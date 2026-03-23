@@ -73,8 +73,8 @@ export default function GrundkursBuchen() {
     }
   };
 
-  const handleSubmit = () => {
-    const result = bookingSchema.safeParse({ faNumber, birthDate, category });
+  const handleSubmit = async () => {
+    const result = bookingSchema.safeParse({ firstName, lastName, email, phone, address, faNumber, birthDate, category, paymentMethod });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.errors.forEach((e) => {
@@ -84,13 +84,48 @@ export default function GrundkursBuchen() {
       return;
     }
     setErrors({});
+    setIsSubmitting(true);
 
     const selectedCourses = Object.values(selections).filter(Boolean) as CourseDate[];
     const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
 
-    toast.success("Buchung erfolgreich!", {
-      description: `${selectedCourses.length} Kursteile für CHF ${total.toFixed(2)} gebucht. Wir senden dir eine Bestätigung per E-Mail.`,
-    });
+    try {
+      const { data: booking, error: bookingError } = await supabase
+        .from('bookings')
+        .insert({
+          booking_type: 'grundkurs',
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          phone,
+          address,
+          fa_number: faNumber,
+          birth_date: birthDate,
+          payment_method: paymentMethod,
+          total_price: total,
+        })
+        .select('id')
+        .single();
+
+      if (bookingError) throw bookingError;
+
+      for (const course of selectedCourses) {
+        await supabase.from('booking_items').insert({
+          booking_id: booking.id,
+          course_date_id: course.id,
+        });
+        await supabase.rpc('decrement_spots', { course_id: course.id });
+      }
+
+      toast.success("Buchung erfolgreich!", {
+        description: `${selectedCourses.length} Kursteile für CHF ${total.toFixed(2)} gebucht. Bestätigung an ${email}.`,
+      });
+    } catch (err) {
+      console.error('Booking error:', err);
+      toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const selectedCourses = Object.entries(selections)
