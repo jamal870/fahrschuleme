@@ -1,4 +1,5 @@
 import { Bike, Shield, Users, Clock, MapPin, Phone, Mail, CreditCard, Eye, Wrench, Target } from "lucide-react";
+import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
 
 const Index = () => {
