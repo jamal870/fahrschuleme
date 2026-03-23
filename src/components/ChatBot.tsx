@@ -292,7 +292,7 @@ export default function ChatBot() {
   };
 
   // ── Fahrstunden booking flow ──
-  const startFahrstunde = () => {
+  const startFahrstunde = async () => {
     setFsStep(1);
     setBookingStep(0);
     setFsCategory(null);
@@ -300,14 +300,16 @@ export default function ChatBot() {
     setFsPackage(null);
     setFsInstructor(null);
     setStudentData(null);
+    // Pre-load services and packages from DB
+    const [services, packages] = await Promise.all([loadServices(), loadPackages()]);
+    setDbServices(services);
+    setDbPackages(packages);
     addMsg({ role: "user", content: "Fahrstunde buchen" });
-    setTimeout(() => {
-      addMsg({
-        role: "bot",
-        content: `**Schritt 1/5** – 🚗 **Fahrstunde buchen**\n\nWähle deine Kategorie:`,
-        categorySelector: true,
-      });
-    }, 400);
+    addMsg({
+      role: "bot",
+      content: `**Schritt 1/5** – 🚗 **Fahrstunde buchen**\n\nWähle deine Kategorie:`,
+      categorySelector: true,
+    });
   };
 
   const selectFsCategory = (cat: "auto" | "motorrad") => {
