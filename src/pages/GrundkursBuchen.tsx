@@ -94,7 +94,7 @@ export default function GrundkursBuchen() {
 
     try {
       // Determine initial status based on payment method
-      const isOnlinePayment = paymentMethod === "Kreditkarte / Debitkarte";
+      const isOnlinePayment = paymentMethod === "Online bezahlen (Stripe/Twint)";
       const initialStatus = isOnlinePayment ? "pending_payment" : "confirmed";
 
       const { data: booking, error: bookingError } = await supabase
