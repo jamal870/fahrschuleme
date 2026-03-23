@@ -268,9 +268,10 @@ export default function GrundkursBuchen() {
           ) : (
             <Button
               onClick={handleSubmit}
-              disabled={selectedCourses.length === 0}
+              disabled={selectedCourses.length === 0 || isSubmitting}
               className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground"
             >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               Jetzt Buchen & Zur Kasse
               <ChevronRight className="w-4 h-4" />
             </Button>
