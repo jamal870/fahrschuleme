@@ -224,12 +224,24 @@ export default function GrundkursBuchen() {
               <ConfirmationStep
                 selectedCourses={selectedCourses}
                 totalPrice={totalPrice}
+                firstName={firstName}
+                setFirstName={setFirstName}
+                lastName={lastName}
+                setLastName={setLastName}
+                email={email}
+                setEmail={setEmail}
+                phone={phone}
+                setPhone={setPhone}
+                address={address}
+                setAddress={setAddress}
                 faNumber={faNumber}
                 setFaNumber={setFaNumber}
                 birthDate={birthDate}
                 setBirthDate={setBirthDate}
                 category={category}
                 setCategory={setCategory}
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
                 errors={errors}
               />
             </motion.div>
