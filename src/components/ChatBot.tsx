@@ -618,7 +618,7 @@ export default function ChatBot() {
 
                         {/* Service selector (Fahrstunden) */}
                         {msg.serviceSelector && fsCategory && (
-                          <ServiceSelector category={fsCategory} onSelect={selectFsService} />
+                          <ServiceSelector category={fsCategory} onSelect={selectFsService} services={dbServices} />
                         )}
 
                         {/* Package selector (Fahrstunden) */}
