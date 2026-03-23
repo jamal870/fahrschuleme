@@ -526,7 +526,7 @@ export default function ChatBot() {
     const price = fsPackage ? fsPackage.totalPrice : fsService.price;
 
     try {
-      const isOnlinePayment = selectedPaymentMethod === "Kreditkarte / Debitkarte";
+      const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
 
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
