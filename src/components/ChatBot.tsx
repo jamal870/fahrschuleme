@@ -279,6 +279,8 @@ export default function ChatBot() {
     const total = sels.reduce((s, { course }) => s + course.price, 0);
 
     try {
+      const isOnlinePayment = selectedPaymentMethod === "Kreditkarte / Debitkarte";
+
       // Save booking to DB
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
@@ -293,6 +295,7 @@ export default function ChatBot() {
           phone: studentData.phone,
           payment_method: selectedPaymentMethod,
           total_price: total,
+          status: isOnlinePayment ? 'pending_payment' : 'confirmed',
         })
         .select('id')
         .single();
@@ -306,6 +309,63 @@ export default function ChatBot() {
           course_date_id: course.id,
         });
         await supabase.rpc('decrement_spots', { course_id: course.id });
+      }
+
+      // Send confirmation email
+      try {
+        await supabase.functions.invoke('send-transactional-email', {
+          body: {
+            templateName: 'booking-confirmation',
+            recipientEmail: studentData.email,
+            idempotencyKey: `booking-confirm-${booking.id}`,
+            templateData: {
+              firstName: studentData.firstName,
+              lastName: studentData.lastName,
+              courses: sels.map(({ part, course }) => ({
+                part,
+                date: course.date,
+                time: course.time,
+                location: course.location,
+              })),
+              totalPrice: total.toFixed(2),
+              paymentMethod: selectedPaymentMethod,
+              bookingId: booking.id,
+            },
+          },
+        });
+      } catch (emailErr) {
+        console.error('Email send error:', emailErr);
+      }
+
+      // If online payment, redirect to Stripe
+      if (isOnlinePayment) {
+        const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
+          body: {
+            bookingId: booking.id,
+            email: studentData.email,
+            customerName: `${studentData.firstName} ${studentData.lastName}`,
+            courses: sels.map(({ part, course }) => ({
+              part,
+              date: course.date,
+              time: course.time,
+              price: course.price,
+            })),
+            totalPrice: total,
+          },
+        });
+
+        if (fnError || !data?.url) {
+          throw new Error('Zahlung konnte nicht initialisiert werden');
+        }
+
+        setBookingStep(0);
+        addMsg({
+          role: "bot",
+          content: `💳 **Weiterleitung zur Zahlung...**\n\nDu wirst jetzt zur sicheren Zahlungsseite weitergeleitet.`,
+        });
+
+        window.open(data.url, '_blank');
+        return;
       }
 
       setBookingStep(0);
