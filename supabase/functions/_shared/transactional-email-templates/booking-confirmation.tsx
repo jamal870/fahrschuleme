@@ -223,8 +223,9 @@ export const template = {
 // Styles — brand color: hsl(195, 85%, 42%) ≈ #1098b8
 const main = { backgroundColor: '#ffffff', fontFamily: "'DM Sans', Arial, sans-serif" }
 const container = { padding: '30px 25px', maxWidth: '600px', margin: '0 auto' }
-const headerSection = { marginBottom: '10px' }
-const brandText = { fontSize: '20px', fontWeight: '700' as const, color: '#1098b8', margin: '0' }
+const headerSection = { marginBottom: '16px' }
+const logoStyle = { margin: '0' }
+
 const h1 = { fontSize: '24px', fontWeight: '700' as const, color: '#1a2b3c', margin: '0 0 20px' }
 const h2 = { fontSize: '18px', fontWeight: '700' as const, color: '#1a2b3c', margin: '0 0 12px' }
 const h2Important = { fontSize: '18px', fontWeight: '700' as const, color: '#c53030', margin: '0 0 12px' }
