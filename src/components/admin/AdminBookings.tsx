@@ -1,0 +1,163 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { RefreshCw, Eye } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { CardTitle } from "@/components/ui/card";
+
+interface Booking {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  booking_type: string;
+  total_price: number;
+  status: string;
+  created_at: string;
+  fa_number: string;
+  birth_date: string;
+  address: string;
+  payment_method: string;
+}
+
+interface BookingItem {
+  id: string;
+  booking_id: string;
+  course_date_id: string | null;
+  fahrstunden_service_id: string | null;
+  fahrstunden_package_id: string | null;
+  instructor: string | null;
+}
+
+const AdminBookings = () => {
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [bookingItems, setBookingItems] = useState<BookingItem[]>([]);
+
+  const fetchBookings = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
+    if (error) toast.error("Fehler beim Laden");
+    else setBookings(data || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchBookings(); }, []);
+
+  const viewDetails = async (booking: Booking) => {
+    setSelectedBooking(booking);
+    const { data } = await supabase.from("booking_items").select("*").eq("booking_id", booking.id);
+    setBookingItems(data || []);
+  };
+
+  const statusColor = (s: string) => {
+    switch (s) {
+      case "confirmed": return "default";
+      case "cancelled": return "destructive";
+      default: return "secondary";
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <CardTitle className="text-xl font-[Outfit]">Buchungen</CardTitle>
+        <Button variant="outline" size="sm" onClick={fetchBookings}>
+          <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
+        </Button>
+      </div>
+
+      <Card>
+        <CardContent className="p-0">
+          {loading ? (
+            <p className="p-6 text-muted-foreground text-center">Laden...</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Datum</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>E-Mail</TableHead>
+                  <TableHead>Typ</TableHead>
+                  <TableHead>Betrag</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Details</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {bookings.map((b) => (
+                  <TableRow key={b.id}>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {new Date(b.created_at).toLocaleDateString("de-CH")}
+                    </TableCell>
+                    <TableCell className="font-medium">{b.first_name} {b.last_name}</TableCell>
+                    <TableCell className="text-sm">{b.email}</TableCell>
+                    <TableCell><Badge variant="outline">{b.booking_type}</Badge></TableCell>
+                    <TableCell>CHF {b.total_price}</TableCell>
+                    <TableCell><Badge variant={statusColor(b.status) as any}>{b.status}</Badge></TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="icon" onClick={() => viewDetails(b)}>
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {bookings.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">Keine Buchungen vorhanden</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Buchungsdetails</DialogTitle>
+          </DialogHeader>
+          {selectedBooking && (
+            <div className="space-y-4 text-sm">
+              <div className="grid grid-cols-2 gap-3">
+                <div><span className="text-muted-foreground">Name:</span> <strong>{selectedBooking.first_name} {selectedBooking.last_name}</strong></div>
+                <div><span className="text-muted-foreground">E-Mail:</span> {selectedBooking.email}</div>
+                <div><span className="text-muted-foreground">Telefon:</span> {selectedBooking.phone}</div>
+                <div><span className="text-muted-foreground">Geburtsdatum:</span> {selectedBooking.birth_date}</div>
+                <div><span className="text-muted-foreground">FA-Nummer:</span> {selectedBooking.fa_number}</div>
+                <div><span className="text-muted-foreground">Adresse:</span> {selectedBooking.address}</div>
+                <div><span className="text-muted-foreground">Zahlung:</span> {selectedBooking.payment_method}</div>
+                <div><span className="text-muted-foreground">Betrag:</span> <strong>CHF {selectedBooking.total_price}</strong></div>
+              </div>
+
+              {bookingItems.length > 0 && (
+                <div>
+                  <p className="font-semibold mb-2">Gebuchte Leistungen:</p>
+                  <ul className="space-y-1 text-xs">
+                    {bookingItems.map((item) => (
+                      <li key={item.id} className="bg-muted/50 p-2 rounded">
+                        {item.course_date_id && <span>Kurs: {item.course_date_id}</span>}
+                        {item.fahrstunden_service_id && <span>Fahrstunde: {item.fahrstunden_service_id}</span>}
+                        {item.fahrstunden_package_id && <span>Paket: {item.fahrstunden_package_id}</span>}
+                        {item.instructor && <span> · Fahrlehrer: {item.instructor}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default AdminBookings;
