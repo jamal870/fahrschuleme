@@ -431,7 +431,7 @@ export default function ChatBot() {
         fa_number: studentData.faNumber,
         email: studentData.email,
         phone: studentData.phone,
-        payment_method: 'pending',
+        payment_method: selectedPaymentMethod,
         total_price: price,
       });
       if (error) throw error;
