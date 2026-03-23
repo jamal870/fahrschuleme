@@ -326,7 +326,6 @@ export default function ChatBot() {
               faNumber: studentData.faNumber,
               phone: studentData.phone,
               email: studentData.email,
-              category: studentData.category,
               courses: sels.map(({ part, course }) => ({
                 part,
                 date: course.date,
