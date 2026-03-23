@@ -166,20 +166,19 @@ export default function ChatBot() {
   };
 
   // ── Grundkurs booking flow ──
-  const startBooking = () => {
+  const startBooking = async () => {
     setBookingStep(1);
     setFsStep(0);
     setSelections({});
     setStudentData(null);
     addMsg({ role: "user", content: "Grundkurs buchen" });
-    setTimeout(() => {
-      const part = motorradGrundkurse[0];
-      addMsg({
-        role: "bot",
-        content: `**Schritt 1/5** – 🏍️ **${part.title}**\n\n${part.description}\n\nWähle deinen Wunschtermin:`,
-        courseCards: { courses: part.dates, partNum: 1 },
-      });
-    }, 400);
+    const courses = await loadCourseDates(1);
+    setDbCourses(prev => ({ ...prev, 1: courses }));
+    addMsg({
+      role: "bot",
+      content: `**Schritt 1/5** – 🏍️ **MGK Teil 1 – Datum wählen**\n\nWähle deinen Wunschtermin:`,
+      courseCards: { courses, partNum: 1 },
+    });
   };
 
   const selectCourse = (partNum: number, course: CourseDate) => {
