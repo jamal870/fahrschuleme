@@ -547,9 +547,8 @@ function ConfirmationStep({
             <Select value={paymentMethod} onValueChange={setPaymentMethod}>
               <SelectTrigger className="mt-1"><SelectValue placeholder="Bitte wählen" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="Banküberweisung">Banküberweisung</SelectItem>
                 <SelectItem value="Barzahlung am Kurstag">Barzahlung am Kurstag</SelectItem>
-                <SelectItem value="Kreditkarte / Debitkarte">Kreditkarte / Debitkarte</SelectItem>
+                <SelectItem value="Online bezahlen (Stripe/Twint)">Online bezahlen (Stripe/Twint)</SelectItem>
               </SelectContent>
             </Select>
             {errors.paymentMethod && <p className="text-xs text-destructive mt-1">{errors.paymentMethod}</p>}

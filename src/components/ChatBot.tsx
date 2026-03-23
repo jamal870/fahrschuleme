@@ -1303,15 +1303,16 @@ function PaymentSelector({ onSelect }: { onSelect: (id: string) => void }) {
           }`}
         >
           <div className="flex items-center gap-2">
-            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-              selected === method.id ? "border-primary" : "border-muted-foreground/40"
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+              selected === method.id ? "bg-primary/10" : "bg-muted"
             }`}>
-              {selected === method.id && <div className="w-2 h-2 rounded-full bg-primary" />}
+              <span className="text-xs">{method.icon}</span>
             </div>
             <span className="text-xs font-medium text-foreground">{method.label}</span>
+            {selected === method.id && <Check className="w-3.5 h-3.5 text-primary ml-auto" />}
           </div>
           {selected === method.id && (
-            <p className="text-[10px] text-muted-foreground mt-1.5 ml-6">{method.desc}</p>
+            <p className="text-[10px] text-muted-foreground mt-1.5 ml-7">{method.desc}</p>
           )}
         </button>
       ))}
@@ -1321,8 +1322,11 @@ function PaymentSelector({ onSelect }: { onSelect: (id: string) => void }) {
         onClick={() => { setConfirmed(true); onSelect(selected!); }}
         className="w-full h-9 text-xs gap-1.5 rounded-lg mt-1"
       >
-        <ChevronRight className="w-3 h-3" />
-        Weiter zur Bestätigung
+        {selected === "card" ? (
+          <>💳 Jetzt bezahlen</>
+        ) : (
+          <><ChevronRight className="w-3 h-3" /> Weiter zur Bestätigung</>
+        )}
       </Button>
     </motion.div>
   );
