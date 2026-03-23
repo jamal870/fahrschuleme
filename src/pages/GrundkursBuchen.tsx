@@ -125,6 +125,34 @@ export default function GrundkursBuchen() {
         await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
+      // Send booking confirmation email (for non-online payments; online payments send after Stripe success)
+      const sendConfirmationEmail = async () => {
+        try {
+          await supabase.functions.invoke('send-transactional-email', {
+            body: {
+              templateName: 'booking-confirmation',
+              recipientEmail: email,
+              idempotencyKey: `booking-confirm-${booking.id}`,
+              templateData: {
+                firstName,
+                lastName,
+                courses: selectedCoursesWithParts.map(({ part, course }) => ({
+                  part,
+                  date: course.date,
+                  time: course.time,
+                  location: course.location,
+                })),
+                totalPrice: total.toFixed(2),
+                paymentMethod,
+                bookingId: booking.id,
+              },
+            },
+          });
+        } catch (emailErr) {
+          console.error('Email send error:', emailErr);
+        }
+      };
+
       // If online payment, redirect to Stripe Checkout
       if (isOnlinePayment) {
         const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
@@ -146,10 +174,16 @@ export default function GrundkursBuchen() {
           throw new Error(fnError?.message || 'Zahlung konnte nicht initialisiert werden');
         }
 
+        // Send confirmation email before redirecting
+        await sendConfirmationEmail();
+
         // Redirect to Stripe Checkout
         window.location.href = data.url;
         return;
       }
+
+      // Non-online payment: send email and show success
+      await sendConfirmationEmail();
 
       toast.success("Buchung erfolgreich!", {
         description: `${selectedCourses.length} Kursteile für CHF ${total.toFixed(2)} gebucht. Bestätigung an ${email}.`,
