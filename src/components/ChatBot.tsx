@@ -282,17 +282,30 @@ export default function ChatBot() {
 
   const selectFsService = (service: FahrstundenService) => {
     setFsService(service);
-    setFsStep(3);
     addMsg({ role: "user", content: `${service.name} – CHF ${service.price.toFixed(2)}` });
 
     const pkgs = fahrstundenPackages.filter((p) => p.serviceId === service.id);
-    setTimeout(() => {
-      addMsg({
-        role: "bot",
-        content: `**Schritt 3/5** – 🎁 **Paket wählen (optional)**\n\nMit einem Paket sparst du! Oder wähle eine Einzellektion:`,
-        packageSelector: { packages: pkgs, service },
-      });
-    }, 400);
+    if (pkgs.length > 0) {
+      setFsStep(3);
+      setTimeout(() => {
+        addMsg({
+          role: "bot",
+          content: `**Schritt 3/5** – 🎁 **Paket wählen (optional)**\n\nMit einem Paket sparst du! Oder wähle eine Einzellektion:`,
+          packageSelector: { packages: pkgs, service },
+        });
+      }, 400);
+    } else {
+      // No packages (e.g. Motorrad) → skip to instructor
+      setFsStep(4);
+      setFsPackage(null);
+      setTimeout(() => {
+        addMsg({
+          role: "bot",
+          content: `**Schritt 3/4** – 👤 **Fahrlehrer wählen (optional)**\n\nWähle deinen bevorzugten Fahrlehrer oder lass dich zuteilen:`,
+          instructorSelector: true,
+        });
+      }, 400);
+    }
   };
 
   const selectFsPackage = (pkg: FahrstundenPackage | null) => {
