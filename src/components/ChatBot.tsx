@@ -84,13 +84,57 @@ export default function ChatBot() {
   const [bookingStep, setBookingStep] = useState<number>(0);
   const [selections, setSelections] = useState<Record<number, CourseDate>>({});
   const [studentData, setStudentData] = useState<StudentFormData | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fahrstunden booking state
-  const [fsStep, setFsStep] = useState<number>(0); // 0=idle, 1=category, 2=service, 3=package, 4=instructor, 5=form, 6=payment, 7=confirm
+  const [fsStep, setFsStep] = useState<number>(0);
   const [fsCategory, setFsCategory] = useState<"auto" | "motorrad" | null>(null);
   const [fsService, setFsService] = useState<FahrstundenService | null>(null);
   const [fsPackage, setFsPackage] = useState<FahrstundenPackage | null>(null);
   const [fsInstructor, setFsInstructor] = useState<Instructor | null>(null);
+
+  // DB data
+  const [dbCourses, setDbCourses] = useState<Record<number, CourseDate[]>>({});
+  const [dbServices, setDbServices] = useState<FahrstundenService[]>([]);
+  const [dbPackages, setDbPackages] = useState<FahrstundenPackage[]>([]);
+
+  // Load course data from DB
+  const loadCourseDates = useCallback(async (part: number): Promise<CourseDate[]> => {
+    const { data, error } = await supabase
+      .from('course_dates')
+      .select('*')
+      .eq('part', part)
+      .gt('spots_available', 0)
+      .order('date');
+    if (error || !data) return [];
+    return data.map((d: any) => ({
+      id: d.id,
+      day: d.day,
+      date: d.date,
+      time: d.time,
+      location: d.location,
+      instructor: d.instructor || undefined,
+      price: Number(d.price),
+      spotsAvailable: d.spots_available,
+    }));
+  }, []);
+
+  const loadServices = useCallback(async (): Promise<FahrstundenService[]> => {
+    const { data } = await supabase.from('fahrstunden_services').select('*');
+    if (!data) return [];
+    return data.map((s: any) => ({
+      id: s.id, category: s.category, name: s.name, duration: s.duration, price: Number(s.price),
+    }));
+  }, []);
+
+  const loadPackages = useCallback(async (): Promise<FahrstundenPackage[]> => {
+    const { data } = await supabase.from('fahrstunden_packages').select('*');
+    if (!data) return [];
+    return data.map((p: any) => ({
+      id: p.id, serviceId: p.service_id, name: p.name, lessons: p.lessons,
+      discount: p.discount, totalPrice: Number(p.total_price), pricePerLesson: Number(p.price_per_lesson),
+    }));
+  }, []);
 
   useEffect(() => {
     if (open && !initialized) {
