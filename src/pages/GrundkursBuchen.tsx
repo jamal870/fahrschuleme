@@ -19,9 +19,15 @@ const STEPS = [
 ];
 
 const bookingSchema = z.object({
+  firstName: z.string().trim().min(1, "Vorname ist ein Pflichtfeld"),
+  lastName: z.string().trim().min(1, "Nachname ist ein Pflichtfeld"),
+  email: z.string().trim().email("Ungültige E-Mail-Adresse"),
+  phone: z.string().trim().min(1, "Telefonnummer ist ein Pflichtfeld"),
+  address: z.string().trim().min(1, "Adresse ist ein Pflichtfeld"),
   faNumber: z.string().trim().min(1, "FA-Nummer ist ein Pflichtfeld").max(30, "FA-Nummer darf maximal 30 Zeichen haben"),
   birthDate: z.string().trim().min(1, "Geburtsdatum ist ein Pflichtfeld"),
   category: z.string().min(1, "Kategorie ist ein Pflichtfeld"),
+  paymentMethod: z.string().min(1, "Zahlungsmethode ist ein Pflichtfeld"),
 });
 
 export default function GrundkursBuchen() {
