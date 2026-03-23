@@ -84,6 +84,55 @@ export const motorradGrundkurse: CoursePart[] = [
   },
 ];
 
+// ─── Fahrstunden (Driving Lessons) ────────────────────────────
+
+export interface FahrstundenService {
+  id: string;
+  category: "auto" | "motorrad";
+  name: string;
+  duration: string;
+  price: number;
+}
+
+export interface FahrstundenPackage {
+  id: string;
+  serviceId: string;
+  name: string;
+  lessons: number;
+  discount: string;
+  totalPrice: number;
+  pricePerLesson: number;
+}
+
+export interface Instructor {
+  id: string;
+  name: string;
+  initials: string;
+  popular?: boolean;
+}
+
+export const fahrstundenServices: FahrstundenService[] = [
+  { id: "auto-45", category: "auto", name: "Auto 45 Min", duration: "45 Min", price: 95 },
+  { id: "auto-90", category: "auto", name: "Auto 90 Min (Doppellektion)", duration: "90 Min", price: 180 },
+  { id: "motorrad-45", category: "motorrad", name: "Motorrad 45 Min", duration: "45 Min", price: 95 },
+  { id: "motorrad-90", category: "motorrad", name: "Motorrad 90 Min (Doppellektion)", duration: "90 Min", price: 180 },
+];
+
+export const fahrstundenPackages: FahrstundenPackage[] = [
+  { id: "pkg-auto45-10", serviceId: "auto-45", name: "10er-Paket (Auto 45 Min)", lessons: 10, discount: "5%", totalPrice: 900, pricePerLesson: 90 },
+  { id: "pkg-auto45-5", serviceId: "auto-45", name: "5er-Paket (Auto 45 Min)", lessons: 5, discount: "11%", totalPrice: 425, pricePerLesson: 85 },
+  { id: "pkg-auto90-10", serviceId: "auto-90", name: "10er-Paket (Auto 90 Min)", lessons: 10, discount: "5%", totalPrice: 1710, pricePerLesson: 171 },
+  { id: "pkg-auto90-5", serviceId: "auto-90", name: "5er-Paket (Auto 90 Min)", lessons: 5, discount: "11%", totalPrice: 800, pricePerLesson: 160 },
+  { id: "pkg-moto45-10", serviceId: "motorrad-45", name: "10er-Paket (Motorrad 45 Min)", lessons: 10, discount: "5%", totalPrice: 900, pricePerLesson: 90 },
+  { id: "pkg-moto45-5", serviceId: "motorrad-45", name: "5er-Paket (Motorrad 45 Min)", lessons: 5, discount: "11%", totalPrice: 425, pricePerLesson: 85 },
+];
+
+export const instructors: Instructor[] = [
+  { id: "je", name: "Jamal Ettana", initials: "JE", popular: true },
+  { id: "na", name: "Nabeel Ahmad", initials: "NA" },
+  { id: "rr", name: "Rebecca Rüegg", initials: "RR" },
+];
+
 export const faqData = [
   {
     question: "Was ist der Motorrad Grundkurs (MGK)?",
