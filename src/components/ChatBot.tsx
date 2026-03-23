@@ -311,38 +311,40 @@ export default function ChatBot() {
         await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
-      // Send confirmation email
-      try {
-        await supabase.functions.invoke('send-transactional-email', {
-          body: {
-            templateName: 'booking-confirmation',
-            recipientEmail: studentData.email,
-            idempotencyKey: `booking-confirm-${booking.id}`,
-            templateData: {
-              firstName: studentData.firstName,
-              lastName: studentData.lastName,
-              address: studentData.address,
-              birthDate: studentData.birthDate,
-              faNumber: studentData.faNumber,
-              phone: studentData.phone,
-              email: studentData.email,
-              courses: sels.map(({ part, course }) => ({
-                part,
-                date: course.date,
-                time: course.time,
-                location: course.location,
-                price: course.price,
-              })),
-              totalPrice: total.toFixed(2),
-              paymentMethod: selectedPaymentMethod,
-              bookingId: booking.id,
-              bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+      // Prepare email send function
+      const sendConfirmationEmail = async () => {
+        try {
+          await supabase.functions.invoke('send-transactional-email', {
+            body: {
+              templateName: 'booking-confirmation',
+              recipientEmail: studentData.email,
+              idempotencyKey: `booking-confirm-${booking.id}`,
+              templateData: {
+                firstName: studentData.firstName,
+                lastName: studentData.lastName,
+                address: studentData.address,
+                birthDate: studentData.birthDate,
+                faNumber: studentData.faNumber,
+                phone: studentData.phone,
+                email: studentData.email,
+                courses: sels.map(({ part, course }) => ({
+                  part,
+                  date: course.date,
+                  time: course.time,
+                  location: course.location,
+                  price: course.price,
+                })),
+                totalPrice: total.toFixed(2),
+                paymentMethod: selectedPaymentMethod,
+                bookingId: booking.id,
+                bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+              },
             },
-          },
-        });
-      } catch (emailErr) {
-        console.error('Email send error:', emailErr);
-      }
+          });
+        } catch (emailErr) {
+          console.error('Email send error:', emailErr);
+        }
+      };
 
       // If online payment, redirect to Stripe
       if (isOnlinePayment) {
