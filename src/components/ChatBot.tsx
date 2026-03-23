@@ -59,9 +59,8 @@ interface FahrstundenSummary {
 }
 
 const PAYMENT_METHODS = [
-  { id: "bank", label: "Direkte Banküberweisung", desc: "Bitte überweisen Sie den Betrag direkt auf unser Bankkonto. Verwenden Sie Ihren Vor- und Nachnamen als Zahlungsreferenz." },
-  { id: "cash", label: "Barzahlung am Kurstag", desc: "Bei Barzahlung erhalten Sie eine Buchungsbestätigung. Die Zahlung erfolgt am ersten Kurstag." },
-  { id: "card", label: "Kreditkarte / Debitkarte", desc: "Bezahlung mit Kredit- oder Debitkarte." },
+  { id: "cash", label: "Barzahlung am Kurstag", desc: "Schüler hat bar bezahlt. Guthaben bleibt gleich oder wird aufgeladen.", icon: "💵" },
+  { id: "card", label: "Online bezahlen (Stripe/Twint)", desc: "Sofort bezahlen per Karte oder Twint. Stripe Checkout öffnet sich.", icon: "💳" },
 ];
 
 const mainMenu: QuickButton[] = [
@@ -237,7 +236,8 @@ export default function ChatBot() {
   const handlePaymentSelect = (methodId: string) => {
     const method = PAYMENT_METHODS.find((m) => m.id === methodId);
     if (!method || !studentData) return;
-    setSelectedPaymentMethod(method.label);
+    const paymentLabel = methodId === "card" ? "Online bezahlen (Stripe/Twint)" : "Barzahlung am Kurstag";
+    setSelectedPaymentMethod(paymentLabel);
     addMsg({ role: "user", content: method.label });
 
     if (bookingStep > 0) {
@@ -279,7 +279,7 @@ export default function ChatBot() {
     const total = sels.reduce((s, { course }) => s + course.price, 0);
 
     try {
-      const isOnlinePayment = selectedPaymentMethod === "Kreditkarte / Debitkarte";
+      const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
 
       // Save booking to DB
       const { data: booking, error: bookingError } = await supabase
@@ -311,40 +311,42 @@ export default function ChatBot() {
         await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
-      // Send confirmation email
-      try {
-        await supabase.functions.invoke('send-transactional-email', {
-          body: {
-            templateName: 'booking-confirmation',
-            recipientEmail: studentData.email,
-            idempotencyKey: `booking-confirm-${booking.id}`,
-            templateData: {
-              firstName: studentData.firstName,
-              lastName: studentData.lastName,
-              address: studentData.address,
-              birthDate: studentData.birthDate,
-              faNumber: studentData.faNumber,
-              phone: studentData.phone,
-              email: studentData.email,
-              courses: sels.map(({ part, course }) => ({
-                part,
-                date: course.date,
-                time: course.time,
-                location: course.location,
-                price: course.price,
-              })),
-              totalPrice: total.toFixed(2),
-              paymentMethod: selectedPaymentMethod,
-              bookingId: booking.id,
-              bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+      // Prepare email send function
+      const sendConfirmationEmail = async () => {
+        try {
+          await supabase.functions.invoke('send-transactional-email', {
+            body: {
+              templateName: 'booking-confirmation',
+              recipientEmail: studentData.email,
+              idempotencyKey: `booking-confirm-${booking.id}`,
+              templateData: {
+                firstName: studentData.firstName,
+                lastName: studentData.lastName,
+                address: studentData.address,
+                birthDate: studentData.birthDate,
+                faNumber: studentData.faNumber,
+                phone: studentData.phone,
+                email: studentData.email,
+                courses: sels.map(({ part, course }) => ({
+                  part,
+                  date: course.date,
+                  time: course.time,
+                  location: course.location,
+                  price: course.price,
+                })),
+                totalPrice: total.toFixed(2),
+                paymentMethod: selectedPaymentMethod,
+                bookingId: booking.id,
+                bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+              },
             },
-          },
-        });
-      } catch (emailErr) {
-        console.error('Email send error:', emailErr);
-      }
+          });
+        } catch (emailErr) {
+          console.error('Email send error:', emailErr);
+        }
+      };
 
-      // If online payment, redirect to Stripe
+      // If online payment, open Stripe and poll for success
       if (isOnlinePayment) {
         const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
           body: {
@@ -365,15 +367,50 @@ export default function ChatBot() {
           throw new Error('Zahlung konnte nicht initialisiert werden');
         }
 
-        setBookingStep(0);
+        window.open(data.url, '_blank');
+
         addMsg({
           role: "bot",
-          content: `💳 **Weiterleitung zur Zahlung...**\n\nDu wirst jetzt zur sicheren Zahlungsseite weitergeleitet.`,
+          content: `⏳ **Warte auf Zahlung...**\n\nStripe Checkout wurde geöffnet. Bitte schliesse die Zahlung ab.`,
         });
 
-        window.open(data.url, '_blank');
+        // Start polling for payment status
+        const pollPayment = async () => {
+          const maxAttempts = 60; // 5 min max
+          for (let i = 0; i < maxAttempts; i++) {
+            await new Promise(r => setTimeout(r, 5000));
+            const { data: updatedBooking } = await supabase
+              .from('bookings')
+              .select('status')
+              .eq('id', booking.id)
+              .single();
+            if (updatedBooking?.status === 'confirmed') {
+              await sendConfirmationEmail();
+              setBookingStep(0);
+              addMsg({
+                role: "bot",
+                content: `✅ **Zahlung erfolgreich!**\n\n🎉 Buchung bestätigt!\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Bestätigung an **${studentData.email}**\n💰 CHF ${total.toFixed(2)}\n\nVielen Dank! 🏍️`,
+                buttons: [
+                  { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
+                  { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+                ],
+              });
+              toast.success("Zahlung erfolgreich!");
+              return;
+            }
+          }
+          addMsg({
+            role: "bot",
+            content: `⚠️ Zahlung konnte nicht bestätigt werden. Bitte kontaktiere uns.`,
+            buttons: [{ label: "Kontakt", icon: <MessageCircle className="w-3.5 h-3.5" />, action: "contact" }],
+          });
+        };
+        pollPayment();
         return;
       }
+
+      // Non-online: send email immediately
+      await sendConfirmationEmail();
 
       setBookingStep(0);
       addMsg({
@@ -489,7 +526,7 @@ export default function ChatBot() {
     const price = fsPackage ? fsPackage.totalPrice : fsService.price;
 
     try {
-      const isOnlinePayment = selectedPaymentMethod === "Kreditkarte / Debitkarte";
+      const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
 
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
@@ -511,37 +548,39 @@ export default function ChatBot() {
 
       if (bookingError) throw bookingError;
 
-      // Send confirmation email
-      try {
-        await supabase.functions.invoke('send-transactional-email', {
-          body: {
-            templateName: 'fahrstunden-confirmation',
-            recipientEmail: studentData.email,
-            idempotencyKey: `fahrstunden-confirm-${booking.id}`,
-            templateData: {
-              firstName: studentData.firstName,
-              lastName: studentData.lastName,
-              address: studentData.address,
-              birthDate: studentData.birthDate,
-              faNumber: studentData.faNumber,
-              phone: studentData.phone,
-              email: studentData.email,
-              category: fsService.category,
-              serviceName: fsService.name,
-              packageName: fsPackage?.name,
-              duration: fsService.duration,
-              totalPrice: price.toFixed(2),
-              paymentMethod: selectedPaymentMethod,
-              bookingId: booking.id,
-              bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+      // Prepare email send function
+      const sendConfirmationEmail = async () => {
+        try {
+          await supabase.functions.invoke('send-transactional-email', {
+            body: {
+              templateName: 'fahrstunden-confirmation',
+              recipientEmail: studentData.email,
+              idempotencyKey: `fahrstunden-confirm-${booking.id}`,
+              templateData: {
+                firstName: studentData.firstName,
+                lastName: studentData.lastName,
+                address: studentData.address,
+                birthDate: studentData.birthDate,
+                faNumber: studentData.faNumber,
+                phone: studentData.phone,
+                email: studentData.email,
+                category: fsService.category,
+                serviceName: fsService.name,
+                packageName: fsPackage?.name,
+                duration: fsService.duration,
+                totalPrice: price.toFixed(2),
+                paymentMethod: selectedPaymentMethod,
+                bookingId: booking.id,
+                bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+              },
             },
-          },
-        });
-      } catch (emailErr) {
-        console.error('Email send error:', emailErr);
-      }
+          });
+        } catch (emailErr) {
+          console.error('Email send error:', emailErr);
+        }
+      };
 
-      // If online payment, redirect to Stripe
+      // If online payment, open Stripe and poll
       if (isOnlinePayment) {
         const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
           body: {
@@ -562,15 +601,49 @@ export default function ChatBot() {
           throw new Error('Zahlung konnte nicht initialisiert werden');
         }
 
-        setFsStep(0);
+        window.open(data.url, '_blank');
+
         addMsg({
           role: "bot",
-          content: `💳 **Weiterleitung zur Zahlung...**\n\nDu wirst jetzt zur sicheren Zahlungsseite weitergeleitet.`,
+          content: `⏳ **Warte auf Zahlung...**\n\nStripe Checkout wurde geöffnet. Bitte schliesse die Zahlung ab.`,
         });
 
-        window.open(data.url, '_blank');
+        const pollPayment = async () => {
+          const maxAttempts = 60;
+          for (let i = 0; i < maxAttempts; i++) {
+            await new Promise(r => setTimeout(r, 5000));
+            const { data: updatedBooking } = await supabase
+              .from('bookings')
+              .select('status')
+              .eq('id', booking.id)
+              .single();
+            if (updatedBooking?.status === 'confirmed') {
+              await sendConfirmationEmail();
+              setFsStep(0);
+              addMsg({
+                role: "bot",
+                content: `✅ **Zahlung erfolgreich!**\n\n🎉 Buchung bestätigt!\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Bestätigung an **${studentData.email}**\n🚗 ${fsService.name}\n💰 CHF ${price.toFixed(2)}\n\nVielen Dank! 🙌`,
+                buttons: [
+                  { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
+                  { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+                ],
+              });
+              toast.success("Zahlung erfolgreich!");
+              return;
+            }
+          }
+          addMsg({
+            role: "bot",
+            content: `⚠️ Zahlung konnte nicht bestätigt werden. Bitte kontaktiere uns.`,
+            buttons: [{ label: "Kontakt", icon: <MessageCircle className="w-3.5 h-3.5" />, action: "contact" }],
+          });
+        };
+        pollPayment();
         return;
       }
+
+      // Non-online: send email immediately
+      await sendConfirmationEmail();
 
       setFsStep(0);
       addMsg({
@@ -1230,15 +1303,16 @@ function PaymentSelector({ onSelect }: { onSelect: (id: string) => void }) {
           }`}
         >
           <div className="flex items-center gap-2">
-            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-              selected === method.id ? "border-primary" : "border-muted-foreground/40"
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+              selected === method.id ? "bg-primary/10" : "bg-muted"
             }`}>
-              {selected === method.id && <div className="w-2 h-2 rounded-full bg-primary" />}
+              <span className="text-xs">{method.icon}</span>
             </div>
             <span className="text-xs font-medium text-foreground">{method.label}</span>
+            {selected === method.id && <Check className="w-3.5 h-3.5 text-primary ml-auto" />}
           </div>
           {selected === method.id && (
-            <p className="text-[10px] text-muted-foreground mt-1.5 ml-6">{method.desc}</p>
+            <p className="text-[10px] text-muted-foreground mt-1.5 ml-7">{method.desc}</p>
           )}
         </button>
       ))}
@@ -1248,8 +1322,11 @@ function PaymentSelector({ onSelect }: { onSelect: (id: string) => void }) {
         onClick={() => { setConfirmed(true); onSelect(selected!); }}
         className="w-full h-9 text-xs gap-1.5 rounded-lg mt-1"
       >
-        <ChevronRight className="w-3 h-3" />
-        Weiter zur Bestätigung
+        {selected === "card" ? (
+          <>💳 Jetzt bezahlen</>
+        ) : (
+          <><ChevronRight className="w-3 h-3" /> Weiter zur Bestätigung</>
+        )}
       </Button>
     </motion.div>
   );

@@ -94,7 +94,7 @@ export default function GrundkursBuchen() {
 
     try {
       // Determine initial status based on payment method
-      const isOnlinePayment = paymentMethod === "Kreditkarte / Debitkarte";
+      const isOnlinePayment = paymentMethod === "Online bezahlen (Stripe/Twint)";
       const initialStatus = isOnlinePayment ? "pending_payment" : "confirmed";
 
       const { data: booking, error: bookingError } = await supabase
@@ -348,8 +348,11 @@ export default function GrundkursBuchen() {
               className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground"
             >
               {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              Jetzt Buchen & Zur Kasse
-              <ChevronRight className="w-4 h-4" />
+              {paymentMethod === "Online bezahlen (Stripe/Twint)" ? (
+                <>💳 Jetzt bezahlen</>
+              ) : (
+                <>Jetzt Buchen <ChevronRight className="w-4 h-4" /></>
+              )}
             </Button>
           )}
         </div>
@@ -547,9 +550,8 @@ function ConfirmationStep({
             <Select value={paymentMethod} onValueChange={setPaymentMethod}>
               <SelectTrigger className="mt-1"><SelectValue placeholder="Bitte wählen" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="Banküberweisung">Banküberweisung</SelectItem>
                 <SelectItem value="Barzahlung am Kurstag">Barzahlung am Kurstag</SelectItem>
-                <SelectItem value="Kreditkarte / Debitkarte">Kreditkarte / Debitkarte</SelectItem>
+                <SelectItem value="Online bezahlen (Stripe/Twint)">Online bezahlen (Stripe/Twint)</SelectItem>
               </SelectContent>
             </Select>
             {errors.paymentMethod && <p className="text-xs text-destructive mt-1">{errors.paymentMethod}</p>}
