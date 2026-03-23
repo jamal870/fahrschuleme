@@ -90,6 +90,10 @@ export default function GrundkursBuchen() {
     const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
 
     try {
+      // Determine initial status based on payment method
+      const isOnlinePayment = paymentMethod === "Kreditkarte / Debitkarte";
+      const initialStatus = isOnlinePayment ? "pending_payment" : "confirmed";
+
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
         .insert({
@@ -103,6 +107,7 @@ export default function GrundkursBuchen() {
           birth_date: birthDate,
           payment_method: paymentMethod,
           total_price: total,
+          status: initialStatus,
         })
         .select('id')
         .single();
@@ -115,6 +120,32 @@ export default function GrundkursBuchen() {
           course_date_id: course.id,
         });
         await supabase.rpc('decrement_spots', { course_id: course.id });
+      }
+
+      // If online payment, redirect to Stripe Checkout
+      if (isOnlinePayment) {
+        const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
+          body: {
+            bookingId: booking.id,
+            email,
+            customerName: `${firstName} ${lastName}`,
+            courses: selectedCourses.map(c => ({
+              part: c.part || 0,
+              date: c.date,
+              time: c.time,
+              price: c.price,
+            })),
+            totalPrice: total,
+          },
+        });
+
+        if (fnError || !data?.url) {
+          throw new Error(fnError?.message || 'Zahlung konnte nicht initialisiert werden');
+        }
+
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+        return;
       }
 
       toast.success("Buchung erfolgreich!", {
