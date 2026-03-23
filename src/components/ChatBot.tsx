@@ -271,24 +271,60 @@ export default function ChatBot() {
     }
   };
 
-  const handleFinalConfirm = () => {
-    if (!studentData) return;
+  const handleFinalConfirm = async () => {
+    if (!studentData || isSubmitting) return;
+    setIsSubmitting(true);
     const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
     const total = sels.reduce((s, { course }) => s + course.price, 0);
 
-    setBookingStep(0);
-    addMsg({
-      role: "bot",
-      content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n💰 Gesamtbetrag: **CHF ${total.toFixed(2)}**\n\nVielen Dank und bis bald auf dem Motorrad! 🏍️`,
-      buttons: [
-        { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
-        { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
-      ],
-    });
+    try {
+      // Save booking to DB
+      const { data: booking, error: bookingError } = await supabase
+        .from('bookings')
+        .insert({
+          booking_type: 'grundkurs',
+          first_name: studentData.firstName,
+          last_name: studentData.lastName,
+          address: studentData.address,
+          birth_date: studentData.birthDate,
+          fa_number: studentData.faNumber,
+          email: studentData.email,
+          phone: studentData.phone,
+          payment_method: selections[1] ? 'pending' : '',
+          total_price: total,
+        })
+        .select('id')
+        .single();
 
-    toast.success("Buchung bestätigt!", {
-      description: `${sels.length} Kursteile für CHF ${total.toFixed(2)} – Bestätigung an ${studentData.email}`,
-    });
+      if (bookingError) throw bookingError;
+
+      // Save booking items and decrement spots
+      for (const { part, course } of sels) {
+        await supabase.from('booking_items').insert({
+          booking_id: booking.id,
+          course_date_id: course.id,
+        });
+        await supabase.rpc('decrement_spots', { course_id: course.id });
+      }
+
+      setBookingStep(0);
+      addMsg({
+        role: "bot",
+        content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n💰 Gesamtbetrag: **CHF ${total.toFixed(2)}**\n\nVielen Dank und bis bald auf dem Motorrad! 🏍️`,
+        buttons: [
+          { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
+          { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+        ],
+      });
+      toast.success("Buchung bestätigt!", {
+        description: `${sels.length} Kursteile für CHF ${total.toFixed(2)} – Bestätigung an ${studentData.email}`,
+      });
+    } catch (err) {
+      console.error('Booking error:', err);
+      toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // ── Fahrstunden booking flow ──
