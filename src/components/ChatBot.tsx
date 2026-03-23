@@ -96,8 +96,13 @@ export default function ChatBot() {
       setMessages([{
         id: "welcome",
         role: "bot",
-        content: "Hoi! 👋 Willkommen bei **Drive me Fahrschule**.\n\nIch helfe dir bei der Buchung von Motorrad Grundkursen und Fahrstunden. Wie kann ich dir helfen?",
-        buttons: mainMenu,
+        content: "Hoi! 👋 Willkommen bei **Drive me Fahrschule**.\n\nWas möchtest du buchen?",
+        buttons: [
+          { label: "🏍️ Motorrad Grundkurs", icon: <Bike className="w-3.5 h-3.5" />, action: "start_booking" },
+          { label: "🚗 Fahrstunde buchen", icon: <Car className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
+          { label: "❓ FAQ", icon: <HelpCircle className="w-3.5 h-3.5" />, action: "show_faq" },
+          { label: "📞 Kontakt", icon: <MessageCircle className="w-3.5 h-3.5" />, action: "contact" },
+        ],
       }]);
       setInitialized(true);
     }
