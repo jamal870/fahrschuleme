@@ -239,6 +239,26 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Buchung Embed */}
+      <section id="buchen" className="max-w-6xl mx-auto px-6 pb-20">
+        <div className="text-center mb-8">
+          <p className="text-primary text-xs font-semibold uppercase tracking-wider mb-2">Online Buchen</p>
+          <h2 className="text-3xl font-bold font-[Outfit] text-foreground mb-4">Grundkurs direkt buchen</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Wähle deinen Wunschtermin und buche deinen Motorrad-Grundkurs bequem online.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-border overflow-hidden bg-card shadow-sm">
+          <iframe
+            src="https://buchen.drive-me.ch/grundkurs-buchen"
+            title="Grundkurs buchen"
+            className="w-full border-0"
+            style={{ height: "800px" }}
+            loading="lazy"
+          />
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-border py-6">
         <div className="max-w-6xl mx-auto px-6 text-center text-xs text-muted-foreground">
