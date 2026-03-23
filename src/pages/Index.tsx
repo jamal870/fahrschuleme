@@ -19,6 +19,14 @@ const Index = () => {
             <a href="#sicherheit" className="hover:text-primary transition-colors">Sicherheit</a>
             <a href="#kategorien" className="hover:text-primary transition-colors">Kategorien</a>
             <a href="#kontakt" className="hover:text-primary transition-colors">Kontakt</a>
+            <a
+              href="https://buchen.drive-me.ch/grundkurs-buchen"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
+            >
+              Jetzt buchen
+            </a>
           </div>
         </nav>
 
@@ -39,13 +47,15 @@ const Index = () => {
               <strong className="text-foreground">Unser Ziel:</strong> Nicht nur bestehen – sondern sicher fahren.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link
-                to="/grundkurs-buchen"
+              <a
+                href="https://buchen.drive-me.ch/grundkurs-buchen"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
               >
                 <CalendarIcon className="w-4 h-4" />
                 Jetzt Grundkurs buchen
-              </Link>
+              </a>
               <a
                 href="#kontakt"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-opacity border border-border"
@@ -228,6 +238,26 @@ const Index = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Buchung Embed */}
+      <section id="buchen" className="max-w-6xl mx-auto px-6 pb-20">
+        <div className="text-center mb-8">
+          <p className="text-primary text-xs font-semibold uppercase tracking-wider mb-2">Online Buchen</p>
+          <h2 className="text-3xl font-bold font-[Outfit] text-foreground mb-4">Grundkurs direkt buchen</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Wähle deinen Wunschtermin und buche deinen Motorrad-Grundkurs bequem online.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-border overflow-hidden bg-card shadow-sm">
+          <iframe
+            src="https://buchen.drive-me.ch/grundkurs-buchen"
+            title="Grundkurs buchen"
+            className="w-full border-0"
+            style={{ height: "800px" }}
+            loading="lazy"
+          />
         </div>
       </section>
 
