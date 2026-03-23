@@ -737,9 +737,9 @@ function CategorySelector({ onSelect }: { onSelect: (cat: "auto" | "motorrad") =
   );
 }
 
-function ServiceSelector({ category, onSelect }: { category: "auto" | "motorrad"; onSelect: (s: FahrstundenService) => void }) {
+function ServiceSelector({ category, onSelect, services }: { category: "auto" | "motorrad"; onSelect: (s: FahrstundenService) => void; services: FahrstundenService[] }) {
   const [selected, setSelected] = useState(false);
-  const services = fahrstundenServices.filter((s) => s.category === category);
+  const filtered = services.filter((s) => s.category === category);
 
   if (selected) {
     return (
