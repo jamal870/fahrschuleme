@@ -19,6 +19,14 @@ const Index = () => {
             <a href="#sicherheit" className="hover:text-primary transition-colors">Sicherheit</a>
             <a href="#kategorien" className="hover:text-primary transition-colors">Kategorien</a>
             <a href="#kontakt" className="hover:text-primary transition-colors">Kontakt</a>
+            <a
+              href="https://buchen.drive-me.ch/grundkurs-buchen"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
+            >
+              Jetzt buchen
+            </a>
           </div>
         </nav>
 
