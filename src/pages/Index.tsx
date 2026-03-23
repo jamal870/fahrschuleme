@@ -39,13 +39,13 @@ const Index = () => {
               <strong className="text-foreground">Unser Ziel:</strong> Nicht nur bestehen – sondern sicher fahren.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a
-                href="#grundkurs"
+              <Link
+                to="/grundkurs-buchen"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
               >
                 <CalendarIcon className="w-4 h-4" />
                 Jetzt Grundkurs buchen
-              </a>
+              </Link>
               <a
                 href="#kontakt"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-opacity border border-border"
