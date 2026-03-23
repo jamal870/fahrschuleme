@@ -181,20 +181,20 @@ export default function ChatBot() {
     });
   };
 
-  const selectCourse = (partNum: number, course: CourseDate) => {
+  const selectCourse = async (partNum: number, course: CourseDate) => {
     setSelections((prev) => ({ ...prev, [partNum]: course }));
     addMsg({ role: "user", content: `${course.day}, ${course.date} – ${course.time}` });
 
     const nextPart = partNum + 1;
     if (nextPart <= 3) {
       setBookingStep(nextPart);
-      setTimeout(() => {
-        const part = motorradGrundkurse[nextPart - 1];
-        addMsg({
-          role: "bot",
-          content: `✅ Teil ${partNum} gewählt!\n\n**Schritt ${nextPart}/5** – 🏍️ **${part.title}**\n\n${part.description}\n\nWähle deinen Wunschtermin:`,
-          courseCards: { courses: part.dates, partNum: nextPart },
-        });
+      const courses = await loadCourseDates(nextPart);
+      setDbCourses(prev => ({ ...prev, [nextPart]: courses }));
+      addMsg({
+        role: "bot",
+        content: `✅ Teil ${partNum} gewählt!\n\n**Schritt ${nextPart}/5** – 🏍️ **MGK Teil ${nextPart} – Datum wählen**\n\nWähle deinen Wunschtermin:`,
+        courseCards: { courses, partNum: nextPart },
+      });
       }, 400);
     } else {
       setBookingStep(4);
