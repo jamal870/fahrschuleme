@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bike, Calendar, HelpCircle, ChevronRight } from "lucide-react";
+import { MessageCircle, X, Send, Bike, Calendar, HelpCircle, ChevronRight, User, Mail, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { faqData, motorradGrundkurse } from "@/data/courses";
 import type { CourseDate } from "@/data/courses";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
@@ -14,12 +16,29 @@ interface Message {
   buttons?: QuickButton[];
   courseCards?: CourseDate[];
   coursePartTitle?: string;
+  bookingForm?: BookingFormData;
 }
 
 interface QuickButton {
   label: string;
   icon?: React.ReactNode;
   action: string;
+}
+
+interface BookingFormData {
+  courseId: string;
+  coursePart: number;
+  courseDate: string;
+  courseTime: string;
+  courseLocation: string;
+}
+
+interface StudentData {
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  faNumber: string;
+  email: string;
 }
 
 const mainMenu: QuickButton[] = [
@@ -92,12 +111,22 @@ export default function ChatBot() {
       const allDates = motorradGrundkurse.flatMap((c) => c.dates);
       const course = allDates.find((d) => d.id === courseId);
       if (!course) return;
-      addMessage({ role: "user", content: `${course.date} buchen` });
+
+      // Find which part this course belongs to
+      const partNum = parseInt(courseId.split("-")[0].replace("mgk", ""));
+
+      addMessage({ role: "user", content: `${course.date} um ${course.time} buchen` });
       setTimeout(() => {
         addMessage({
           role: "bot",
-          content: `✅ Toll! Du möchtest den Kurs am **${course.date}** um **${course.time}** in **${course.location}** buchen.\n\nBitte kontaktiere uns zur Bestätigung:\n\n📞 Telefon oder ✉️ E-Mail an info@drive-me.ch\n\nWir freuen uns auf dich!`,
-          buttons: [{ label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" }],
+          content: `📝 Super! Du möchtest **MGK Teil ${partNum}** am **${course.date}** um **${course.time}** in **${course.location}** buchen.\n\nBitte fülle deine Daten aus:`,
+          bookingForm: {
+            courseId: course.id,
+            coursePart: partNum,
+            courseDate: course.date,
+            courseTime: course.time,
+            courseLocation: course.location,
+          },
         });
       }, 400);
     } else if (action === "show_faq") {
@@ -147,6 +176,28 @@ export default function ChatBot() {
     }
   };
 
+  const handleBookingSubmit = (formData: BookingFormData, studentData: StudentData) => {
+    addMessage({
+      role: "user",
+      content: `Buchung: ${studentData.firstName} ${studentData.lastName}, ${studentData.email}`,
+    });
+
+    setTimeout(() => {
+      addMessage({
+        role: "bot",
+        content: `✅ **Buchung erfolgreich!**\n\n🏍️ **MGK Teil ${formData.coursePart}**\n📅 ${formData.courseDate}\n🕐 ${formData.courseTime}\n📍 ${formData.courseLocation}\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 ${studentData.email}\n🪪 FA-Nr: ${studentData.faNumber}\n\nEine Bestätigung wird an **${studentData.email}** gesendet.\n\n💳 **Zahlungshinweis:** Bei Barzahlung erfolgt die Zahlung am Kurstag.`,
+        buttons: [
+          { label: "Weiteren Kurs buchen", icon: <Calendar className="w-3.5 h-3.5" />, action: "show_courses" },
+          { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+        ],
+      });
+
+      toast.success("Buchung bestätigt!", {
+        description: `MGK Teil ${formData.coursePart} am ${formData.courseDate} für ${studentData.firstName} ${studentData.lastName}`,
+      });
+    }, 600);
+  };
+
   const handleSend = () => {
     const text = input.trim();
     if (!text) return;
@@ -157,7 +208,6 @@ export default function ChatBot() {
     setTimeout(() => {
       if (lower.includes("kurs") || lower.includes("buchen") || lower.includes("termin") || lower.includes("datum")) {
         handleAction("show_courses");
-        // remove the duplicate user msg
         setMessages((prev) => prev.slice(0, -1));
       } else if (lower.includes("faq") || lower.includes("frage") || lower.includes("hilfe")) {
         handleAction("show_faq");
@@ -211,7 +261,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.9 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-4 right-4 z-50 w-[360px] max-w-[calc(100vw-2rem)] h-[560px] max-h-[calc(100vh-2rem)] rounded-2xl bg-card shadow-2xl border border-border flex flex-col overflow-hidden"
+            className="fixed bottom-4 right-4 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[600px] max-h-[calc(100vh-2rem)] rounded-2xl bg-card shadow-2xl border border-border flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="bg-primary text-primary-foreground px-5 py-4 flex items-center justify-between shrink-0">
@@ -240,7 +290,7 @@ export default function ChatBot() {
                       animate={{ opacity: 1, y: 0 }}
                       className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                     >
-                      <div className={`max-w-[85%] space-y-2`}>
+                      <div className="max-w-[85%] space-y-2">
                         <div
                           className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                             msg.role === "user"
@@ -258,6 +308,14 @@ export default function ChatBot() {
                               <CourseCard key={course.id} course={course} onBook={() => handleAction(`book_${course.id}`)} />
                             ))}
                           </div>
+                        )}
+
+                        {/* Booking Form */}
+                        {msg.bookingForm && (
+                          <BookingForm
+                            formData={msg.bookingForm}
+                            onSubmit={(studentData) => handleBookingSubmit(msg.bookingForm!, studentData)}
+                          />
                         )}
 
                         {/* Quick Buttons */}
@@ -310,8 +368,150 @@ export default function ChatBot() {
   );
 }
 
+function BookingForm({
+  formData,
+  onSubmit,
+}: {
+  formData: BookingFormData;
+  onSubmit: (data: StudentData) => void;
+}) {
+  const [studentData, setStudentData] = useState<StudentData>({
+    firstName: "",
+    lastName: "",
+    birthDate: "",
+    faNumber: "",
+    email: "",
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
+
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    if (!studentData.firstName.trim()) newErrors.firstName = "Pflichtfeld";
+    if (!studentData.lastName.trim()) newErrors.lastName = "Pflichtfeld";
+    if (!studentData.birthDate) newErrors.birthDate = "Pflichtfeld";
+    if (!studentData.faNumber.trim()) newErrors.faNumber = "Pflichtfeld";
+    if (!studentData.email.trim()) {
+      newErrors.email = "Pflichtfeld";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(studentData.email.trim())) {
+      newErrors.email = "Ungültige E-Mail";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitted) return;
+    if (!validate()) return;
+    setSubmitted(true);
+    onSubmit({
+      firstName: studentData.firstName.trim(),
+      lastName: studentData.lastName.trim(),
+      birthDate: studentData.birthDate,
+      faNumber: studentData.faNumber.trim(),
+      email: studentData.email.trim(),
+    });
+  };
+
+  if (submitted) {
+    return (
+      <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
+        <p className="text-xs font-medium text-accent">✅ Daten übermittelt</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.form
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      onSubmit={handleSubmit}
+      className="bg-card border border-border rounded-xl p-4 space-y-3"
+    >
+      <div className="flex items-center gap-2 mb-1">
+        <User className="w-4 h-4 text-primary" />
+        <p className="text-xs font-semibold text-foreground">Schülerdaten</p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <Label className="text-[10px] text-muted-foreground">Vorname *</Label>
+          <Input
+            value={studentData.firstName}
+            onChange={(e) => setStudentData((d) => ({ ...d, firstName: e.target.value }))}
+            placeholder="Max"
+            className="h-8 text-xs"
+            maxLength={50}
+          />
+          {errors.firstName && <p className="text-[10px] text-destructive mt-0.5">{errors.firstName}</p>}
+        </div>
+        <div>
+          <Label className="text-[10px] text-muted-foreground">Nachname *</Label>
+          <Input
+            value={studentData.lastName}
+            onChange={(e) => setStudentData((d) => ({ ...d, lastName: e.target.value }))}
+            placeholder="Muster"
+            className="h-8 text-xs"
+            maxLength={50}
+          />
+          {errors.lastName && <p className="text-[10px] text-destructive mt-0.5">{errors.lastName}</p>}
+        </div>
+      </div>
+
+      <div>
+        <Label className="text-[10px] text-muted-foreground">Geburtsdatum *</Label>
+        <Input
+          type="date"
+          value={studentData.birthDate}
+          onChange={(e) => setStudentData((d) => ({ ...d, birthDate: e.target.value }))}
+          className="h-8 text-xs"
+        />
+        {errors.birthDate && <p className="text-[10px] text-destructive mt-0.5">{errors.birthDate}</p>}
+      </div>
+
+      <div>
+        <Label className="text-[10px] text-muted-foreground flex items-center gap-1">
+          <Hash className="w-3 h-3" /> FA-Nummer (Lernfahrausweis) *
+        </Label>
+        <Input
+          value={studentData.faNumber}
+          onChange={(e) => setStudentData((d) => ({ ...d, faNumber: e.target.value }))}
+          placeholder="z.B. CH-1234567890"
+          className="h-8 text-xs"
+          maxLength={30}
+        />
+        {errors.faNumber && <p className="text-[10px] text-destructive mt-0.5">{errors.faNumber}</p>}
+      </div>
+
+      <div>
+        <Label className="text-[10px] text-muted-foreground flex items-center gap-1">
+          <Mail className="w-3 h-3" /> E-Mail-Adresse *
+        </Label>
+        <Input
+          type="email"
+          value={studentData.email}
+          onChange={(e) => setStudentData((d) => ({ ...d, email: e.target.value }))}
+          placeholder="max@beispiel.ch"
+          className="h-8 text-xs"
+          maxLength={100}
+        />
+        {errors.email && <p className="text-[10px] text-destructive mt-0.5">{errors.email}</p>}
+      </div>
+
+      <Button type="submit" size="sm" className="w-full h-8 text-xs gap-1.5 rounded-lg">
+        <Send className="w-3 h-3" />
+        Kurs verbindlich buchen
+      </Button>
+
+      <p className="text-[9px] text-muted-foreground text-center">
+        💳 Bei Barzahlung erfolgt die Zahlung am Kurstag.
+      </p>
+    </motion.form>
+  );
+}
+
 function MessageContent({ content }: { content: string }) {
-  // Simple markdown-like rendering for bold text and newlines
   const parts = content.split(/(\*\*[^*]+\*\*)/g);
   return (
     <>
@@ -349,7 +549,9 @@ function CourseCard({ course, onBook }: { course: CourseDate; onBook: () => void
         </div>
         <div className="text-right space-y-1">
           <p className="font-bold text-sm">CHF {course.price.toFixed(2)}</p>
-          <span className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-full bg-accent/15 text-accent">
+          <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full ${
+            course.spotsAvailable <= 2 ? "bg-destructive/15 text-destructive" : "bg-accent/15 text-accent"
+          }`}>
             {course.spotsAvailable} Plätze frei
           </span>
         </div>
