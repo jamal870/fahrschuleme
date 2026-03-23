@@ -346,7 +346,7 @@ export default function ChatBot() {
         }
       };
 
-      // If online payment, redirect to Stripe
+      // If online payment, open Stripe and poll for success
       if (isOnlinePayment) {
         const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
           body: {
@@ -367,15 +367,50 @@ export default function ChatBot() {
           throw new Error('Zahlung konnte nicht initialisiert werden');
         }
 
-        setBookingStep(0);
+        window.open(data.url, '_blank');
+
         addMsg({
           role: "bot",
-          content: `💳 **Weiterleitung zur Zahlung...**\n\nDu wirst jetzt zur sicheren Zahlungsseite weitergeleitet.`,
+          content: `⏳ **Warte auf Zahlung...**\n\nStripe Checkout wurde geöffnet. Bitte schliesse die Zahlung ab.`,
         });
 
-        window.open(data.url, '_blank');
+        // Start polling for payment status
+        const pollPayment = async () => {
+          const maxAttempts = 60; // 5 min max
+          for (let i = 0; i < maxAttempts; i++) {
+            await new Promise(r => setTimeout(r, 5000));
+            const { data: updatedBooking } = await supabase
+              .from('bookings')
+              .select('status')
+              .eq('id', booking.id)
+              .single();
+            if (updatedBooking?.status === 'confirmed') {
+              await sendConfirmationEmail();
+              setBookingStep(0);
+              addMsg({
+                role: "bot",
+                content: `✅ **Zahlung erfolgreich!**\n\n🎉 Buchung bestätigt!\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Bestätigung an **${studentData.email}**\n💰 CHF ${total.toFixed(2)}\n\nVielen Dank! 🏍️`,
+                buttons: [
+                  { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
+                  { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+                ],
+              });
+              toast.success("Zahlung erfolgreich!");
+              return;
+            }
+          }
+          addMsg({
+            role: "bot",
+            content: `⚠️ Zahlung konnte nicht bestätigt werden. Bitte kontaktiere uns.`,
+            buttons: [{ label: "Kontakt", icon: <MessageCircle className="w-3.5 h-3.5" />, action: "contact" }],
+          });
+        };
+        pollPayment();
         return;
       }
+
+      // Non-online: send email immediately
+      await sendConfirmationEmail();
 
       setBookingStep(0);
       addMsg({
