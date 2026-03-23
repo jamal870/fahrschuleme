@@ -134,23 +134,31 @@ export const instructors: Instructor[] = [
 export const faqData = [
   {
     question: "Was ist der Motorrad Grundkurs (MGK)?",
-    answer: "Der Motorrad Grundkurs ist ein obligatorischer Kurs in der Schweiz, bestehend aus **4 Teilen** (je 4 Stunden). Er ist Voraussetzung für den Lernfahrausweis der Kategorie A1 oder A. Die Kursteile müssen **in der richtigen Reihenfolge** absolviert werden.",
+    answer: "Der Motorrad Grundkurs ist ein obligatorischer Kurs in der Schweiz, bestehend aus **3 Teilen** (je 4 Stunden). Er ist Voraussetzung für den Lernfahrausweis der Kategorie A1 oder A. Die Kursteile müssen **in der richtigen Reihenfolge** absolviert werden.",
   },
   {
     question: "Wie viel kostet der Grundkurs?",
     answer: "Jeder Kursteil kostet **CHF 160.00**. Der gesamte Grundkurs (3 Teile) kostet somit **CHF 480.00**.",
   },
   {
-    question: "Wo finden die Kurse statt?",
-    answer: "Unsere Motorrad Grundkurse finden in **Wettingen** statt.",
+    question: "Wo finden die Kurse statt? (Treffpunkt)",
+    answer: "Unsere Motorrad Grundkurse finden in **Wettingen** statt.\n\n📍 **Treffpunkt:**\nLandstrasse 99\nCenterpassage – Ottos Rampe\n5430 Wettingen",
   },
   {
-    question: "Welche Voraussetzungen brauche ich?",
-    answer: "Du brauchst:\n- Einen gültigen **Lernfahrausweis** Kategorie A1 oder A\n- **Motorradhelm** (obligatorisch)\n- **Handschuhe und festes Schuhwerk**\n- Wetterangepasste Kleidung",
+    question: "Was muss ich zum Kurs mitbringen?",
+    answer: "Du brauchst:\n- **Eigenes Motorrad** in technisch einwandfreiem Zustand (aufgetankt, Profiltiefe > 1.6 mm)\n- **L-Schild** am Motorrad angebracht\n- **Motorradbekleidung** mit Protektoren (Knie, Ellenbogen, Schulter)\n- **Helm, Handschuhe und geeignete Schuhe/Stiefel**\n- **Regenschutzbekleidung** (z.B. Overall) für schlechtes Wetter\n- **Personalausweis** (ID oder Pass) und **Lernfahrausweis** am ersten Kurstag!\n\n⚠️ Du musst dich sicher im Verkehr bewegen können.",
   },
   {
     question: "Kann ich einen Kursteil nachholen?",
     answer: "Ja, du kannst einzelne Kursteile an einem anderen Datum nachholen. Melde dich einfach bei uns und wir finden einen passenden Termin für dich.",
+  },
+  {
+    question: "Stornierung & Umbuchung",
+    answer: "Die Anmeldung ist **verbindlich**. Umbuchungen bzw. Stornierungen sind bis **5 Arbeitstage** vor Kursbeginn schriftlich an **info@drive-me.ch** möglich. Danach wird die volle Kursgebühr in Rechnung gestellt.\n\nFahrstunden müssen **24 Stunden** vorher abgesagt werden.",
+  },
+  {
+    question: "Wie kann ich bezahlen?",
+    answer: "Du kannst **bar oder mit Karte vor Ort** am ersten Kurstag bezahlen.\n\n🏦 **Banküberweisung:**\nFahrschule Drive me GmbH\nBank: PostFinance\nKontonummer: 15-263666-6\nIBAN: CH9509000000152636666\nBIC: POFICHBEXXX",
   },
   {
     question: "Wie kann ich mich anmelden?",
