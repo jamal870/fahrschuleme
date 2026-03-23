@@ -351,22 +351,28 @@ function CourseStepContent({
 function ConfirmationStep({
   selectedCourses,
   totalPrice,
-  faNumber,
-  setFaNumber,
-  birthDate,
-  setBirthDate,
-  category,
-  setCategory,
+  firstName, setFirstName,
+  lastName, setLastName,
+  email, setEmail,
+  phone, setPhone,
+  address, setAddress,
+  faNumber, setFaNumber,
+  birthDate, setBirthDate,
+  category, setCategory,
+  paymentMethod, setPaymentMethod,
   errors,
 }: {
   selectedCourses: { part: number; course: CourseDate }[];
   totalPrice: number;
-  faNumber: string;
-  setFaNumber: (v: string) => void;
-  birthDate: string;
-  setBirthDate: (v: string) => void;
-  category: string;
-  setCategory: (v: string) => void;
+  firstName: string; setFirstName: (v: string) => void;
+  lastName: string; setLastName: (v: string) => void;
+  email: string; setEmail: (v: string) => void;
+  phone: string; setPhone: (v: string) => void;
+  address: string; setAddress: (v: string) => void;
+  faNumber: string; setFaNumber: (v: string) => void;
+  birthDate: string; setBirthDate: (v: string) => void;
+  category: string; setCategory: (v: string) => void;
+  paymentMethod: string; setPaymentMethod: (v: string) => void;
   errors: Record<string, string>;
 }) {
   return (
@@ -409,59 +415,68 @@ function ConfirmationStep({
         </div>
       </div>
 
-      {/* Required Details */}
+      {/* Personal Details */}
       <div className="bg-muted/50 rounded-xl p-6">
-        <h3 className="font-semibold text-primary mb-4">Pflichtangaben / Required Details</h3>
+        <h3 className="font-semibold text-primary mb-4">Persönliche Daten</h3>
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="fa-number" className="text-sm font-medium">
-              FA-Nummer (Lernfahrausweis-Nummer) <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="fa-number"
-              value={faNumber}
-              onChange={(e) => setFaNumber(e.target.value)}
-              placeholder="z.B. CH-1234567890"
-              maxLength={30}
-              className="mt-1"
-            />
-            <p className="text-xs text-muted-foreground mt-1">
-              Pflichtfeld – Buchung ohne FA-Nummer nicht möglich.
-            </p>
-            {errors.faNumber && (
-              <p className="text-xs text-destructive mt-1">{errors.faNumber}</p>
-            )}
+            <Label className="text-sm font-medium">Vorname <span className="text-destructive">*</span></Label>
+            <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Max" className="mt-1" />
+            {errors.firstName && <p className="text-xs text-destructive mt-1">{errors.firstName}</p>}
           </div>
-
           <div>
-            <Label htmlFor="birth-date" className="text-sm font-medium">
-              Geburtsdatum <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="birth-date"
-              type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              className="mt-1"
-            />
-            {errors.birthDate && (
-              <p className="text-xs text-destructive mt-1">{errors.birthDate}</p>
-            )}
+            <Label className="text-sm font-medium">Nachname <span className="text-destructive">*</span></Label>
+            <Input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Muster" className="mt-1" />
+            {errors.lastName && <p className="text-xs text-destructive mt-1">{errors.lastName}</p>}
           </div>
-
+          <div>
+            <Label className="text-sm font-medium">E-Mail <span className="text-destructive">*</span></Label>
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="max@example.com" className="mt-1" />
+            {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
+          </div>
+          <div>
+            <Label className="text-sm font-medium">Telefon <span className="text-destructive">*</span></Label>
+            <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+41 79 123 45 67" className="mt-1" />
+            {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
+          </div>
+          <div className="sm:col-span-2">
+            <Label className="text-sm font-medium">Adresse <span className="text-destructive">*</span></Label>
+            <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Musterstrasse 1, 5400 Baden" className="mt-1" />
+            {errors.address && <p className="text-xs text-destructive mt-1">{errors.address}</p>}
+          </div>
+          <div>
+            <Label className="text-sm font-medium">Geburtsdatum <span className="text-destructive">*</span></Label>
+            <Input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mt-1" />
+            {errors.birthDate && <p className="text-xs text-destructive mt-1">{errors.birthDate}</p>}
+          </div>
+          <div>
+            <Label className="text-sm font-medium">FA-Nummer <span className="text-destructive">*</span></Label>
+            <Input value={faNumber} onChange={(e) => setFaNumber(e.target.value)} placeholder="z.B. CH-1234567890" maxLength={30} className="mt-1" />
+            {errors.faNumber && <p className="text-xs text-destructive mt-1">{errors.faNumber}</p>}
+          </div>
           <div>
             <Label className="text-sm font-medium">Kategorie</Label>
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="mt-1">
-                <SelectValue />
-              </SelectTrigger>
+              <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="A (Motorrad)">A (Motorrad)</SelectItem>
                 <SelectItem value="A1 (Leichtmotorrad)">A1 (Leichtmotorrad)</SelectItem>
                 <SelectItem value="A2">A2</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div>
+            <Label className="text-sm font-medium">Zahlungsmethode <span className="text-destructive">*</span></Label>
+            <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+              <SelectTrigger className="mt-1"><SelectValue placeholder="Bitte wählen" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Banküberweisung">Banküberweisung</SelectItem>
+                <SelectItem value="Barzahlung am Kurstag">Barzahlung am Kurstag</SelectItem>
+                <SelectItem value="Kreditkarte / Debitkarte">Kreditkarte / Debitkarte</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.paymentMethod && <p className="text-xs text-destructive mt-1">{errors.paymentMethod}</p>}
           </div>
         </div>
 
@@ -471,9 +486,6 @@ function ConfirmationStep({
             <span>
               <strong>Zahlungshinweis:</strong> Bei Barzahlung erhalten Sie eine Buchungsbestätigung. Die Zahlung erfolgt am Kurstag.
             </span>
-          </p>
-          <p className="text-xs text-muted-foreground mt-1 ml-6 italic">
-            Payment notice: Cash payers receive confirmation. Payment is due on course day.
           </p>
         </div>
       </div>
