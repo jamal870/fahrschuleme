@@ -548,37 +548,39 @@ export default function ChatBot() {
 
       if (bookingError) throw bookingError;
 
-      // Send confirmation email
-      try {
-        await supabase.functions.invoke('send-transactional-email', {
-          body: {
-            templateName: 'fahrstunden-confirmation',
-            recipientEmail: studentData.email,
-            idempotencyKey: `fahrstunden-confirm-${booking.id}`,
-            templateData: {
-              firstName: studentData.firstName,
-              lastName: studentData.lastName,
-              address: studentData.address,
-              birthDate: studentData.birthDate,
-              faNumber: studentData.faNumber,
-              phone: studentData.phone,
-              email: studentData.email,
-              category: fsService.category,
-              serviceName: fsService.name,
-              packageName: fsPackage?.name,
-              duration: fsService.duration,
-              totalPrice: price.toFixed(2),
-              paymentMethod: selectedPaymentMethod,
-              bookingId: booking.id,
-              bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+      // Prepare email send function
+      const sendConfirmationEmail = async () => {
+        try {
+          await supabase.functions.invoke('send-transactional-email', {
+            body: {
+              templateName: 'fahrstunden-confirmation',
+              recipientEmail: studentData.email,
+              idempotencyKey: `fahrstunden-confirm-${booking.id}`,
+              templateData: {
+                firstName: studentData.firstName,
+                lastName: studentData.lastName,
+                address: studentData.address,
+                birthDate: studentData.birthDate,
+                faNumber: studentData.faNumber,
+                phone: studentData.phone,
+                email: studentData.email,
+                category: fsService.category,
+                serviceName: fsService.name,
+                packageName: fsPackage?.name,
+                duration: fsService.duration,
+                totalPrice: price.toFixed(2),
+                paymentMethod: selectedPaymentMethod,
+                bookingId: booking.id,
+                bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+              },
             },
-          },
-        });
-      } catch (emailErr) {
-        console.error('Email send error:', emailErr);
-      }
+          });
+        } catch (emailErr) {
+          console.error('Email send error:', emailErr);
+        }
+      };
 
-      // If online payment, redirect to Stripe
+      // If online payment, open Stripe and poll
       if (isOnlinePayment) {
         const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
           body: {
@@ -599,15 +601,49 @@ export default function ChatBot() {
           throw new Error('Zahlung konnte nicht initialisiert werden');
         }
 
-        setFsStep(0);
+        window.open(data.url, '_blank');
+
         addMsg({
           role: "bot",
-          content: `💳 **Weiterleitung zur Zahlung...**\n\nDu wirst jetzt zur sicheren Zahlungsseite weitergeleitet.`,
+          content: `⏳ **Warte auf Zahlung...**\n\nStripe Checkout wurde geöffnet. Bitte schliesse die Zahlung ab.`,
         });
 
-        window.open(data.url, '_blank');
+        const pollPayment = async () => {
+          const maxAttempts = 60;
+          for (let i = 0; i < maxAttempts; i++) {
+            await new Promise(r => setTimeout(r, 5000));
+            const { data: updatedBooking } = await supabase
+              .from('bookings')
+              .select('status')
+              .eq('id', booking.id)
+              .single();
+            if (updatedBooking?.status === 'confirmed') {
+              await sendConfirmationEmail();
+              setFsStep(0);
+              addMsg({
+                role: "bot",
+                content: `✅ **Zahlung erfolgreich!**\n\n🎉 Buchung bestätigt!\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Bestätigung an **${studentData.email}**\n🚗 ${fsService.name}\n💰 CHF ${price.toFixed(2)}\n\nVielen Dank! 🙌`,
+                buttons: [
+                  { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
+                  { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+                ],
+              });
+              toast.success("Zahlung erfolgreich!");
+              return;
+            }
+          }
+          addMsg({
+            role: "bot",
+            content: `⚠️ Zahlung konnte nicht bestätigt werden. Bitte kontaktiere uns.`,
+            buttons: [{ label: "Kontakt", icon: <MessageCircle className="w-3.5 h-3.5" />, action: "contact" }],
+          });
+        };
+        pollPayment();
         return;
       }
+
+      // Non-online: send email immediately
+      await sendConfirmationEmail();
 
       setFsStep(0);
       addMsg({
