@@ -279,7 +279,7 @@ export default function ChatBot() {
     const total = sels.reduce((s, { course }) => s + course.price, 0);
 
     try {
-      const isOnlinePayment = selectedPaymentMethod === "Kreditkarte / Debitkarte";
+      const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
 
       // Save booking to DB
       const { data: booking, error: bookingError } = await supabase
