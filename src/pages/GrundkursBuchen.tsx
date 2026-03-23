@@ -86,10 +86,17 @@ export default function GrundkursBuchen() {
     setErrors({});
     setIsSubmitting(true);
 
-    const selectedCourses = Object.values(selections).filter(Boolean) as CourseDate[];
+    const selectedCoursesWithParts = Object.entries(selections)
+      .filter(([, v]) => v !== null)
+      .map(([part, course]) => ({ part: parseInt(part), course: course! }));
+    const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
     const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
 
     try {
+      // Determine initial status based on payment method
+      const isOnlinePayment = paymentMethod === "Kreditkarte / Debitkarte";
+      const initialStatus = isOnlinePayment ? "pending_payment" : "confirmed";
+
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
         .insert({
@@ -103,6 +110,7 @@ export default function GrundkursBuchen() {
           birth_date: birthDate,
           payment_method: paymentMethod,
           total_price: total,
+          status: initialStatus,
         })
         .select('id')
         .single();
@@ -115,6 +123,32 @@ export default function GrundkursBuchen() {
           course_date_id: course.id,
         });
         await supabase.rpc('decrement_spots', { course_id: course.id });
+      }
+
+      // If online payment, redirect to Stripe Checkout
+      if (isOnlinePayment) {
+        const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
+          body: {
+            bookingId: booking.id,
+            email,
+            customerName: `${firstName} ${lastName}`,
+            courses: selectedCoursesWithParts.map(({ part, course }) => ({
+              part,
+              date: course.date,
+              time: course.time,
+              price: course.price,
+            })),
+            totalPrice: total,
+          },
+        });
+
+        if (fnError || !data?.url) {
+          throw new Error(fnError?.message || 'Zahlung konnte nicht initialisiert werden');
+        }
+
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+        return;
       }
 
       toast.success("Buchung erfolgreich!", {

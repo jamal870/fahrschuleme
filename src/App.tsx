@@ -7,6 +7,7 @@ import Index from "./pages/Index.tsx";
 import GrundkursBuchen from "./pages/GrundkursBuchen.tsx";
 import Admin from "./pages/Admin.tsx";
 import AdminLogin from "./pages/AdminLogin.tsx";
+import BuchungErfolgreich from "./pages/BuchungErfolgreich.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/grundkurs-buchen" element={<GrundkursBuchen />} />
+          <Route path="/buchung-erfolgreich" element={<BuchungErfolgreich />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
