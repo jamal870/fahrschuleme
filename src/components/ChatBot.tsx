@@ -59,9 +59,8 @@ interface FahrstundenSummary {
 }
 
 const PAYMENT_METHODS = [
-  { id: "bank", label: "Direkte Banküberweisung", desc: "Bitte überweisen Sie den Betrag direkt auf unser Bankkonto. Verwenden Sie Ihren Vor- und Nachnamen als Zahlungsreferenz." },
-  { id: "cash", label: "Barzahlung am Kurstag", desc: "Bei Barzahlung erhalten Sie eine Buchungsbestätigung. Die Zahlung erfolgt am ersten Kurstag." },
-  { id: "card", label: "Kreditkarte / Debitkarte", desc: "Bezahlung mit Kredit- oder Debitkarte." },
+  { id: "cash", label: "Barzahlung am Kurstag", desc: "Schüler hat bar bezahlt. Guthaben bleibt gleich oder wird aufgeladen.", icon: "💵" },
+  { id: "card", label: "Online bezahlen (Stripe/Twint)", desc: "Sofort bezahlen per Karte oder Twint. Stripe Checkout öffnet sich.", icon: "💳" },
 ];
 
 const mainMenu: QuickButton[] = [
