@@ -348,8 +348,11 @@ export default function GrundkursBuchen() {
               className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground"
             >
               {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              Jetzt Buchen & Zur Kasse
-              <ChevronRight className="w-4 h-4" />
+              {paymentMethod === "Online bezahlen (Stripe/Twint)" ? (
+                <>💳 Jetzt bezahlen</>
+              ) : (
+                <>Jetzt Buchen <ChevronRight className="w-4 h-4" /></>
+              )}
             </Button>
           )}
         </div>
