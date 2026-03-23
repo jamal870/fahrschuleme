@@ -195,7 +195,6 @@ export default function ChatBot() {
         content: `✅ Teil ${partNum} gewählt!\n\n**Schritt ${nextPart}/5** – 🏍️ **MGK Teil ${nextPart} – Datum wählen**\n\nWähle deinen Wunschtermin:`,
         courseCards: { courses, partNum: nextPart },
       });
-      }, 400);
     } else {
       setBookingStep(4);
       setTimeout(() => {
