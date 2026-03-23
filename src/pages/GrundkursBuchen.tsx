@@ -136,15 +136,23 @@ export default function GrundkursBuchen() {
               templateData: {
                 firstName,
                 lastName,
+                address,
+                birthDate,
+                faNumber,
+                phone,
+                email,
+                category,
                 courses: selectedCoursesWithParts.map(({ part, course }) => ({
                   part,
                   date: course.date,
                   time: course.time,
                   location: course.location,
+                  price: course.price,
                 })),
                 totalPrice: total.toFixed(2),
                 paymentMethod,
                 bookingId: booking.id,
+                bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
               },
             },
           });
