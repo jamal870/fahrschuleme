@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bike, Calendar, HelpCircle, ChevronRight, User, Mail, Hash } from "lucide-react";
+import { X, Send, Bike, Calendar, HelpCircle, ChevronRight, MessageCircle, User, Mail, Hash, Phone, MapPin, CreditCard, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,14 +9,17 @@ import { faqData, motorradGrundkurse } from "@/data/courses";
 import type { CourseDate } from "@/data/courses";
 import { toast } from "sonner";
 
+// ─── Types ───────────────────────────────────────────────────
+
 interface Message {
   id: string;
   role: "user" | "bot";
   content: string;
   buttons?: QuickButton[];
-  courseCards?: CourseDate[];
-  coursePartTitle?: string;
-  bookingForm?: BookingFormData;
+  courseCards?: { courses: CourseDate[]; partNum: number };
+  studentForm?: boolean;
+  paymentStep?: boolean;
+  confirmationSummary?: BookingSummary;
 }
 
 interface QuickButton {
@@ -25,27 +28,35 @@ interface QuickButton {
   action: string;
 }
 
-interface BookingFormData {
-  courseId: string;
-  coursePart: number;
-  courseDate: string;
-  courseTime: string;
-  courseLocation: string;
-}
-
-interface StudentData {
+interface StudentFormData {
   firstName: string;
   lastName: string;
+  address: string;
   birthDate: string;
   faNumber: string;
   email: string;
+  phone: string;
 }
 
+interface BookingSummary {
+  selections: { part: number; course: CourseDate }[];
+  student: StudentFormData;
+  paymentMethod: string;
+}
+
+const PAYMENT_METHODS = [
+  { id: "bank", label: "Direkte Banküberweisung", desc: "Bitte überweisen Sie den Betrag direkt auf unser Bankkonto. Verwenden Sie Ihren Vor- und Nachnamen als Zahlungsreferenz." },
+  { id: "cash", label: "Barzahlung am Kurstag", desc: "Bei Barzahlung erhalten Sie eine Buchungsbestätigung. Die Zahlung erfolgt am ersten Kurstag." },
+  { id: "card", label: "Kreditkarte / Debitkarte", desc: "Bezahlung mit Kredit- oder Debitkarte." },
+];
+
 const mainMenu: QuickButton[] = [
-  { label: "Kurse anzeigen", icon: <Calendar className="w-3.5 h-3.5" />, action: "show_courses" },
+  { label: "Kurs buchen", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
   { label: "FAQ", icon: <HelpCircle className="w-3.5 h-3.5" />, action: "show_faq" },
   { label: "Kontakt", icon: <MessageCircle className="w-3.5 h-3.5" />, action: "contact" },
 ];
+
+// ─── Main Component ──────────────────────────────────────────
 
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
@@ -53,113 +64,181 @@ export default function ChatBot() {
   const [input, setInput] = useState("");
   const [initialized, setInitialized] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Booking state
+  const [bookingStep, setBookingStep] = useState<number>(0); // 0=idle, 1-3=selecting part, 4=form, 5=payment, 6=confirm
+  const [selections, setSelections] = useState<Record<number, CourseDate>>({});
+  const [studentData, setStudentData] = useState<StudentFormData | null>(null);
 
   useEffect(() => {
     if (open && !initialized) {
-      setMessages([
-        {
-          id: "welcome",
-          role: "bot",
-          content: "Hoi! 👋 Willkommen bei **Drive me Fahrschule**. Ich bin dein Assistent für Motorrad Grundkurse. Wie kann ich dir helfen?",
-          buttons: mainMenu,
-        },
-      ]);
+      setMessages([{
+        id: "welcome",
+        role: "bot",
+        content: "Hoi! 👋 Willkommen bei **Drive me Fahrschule**.\n\nIch helfe dir bei der Buchung deiner Motorrad Grundkurse (Teil 1–3). Wie kann ich dir helfen?",
+        buttons: mainMenu,
+      }]);
       setInitialized(true);
     }
   }, [open, initialized]);
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      setTimeout(() => {
+        if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }, 100);
     }
   }, [messages]);
 
-  const addMessage = (msg: Omit<Message, "id">) => {
+  const addMsg = (msg: Omit<Message, "id">) => {
     setMessages((prev) => [...prev, { ...msg, id: crypto.randomUUID() }]);
   };
 
+  // ── Start booking flow ──
+  const startBooking = () => {
+    setBookingStep(1);
+    setSelections({});
+    setStudentData(null);
+    addMsg({ role: "user", content: "Kurs buchen" });
+    setTimeout(() => {
+      const part = motorradGrundkurse[0];
+      addMsg({
+        role: "bot",
+        content: `**Schritt 1/5** – 🏍️ **${part.title}**\n\n${part.description}\n\nWähle deinen Wunschtermin:`,
+        courseCards: { courses: part.dates, partNum: 1 },
+      });
+    }, 400);
+  };
+
+  // ── Select a course date ──
+  const selectCourse = (partNum: number, course: CourseDate) => {
+    setSelections((prev) => ({ ...prev, [partNum]: course }));
+    addMsg({ role: "user", content: `${course.day}, ${course.date} – ${course.time}` });
+
+    const nextPart = partNum + 1;
+    if (nextPart <= 3) {
+      setBookingStep(nextPart);
+      setTimeout(() => {
+        const part = motorradGrundkurse[nextPart - 1];
+        addMsg({
+          role: "bot",
+          content: `✅ Teil ${partNum} gewählt!\n\n**Schritt ${nextPart}/5** – 🏍️ **${part.title}**\n\n${part.description}\n\nWähle deinen Wunschtermin:`,
+          courseCards: { courses: part.dates, partNum: nextPart },
+        });
+      }, 400);
+    } else {
+      // All 3 parts selected → show form
+      setBookingStep(4);
+      setTimeout(() => {
+        addMsg({
+          role: "bot",
+          content: `✅ Alle 3 Kursteile gewählt!\n\n**Schritt 4/5** – 📝 Bitte fülle deine persönlichen Daten aus:`,
+          studentForm: true,
+        });
+      }, 400);
+    }
+  };
+
+  // ── Student form submitted ──
+  const handleStudentSubmit = (data: StudentFormData) => {
+    setStudentData(data);
+    setBookingStep(5);
+    addMsg({ role: "user", content: `${data.firstName} ${data.lastName}, ${data.email}` });
+    setTimeout(() => {
+      addMsg({
+        role: "bot",
+        content: `✅ Daten erfasst!\n\n**Schritt 5/5** – 💳 Wähle deine Bezahlmethode:`,
+        paymentStep: true,
+      });
+    }, 400);
+  };
+
+  // ── Payment selected ──
+  const handlePaymentSelect = (methodId: string) => {
+    const method = PAYMENT_METHODS.find((m) => m.id === methodId);
+    if (!method || !studentData) return;
+    setBookingStep(6);
+
+    const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
+    addMsg({ role: "user", content: method.label });
+
+    setTimeout(() => {
+      addMsg({
+        role: "bot",
+        content: `Bitte überprüfe deine Buchung:`,
+        confirmationSummary: {
+          selections: sels,
+          student: studentData,
+          paymentMethod: method.label,
+        },
+      });
+    }, 400);
+  };
+
+  // ── Final confirm ──
+  const handleFinalConfirm = () => {
+    if (!studentData) return;
+    const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
+    const total = sels.reduce((s, { course }) => s + course.price, 0);
+
+    setBookingStep(0);
+    addMsg({
+      role: "bot",
+      content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n💰 Gesamtbetrag: **CHF ${total.toFixed(2)}**\n\nVielen Dank und bis bald auf dem Motorrad! 🏍️`,
+      buttons: [
+        { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
+        { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+      ],
+    });
+
+    toast.success("Buchung bestätigt!", {
+      description: `${sels.length} Kursteile für CHF ${total.toFixed(2)} – Bestätigung an ${studentData.email}`,
+    });
+  };
+
+  // ── Generic actions ──
   const handleAction = (action: string) => {
-    if (action === "show_courses") {
-      addMessage({ role: "user", content: "Kurse anzeigen" });
+    if (action === "start_booking") {
+      startBooking();
+    } else if (action === "show_courses") {
+      addMsg({ role: "user", content: "Kurse anzeigen" });
       setTimeout(() => {
-        addMessage({
+        addMsg({
           role: "bot",
-          content: "Hier sind unsere **Motorrad Grundkurse**. Welchen Teil möchtest du buchen?",
-          buttons: motorradGrundkurse.map((c) => ({
-            label: `Teil ${c.part}`,
-            icon: <Bike className="w-3.5 h-3.5" />,
-            action: `course_part_${c.part}`,
-          })),
-        });
-      }, 400);
-    } else if (action.startsWith("course_part_")) {
-      const partNum = parseInt(action.split("_")[2]);
-      const part = motorradGrundkurse.find((c) => c.part === partNum);
-      if (!part) return;
-      addMessage({ role: "user", content: `Teil ${partNum} anzeigen` });
-      setTimeout(() => {
-        addMessage({
-          role: "bot",
-          content: `🏍️ **${part.title}**\n\n${part.description}`,
-          courseCards: part.dates,
-          coursePartTitle: part.title,
-        });
-      }, 400);
-    } else if (action.startsWith("book_")) {
-      const courseId = action.replace("book_", "");
-      const allDates = motorradGrundkurse.flatMap((c) => c.dates);
-      const course = allDates.find((d) => d.id === courseId);
-      if (!course) return;
-
-      // Find which part this course belongs to
-      const partNum = parseInt(courseId.split("-")[0].replace("mgk", ""));
-
-      addMessage({ role: "user", content: `${course.date} um ${course.time} buchen` });
-      setTimeout(() => {
-        addMessage({
-          role: "bot",
-          content: `📝 Super! Du möchtest **MGK Teil ${partNum}** am **${course.date}** um **${course.time}** in **${course.location}** buchen.\n\nBitte fülle deine Daten aus:`,
-          bookingForm: {
-            courseId: course.id,
-            coursePart: partNum,
-            courseDate: course.date,
-            courseTime: course.time,
-            courseLocation: course.location,
-          },
+          content: "Hier sind unsere **Motorrad Grundkurse**. Möchtest du gleich buchen?",
+          buttons: [
+            { label: "Jetzt buchen (Teil 1–3)", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
+            ...mainMenu.filter((m) => m.action !== "start_booking"),
+          ],
         });
       }, 400);
     } else if (action === "show_faq") {
-      addMessage({ role: "user", content: "FAQ anzeigen" });
+      addMsg({ role: "user", content: "FAQ anzeigen" });
       setTimeout(() => {
-        addMessage({
+        addMsg({
           role: "bot",
           content: "Hier sind die häufigsten Fragen. Wähle eine aus:",
-          buttons: faqData.map((f, i) => ({
-            label: f.question,
-            action: `faq_${i}`,
-          })),
+          buttons: faqData.map((f, i) => ({ label: f.question, action: `faq_${i}` })),
         });
       }, 400);
     } else if (action.startsWith("faq_")) {
-      const idx = parseInt(action.split("_")[1]);
-      const faq = faqData[idx];
+      const faq = faqData[parseInt(action.split("_")[1])];
       if (!faq) return;
-      addMessage({ role: "user", content: faq.question });
+      addMsg({ role: "user", content: faq.question });
       setTimeout(() => {
-        addMessage({
+        addMsg({
           role: "bot",
           content: faq.answer,
           buttons: [
             { label: "Weitere Fragen", icon: <HelpCircle className="w-3.5 h-3.5" />, action: "show_faq" },
-            { label: "Kurse buchen", icon: <Calendar className="w-3.5 h-3.5" />, action: "show_courses" },
+            { label: "Kurs buchen", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
           ],
         });
       }, 400);
     } else if (action === "contact") {
-      addMessage({ role: "user", content: "Kontakt" });
+      addMsg({ role: "user", content: "Kontakt" });
       setTimeout(() => {
-        addMessage({
+        addMsg({
           role: "bot",
           content: "📞 Du erreichst uns unter:\n\n**Drive me Fahrschule**\n📍 Wettingen\n✉️ info@drive-me.ch\n\nWir freuen uns auf deine Nachricht!",
           buttons: [{ label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" }],
@@ -167,65 +246,39 @@ export default function ChatBot() {
       }, 400);
     } else if (action === "main_menu") {
       setTimeout(() => {
-        addMessage({
-          role: "bot",
-          content: "Was möchtest du als nächstes tun?",
-          buttons: mainMenu,
-        });
+        addMsg({ role: "bot", content: "Was möchtest du als nächstes tun?", buttons: mainMenu });
       }, 300);
     }
   };
 
-  const handleBookingSubmit = (formData: BookingFormData, studentData: StudentData) => {
-    addMessage({
-      role: "user",
-      content: `Buchung: ${studentData.firstName} ${studentData.lastName}, ${studentData.email}`,
-    });
-
-    setTimeout(() => {
-      addMessage({
-        role: "bot",
-        content: `✅ **Buchung erfolgreich!**\n\n🏍️ **MGK Teil ${formData.coursePart}**\n📅 ${formData.courseDate}\n🕐 ${formData.courseTime}\n📍 ${formData.courseLocation}\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 ${studentData.email}\n🪪 FA-Nr: ${studentData.faNumber}\n\nEine Bestätigung wird an **${studentData.email}** gesendet.\n\n💳 **Zahlungshinweis:** Bei Barzahlung erfolgt die Zahlung am Kurstag.`,
-        buttons: [
-          { label: "Weiteren Kurs buchen", icon: <Calendar className="w-3.5 h-3.5" />, action: "show_courses" },
-          { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
-        ],
-      });
-
-      toast.success("Buchung bestätigt!", {
-        description: `MGK Teil ${formData.coursePart} am ${formData.courseDate} für ${studentData.firstName} ${studentData.lastName}`,
-      });
-    }, 600);
-  };
-
+  // ── Text input ──
   const handleSend = () => {
     const text = input.trim();
     if (!text) return;
     setInput("");
-    addMessage({ role: "user", content: text });
-
+    addMsg({ role: "user", content: text });
     const lower = text.toLowerCase();
     setTimeout(() => {
-      if (lower.includes("kurs") || lower.includes("buchen") || lower.includes("termin") || lower.includes("datum")) {
-        handleAction("show_courses");
+      if (lower.includes("kurs") || lower.includes("buchen") || lower.includes("termin")) {
+        startBooking();
         setMessages((prev) => prev.slice(0, -1));
       } else if (lower.includes("faq") || lower.includes("frage") || lower.includes("hilfe")) {
         handleAction("show_faq");
         setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("kontakt") || lower.includes("telefon") || lower.includes("email") || lower.includes("anruf")) {
+      } else if (lower.includes("kontakt") || lower.includes("telefon") || lower.includes("email")) {
         handleAction("contact");
         setMessages((prev) => prev.slice(0, -1));
       } else if (lower.includes("preis") || lower.includes("kosten") || lower.includes("chf")) {
-        addMessage({
+        addMsg({
           role: "bot",
           content: faqData[1].answer,
           buttons: [
-            { label: "Kurse anzeigen", icon: <Calendar className="w-3.5 h-3.5" />, action: "show_courses" },
+            { label: "Kurs buchen", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
             { label: "Weitere Fragen", icon: <HelpCircle className="w-3.5 h-3.5" />, action: "show_faq" },
           ],
         });
       } else {
-        addMessage({
+        addMsg({
           role: "bot",
           content: "Entschuldigung, das habe ich nicht ganz verstanden. Kann ich dir mit einem dieser Themen helfen?",
           buttons: mainMenu,
@@ -261,7 +314,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.9 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-4 right-4 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[600px] max-h-[calc(100vh-2rem)] rounded-2xl bg-card shadow-2xl border border-border flex flex-col overflow-hidden"
+            className="fixed bottom-4 right-4 z-50 w-[390px] max-w-[calc(100vw-2rem)] h-[620px] max-h-[calc(100vh-2rem)] rounded-2xl bg-card shadow-2xl border border-border flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="bg-primary text-primary-foreground px-5 py-4 flex items-center justify-between shrink-0">
@@ -279,9 +332,38 @@ export default function ChatBot() {
               </button>
             </div>
 
+            {/* Progress bar during booking */}
+            {bookingStep > 0 && bookingStep <= 6 && (
+              <div className="px-4 py-2 bg-muted/50 border-b border-border shrink-0">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-medium text-muted-foreground">Buchungsfortschritt</span>
+                  <span className="text-[10px] font-bold text-primary">
+                    {Math.min(bookingStep, 5)}/5
+                  </span>
+                </div>
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <div
+                      key={s}
+                      className={`h-1.5 flex-1 rounded-full transition-colors ${
+                        s <= bookingStep ? "bg-primary" : "bg-border"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <div className="flex justify-between mt-1">
+                  {["Teil 1", "Teil 2", "Teil 3", "Daten", "Zahlung"].map((label, i) => (
+                    <span key={i} className={`text-[8px] ${i + 1 <= bookingStep ? "text-primary font-medium" : "text-muted-foreground"}`}>
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Messages */}
             <ScrollArea className="flex-1 px-4 py-3" ref={scrollRef}>
-              <div className="space-y-4">
+              <div className="space-y-4 pb-2">
                 <AnimatePresence initial={false}>
                   {messages.map((msg) => (
                     <motion.div
@@ -290,7 +372,7 @@ export default function ChatBot() {
                       animate={{ opacity: 1, y: 0 }}
                       className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                     >
-                      <div className="max-w-[85%] space-y-2">
+                      <div className="max-w-[90%] space-y-2">
                         <div
                           className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                             msg.role === "user"
@@ -301,24 +383,38 @@ export default function ChatBot() {
                           <MessageContent content={msg.content} />
                         </div>
 
-                        {/* Course Cards */}
+                        {/* Course date cards */}
                         {msg.courseCards && (
-                          <div className="grid grid-cols-1 gap-2">
-                            {msg.courseCards.map((course) => (
-                              <CourseCard key={course.id} course={course} onBook={() => handleAction(`book_${course.id}`)} />
+                          <div className="grid grid-cols-1 gap-2 max-h-[280px] overflow-y-auto pr-1">
+                            {msg.courseCards.courses.map((course) => (
+                              <CourseCard
+                                key={course.id}
+                                course={course}
+                                onSelect={() => selectCourse(msg.courseCards!.partNum, course)}
+                              />
                             ))}
                           </div>
                         )}
 
-                        {/* Booking Form */}
-                        {msg.bookingForm && (
-                          <BookingForm
-                            formData={msg.bookingForm}
-                            onSubmit={(studentData) => handleBookingSubmit(msg.bookingForm!, studentData)}
+                        {/* Student form */}
+                        {msg.studentForm && (
+                          <StudentForm onSubmit={handleStudentSubmit} />
+                        )}
+
+                        {/* Payment step */}
+                        {msg.paymentStep && (
+                          <PaymentSelector onSelect={handlePaymentSelect} />
+                        )}
+
+                        {/* Confirmation summary */}
+                        {msg.confirmationSummary && (
+                          <ConfirmationCard
+                            summary={msg.confirmationSummary}
+                            onConfirm={handleFinalConfirm}
                           />
                         )}
 
-                        {/* Quick Buttons */}
+                        {/* Quick buttons */}
                         {msg.buttons && (
                           <div className="flex flex-wrap gap-1.5">
                             {msg.buttons.map((btn, i) => (
@@ -342,15 +438,8 @@ export default function ChatBot() {
 
             {/* Input */}
             <div className="px-4 py-3 border-t border-border bg-card shrink-0">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSend();
-                }}
-                className="flex gap-2"
-              >
+              <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
                 <Input
-                  ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Schreib eine Nachricht..."
@@ -368,56 +457,79 @@ export default function ChatBot() {
   );
 }
 
-function BookingForm({
-  formData,
-  onSubmit,
-}: {
-  formData: BookingFormData;
-  onSubmit: (data: StudentData) => void;
-}) {
-  const [studentData, setStudentData] = useState<StudentData>({
-    firstName: "",
-    lastName: "",
-    birthDate: "",
-    faNumber: "",
-    email: "",
+// ─── Sub-Components ──────────────────────────────────────────
+
+function CourseCard({ course, onSelect }: { course: CourseDate; onSelect: () => void }) {
+  return (
+    <motion.button
+      whileTap={{ scale: 0.98 }}
+      onClick={onSelect}
+      className="w-full text-left bg-card border border-border rounded-xl p-3 hover:border-primary/40 transition-colors"
+    >
+      <div className="flex justify-between items-start">
+        <div className="space-y-0.5">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
+          <p className="font-bold text-sm text-foreground">{course.date}</p>
+          <p className="text-xs text-muted-foreground">🕐 {course.time}</p>
+          <p className="text-xs text-muted-foreground">📍 {course.location}</p>
+          {course.instructor && <p className="text-xs text-muted-foreground">👤 {course.instructor}</p>}
+        </div>
+        <div className="text-right space-y-1">
+          <p className="font-bold text-sm text-primary">CHF {course.price.toFixed(2)}</p>
+          <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full ${
+            course.spotsAvailable <= 2 ? "bg-destructive/15 text-destructive" : "bg-accent/15 text-accent"
+          }`}>
+            {course.spotsAvailable} Plätze
+          </span>
+        </div>
+      </div>
+    </motion.button>
+  );
+}
+
+function StudentForm({ onSubmit }: { onSubmit: (data: StudentFormData) => void }) {
+  const [data, setData] = useState<StudentFormData>({
+    firstName: "", lastName: "", address: "", birthDate: "", faNumber: "", email: "", phone: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
 
-  const validate = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    if (!studentData.firstName.trim()) newErrors.firstName = "Pflichtfeld";
-    if (!studentData.lastName.trim()) newErrors.lastName = "Pflichtfeld";
-    if (!studentData.birthDate) newErrors.birthDate = "Pflichtfeld";
-    if (!studentData.faNumber.trim()) newErrors.faNumber = "Pflichtfeld";
-    if (!studentData.email.trim()) {
-      newErrors.email = "Pflichtfeld";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(studentData.email.trim())) {
-      newErrors.email = "Ungültige E-Mail";
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const set = (key: keyof StudentFormData, val: string) =>
+    setData((d) => ({ ...d, [key]: val }));
+
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!data.firstName.trim()) e.firstName = "Pflichtfeld";
+    if (!data.lastName.trim()) e.lastName = "Pflichtfeld";
+    if (!data.address.trim()) e.address = "Pflichtfeld";
+    if (!data.birthDate) e.birthDate = "Pflichtfeld";
+    if (!data.faNumber.trim()) e.faNumber = "Pflichtfeld";
+    if (!data.email.trim()) e.email = "Pflichtfeld";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) e.email = "Ungültige E-Mail";
+    if (!data.phone.trim()) e.phone = "Pflichtfeld";
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (submitted) return;
-    if (!validate()) return;
+  const handleSubmit = (ev: React.FormEvent) => {
+    ev.preventDefault();
+    if (submitted || !validate()) return;
     setSubmitted(true);
     onSubmit({
-      firstName: studentData.firstName.trim(),
-      lastName: studentData.lastName.trim(),
-      birthDate: studentData.birthDate,
-      faNumber: studentData.faNumber.trim(),
-      email: studentData.email.trim(),
+      firstName: data.firstName.trim(),
+      lastName: data.lastName.trim(),
+      address: data.address.trim(),
+      birthDate: data.birthDate,
+      faNumber: data.faNumber.trim(),
+      email: data.email.trim(),
+      phone: data.phone.trim(),
     });
   };
 
   if (submitted) {
     return (
       <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
-        <p className="text-xs font-medium text-accent">✅ Daten übermittelt</p>
+        <p className="text-xs font-medium text-accent flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> Daten übermittelt</p>
       </div>
     );
   }
@@ -427,87 +539,179 @@ function BookingForm({
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       onSubmit={handleSubmit}
-      className="bg-card border border-border rounded-xl p-4 space-y-3"
+      className="bg-card border border-border rounded-xl p-4 space-y-2.5"
     >
       <div className="flex items-center gap-2 mb-1">
         <User className="w-4 h-4 text-primary" />
-        <p className="text-xs font-semibold text-foreground">Schülerdaten</p>
+        <p className="text-xs font-semibold text-foreground">Persönliche Daten</p>
       </div>
 
       <div className="grid grid-cols-2 gap-2">
+        <FormField label="Vorname *" error={errors.firstName}>
+          <Input value={data.firstName} onChange={(e) => set("firstName", e.target.value)} placeholder="Max" className="h-8 text-xs" maxLength={50} />
+        </FormField>
+        <FormField label="Nachname *" error={errors.lastName}>
+          <Input value={data.lastName} onChange={(e) => set("lastName", e.target.value)} placeholder="Muster" className="h-8 text-xs" maxLength={50} />
+        </FormField>
+      </div>
+
+      <FormField label="Adresse *" error={errors.address} icon={<MapPin className="w-3 h-3" />}>
+        <Input value={data.address} onChange={(e) => set("address", e.target.value)} placeholder="Musterstrasse 1, 5430 Wettingen" className="h-8 text-xs" maxLength={150} />
+      </FormField>
+
+      <FormField label="Geburtsdatum *" error={errors.birthDate}>
+        <Input type="date" value={data.birthDate} onChange={(e) => set("birthDate", e.target.value)} className="h-8 text-xs" />
+      </FormField>
+
+      <FormField label="FA-Nummer (Lernfahrausweis) *" error={errors.faNumber} icon={<Hash className="w-3 h-3" />}>
+        <Input value={data.faNumber} onChange={(e) => set("faNumber", e.target.value)} placeholder="z.B. CH-1234567890" className="h-8 text-xs" maxLength={30} />
+      </FormField>
+
+      <FormField label="E-Mail-Adresse *" error={errors.email} icon={<Mail className="w-3 h-3" />}>
+        <Input type="email" value={data.email} onChange={(e) => set("email", e.target.value)} placeholder="max@beispiel.ch" className="h-8 text-xs" maxLength={100} />
+      </FormField>
+
+      <FormField label="Telefon (für Rückfragen) *" error={errors.phone} icon={<Phone className="w-3 h-3" />}>
+        <Input type="tel" value={data.phone} onChange={(e) => set("phone", e.target.value)} placeholder="+41 79 123 45 67" className="h-8 text-xs" maxLength={20} />
+      </FormField>
+
+      <Button type="submit" size="sm" className="w-full h-9 text-xs gap-1.5 rounded-lg mt-1">
+        <ChevronRight className="w-3 h-3" />
+        Weiter zur Bezahlmethode
+      </Button>
+    </motion.form>
+  );
+}
+
+function FormField({ label, error, icon, children }: { label: string; error?: string; icon?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div>
+      <Label className="text-[10px] text-muted-foreground flex items-center gap-1">
+        {icon} {label}
+      </Label>
+      {children}
+      {error && <p className="text-[10px] text-destructive mt-0.5">{error}</p>}
+    </div>
+  );
+}
+
+function PaymentSelector({ onSelect }: { onSelect: (id: string) => void }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const [confirmed, setConfirmed] = useState(false);
+
+  if (confirmed) {
+    return (
+      <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
+        <p className="text-xs font-medium text-accent flex items-center justify-center gap-1"><CreditCard className="w-3.5 h-3.5" /> Bezahlmethode gewählt</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-4 space-y-2">
+      <div className="flex items-center gap-2 mb-1">
+        <CreditCard className="w-4 h-4 text-primary" />
+        <p className="text-xs font-semibold text-foreground">Bezahlmethode</p>
+      </div>
+      {PAYMENT_METHODS.map((method) => (
+        <button
+          key={method.id}
+          onClick={() => setSelected(method.id)}
+          className={`w-full text-left p-3 rounded-lg border-2 transition-colors ${
+            selected === method.id
+              ? "border-primary bg-primary/5"
+              : "border-border hover:border-primary/30"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+              selected === method.id ? "border-primary" : "border-muted-foreground/40"
+            }`}>
+              {selected === method.id && <div className="w-2 h-2 rounded-full bg-primary" />}
+            </div>
+            <span className="text-xs font-medium text-foreground">{method.label}</span>
+          </div>
+          {selected === method.id && (
+            <p className="text-[10px] text-muted-foreground mt-1.5 ml-6">{method.desc}</p>
+          )}
+        </button>
+      ))}
+      <Button
+        size="sm"
+        disabled={!selected}
+        onClick={() => { setConfirmed(true); onSelect(selected!); }}
+        className="w-full h-9 text-xs gap-1.5 rounded-lg mt-1"
+      >
+        <ChevronRight className="w-3 h-3" />
+        Weiter zur Bestätigung
+      </Button>
+    </motion.div>
+  );
+}
+
+function ConfirmationCard({ summary, onConfirm }: { summary: BookingSummary; onConfirm: () => void }) {
+  const [confirmed, setConfirmed] = useState(false);
+  const total = summary.selections.reduce((s, { course }) => s + course.price, 0);
+
+  if (confirmed) {
+    return (
+      <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
+        <p className="text-xs font-medium text-accent flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> Buchung bestätigt</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-4 space-y-3">
+      <p className="text-xs font-semibold text-foreground flex items-center gap-2">
+        <Check className="w-4 h-4 text-primary" /> Buchungsübersicht
+      </p>
+
+      {/* Course summary */}
+      <div className="space-y-2">
+        {summary.selections.map(({ part, course }) => (
+          <div key={part} className="bg-muted/50 rounded-lg p-2.5">
+            <p className="text-[10px] font-bold text-primary uppercase">MGK Teil {part}</p>
+            <p className="text-xs font-medium text-foreground">{course.date} – {course.time}</p>
+            <p className="text-[10px] text-muted-foreground">📍 {course.location} · CHF {course.price.toFixed(2)}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Student info */}
+      <div className="bg-muted/50 rounded-lg p-2.5 space-y-0.5">
+        <p className="text-[10px] font-bold text-foreground uppercase">Schülerdaten</p>
+        <p className="text-xs text-foreground">{summary.student.firstName} {summary.student.lastName}</p>
+        <p className="text-[10px] text-muted-foreground">{summary.student.address}</p>
+        <p className="text-[10px] text-muted-foreground">📧 {summary.student.email} · 📞 {summary.student.phone}</p>
+        <p className="text-[10px] text-muted-foreground">🪪 {summary.student.faNumber}</p>
+      </div>
+
+      {/* Payment & Total */}
+      <div className="flex justify-between items-center pt-1 border-t border-border">
         <div>
-          <Label className="text-[10px] text-muted-foreground">Vorname *</Label>
-          <Input
-            value={studentData.firstName}
-            onChange={(e) => setStudentData((d) => ({ ...d, firstName: e.target.value }))}
-            placeholder="Max"
-            className="h-8 text-xs"
-            maxLength={50}
-          />
-          {errors.firstName && <p className="text-[10px] text-destructive mt-0.5">{errors.firstName}</p>}
+          <p className="text-[10px] text-muted-foreground">Bezahlung</p>
+          <p className="text-xs font-medium text-foreground">{summary.paymentMethod}</p>
         </div>
-        <div>
-          <Label className="text-[10px] text-muted-foreground">Nachname *</Label>
-          <Input
-            value={studentData.lastName}
-            onChange={(e) => setStudentData((d) => ({ ...d, lastName: e.target.value }))}
-            placeholder="Muster"
-            className="h-8 text-xs"
-            maxLength={50}
-          />
-          {errors.lastName && <p className="text-[10px] text-destructive mt-0.5">{errors.lastName}</p>}
+        <div className="text-right">
+          <p className="text-[10px] text-muted-foreground">Gesamt</p>
+          <p className="text-base font-bold text-primary">CHF {total.toFixed(2)}</p>
         </div>
       </div>
 
-      <div>
-        <Label className="text-[10px] text-muted-foreground">Geburtsdatum *</Label>
-        <Input
-          type="date"
-          value={studentData.birthDate}
-          onChange={(e) => setStudentData((d) => ({ ...d, birthDate: e.target.value }))}
-          className="h-8 text-xs"
-        />
-        {errors.birthDate && <p className="text-[10px] text-destructive mt-0.5">{errors.birthDate}</p>}
-      </div>
-
-      <div>
-        <Label className="text-[10px] text-muted-foreground flex items-center gap-1">
-          <Hash className="w-3 h-3" /> FA-Nummer (Lernfahrausweis) *
-        </Label>
-        <Input
-          value={studentData.faNumber}
-          onChange={(e) => setStudentData((d) => ({ ...d, faNumber: e.target.value }))}
-          placeholder="z.B. CH-1234567890"
-          className="h-8 text-xs"
-          maxLength={30}
-        />
-        {errors.faNumber && <p className="text-[10px] text-destructive mt-0.5">{errors.faNumber}</p>}
-      </div>
-
-      <div>
-        <Label className="text-[10px] text-muted-foreground flex items-center gap-1">
-          <Mail className="w-3 h-3" /> E-Mail-Adresse *
-        </Label>
-        <Input
-          type="email"
-          value={studentData.email}
-          onChange={(e) => setStudentData((d) => ({ ...d, email: e.target.value }))}
-          placeholder="max@beispiel.ch"
-          className="h-8 text-xs"
-          maxLength={100}
-        />
-        {errors.email && <p className="text-[10px] text-destructive mt-0.5">{errors.email}</p>}
-      </div>
-
-      <Button type="submit" size="sm" className="w-full h-8 text-xs gap-1.5 rounded-lg">
-        <Send className="w-3 h-3" />
-        Kurs verbindlich buchen
+      <Button
+        size="sm"
+        onClick={() => { setConfirmed(true); onConfirm(); }}
+        className="w-full h-9 text-xs gap-1.5 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground"
+      >
+        <Check className="w-3.5 h-3.5" />
+        Gebührenpflichtig bestätigen
       </Button>
 
       <p className="text-[9px] text-muted-foreground text-center">
-        💳 Bei Barzahlung erfolgt die Zahlung am Kurstag.
+        Mit der Bestätigung akzeptierst du unsere AGB und Datenschutzrichtlinien.
       </p>
-    </motion.form>
+    </motion.div>
   );
 }
 
@@ -527,35 +731,5 @@ function MessageContent({ content }: { content: string }) {
         ));
       })}
     </>
-  );
-}
-
-function CourseCard({ course, onBook }: { course: CourseDate; onBook: () => void }) {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      className="bg-card border border-border rounded-xl p-3 cursor-pointer hover:border-primary/40 transition-colors"
-      onClick={onBook}
-    >
-      <div className="flex justify-between items-start">
-        <div className="space-y-1">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{course.day}</p>
-          <p className="font-bold text-sm">{course.date}</p>
-          <p className="text-xs text-muted-foreground flex items-center gap-1">🕐 {course.time}</p>
-          <p className="text-xs text-muted-foreground flex items-center gap-1">📍 {course.location}</p>
-          {course.instructor && (
-            <p className="text-xs text-muted-foreground flex items-center gap-1">👤 {course.instructor}</p>
-          )}
-        </div>
-        <div className="text-right space-y-1">
-          <p className="font-bold text-sm">CHF {course.price.toFixed(2)}</p>
-          <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full ${
-            course.spotsAvailable <= 2 ? "bg-destructive/15 text-destructive" : "bg-accent/15 text-accent"
-          }`}>
-            {course.spotsAvailable} Plätze frei
-          </span>
-        </div>
-      </div>
-    </motion.div>
   );
 }
