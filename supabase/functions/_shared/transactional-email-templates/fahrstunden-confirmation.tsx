@@ -47,7 +47,7 @@ const FahrstundenConfirmationEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Section style={headerSection}>
-          <Text style={brandText}>🏍️ {SITE_NAME}</Text>
+          <Img src="https://web-support-buddy.lovable.app/images/drive-me-logo.png" alt="Drive me Fahrschule" width="220" style={logoStyle} />
         </Section>
 
         <Heading style={h1}>Buchungsbestätigung</Heading>
