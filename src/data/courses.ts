@@ -149,6 +149,14 @@ export const faqData = [
     answer: "Du brauchst:\n- **Eigenes Motorrad** in technisch einwandfreiem Zustand (aufgetankt, Profiltiefe > 1.6 mm)\n- **L-Schild** am Motorrad angebracht\n- **Motorradbekleidung** mit Protektoren (Knie, Ellenbogen, Schulter)\n- **Helm, Handschuhe und geeignete Schuhe/Stiefel**\n- **Regenschutzbekleidung** (z.B. Overall) für schlechtes Wetter\n- **Personalausweis** (ID oder Pass) und **Lernfahrausweis** am ersten Kurstag!\n\n⚠️ Du musst dich sicher im Verkehr bewegen können.",
   },
   {
+    question: "Brauche ich ein eigenes Motorrad?",
+    answer: "Ja, **sämtliche Fahrlektionen und Kurse müssen mit dem eigenen Motorrad** absolviert werden. Das Motorrad muss in einem technisch einwandfreien Zustand sein, aufgetankt und mit einem **L-Schild** versehen sein.",
+  },
+  {
+    question: "Brauche ich Fahrerfahrung für den Grundkurs?",
+    answer: "Du musst dich **sicher im Verkehr bewegen können**. Grundlegende Fahrerfahrung ist empfohlen, damit du dem Kursinhalt gut folgen kannst. Falls du noch unsicher bist, empfehlen wir vorab ein paar **Fahrstunden** bei uns zu buchen. 🏍️",
+  },
+  {
     question: "Kann ich einen Kursteil nachholen?",
     answer: "Ja, du kannst einzelne Kursteile an einem anderen Datum nachholen. Melde dich einfach bei uns und wir finden einen passenden Termin für dich.",
   },
