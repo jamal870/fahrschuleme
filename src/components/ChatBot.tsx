@@ -236,7 +236,8 @@ export default function ChatBot() {
   const handlePaymentSelect = (methodId: string) => {
     const method = PAYMENT_METHODS.find((m) => m.id === methodId);
     if (!method || !studentData) return;
-    setSelectedPaymentMethod(method.label);
+    const paymentLabel = methodId === "card" ? "Online bezahlen (Stripe/Twint)" : "Barzahlung am Kurstag";
+    setSelectedPaymentMethod(paymentLabel);
     addMsg({ role: "user", content: method.label });
 
     if (bookingStep > 0) {
