@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Bike, Calendar, HelpCircle, ChevronRight, MessageCircle, User, Mail, Hash, Phone, MapPin, CreditCard, Check } from "lucide-react";
+import { X, Send, Bike, Calendar, HelpCircle, ChevronRight, MessageCircle, User, Mail, Hash, Phone, MapPin, CreditCard, Check, Car, Clock, Gift, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { faqData, motorradGrundkurse } from "@/data/courses";
-import type { CourseDate } from "@/data/courses";
+import { faqData, motorradGrundkurse, fahrstundenServices, fahrstundenPackages, instructors } from "@/data/courses";
+import type { CourseDate, FahrstundenService, FahrstundenPackage, Instructor } from "@/data/courses";
 import { toast } from "sonner";
 
 // ─── Types ───────────────────────────────────────────────────
@@ -20,6 +20,11 @@ interface Message {
   studentForm?: boolean;
   paymentStep?: boolean;
   confirmationSummary?: BookingSummary;
+  serviceSelector?: boolean;
+  categorySelector?: boolean;
+  instructorSelector?: boolean;
+  packageSelector?: { packages: FahrstundenPackage[]; service: FahrstundenService };
+  fahrstundenConfirmation?: FahrstundenSummary;
 }
 
 interface QuickButton {
@@ -44,6 +49,14 @@ interface BookingSummary {
   paymentMethod: string;
 }
 
+interface FahrstundenSummary {
+  service: FahrstundenService;
+  selectedPackage?: FahrstundenPackage;
+  instructor?: Instructor;
+  student: StudentFormData;
+  paymentMethod: string;
+}
+
 const PAYMENT_METHODS = [
   { id: "bank", label: "Direkte Banküberweisung", desc: "Bitte überweisen Sie den Betrag direkt auf unser Bankkonto. Verwenden Sie Ihren Vor- und Nachnamen als Zahlungsreferenz." },
   { id: "cash", label: "Barzahlung am Kurstag", desc: "Bei Barzahlung erhalten Sie eine Buchungsbestätigung. Die Zahlung erfolgt am ersten Kurstag." },
@@ -51,7 +64,8 @@ const PAYMENT_METHODS = [
 ];
 
 const mainMenu: QuickButton[] = [
-  { label: "Kurs buchen", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
+  { label: "Grundkurs buchen", icon: <Bike className="w-3.5 h-3.5" />, action: "start_booking" },
+  { label: "Fahrstunde buchen", icon: <Car className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
   { label: "FAQ", icon: <HelpCircle className="w-3.5 h-3.5" />, action: "show_faq" },
   { label: "Kontakt", icon: <MessageCircle className="w-3.5 h-3.5" />, action: "contact" },
 ];
@@ -65,17 +79,24 @@ export default function ChatBot() {
   const [initialized, setInitialized] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Booking state
-  const [bookingStep, setBookingStep] = useState<number>(0); // 0=idle, 1-3=selecting part, 4=form, 5=payment, 6=confirm
+  // Grundkurs booking state
+  const [bookingStep, setBookingStep] = useState<number>(0);
   const [selections, setSelections] = useState<Record<number, CourseDate>>({});
   const [studentData, setStudentData] = useState<StudentFormData | null>(null);
+
+  // Fahrstunden booking state
+  const [fsStep, setFsStep] = useState<number>(0); // 0=idle, 1=category, 2=service, 3=package, 4=instructor, 5=form, 6=payment, 7=confirm
+  const [fsCategory, setFsCategory] = useState<"auto" | "motorrad" | null>(null);
+  const [fsService, setFsService] = useState<FahrstundenService | null>(null);
+  const [fsPackage, setFsPackage] = useState<FahrstundenPackage | null>(null);
+  const [fsInstructor, setFsInstructor] = useState<Instructor | null>(null);
 
   useEffect(() => {
     if (open && !initialized) {
       setMessages([{
         id: "welcome",
         role: "bot",
-        content: "Hoi! 👋 Willkommen bei **Drive me Fahrschule**.\n\nIch helfe dir bei der Buchung deiner Motorrad Grundkurse (Teil 1–3). Wie kann ich dir helfen?",
+        content: "Hoi! 👋 Willkommen bei **Drive me Fahrschule**.\n\nIch helfe dir bei der Buchung von Motorrad Grundkursen und Fahrstunden. Wie kann ich dir helfen?",
         buttons: mainMenu,
       }]);
       setInitialized(true);
@@ -94,12 +115,13 @@ export default function ChatBot() {
     setMessages((prev) => [...prev, { ...msg, id: crypto.randomUUID() }]);
   };
 
-  // ── Start booking flow ──
+  // ── Grundkurs booking flow ──
   const startBooking = () => {
     setBookingStep(1);
+    setFsStep(0);
     setSelections({});
     setStudentData(null);
-    addMsg({ role: "user", content: "Kurs buchen" });
+    addMsg({ role: "user", content: "Grundkurs buchen" });
     setTimeout(() => {
       const part = motorradGrundkurse[0];
       addMsg({
@@ -110,7 +132,6 @@ export default function ChatBot() {
     }, 400);
   };
 
-  // ── Select a course date ──
   const selectCourse = (partNum: number, course: CourseDate) => {
     setSelections((prev) => ({ ...prev, [partNum]: course }));
     addMsg({ role: "user", content: `${course.day}, ${course.date} – ${course.time}` });
@@ -127,7 +148,6 @@ export default function ChatBot() {
         });
       }, 400);
     } else {
-      // All 3 parts selected → show form
       setBookingStep(4);
       setTimeout(() => {
         addMsg({
@@ -139,43 +159,70 @@ export default function ChatBot() {
     }
   };
 
-  // ── Student form submitted ──
   const handleStudentSubmit = (data: StudentFormData) => {
     setStudentData(data);
-    setBookingStep(5);
-    addMsg({ role: "user", content: `${data.firstName} ${data.lastName}, ${data.email}` });
-    setTimeout(() => {
-      addMsg({
-        role: "bot",
-        content: `✅ Daten erfasst!\n\n**Schritt 5/5** – 💳 Wähle deine Bezahlmethode:`,
-        paymentStep: true,
-      });
-    }, 400);
+    // Check if we're in Grundkurs or Fahrstunden flow
+    if (bookingStep > 0) {
+      setBookingStep(5);
+      addMsg({ role: "user", content: `${data.firstName} ${data.lastName}, ${data.email}` });
+      setTimeout(() => {
+        addMsg({
+          role: "bot",
+          content: `✅ Daten erfasst!\n\n**Schritt 5/5** – 💳 Wähle deine Bezahlmethode:`,
+          paymentStep: true,
+        });
+      }, 400);
+    } else if (fsStep > 0) {
+      setFsStep(6);
+      addMsg({ role: "user", content: `${data.firstName} ${data.lastName}, ${data.email}` });
+      setTimeout(() => {
+        addMsg({
+          role: "bot",
+          content: `✅ Daten erfasst!\n\n**Schritt 5/5** – 💳 Wähle deine Bezahlmethode:`,
+          paymentStep: true,
+        });
+      }, 400);
+    }
   };
 
-  // ── Payment selected ──
   const handlePaymentSelect = (methodId: string) => {
     const method = PAYMENT_METHODS.find((m) => m.id === methodId);
     if (!method || !studentData) return;
-    setBookingStep(6);
 
-    const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
     addMsg({ role: "user", content: method.label });
 
-    setTimeout(() => {
-      addMsg({
-        role: "bot",
-        content: `Bitte überprüfe deine Buchung:`,
-        confirmationSummary: {
-          selections: sels,
-          student: studentData,
-          paymentMethod: method.label,
-        },
-      });
-    }, 400);
+    if (bookingStep > 0) {
+      setBookingStep(6);
+      const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
+      setTimeout(() => {
+        addMsg({
+          role: "bot",
+          content: `Bitte überprüfe deine Buchung:`,
+          confirmationSummary: {
+            selections: sels,
+            student: studentData,
+            paymentMethod: method.label,
+          },
+        });
+      }, 400);
+    } else if (fsStep > 0) {
+      setFsStep(7);
+      setTimeout(() => {
+        addMsg({
+          role: "bot",
+          content: `Bitte überprüfe deine Buchung:`,
+          fahrstundenConfirmation: {
+            service: fsService!,
+            selectedPackage: fsPackage || undefined,
+            instructor: fsInstructor || undefined,
+            student: studentData,
+            paymentMethod: method.label,
+          },
+        });
+      }, 400);
+    }
   };
 
-  // ── Final confirm ──
   const handleFinalConfirm = () => {
     if (!studentData) return;
     const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
@@ -196,19 +243,113 @@ export default function ChatBot() {
     });
   };
 
+  // ── Fahrstunden booking flow ──
+  const startFahrstunde = () => {
+    setFsStep(1);
+    setBookingStep(0);
+    setFsCategory(null);
+    setFsService(null);
+    setFsPackage(null);
+    setFsInstructor(null);
+    setStudentData(null);
+    addMsg({ role: "user", content: "Fahrstunde buchen" });
+    setTimeout(() => {
+      addMsg({
+        role: "bot",
+        content: `**Schritt 1/5** – 🚗 **Fahrstunde buchen**\n\nWähle deine Kategorie:`,
+        categorySelector: true,
+      });
+    }, 400);
+  };
+
+  const selectFsCategory = (cat: "auto" | "motorrad") => {
+    setFsCategory(cat);
+    setFsStep(2);
+    addMsg({ role: "user", content: cat === "auto" ? "Fahrstunden Auto" : "Fahrstunden Motorrad" });
+    setTimeout(() => {
+      addMsg({
+        role: "bot",
+        content: `**Schritt 2/5** – ⏱️ **Lektion wählen**\n\nWähle deine gewünschte Lektionsdauer:`,
+        serviceSelector: true,
+      });
+    }, 400);
+  };
+
+  const selectFsService = (service: FahrstundenService) => {
+    setFsService(service);
+    setFsStep(3);
+    addMsg({ role: "user", content: `${service.name} – CHF ${service.price.toFixed(2)}` });
+
+    const pkgs = fahrstundenPackages.filter((p) => p.serviceId === service.id);
+    setTimeout(() => {
+      addMsg({
+        role: "bot",
+        content: `**Schritt 3/5** – 🎁 **Paket wählen (optional)**\n\nMit einem Paket sparst du! Oder wähle eine Einzellektion:`,
+        packageSelector: { packages: pkgs, service },
+      });
+    }, 400);
+  };
+
+  const selectFsPackage = (pkg: FahrstundenPackage | null) => {
+    setFsPackage(pkg);
+    setFsStep(4);
+    addMsg({ role: "user", content: pkg ? `${pkg.name} – CHF ${pkg.totalPrice.toFixed(2)}` : "Einzellektion" });
+    setTimeout(() => {
+      addMsg({
+        role: "bot",
+        content: `**Schritt 4/5** – 👤 **Fahrlehrer wählen (optional)**\n\nWähle deinen bevorzugten Fahrlehrer oder lass dich zuteilen:`,
+        instructorSelector: true,
+      });
+    }, 400);
+  };
+
+  const selectFsInstructor = (inst: Instructor | null) => {
+    setFsInstructor(inst);
+    setFsStep(5);
+    addMsg({ role: "user", content: inst ? inst.name : "Keine Präferenz" });
+    setTimeout(() => {
+      addMsg({
+        role: "bot",
+        content: `✅ Auswahl getroffen!\n\n**Schritt 5/5** – 📝 Bitte fülle deine persönlichen Daten aus:`,
+        studentForm: true,
+      });
+    }, 400);
+  };
+
+  const handleFsConfirm = () => {
+    if (!studentData || !fsService) return;
+    const price = fsPackage ? fsPackage.totalPrice : fsService.price;
+
+    setFsStep(0);
+    addMsg({
+      role: "bot",
+      content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n🚗 ${fsService.name}${fsPackage ? ` (${fsPackage.name})` : ""}\n💰 Betrag: **CHF ${price.toFixed(2)}**\n\nVielen Dank! Wir melden uns für die Terminbestätigung. 🙌`,
+      buttons: [
+        { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
+        { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+      ],
+    });
+
+    toast.success("Fahrstunde gebucht!", {
+      description: `${fsService.name} für CHF ${price.toFixed(2)} – Bestätigung an ${studentData.email}`,
+    });
+  };
+
   // ── Generic actions ──
   const handleAction = (action: string) => {
     if (action === "start_booking") {
       startBooking();
+    } else if (action === "start_fahrstunde") {
+      startFahrstunde();
     } else if (action === "show_courses") {
       addMsg({ role: "user", content: "Kurse anzeigen" });
       setTimeout(() => {
         addMsg({
           role: "bot",
-          content: "Hier sind unsere **Motorrad Grundkurse**. Möchtest du gleich buchen?",
+          content: "Was möchtest du buchen?",
           buttons: [
-            { label: "Jetzt buchen (Teil 1–3)", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
-            ...mainMenu.filter((m) => m.action !== "start_booking"),
+            { label: "Grundkurs (Teil 1–3)", icon: <Bike className="w-3.5 h-3.5" />, action: "start_booking" },
+            { label: "Fahrstunde", icon: <Car className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
           ],
         });
       }, 400);
@@ -240,7 +381,7 @@ export default function ChatBot() {
       setTimeout(() => {
         addMsg({
           role: "bot",
-          content: "📞 Du erreichst uns unter:\n\n**Drive me Fahrschule**\n📍 Wettingen\n✉️ info@drive-me.ch\n\nWir freuen uns auf deine Nachricht!",
+          content: "📞 Du erreichst uns unter:\n\n**Drive me Fahrschule**\n📍 Wettingen\n✉️ info@drive-me.ch\n📞 +41 78 974 44 74\n\nWir freuen uns auf deine Nachricht!",
           buttons: [{ label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" }],
         });
       }, 400);
@@ -259,7 +400,10 @@ export default function ChatBot() {
     addMsg({ role: "user", content: text });
     const lower = text.toLowerCase();
     setTimeout(() => {
-      if (lower.includes("kurs") || lower.includes("buchen") || lower.includes("termin")) {
+      if (lower.includes("fahrstunde") || lower.includes("fahrlektion") || lower.includes("lektion")) {
+        startFahrstunde();
+        setMessages((prev) => prev.slice(0, -1));
+      } else if (lower.includes("grundkurs") || lower.includes("kurs") || lower.includes("buchen") || lower.includes("termin")) {
         startBooking();
         setMessages((prev) => prev.slice(0, -1));
       } else if (lower.includes("faq") || lower.includes("frage") || lower.includes("hilfe")) {
@@ -273,8 +417,8 @@ export default function ChatBot() {
           role: "bot",
           content: faqData[1].answer,
           buttons: [
-            { label: "Kurs buchen", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
-            { label: "Weitere Fragen", icon: <HelpCircle className="w-3.5 h-3.5" />, action: "show_faq" },
+            { label: "Grundkurs buchen", icon: <Bike className="w-3.5 h-3.5" />, action: "start_booking" },
+            { label: "Fahrstunde buchen", icon: <Car className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
           ],
         });
       } else {
@@ -286,6 +430,9 @@ export default function ChatBot() {
       }
     }, 500);
   };
+
+  const activeStep = bookingStep > 0 ? bookingStep : (fsStep > 0 ? fsStep : 0);
+  const isBookingActive = bookingStep > 0 || fsStep > 0;
 
   return (
     <>
@@ -324,7 +471,7 @@ export default function ChatBot() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-sm font-[Outfit]">Drive me Fahrschule</h3>
-                  <p className="text-xs opacity-80">Motorrad Grundkurse</p>
+                  <p className="text-xs opacity-80">Grundkurse & Fahrstunden</p>
                 </div>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 rounded-lg hover:bg-primary-foreground/10 transition-colors">
@@ -333,12 +480,12 @@ export default function ChatBot() {
             </div>
 
             {/* Progress bar during booking */}
-            {bookingStep > 0 && bookingStep <= 6 && (
+            {isBookingActive && activeStep <= 7 && (
               <div className="px-4 py-2 bg-muted/50 border-b border-border shrink-0">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[10px] font-medium text-muted-foreground">Buchungsfortschritt</span>
                   <span className="text-[10px] font-bold text-primary">
-                    {Math.min(bookingStep, 5)}/5
+                    {Math.min(activeStep, 5)}/5
                   </span>
                 </div>
                 <div className="flex gap-1">
@@ -346,17 +493,24 @@ export default function ChatBot() {
                     <div
                       key={s}
                       className={`h-1.5 flex-1 rounded-full transition-colors ${
-                        s <= bookingStep ? "bg-primary" : "bg-border"
+                        s <= Math.min(activeStep, 5) ? "bg-primary" : "bg-border"
                       }`}
                     />
                   ))}
                 </div>
                 <div className="flex justify-between mt-1">
-                  {["Teil 1", "Teil 2", "Teil 3", "Daten", "Zahlung"].map((label, i) => (
-                    <span key={i} className={`text-[8px] ${i + 1 <= bookingStep ? "text-primary font-medium" : "text-muted-foreground"}`}>
-                      {label}
-                    </span>
-                  ))}
+                  {bookingStep > 0
+                    ? ["Teil 1", "Teil 2", "Teil 3", "Daten", "Zahlung"].map((label, i) => (
+                        <span key={i} className={`text-[8px] ${i + 1 <= bookingStep ? "text-primary font-medium" : "text-muted-foreground"}`}>
+                          {label}
+                        </span>
+                      ))
+                    : ["Kategorie", "Lektion", "Paket", "Daten", "Zahlung"].map((label, i) => (
+                        <span key={i} className={`text-[8px] ${i + 1 <= fsStep ? "text-primary font-medium" : "text-muted-foreground"}`}>
+                          {label}
+                        </span>
+                      ))
+                  }
                 </div>
               </div>
             )}
@@ -396,6 +550,30 @@ export default function ChatBot() {
                           </div>
                         )}
 
+                        {/* Category selector (Fahrstunden) */}
+                        {msg.categorySelector && (
+                          <CategorySelector onSelect={selectFsCategory} />
+                        )}
+
+                        {/* Service selector (Fahrstunden) */}
+                        {msg.serviceSelector && fsCategory && (
+                          <ServiceSelector category={fsCategory} onSelect={selectFsService} />
+                        )}
+
+                        {/* Package selector (Fahrstunden) */}
+                        {msg.packageSelector && (
+                          <PackageSelector
+                            packages={msg.packageSelector.packages}
+                            service={msg.packageSelector.service}
+                            onSelect={selectFsPackage}
+                          />
+                        )}
+
+                        {/* Instructor selector */}
+                        {msg.instructorSelector && (
+                          <InstructorSelector onSelect={selectFsInstructor} />
+                        )}
+
                         {/* Student form */}
                         {msg.studentForm && (
                           <StudentForm onSubmit={handleStudentSubmit} />
@@ -406,11 +584,19 @@ export default function ChatBot() {
                           <PaymentSelector onSelect={handlePaymentSelect} />
                         )}
 
-                        {/* Confirmation summary */}
+                        {/* Grundkurs confirmation */}
                         {msg.confirmationSummary && (
                           <ConfirmationCard
                             summary={msg.confirmationSummary}
                             onConfirm={handleFinalConfirm}
+                          />
+                        )}
+
+                        {/* Fahrstunden confirmation */}
+                        {msg.fahrstundenConfirmation && (
+                          <FahrstundenConfirmationCard
+                            summary={msg.fahrstundenConfirmation}
+                            onConfirm={handleFsConfirm}
                           />
                         )}
 
@@ -458,6 +644,169 @@ export default function ChatBot() {
 }
 
 // ─── Sub-Components ──────────────────────────────────────────
+
+function CategorySelector({ onSelect }: { onSelect: (cat: "auto" | "motorrad") => void }) {
+  const [selected, setSelected] = useState(false);
+
+  if (selected) {
+    return (
+      <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
+        <p className="text-xs font-medium text-accent flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> Kategorie gewählt</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 gap-2">
+      {[
+        { cat: "auto" as const, icon: <Car className="w-6 h-6" />, label: "Auto", desc: "Fahrstunden Auto" },
+        { cat: "motorrad" as const, icon: <Bike className="w-6 h-6" />, label: "Motorrad", desc: "Fahrstunden Motorrad" },
+      ].map((item) => (
+        <button
+          key={item.cat}
+          onClick={() => { setSelected(true); onSelect(item.cat); }}
+          className="flex flex-col items-center gap-2 p-4 bg-card border-2 border-border rounded-xl hover:border-primary/40 transition-colors"
+        >
+          <div className="text-primary">{item.icon}</div>
+          <span className="text-xs font-semibold text-foreground">{item.label}</span>
+          <span className="text-[10px] text-muted-foreground">{item.desc}</span>
+        </button>
+      ))}
+    </motion.div>
+  );
+}
+
+function ServiceSelector({ category, onSelect }: { category: "auto" | "motorrad"; onSelect: (s: FahrstundenService) => void }) {
+  const [selected, setSelected] = useState(false);
+  const services = fahrstundenServices.filter((s) => s.category === category);
+
+  if (selected) {
+    return (
+      <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
+        <p className="text-xs font-medium text-accent flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> Lektion gewählt</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+      {services.map((service) => (
+        <button
+          key={service.id}
+          onClick={() => { setSelected(true); onSelect(service); }}
+          className="w-full text-left bg-card border border-border rounded-xl p-3 hover:border-primary/40 transition-colors"
+        >
+          <div className="flex justify-between items-center">
+            <div className="space-y-0.5">
+              <p className="text-xs font-bold text-foreground">{service.name}</p>
+              <p className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="w-3 h-3" /> {service.duration}</p>
+            </div>
+            <p className="font-bold text-sm text-primary">CHF {service.price.toFixed(2)}</p>
+          </div>
+        </button>
+      ))}
+    </motion.div>
+  );
+}
+
+function PackageSelector({ packages, service, onSelect }: { packages: FahrstundenPackage[]; service: FahrstundenService; onSelect: (pkg: FahrstundenPackage | null) => void }) {
+  const [selected, setSelected] = useState(false);
+
+  if (selected) {
+    return (
+      <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
+        <p className="text-xs font-medium text-accent flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> Auswahl getroffen</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+      {packages.map((pkg) => (
+        <button
+          key={pkg.id}
+          onClick={() => { setSelected(true); onSelect(pkg); }}
+          className="w-full text-left bg-card border-2 border-primary/20 rounded-xl p-3 hover:border-primary/50 transition-colors"
+        >
+          <div className="flex justify-between items-start">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-1.5">
+                <Gift className="w-3 h-3 text-primary" />
+                <p className="text-xs font-bold text-foreground">{pkg.name}</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground">{service.name} × {pkg.lessons}</p>
+            </div>
+            <div className="text-right">
+              <span className="inline-block text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full mb-0.5">Spare {pkg.discount}</span>
+              <p className="font-bold text-sm text-primary">CHF {pkg.totalPrice.toFixed(2)}</p>
+            </div>
+          </div>
+        </button>
+      ))}
+
+      <div className="relative flex items-center gap-2 py-1">
+        <div className="flex-1 h-px bg-border" />
+        <span className="text-[10px] text-muted-foreground">Oder</span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+
+      <button
+        onClick={() => { setSelected(true); onSelect(null); }}
+        className="w-full text-left bg-card border border-border rounded-xl p-3 hover:border-primary/40 transition-colors"
+      >
+        <div className="flex justify-between items-center">
+          <p className="text-xs font-medium text-foreground">Einzellektion ohne Paket</p>
+          <p className="font-bold text-sm text-primary">CHF {service.price.toFixed(2)}</p>
+        </div>
+      </button>
+    </motion.div>
+  );
+}
+
+function InstructorSelector({ onSelect }: { onSelect: (inst: Instructor | null) => void }) {
+  const [selected, setSelected] = useState(false);
+
+  if (selected) {
+    return (
+      <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
+        <p className="text-xs font-medium text-accent flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> Fahrlehrer gewählt</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+      {instructors.map((inst) => (
+        <button
+          key={inst.id}
+          onClick={() => { setSelected(true); onSelect(inst); }}
+          className="w-full text-left bg-card border border-border rounded-xl p-3 hover:border-primary/40 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="text-xs font-bold text-primary">{inst.initials}</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-xs font-bold text-foreground">{inst.name}</p>
+              {inst.popular && <span className="text-[10px] text-primary font-medium">⭐ Beliebt</span>}
+            </div>
+          </div>
+        </button>
+      ))}
+      <button
+        onClick={() => { setSelected(true); onSelect(null); }}
+        className="w-full text-left bg-card border border-border rounded-xl p-3 hover:border-primary/40 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+            <Users className="w-4 h-4 text-muted-foreground" />
+          </div>
+          <p className="text-xs font-medium text-foreground">Keine Präferenz</p>
+        </div>
+      </button>
+    </motion.div>
+  );
+}
 
 function CourseCard({ course, onSelect }: { course: CourseDate; onSelect: () => void }) {
   return (
@@ -666,8 +1015,6 @@ function ConfirmationCard({ summary, onConfirm }: { summary: BookingSummary; onC
       <p className="text-xs font-semibold text-foreground flex items-center gap-2">
         <Check className="w-4 h-4 text-primary" /> Buchungsübersicht
       </p>
-
-      {/* Course summary */}
       <div className="space-y-2">
         {summary.selections.map(({ part, course }) => (
           <div key={part} className="bg-muted/50 rounded-lg p-2.5">
@@ -677,8 +1024,6 @@ function ConfirmationCard({ summary, onConfirm }: { summary: BookingSummary; onC
           </div>
         ))}
       </div>
-
-      {/* Student info */}
       <div className="bg-muted/50 rounded-lg p-2.5 space-y-0.5">
         <p className="text-[10px] font-bold text-foreground uppercase">Schülerdaten</p>
         <p className="text-xs text-foreground">{summary.student.firstName} {summary.student.lastName}</p>
@@ -686,8 +1031,6 @@ function ConfirmationCard({ summary, onConfirm }: { summary: BookingSummary; onC
         <p className="text-[10px] text-muted-foreground">📧 {summary.student.email} · 📞 {summary.student.phone}</p>
         <p className="text-[10px] text-muted-foreground">🪪 {summary.student.faNumber}</p>
       </div>
-
-      {/* Payment & Total */}
       <div className="flex justify-between items-center pt-1 border-t border-border">
         <div>
           <p className="text-[10px] text-muted-foreground">Bezahlung</p>
@@ -696,6 +1039,68 @@ function ConfirmationCard({ summary, onConfirm }: { summary: BookingSummary; onC
         <div className="text-right">
           <p className="text-[10px] text-muted-foreground">Gesamt</p>
           <p className="text-base font-bold text-primary">CHF {total.toFixed(2)}</p>
+        </div>
+      </div>
+      <Button
+        size="sm"
+        onClick={() => { setConfirmed(true); onConfirm(); }}
+        className="w-full h-9 text-xs gap-1.5 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground"
+      >
+        <Check className="w-3.5 h-3.5" />
+        Gebührenpflichtig bestätigen
+      </Button>
+      <p className="text-[9px] text-muted-foreground text-center">
+        Mit der Bestätigung akzeptierst du unsere AGB und Datenschutzrichtlinien.
+      </p>
+    </motion.div>
+  );
+}
+
+function FahrstundenConfirmationCard({ summary, onConfirm }: { summary: FahrstundenSummary; onConfirm: () => void }) {
+  const [confirmed, setConfirmed] = useState(false);
+  const price = summary.selectedPackage ? summary.selectedPackage.totalPrice : summary.service.price;
+
+  if (confirmed) {
+    return (
+      <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
+        <p className="text-xs font-medium text-accent flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> Buchung bestätigt</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-4 space-y-3">
+      <p className="text-xs font-semibold text-foreground flex items-center gap-2">
+        <Check className="w-4 h-4 text-primary" /> Buchungsübersicht – Fahrstunde
+      </p>
+
+      <div className="bg-muted/50 rounded-lg p-2.5 space-y-0.5">
+        <p className="text-[10px] font-bold text-primary uppercase">Fahrstunde</p>
+        <p className="text-xs font-medium text-foreground">{summary.service.name}</p>
+        {summary.selectedPackage && (
+          <p className="text-[10px] text-muted-foreground">📦 {summary.selectedPackage.name}</p>
+        )}
+        {summary.instructor && (
+          <p className="text-[10px] text-muted-foreground">👤 Fahrlehrer: {summary.instructor.name}</p>
+        )}
+      </div>
+
+      <div className="bg-muted/50 rounded-lg p-2.5 space-y-0.5">
+        <p className="text-[10px] font-bold text-foreground uppercase">Schülerdaten</p>
+        <p className="text-xs text-foreground">{summary.student.firstName} {summary.student.lastName}</p>
+        <p className="text-[10px] text-muted-foreground">{summary.student.address}</p>
+        <p className="text-[10px] text-muted-foreground">📧 {summary.student.email} · 📞 {summary.student.phone}</p>
+        <p className="text-[10px] text-muted-foreground">🪪 {summary.student.faNumber}</p>
+      </div>
+
+      <div className="flex justify-between items-center pt-1 border-t border-border">
+        <div>
+          <p className="text-[10px] text-muted-foreground">Bezahlung</p>
+          <p className="text-xs font-medium text-foreground">{summary.paymentMethod}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-[10px] text-muted-foreground">Gesamt</p>
+          <p className="text-base font-bold text-primary">CHF {price.toFixed(2)}</p>
         </div>
       </div>
 
@@ -707,7 +1112,6 @@ function ConfirmationCard({ summary, onConfirm }: { summary: BookingSummary; onC
         <Check className="w-3.5 h-3.5" />
         Gebührenpflichtig bestätigen
       </Button>
-
       <p className="text-[9px] text-muted-foreground text-center">
         Mit der Bestätigung akzeptierst du unsere AGB und Datenschutzrichtlinien.
       </p>
