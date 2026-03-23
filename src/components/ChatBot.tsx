@@ -515,9 +515,9 @@ export default function ChatBot() {
       try {
         await supabase.functions.invoke('send-transactional-email', {
           body: {
-            templateName: 'booking-confirmation',
+            templateName: 'fahrstunden-confirmation',
             recipientEmail: studentData.email,
-            idempotencyKey: `booking-confirm-${booking.id}`,
+            idempotencyKey: `fahrstunden-confirm-${booking.id}`,
             templateData: {
               firstName: studentData.firstName,
               lastName: studentData.lastName,
@@ -526,13 +526,10 @@ export default function ChatBot() {
               faNumber: studentData.faNumber,
               phone: studentData.phone,
               email: studentData.email,
-              
-              courses: [{
-                part: 0,
-                date: fsService.name + (fsPackage ? ` (${fsPackage.name})` : ''),
-                time: fsService.duration,
-                location: 'Wird noch bekannt gegeben',
-              }],
+              category: fsService.category,
+              serviceName: fsService.name,
+              packageName: fsPackage?.name,
+              duration: fsService.duration,
               totalPrice: price.toFixed(2),
               paymentMethod: selectedPaymentMethod,
               bookingId: booking.id,
