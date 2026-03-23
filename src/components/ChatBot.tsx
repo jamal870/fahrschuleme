@@ -526,7 +526,7 @@ export default function ChatBot() {
               faNumber: studentData.faNumber,
               phone: studentData.phone,
               email: studentData.email,
-              category: studentData.category,
+              category: fsService.category,
               serviceName: fsService.name,
               packageName: fsPackage?.name,
               duration: fsService.duration,
