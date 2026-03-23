@@ -321,15 +321,23 @@ export default function ChatBot() {
             templateData: {
               firstName: studentData.firstName,
               lastName: studentData.lastName,
+              address: studentData.address,
+              birthDate: studentData.birthDate,
+              faNumber: studentData.faNumber,
+              phone: studentData.phone,
+              email: studentData.email,
+              category: studentData.category,
               courses: sels.map(({ part, course }) => ({
                 part,
                 date: course.date,
                 time: course.time,
                 location: course.location,
+                price: course.price,
               })),
               totalPrice: total.toFixed(2),
               paymentMethod: selectedPaymentMethod,
               bookingId: booking.id,
+              bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
             },
           },
         });
