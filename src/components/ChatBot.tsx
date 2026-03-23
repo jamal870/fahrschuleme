@@ -85,6 +85,7 @@ export default function ChatBot() {
   const [selections, setSelections] = useState<Record<number, CourseDate>>({});
   const [studentData, setStudentData] = useState<StudentFormData | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
 
   // Fahrstunden booking state
   const [fsStep, setFsStep] = useState<number>(0);
