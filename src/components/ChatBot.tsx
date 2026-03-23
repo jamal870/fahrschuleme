@@ -751,7 +751,7 @@ function ServiceSelector({ category, onSelect, services }: { category: "auto" | 
 
   return (
     <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-      {services.map((service) => (
+      {filtered.map((service) => (
         <button
           key={service.id}
           onClick={() => { setSelected(true); onSelect(service); }}
