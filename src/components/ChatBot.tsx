@@ -323,11 +323,11 @@ export default function ChatBot() {
     }, 400);
   };
 
-  const selectFsService = (service: FahrstundenService) => {
+  const selectFsService = async (service: FahrstundenService) => {
     setFsService(service);
     addMsg({ role: "user", content: `${service.name} – CHF ${service.price.toFixed(2)}` });
 
-    const pkgs = fahrstundenPackages.filter((p) => p.serviceId === service.id);
+    const pkgs = dbPackages.filter((p) => p.serviceId === service.id);
     if (pkgs.length > 0) {
       setFsStep(3);
       setTimeout(() => {
