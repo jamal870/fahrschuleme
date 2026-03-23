@@ -291,7 +291,7 @@ export default function ChatBot() {
           fa_number: studentData.faNumber,
           email: studentData.email,
           phone: studentData.phone,
-          payment_method: selections[1] ? 'pending' : '',
+          payment_method: selectedPaymentMethod,
           total_price: total,
         })
         .select('id')
