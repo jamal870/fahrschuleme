@@ -129,8 +129,6 @@ export const fahrstundenPackages: FahrstundenPackage[] = [
 
 export const instructors: Instructor[] = [
   { id: "je", name: "Jamal Ettana", initials: "JE", popular: true },
-  { id: "na", name: "Nabeel Ahmad", initials: "NA" },
-  { id: "rr", name: "Rebecca Rüegg", initials: "RR" },
 ];
 
 export const faqData = [
