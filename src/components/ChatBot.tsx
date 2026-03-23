@@ -1,13 +1,14 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Bike, Calendar, HelpCircle, ChevronRight, MessageCircle, User, Mail, Hash, Phone, MapPin, CreditCard, Check, Car, Clock, Gift, Users } from "lucide-react";
+import { X, Send, Bike, Calendar, HelpCircle, ChevronRight, MessageCircle, User, Mail, Hash, Phone, MapPin, CreditCard, Check, Car, Clock, Gift, Users, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { faqData, motorradGrundkurse, fahrstundenServices, fahrstundenPackages, instructors } from "@/data/courses";
+import { faqData, instructors } from "@/data/courses";
 import type { CourseDate, FahrstundenService, FahrstundenPackage, Instructor } from "@/data/courses";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -83,13 +84,58 @@ export default function ChatBot() {
   const [bookingStep, setBookingStep] = useState<number>(0);
   const [selections, setSelections] = useState<Record<number, CourseDate>>({});
   const [studentData, setStudentData] = useState<StudentFormData | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
 
   // Fahrstunden booking state
-  const [fsStep, setFsStep] = useState<number>(0); // 0=idle, 1=category, 2=service, 3=package, 4=instructor, 5=form, 6=payment, 7=confirm
+  const [fsStep, setFsStep] = useState<number>(0);
   const [fsCategory, setFsCategory] = useState<"auto" | "motorrad" | null>(null);
   const [fsService, setFsService] = useState<FahrstundenService | null>(null);
   const [fsPackage, setFsPackage] = useState<FahrstundenPackage | null>(null);
   const [fsInstructor, setFsInstructor] = useState<Instructor | null>(null);
+
+  // DB data
+  const [dbCourses, setDbCourses] = useState<Record<number, CourseDate[]>>({});
+  const [dbServices, setDbServices] = useState<FahrstundenService[]>([]);
+  const [dbPackages, setDbPackages] = useState<FahrstundenPackage[]>([]);
+
+  // Load course data from DB
+  const loadCourseDates = useCallback(async (part: number): Promise<CourseDate[]> => {
+    const { data, error } = await supabase
+      .from('course_dates')
+      .select('*')
+      .eq('part', part)
+      .gt('spots_available', 0)
+      .order('date');
+    if (error || !data) return [];
+    return data.map((d: any) => ({
+      id: d.id,
+      day: d.day,
+      date: d.date,
+      time: d.time,
+      location: d.location,
+      instructor: d.instructor || undefined,
+      price: Number(d.price),
+      spotsAvailable: d.spots_available,
+    }));
+  }, []);
+
+  const loadServices = useCallback(async (): Promise<FahrstundenService[]> => {
+    const { data } = await supabase.from('fahrstunden_services').select('*');
+    if (!data) return [];
+    return data.map((s: any) => ({
+      id: s.id, category: s.category, name: s.name, duration: s.duration, price: Number(s.price),
+    }));
+  }, []);
+
+  const loadPackages = useCallback(async (): Promise<FahrstundenPackage[]> => {
+    const { data } = await supabase.from('fahrstunden_packages').select('*');
+    if (!data) return [];
+    return data.map((p: any) => ({
+      id: p.id, serviceId: p.service_id, name: p.name, lessons: p.lessons,
+      discount: p.discount, totalPrice: Number(p.total_price), pricePerLesson: Number(p.price_per_lesson),
+    }));
+  }, []);
 
   useEffect(() => {
     if (open && !initialized) {
@@ -121,37 +167,35 @@ export default function ChatBot() {
   };
 
   // ── Grundkurs booking flow ──
-  const startBooking = () => {
+  const startBooking = async () => {
     setBookingStep(1);
     setFsStep(0);
     setSelections({});
     setStudentData(null);
     addMsg({ role: "user", content: "Grundkurs buchen" });
-    setTimeout(() => {
-      const part = motorradGrundkurse[0];
-      addMsg({
-        role: "bot",
-        content: `**Schritt 1/5** – 🏍️ **${part.title}**\n\n${part.description}\n\nWähle deinen Wunschtermin:`,
-        courseCards: { courses: part.dates, partNum: 1 },
-      });
-    }, 400);
+    const courses = await loadCourseDates(1);
+    setDbCourses(prev => ({ ...prev, 1: courses }));
+    addMsg({
+      role: "bot",
+      content: `**Schritt 1/5** – 🏍️ **MGK Teil 1 – Datum wählen**\n\nWähle deinen Wunschtermin:`,
+      courseCards: { courses, partNum: 1 },
+    });
   };
 
-  const selectCourse = (partNum: number, course: CourseDate) => {
+  const selectCourse = async (partNum: number, course: CourseDate) => {
     setSelections((prev) => ({ ...prev, [partNum]: course }));
     addMsg({ role: "user", content: `${course.day}, ${course.date} – ${course.time}` });
 
     const nextPart = partNum + 1;
     if (nextPart <= 3) {
       setBookingStep(nextPart);
-      setTimeout(() => {
-        const part = motorradGrundkurse[nextPart - 1];
-        addMsg({
-          role: "bot",
-          content: `✅ Teil ${partNum} gewählt!\n\n**Schritt ${nextPart}/5** – 🏍️ **${part.title}**\n\n${part.description}\n\nWähle deinen Wunschtermin:`,
-          courseCards: { courses: part.dates, partNum: nextPart },
-        });
-      }, 400);
+      const courses = await loadCourseDates(nextPart);
+      setDbCourses(prev => ({ ...prev, [nextPart]: courses }));
+      addMsg({
+        role: "bot",
+        content: `✅ Teil ${partNum} gewählt!\n\n**Schritt ${nextPart}/5** – 🏍️ **MGK Teil ${nextPart} – Datum wählen**\n\nWähle deinen Wunschtermin:`,
+        courseCards: { courses, partNum: nextPart },
+      });
     } else {
       setBookingStep(4);
       setTimeout(() => {
@@ -193,7 +237,7 @@ export default function ChatBot() {
   const handlePaymentSelect = (methodId: string) => {
     const method = PAYMENT_METHODS.find((m) => m.id === methodId);
     if (!method || !studentData) return;
-
+    setSelectedPaymentMethod(method.label);
     addMsg({ role: "user", content: method.label });
 
     if (bookingStep > 0) {
@@ -228,28 +272,64 @@ export default function ChatBot() {
     }
   };
 
-  const handleFinalConfirm = () => {
-    if (!studentData) return;
+  const handleFinalConfirm = async () => {
+    if (!studentData || isSubmitting) return;
+    setIsSubmitting(true);
     const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
     const total = sels.reduce((s, { course }) => s + course.price, 0);
 
-    setBookingStep(0);
-    addMsg({
-      role: "bot",
-      content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n💰 Gesamtbetrag: **CHF ${total.toFixed(2)}**\n\nVielen Dank und bis bald auf dem Motorrad! 🏍️`,
-      buttons: [
-        { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
-        { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
-      ],
-    });
+    try {
+      // Save booking to DB
+      const { data: booking, error: bookingError } = await supabase
+        .from('bookings')
+        .insert({
+          booking_type: 'grundkurs',
+          first_name: studentData.firstName,
+          last_name: studentData.lastName,
+          address: studentData.address,
+          birth_date: studentData.birthDate,
+          fa_number: studentData.faNumber,
+          email: studentData.email,
+          phone: studentData.phone,
+          payment_method: selectedPaymentMethod,
+          total_price: total,
+        })
+        .select('id')
+        .single();
 
-    toast.success("Buchung bestätigt!", {
-      description: `${sels.length} Kursteile für CHF ${total.toFixed(2)} – Bestätigung an ${studentData.email}`,
-    });
+      if (bookingError) throw bookingError;
+
+      // Save booking items and decrement spots
+      for (const { part, course } of sels) {
+        await supabase.from('booking_items').insert({
+          booking_id: booking.id,
+          course_date_id: course.id,
+        });
+        await supabase.rpc('decrement_spots', { course_id: course.id });
+      }
+
+      setBookingStep(0);
+      addMsg({
+        role: "bot",
+        content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n💰 Gesamtbetrag: **CHF ${total.toFixed(2)}**\n\nVielen Dank und bis bald auf dem Motorrad! 🏍️`,
+        buttons: [
+          { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_booking" },
+          { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+        ],
+      });
+      toast.success("Buchung bestätigt!", {
+        description: `${sels.length} Kursteile für CHF ${total.toFixed(2)} – Bestätigung an ${studentData.email}`,
+      });
+    } catch (err) {
+      console.error('Booking error:', err);
+      toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // ── Fahrstunden booking flow ──
-  const startFahrstunde = () => {
+  const startFahrstunde = async () => {
     setFsStep(1);
     setBookingStep(0);
     setFsCategory(null);
@@ -257,14 +337,16 @@ export default function ChatBot() {
     setFsPackage(null);
     setFsInstructor(null);
     setStudentData(null);
+    // Pre-load services and packages from DB
+    const [services, packages] = await Promise.all([loadServices(), loadPackages()]);
+    setDbServices(services);
+    setDbPackages(packages);
     addMsg({ role: "user", content: "Fahrstunde buchen" });
-    setTimeout(() => {
-      addMsg({
-        role: "bot",
-        content: `**Schritt 1/5** – 🚗 **Fahrstunde buchen**\n\nWähle deine Kategorie:`,
-        categorySelector: true,
-      });
-    }, 400);
+    addMsg({
+      role: "bot",
+      content: `**Schritt 1/5** – 🚗 **Fahrstunde buchen**\n\nWähle deine Kategorie:`,
+      categorySelector: true,
+    });
   };
 
   const selectFsCategory = (cat: "auto" | "motorrad") => {
@@ -280,11 +362,11 @@ export default function ChatBot() {
     }, 400);
   };
 
-  const selectFsService = (service: FahrstundenService) => {
+  const selectFsService = async (service: FahrstundenService) => {
     setFsService(service);
     addMsg({ role: "user", content: `${service.name} – CHF ${service.price.toFixed(2)}` });
 
-    const pkgs = fahrstundenPackages.filter((p) => p.serviceId === service.id);
+    const pkgs = dbPackages.filter((p) => p.serviceId === service.id);
     if (pkgs.length > 0) {
       setFsStep(3);
       setTimeout(() => {
@@ -334,23 +416,44 @@ export default function ChatBot() {
     }, 400);
   };
 
-  const handleFsConfirm = () => {
-    if (!studentData || !fsService) return;
+  const handleFsConfirm = async () => {
+    if (!studentData || !fsService || isSubmitting) return;
+    setIsSubmitting(true);
     const price = fsPackage ? fsPackage.totalPrice : fsService.price;
 
-    setFsStep(0);
-    addMsg({
-      role: "bot",
-      content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n🚗 ${fsService.name}${fsPackage ? ` (${fsPackage.name})` : ""}\n💰 Betrag: **CHF ${price.toFixed(2)}**\n\nVielen Dank! Wir melden uns für die Terminbestätigung. 🙌`,
-      buttons: [
-        { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
-        { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
-      ],
-    });
+    try {
+      const { error } = await supabase.from('bookings').insert({
+        booking_type: 'fahrstunde',
+        first_name: studentData.firstName,
+        last_name: studentData.lastName,
+        address: studentData.address,
+        birth_date: studentData.birthDate,
+        fa_number: studentData.faNumber,
+        email: studentData.email,
+        phone: studentData.phone,
+        payment_method: selectedPaymentMethod,
+        total_price: price,
+      });
+      if (error) throw error;
 
-    toast.success("Fahrstunde gebucht!", {
-      description: `${fsService.name} für CHF ${price.toFixed(2)} – Bestätigung an ${studentData.email}`,
-    });
+      setFsStep(0);
+      addMsg({
+        role: "bot",
+        content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n🚗 ${fsService.name}${fsPackage ? ` (${fsPackage.name})` : ""}\n💰 Betrag: **CHF ${price.toFixed(2)}**\n\nVielen Dank! Wir melden uns für die Terminbestätigung. 🙌`,
+        buttons: [
+          { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
+          { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+        ],
+      });
+      toast.success("Fahrstunde gebucht!", {
+        description: `${fsService.name} für CHF ${price.toFixed(2)} – Bestätigung an ${studentData.email}`,
+      });
+    } catch (err) {
+      console.error('Booking error:', err);
+      toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // ── Generic actions ──
@@ -575,7 +678,7 @@ export default function ChatBot() {
 
                         {/* Service selector (Fahrstunden) */}
                         {msg.serviceSelector && fsCategory && (
-                          <ServiceSelector category={fsCategory} onSelect={selectFsService} />
+                          <ServiceSelector category={fsCategory} onSelect={selectFsService} services={dbServices} />
                         )}
 
                         {/* Package selector (Fahrstunden) */}
@@ -694,9 +797,9 @@ function CategorySelector({ onSelect }: { onSelect: (cat: "auto" | "motorrad") =
   );
 }
 
-function ServiceSelector({ category, onSelect }: { category: "auto" | "motorrad"; onSelect: (s: FahrstundenService) => void }) {
+function ServiceSelector({ category, onSelect, services }: { category: "auto" | "motorrad"; onSelect: (s: FahrstundenService) => void; services: FahrstundenService[] }) {
   const [selected, setSelected] = useState(false);
-  const services = fahrstundenServices.filter((s) => s.category === category);
+  const filtered = services.filter((s) => s.category === category);
 
   if (selected) {
     return (
@@ -708,7 +811,7 @@ function ServiceSelector({ category, onSelect }: { category: "auto" | "motorrad"
 
   return (
     <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-      {services.map((service) => (
+      {filtered.map((service) => (
         <button
           key={service.id}
           onClick={() => { setSelected(true); onSelect(service); }}
