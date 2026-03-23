@@ -73,7 +73,7 @@ const mainMenu: QuickButton[] = [
 // ─── Main Component ──────────────────────────────────────────
 
 export default function ChatBot() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [initialized, setInitialized] = useState(false);
