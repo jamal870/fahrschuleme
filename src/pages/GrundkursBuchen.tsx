@@ -37,10 +37,17 @@ export default function GrundkursBuchen() {
     2: null,
     3: null,
   });
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [faNumber, setFaNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [category, setCategory] = useState("A (Motorrad)");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectCourse = (part: number, course: CourseDate) => {
     setSelections((prev) => ({ ...prev, [part]: course }));
