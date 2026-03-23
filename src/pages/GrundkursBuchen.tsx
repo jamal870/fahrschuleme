@@ -86,7 +86,10 @@ export default function GrundkursBuchen() {
     setErrors({});
     setIsSubmitting(true);
 
-    const selectedCourses = Object.values(selections).filter(Boolean) as CourseDate[];
+    const selectedCoursesWithParts = Object.entries(selections)
+      .filter(([, v]) => v !== null)
+      .map(([part, course]) => ({ part: parseInt(part), course: course! }));
+    const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
     const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
 
     try {
