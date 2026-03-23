@@ -415,23 +415,44 @@ export default function ChatBot() {
     }, 400);
   };
 
-  const handleFsConfirm = () => {
-    if (!studentData || !fsService) return;
+  const handleFsConfirm = async () => {
+    if (!studentData || !fsService || isSubmitting) return;
+    setIsSubmitting(true);
     const price = fsPackage ? fsPackage.totalPrice : fsService.price;
 
-    setFsStep(0);
-    addMsg({
-      role: "bot",
-      content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n🚗 ${fsService.name}${fsPackage ? ` (${fsPackage.name})` : ""}\n💰 Betrag: **CHF ${price.toFixed(2)}**\n\nVielen Dank! Wir melden uns für die Terminbestätigung. 🙌`,
-      buttons: [
-        { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
-        { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
-      ],
-    });
+    try {
+      const { error } = await supabase.from('bookings').insert({
+        booking_type: 'fahrstunde',
+        first_name: studentData.firstName,
+        last_name: studentData.lastName,
+        address: studentData.address,
+        birth_date: studentData.birthDate,
+        fa_number: studentData.faNumber,
+        email: studentData.email,
+        phone: studentData.phone,
+        payment_method: 'pending',
+        total_price: price,
+      });
+      if (error) throw error;
 
-    toast.success("Fahrstunde gebucht!", {
-      description: `${fsService.name} für CHF ${price.toFixed(2)} – Bestätigung an ${studentData.email}`,
-    });
+      setFsStep(0);
+      addMsg({
+        role: "bot",
+        content: `🎉 **Buchung erfolgreich bestätigt!**\n\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Eine Bestätigung wird an **${studentData.email}** gesendet.\n\n🚗 ${fsService.name}${fsPackage ? ` (${fsPackage.name})` : ""}\n💰 Betrag: **CHF ${price.toFixed(2)}**\n\nVielen Dank! Wir melden uns für die Terminbestätigung. 🙌`,
+        buttons: [
+          { label: "Neue Buchung", icon: <Calendar className="w-3.5 h-3.5" />, action: "start_fahrstunde" },
+          { label: "Zurück zum Menü", icon: <ChevronRight className="w-3.5 h-3.5" />, action: "main_menu" },
+        ],
+      });
+      toast.success("Fahrstunde gebucht!", {
+        description: `${fsService.name} für CHF ${price.toFixed(2)} – Bestätigung an ${studentData.email}`,
+      });
+    } catch (err) {
+      console.error('Booking error:', err);
+      toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // ── Generic actions ──
