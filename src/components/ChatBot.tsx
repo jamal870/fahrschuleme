@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { faqData, instructors } from "@/data/courses";
+import { faqData } from "@/data/courses";
 import type { CourseDate, FahrstundenService, FahrstundenPackage, Instructor } from "@/data/courses";
+import { tenantConfig } from "@/config/tenant";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -61,10 +62,7 @@ interface FahrstundenSummary {
 
 type ConfirmationResult = "confirmed" | "payment_started" | "failed";
 
-const PAYMENT_METHODS = [
-  { id: "card", label: "Online bezahlen (Stripe/Twint)", desc: "Sichere Onlinezahlung via Stripe Checkout.", icon: "💳" },
-  { id: "cash", label: "Barzahlung am Kurstag", desc: "Zahlung bar vor Ort am Kurstag.", icon: "💵" },
-];
+const PAYMENT_METHODS = tenantConfig.booking.paymentMethods;
 
 const mainMenu: QuickButton[] = [
   { label: "🏍️ Grundkurs buchen", action: "start_booking" },
@@ -112,7 +110,7 @@ export default function ChatBot() {
         setOpen(true);
         setAutoOpened(true);
       }
-    }, 8000);
+    }, tenantConfig.chatbot.autoOpenDelayMs);
     return () => clearTimeout(timer);
   }, [open, autoOpened]);
 
@@ -153,7 +151,7 @@ export default function ChatBot() {
       setMessages([{
         id: "welcome",
         role: "bot",
-        content: "Hoi! 👋 Willkommen bei **Drive Me Fahrschule** in Wettingen.\nWie kann ich dir helfen?",
+        content: tenantConfig.chatbot.welcomeMessage,
         buttons: mainMenu,
       }]);
       setInitialized(true);
@@ -181,7 +179,7 @@ export default function ChatBot() {
     addMsg({ role: "user", content: "Grundkurs buchen" });
     addMsg({
       role: "bot",
-      content: "Super! Der Motorrad-Grundkurs bei Drive Me dauert 12 Stunden (3 Teile). Er ist gesetzlich vorgeschrieben für alle Kategorien.\n\nWelche Kategorie interessiert dich?",
+      content: tenantConfig.chatbot.grundkursIntro,
       buttons: [
         { label: "A1 – 125cc", action: "cat_a1" },
         { label: "A2 – 35kW", action: "cat_a2" },
@@ -415,7 +413,7 @@ export default function ChatBot() {
     addMsg({ role: "user", content: "Fahrstunden buchen" });
     addMsg({
       role: "bot",
-      content: "Fahrstunden bei Drive Me – flexibel Mo–Sa von 08–22 Uhr.\n\nWas möchtest du buchen?",
+      content: tenantConfig.chatbot.fahrstundenIntro,
       buttons: [
         { label: "Einzelstunde", action: "fs_single" },
         { label: "Paket 5 Stunden", action: "fs_pkg5" },
@@ -684,7 +682,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "Direkt anrufen" });
       addMsg({
         role: "bot",
-        content: "📞 Du erreichst Jamal unter **078 974 44 74**.\n\nÖffnungszeiten: Mo–Sa 08:00–22:00",
+        content: `📞 Du erreichst uns unter **${tenantConfig.contact.phone}**.\n\nÖffnungszeiten: ${tenantConfig.contact.openingHours}`,
         buttons: [{ label: "Zurück zum Menü", action: "main_menu" }],
       });
     }
@@ -713,7 +711,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "WhatsApp" });
       addMsg({
         role: "bot",
-        content: "📱 Schreib uns direkt auf WhatsApp:\n\n👉 [wa.me/41789744474](https://wa.me/41789744474)",
+        content: `📱 Schreib uns direkt auf WhatsApp:\n\n👉 [WhatsApp öffnen](${tenantConfig.contact.whatsappUrl})`,
         buttons: [{ label: "Zurück zum Menü", action: "main_menu" }],
       });
     }
@@ -721,7 +719,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "E-Mail" });
       addMsg({
         role: "bot",
-        content: "Schreib uns an **info@drive-me.ch** – wir antworten innerhalb von 24h.",
+        content: `Schreib uns an **${tenantConfig.contact.email}** – wir antworten innerhalb von 24h.`,
         buttons: [{ label: "Zurück zum Menü", action: "main_menu" }],
       });
     }
@@ -1178,7 +1176,7 @@ function InstructorSelector({ onSelect }: { onSelect: (inst: Instructor | null) 
   }
   return (
     <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-      {instructors.map((inst) => (
+      {tenantConfig.instructors.map((inst) => (
         <button key={inst.id} onClick={() => { setSelected(true); onSelect(inst); }} className="w-full text-left bg-card border border-border p-3 hover:border-primary/40 transition-colors" style={{ borderRadius: "3px" }}>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary/10 flex items-center justify-center" style={{ borderRadius: "3px" }}>

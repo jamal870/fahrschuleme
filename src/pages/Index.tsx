@@ -1,6 +1,7 @@
 import { Phone, Mail, MapPin, Clock, Users, ChevronRight, Bike, Car, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
+import { tenantConfig } from "@/config/tenant";
 
 const Index = () => {
   return (
@@ -11,10 +12,10 @@ const Index = () => {
           <Link to="/" className="flex items-center gap-1">
             <div className="flex flex-col leading-tight">
               <span className="flex items-baseline gap-0.5">
-                <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
-                <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
+                <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>{tenantConfig.brand.logoText.main}</span>
+                <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>{tenantConfig.brand.logoText.accent}</span>
               </span>
-              <span className="text-[10px] font-body text-muted-foreground -mt-1">Fahrschule</span>
+              <span className="text-[10px] font-body text-muted-foreground -mt-1">{tenantConfig.brand.logoText.sub}</span>
             </div>
           </Link>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
@@ -24,8 +25,8 @@ const Index = () => {
             <a href="#preise" className="hover:text-primary transition-colors">Preise</a>
             <a href="#kontakt" className="hover:text-primary transition-colors">Kontakt</a>
             <a
-              href="https://buchen.drive-me.ch/grundkurs-buchen"
-              target="_blank"
+              href={tenantConfig.booking.externalBookingUrl || "/grundkurs-buchen"}
+              target={tenantConfig.booking.externalBookingUrl ? "_blank" : undefined}
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
               style={{ borderRadius: "3px" }}
@@ -42,10 +43,10 @@ const Index = () => {
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground leading-none mb-4">
               Motorradführerschein<br />
-              <span className="text-primary">in Wettingen</span>
+              <span className="text-primary">in {tenantConfig.location.city}</span>
             </h1>
             <p className="text-lg font-body text-muted-foreground leading-relaxed mb-8 max-w-lg">
-              Drive Me – Erfahrene Instruktoren · Kleine Gruppen · Mo–Sa 08–22 Uhr
+              {tenantConfig.brand.name} – {tenantConfig.brand.tagline} · {tenantConfig.contact.openingHours}
             </p>
             <div className="flex flex-wrap gap-3">
               <a
@@ -73,9 +74,9 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {[
               { icon: <Bike className="w-5 h-5 mx-auto mb-1" />, label: "AM / A1 / A2 / A" },
-              { icon: <Clock className="w-5 h-5 mx-auto mb-1" />, label: "Mo–Sa 08–22 Uhr" },
+              { icon: <Clock className="w-5 h-5 mx-auto mb-1" />, label: tenantConfig.contact.openingHours },
               { icon: <Users className="w-5 h-5 mx-auto mb-1" />, label: "Kleine Gruppen" },
-              { icon: <MapPin className="w-5 h-5 mx-auto mb-1" />, label: "Wettingen / Baden" },
+              { icon: <MapPin className="w-5 h-5 mx-auto mb-1" />, label: tenantConfig.location.region },
             ].map((stat, i) => (
               <div key={i} className="py-2">
                 {stat.icon}
@@ -95,15 +96,11 @@ const Index = () => {
               Sichere Fahrpraxis ist unser Ziel
             </h2>
             <p className="text-muted-foreground font-body max-w-2xl mx-auto">
-              Bei Drive Me in Wettingen liegt unser Fokus darauf, dich zu einem sicheren und kompetenten Fahrer auszubilden.
+              Bei {tenantConfig.brand.name} in {tenantConfig.location.city} liegt unser Fokus darauf, dich zu einem sicheren und kompetenten Fahrer auszubilden.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { title: "Passive Sicherheit", desc: "Technisch einwandfreies Motorrad, vollständige Schutzausrüstung mit Protektoren, Handschuhen, Stiefeln und geprüftem Helm." },
-              { title: "Aktive Sicherheit", desc: "Entsteht durch deine Fahrtechnik, präzise Fahrzeugbeherrschung und die in unseren Kursen vermittelten Fähigkeiten." },
-              { title: "Training", desc: "Diese Fahrtechniken trainieren wir im 12-Stunden-Grundkurs und in individuell abgestimmten Motorrad Fahrstunden." },
-            ].map((item, i) => (
+            {tenantConfig.safetyPoints.map((item, i) => (
               <div key={i} className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
                 <h3 className="font-heading font-bold text-foreground mb-2 text-lg">{item.title}</h3>
                 <p className="text-sm text-muted-foreground font-body">{item.desc}</p>
@@ -121,12 +118,7 @@ const Index = () => {
             <h2 className="text-3xl font-heading font-bold text-foreground mb-4">Motorrad-Kategorien</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {[
-              { title: "AM – Mofa", age: "Ab 15 Jahren", desc: "Mofa & Roller bis 50cm³, max. 45 km/h" },
-              { title: "A1 – 125cc", age: "Ab 16 Jahren", desc: "125cm³, max. 11 kW – perfekter Einstieg" },
-              { title: "A2 – 35kW", age: "Ab 18 Jahren", desc: "Bis 35 kW – nächste Stufe nach A1" },
-              { title: "A – Unbegrenzt", age: "Ab 20 Jahren", desc: "Unbegrenzte Leistung – Direktzugang" },
-            ].map((cat, i) => (
+            {tenantConfig.categories.map((cat, i) => (
               <div key={i} className="bg-card border border-border p-5 hover:border-primary/50 transition-colors" style={{ borderRadius: "3px" }}>
                 <h3 className="font-heading font-bold text-foreground text-lg mb-1">{cat.title}</h3>
                 <p className="text-primary text-xs font-heading font-bold mb-2">{cat.age}</p>
@@ -206,12 +198,7 @@ const Index = () => {
             <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
               <h3 className="text-xl font-heading font-bold text-primary mb-4">Auto</h3>
               <div className="space-y-3">
-                {[
-                  { name: "Admin Beitrag einmalig", price: "130.-", note: "Beinhaltet Administrationsgebühren und Vollkaskoversicherung" },
-                  { name: "Einzellektion (45min)", price: "95.-" },
-                  { name: "Doppellektion (2x45Min)", price: "190.-" },
-                  { name: "Auf Rechnung (45min)", price: "95.-" },
-                ].map((item, i) => (
+                {tenantConfig.pricing.auto.map((item, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between">
                       <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
@@ -224,10 +211,7 @@ const Index = () => {
 
               <h4 className="text-lg font-heading font-bold text-primary mt-6 mb-3">Auto Abonnements</h4>
               <div className="space-y-3">
-                {[
-                  { name: "10er Abo", price: "900.-", note: "Kaufe 10 Fahrstunden und spare 50.- auf den Gesamtpreis" },
-                  { name: "20er Abo", price: "1760.-", note: "Kaufe 20 Fahrstunden und spare 150.- auf den Gesamtpreis" },
-                ].map((item, i) => (
+                {tenantConfig.pricing.autoAbos.map((item, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between">
                       <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
@@ -243,12 +227,7 @@ const Index = () => {
             <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
               <h3 className="text-xl font-heading font-bold text-primary mb-4">Motorrad</h3>
               <div className="space-y-3">
-                {[
-                  { name: "Einzellektion (60Min)", price: "130.-" },
-                  { name: "Doppellektion (2x45Min)", price: "180.-" },
-                  { name: "Motorrad Vorschulung Doppellektion", price: "180.-" },
-                  { name: "Vor-Prüfungsfahrt inkl. Prüfung (120min)", price: "180.-" },
-                ].map((item, i) => (
+                {tenantConfig.pricing.motorrad.map((item, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between">
                       <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
@@ -260,12 +239,7 @@ const Index = () => {
 
               <h4 className="text-lg font-heading font-bold text-foreground mt-6 mb-3">Motorrad Grundkurs</h4>
               <div className="space-y-3">
-                {[
-                  { name: "M1 (4h)", price: "160.-" },
-                  { name: "M2 (4h)", price: "160.-" },
-                  { name: "M3 (4h)", price: "160.-" },
-                  { name: "Motorrad Tageskurs (4h)", price: "200.-" },
-                ].map((item, i) => (
+                {tenantConfig.pricing.motorradGrundkurs.map((item, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between">
                       <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
@@ -306,10 +280,10 @@ const Index = () => {
             <h2 className="text-2xl font-heading font-bold text-foreground mb-6">Kontakt</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { icon: <MapPin className="w-5 h-5 text-primary" />, label: "Adresse", value: "Landstrasse 99\nCenter Passage 2. OG\nRaum 2.35, 5430 Wettingen" },
-                { icon: <Phone className="w-5 h-5 text-primary" />, label: "Telefon", value: "078 974 44 74" },
-                { icon: <Mail className="w-5 h-5 text-primary" />, label: "E-Mail", value: "info@drive-me.ch" },
-                { icon: <Clock className="w-5 h-5 text-primary" />, label: "Öffnungszeiten", value: "Mo–Sa 08:00–22:00" },
+                { icon: <MapPin className="w-5 h-5 text-primary" />, label: "Adresse", value: `${tenantConfig.contact.address.street}\n${tenantConfig.contact.address.detail}\n${tenantConfig.contact.address.city}` },
+                { icon: <Phone className="w-5 h-5 text-primary" />, label: "Telefon", value: tenantConfig.contact.phone },
+                { icon: <Mail className="w-5 h-5 text-primary" />, label: "E-Mail", value: tenantConfig.contact.email },
+                { icon: <Clock className="w-5 h-5 text-primary" />, label: "Öffnungszeiten", value: tenantConfig.contact.openingHours },
               ].map((c, i) => (
                 <div key={i} className="flex items-start gap-3">
                   {c.icon}
@@ -336,7 +310,7 @@ const Index = () => {
           </div>
           <div className="border border-border overflow-hidden bg-card shadow-sm" style={{ borderRadius: "3px" }}>
             <iframe
-              src="https://buchen.drive-me.ch/grundkurs-buchen"
+              src={tenantConfig.booking.externalBookingUrl || "/grundkurs-buchen"}
               title="Grundkurs buchen"
               className="w-full border-0"
               style={{ height: "800px" }}
@@ -349,7 +323,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t-2 border-primary bg-card py-6">
         <div className="max-w-6xl mx-auto px-6 text-center text-xs text-muted-foreground font-body">
-          © 2026 Drive me Fahrschule. Alle Rechte vorbehalten.
+          {tenantConfig.footer.copyright}
         </div>
       </footer>
 
