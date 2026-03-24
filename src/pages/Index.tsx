@@ -10,8 +10,10 @@ const Index = () => {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex flex-col leading-tight">
-              <span className="text-xl font-heading font-bold text-foreground tracking-tight">DRIVE ME</span>
-              <span className="text-[10px] font-body text-muted-foreground -mt-0.5">Fahrschule</span>
+              <span className="text-[22px] font-heading font-bold text-foreground uppercase" style={{ letterSpacing: "0.05em" }}>
+                DRIVE <span className="text-primary">ME</span>
+              </span>
+              <span className="text-[10px] font-body text-muted-foreground -mt-1">Fahrschule</span>
             </div>
           </Link>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
