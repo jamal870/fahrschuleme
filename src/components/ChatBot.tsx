@@ -1176,7 +1176,7 @@ function InstructorSelector({ onSelect }: { onSelect: (inst: Instructor | null) 
   }
   return (
     <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-      {instructors.map((inst) => (
+      {tenantConfig.instructors.map((inst) => (
         <button key={inst.id} onClick={() => { setSelected(true); onSelect(inst); }} className="w-full text-left bg-card border border-border p-3 hover:border-primary/40 transition-colors" style={{ borderRadius: "3px" }}>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary/10 flex items-center justify-center" style={{ borderRadius: "3px" }}>
