@@ -97,8 +97,8 @@ serve(async (req) => {
       customer_email: customerId ? undefined : email,
       line_items: lineItems,
       mode: "payment",
-      success_url: `${origin}/buchung-erfolgreich?booking_id=${bookingId}`,
-      cancel_url: `${origin}/grundkurs-buchen`,
+       success_url: `${origin}/#/buchung-erfolgreich?booking_id=${bookingId}`,
+       cancel_url: `${origin}/#/grundkurs`,
       metadata: {
         booking_id: bookingId,
         customer_name: customerName || "",
