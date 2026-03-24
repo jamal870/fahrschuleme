@@ -310,7 +310,7 @@ const Index = () => {
           </div>
           <div className="border border-border overflow-hidden bg-card shadow-sm" style={{ borderRadius: "3px" }}>
             <iframe
-              src="https://buchen.drive-me.ch/grundkurs-buchen"
+              src={tenantConfig.booking.externalBookingUrl || "/grundkurs-buchen"}
               title="Grundkurs buchen"
               className="w-full border-0"
               style={{ height: "800px" }}
