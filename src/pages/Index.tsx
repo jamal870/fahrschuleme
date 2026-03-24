@@ -96,7 +96,7 @@ const Index = () => {
               Sichere Fahrpraxis ist unser Ziel
             </h2>
             <p className="text-muted-foreground font-body max-w-2xl mx-auto">
-              Bei Drive Me in Wettingen liegt unser Fokus darauf, dich zu einem sicheren und kompetenten Fahrer auszubilden.
+              Bei {tenantConfig.brand.name} in {tenantConfig.location.city} liegt unser Fokus darauf, dich zu einem sicheren und kompetenten Fahrer auszubilden.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
