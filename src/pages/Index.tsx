@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, Clock, Users, Shield, ChevronRight, Bike, Car } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Users, ChevronRight, Bike, Car } from "lucide-react";
 import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
 
