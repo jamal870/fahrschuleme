@@ -61,7 +61,6 @@ interface FahrstundenSummary {
 
 const PAYMENT_METHODS = [
   { id: "cash", label: "Barzahlung am Kurstag", desc: "Zahlung bar vor Ort am Kurstag.", icon: "💵" },
-  { id: "card", label: "Online bezahlen (Stripe/Twint)", desc: "Sofort bezahlen per Karte oder Twint.", icon: "💳" },
 ];
 
 const mainMenu: QuickButton[] = [
