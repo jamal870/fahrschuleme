@@ -112,27 +112,24 @@ export default function GrundkursBuchen() {
     }
 
     try {
-      const { data: booking, error: bookingError } = await supabase
-        .from('bookings')
-        .insert({
-          booking_type: 'grundkurs',
-          first_name: firstName, last_name: lastName, email, phone, address,
-          fa_number: faNumber, birth_date: birthDate,
-          payment_method: "stripe",
-          total_price: total, status: 'pending_payment',
-        })
-        .select('id').single();
+      // Create booking via server-side edge function
+      const { data: bookingResult, error: bookingError } = await supabase.functions.invoke('create-booking', {
+        body: {
+          bookingType: 'grundkurs',
+          firstName, lastName, email, phone, address,
+          faNumber, birthDate,
+          paymentMethod: "stripe",
+          totalPrice: total, status: 'pending_payment',
+          courseDateIds: selectedCourses.map(c => c.id),
+        },
+      });
 
-      if (bookingError) throw bookingError;
-
-      for (const course of selectedCourses) {
-        await supabase.from('booking_items').insert({ booking_id: booking.id, course_date_id: course.id });
-      }
+      if (bookingError || !bookingResult?.bookingId) throw new Error(bookingError?.message || bookingResult?.error || "Buchung fehlgeschlagen");
 
       // Create Stripe checkout session
       const { data: stripeData, error: stripeError } = await supabase.functions.invoke('create-course-payment', {
         body: {
-          bookingId: booking.id,
+          bookingId: bookingResult.bookingId,
           email,
           customerName: `${firstName} ${lastName}`,
         },
@@ -143,9 +140,9 @@ export default function GrundkursBuchen() {
       }
 
       try {
-        checkoutWindow.location.replace(stripeData.url);
+        checkoutWindow!.location.replace(stripeData.url);
       } catch {
-        checkoutWindow.location.href = stripeData.url;
+        checkoutWindow!.location.href = stripeData.url;
       }
       toast.success("Zahlungsseite geöffnet – bitte im neuen Tab bezahlen. Nach erfolgreicher Zahlung erhältst du die Bestätigung per E-Mail.");
     } catch (err) {
