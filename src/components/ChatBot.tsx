@@ -344,13 +344,6 @@ export default function ChatBot() {
             bookingId: booking.id,
             email: studentData.email,
             customerName: `${studentData.firstName} ${studentData.lastName}`,
-            courses: sels.map(({ part, course }) => ({
-              part,
-              date: course.date,
-              time: course.time,
-              price: course.price,
-            })),
-            totalPrice: total,
           },
         });
 
