@@ -74,9 +74,9 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {[
               { icon: <Bike className="w-5 h-5 mx-auto mb-1" />, label: "AM / A1 / A2 / A" },
-              { icon: <Clock className="w-5 h-5 mx-auto mb-1" />, label: "Mo–Sa 08–22 Uhr" },
+              { icon: <Clock className="w-5 h-5 mx-auto mb-1" />, label: tenantConfig.contact.openingHours },
               { icon: <Users className="w-5 h-5 mx-auto mb-1" />, label: "Kleine Gruppen" },
-              { icon: <MapPin className="w-5 h-5 mx-auto mb-1" />, label: "Wettingen / Baden" },
+              { icon: <MapPin className="w-5 h-5 mx-auto mb-1" />, label: tenantConfig.location.region },
             ].map((stat, i) => (
               <div key={i} className="py-2">
                 {stat.icon}
