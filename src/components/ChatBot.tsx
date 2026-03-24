@@ -542,9 +542,8 @@ export default function ChatBot() {
           const maxAttempts = 60;
           for (let i = 0; i < maxAttempts; i++) {
             await new Promise(r => setTimeout(r, 5000));
-            const { data: updatedBooking } = await supabase.from('bookings').select('status').eq('id', booking.id).single();
-            if (updatedBooking?.status === 'confirmed') {
-              await sendConfirmationEmail();
+            const { data: statusData } = await supabase.rpc('get_booking_status', { booking_uuid: booking.id });
+            if (statusData && statusData.length > 0 && statusData[0].status === 'confirmed') {
               setFsStep(0);
               addMsg({
                 role: "bot",
