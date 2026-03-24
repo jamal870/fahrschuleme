@@ -719,7 +719,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "E-Mail" });
       addMsg({
         role: "bot",
-        content: "Schreib uns an **info@drive-me.ch** – wir antworten innerhalb von 24h.",
+        content: `Schreib uns an **${tenantConfig.contact.email}** – wir antworten innerhalb von 24h.`,
         buttons: [{ label: "Zurück zum Menü", action: "main_menu" }],
       });
     }
