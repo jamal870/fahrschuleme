@@ -179,7 +179,7 @@ export default function ChatBot() {
     addMsg({ role: "user", content: "Grundkurs buchen" });
     addMsg({
       role: "bot",
-      content: "Super! Der Motorrad-Grundkurs bei Drive Me dauert 12 Stunden (3 Teile). Er ist gesetzlich vorgeschrieben für alle Kategorien.\n\nWelche Kategorie interessiert dich?",
+      content: tenantConfig.chatbot.grundkursIntro,
       buttons: [
         { label: "A1 – 125cc", action: "cat_a1" },
         { label: "A2 – 35kW", action: "cat_a2" },
