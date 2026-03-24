@@ -239,12 +239,7 @@ const Index = () => {
 
               <h4 className="text-lg font-heading font-bold text-foreground mt-6 mb-3">Motorrad Grundkurs</h4>
               <div className="space-y-3">
-                {[
-                  { name: "M1 (4h)", price: "160.-" },
-                  { name: "M2 (4h)", price: "160.-" },
-                  { name: "M3 (4h)", price: "160.-" },
-                  { name: "Motorrad Tageskurs (4h)", price: "200.-" },
-                ].map((item, i) => (
+                {tenantConfig.pricing.motorradGrundkurs.map((item, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between">
                       <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
