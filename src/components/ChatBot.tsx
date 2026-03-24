@@ -151,7 +151,7 @@ export default function ChatBot() {
       setMessages([{
         id: "welcome",
         role: "bot",
-        content: "Hoi! 👋 Willkommen bei **Drive Me Fahrschule** in Wettingen.\nWie kann ich dir helfen?",
+        content: tenantConfig.chatbot.welcomeMessage,
         buttons: mainMenu,
       }]);
       setInitialized(true);
