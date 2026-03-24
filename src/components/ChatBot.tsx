@@ -682,7 +682,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "Direkt anrufen" });
       addMsg({
         role: "bot",
-        content: "📞 Du erreichst Jamal unter **078 974 44 74**.\n\nÖffnungszeiten: Mo–Sa 08:00–22:00",
+        content: `📞 Du erreichst uns unter **${tenantConfig.contact.phone}**.\n\nÖffnungszeiten: ${tenantConfig.contact.openingHours}`,
         buttons: [{ label: "Zurück zum Menü", action: "main_menu" }],
       });
     }
