@@ -12,10 +12,10 @@ const Index = () => {
           <Link to="/" className="flex items-center gap-1">
             <div className="flex flex-col leading-tight">
               <span className="flex items-baseline gap-0.5">
-                <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
-                <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
+                <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>{tenantConfig.brand.logoText.main}</span>
+                <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>{tenantConfig.brand.logoText.accent}</span>
               </span>
-              <span className="text-[10px] font-body text-muted-foreground -mt-1">Fahrschule</span>
+              <span className="text-[10px] font-body text-muted-foreground -mt-1">{tenantConfig.brand.logoText.sub}</span>
             </div>
           </Link>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
