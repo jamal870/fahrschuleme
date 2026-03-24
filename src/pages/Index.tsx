@@ -11,7 +11,7 @@ const Index = () => {
           <Link to="/" className="flex items-center gap-2">
             <div className="flex flex-col leading-tight">
               <span className="text-[22px] font-heading font-bold text-foreground uppercase" style={{ letterSpacing: "0.05em" }}>
-                DRIVE <span className="text-primary">ME</span>
+                DRIVE <span className="text-primary lowercase tracking-normal" style={{ fontStyle: "italic", letterSpacing: "0.02em" }}>me</span>
               </span>
               <span className="text-[10px] font-body text-muted-foreground -mt-1">Fahrschule</span>
             </div>
