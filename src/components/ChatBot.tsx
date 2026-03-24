@@ -293,6 +293,13 @@ export default function ChatBot() {
     const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
     const total = sels.reduce((s, { course }) => s + course.price, 0);
     const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
+    const checkoutWindow = isOnlinePayment ? window.open("about:blank", "_blank", "noopener,noreferrer") : null;
+
+    if (isOnlinePayment && !checkoutWindow) {
+      toast.error("Popup blockiert – bitte Popups erlauben und erneut versuchen.");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const { data: booking, error: bookingError } = await supabase
@@ -351,10 +358,8 @@ export default function ChatBot() {
           throw new Error(fnError?.message || 'Zahlung konnte nicht initialisiert werden');
         }
 
-        // Open Stripe in new tab
-        window.open(data.url, '_blank');
+        checkoutWindow.location.href = data.url;
 
-        // Show waiting message
         addMsg({
           role: "bot",
           content: `💳 **Zahlung geöffnet** – bitte schliesse die Zahlung im neuen Tab ab.\n\nNach erfolgreicher Zahlung erhältst du die Bestätigung per E-Mail an **${studentData.email}**.`,
@@ -380,6 +385,9 @@ export default function ChatBot() {
       });
       toast.success("Buchung bestätigt!");
     } catch (err) {
+      if (checkoutWindow && !checkoutWindow.closed) {
+        checkoutWindow.close();
+      }
       console.error('Booking error:', err);
       toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
     } finally {
@@ -470,9 +478,16 @@ export default function ChatBot() {
     if (!studentData || !fsService || isSubmitting) return;
     setIsSubmitting(true);
     const price = fsPackage ? fsPackage.totalPrice : fsService.price;
+    const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
+    const checkoutWindow = isOnlinePayment ? window.open("about:blank", "_blank", "noopener,noreferrer") : null;
+
+    if (isOnlinePayment && !checkoutWindow) {
+      toast.error("Popup blockiert – bitte Popups erlauben und erneut versuchen.");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
-      const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
         .insert({
@@ -515,7 +530,7 @@ export default function ChatBot() {
           },
         });
         if (fnError || !data?.url) throw new Error('Zahlung konnte nicht initialisiert werden');
-        window.open(data.url, '_blank');
+        checkoutWindow.location.href = data.url;
         addMsg({ role: "bot", content: `⏳ **Warte auf Zahlung...**\n\nStripe Checkout wurde geöffnet.` });
 
         const pollPayment = async () => {
@@ -550,6 +565,9 @@ export default function ChatBot() {
       });
       toast.success("Fahrstunde gebucht!");
     } catch (err) {
+      if (checkoutWindow && !checkoutWindow.closed) {
+        checkoutWindow.close();
+      }
       console.error('Booking error:', err);
       toast.error("Buchung fehlgeschlagen.");
     } finally {
