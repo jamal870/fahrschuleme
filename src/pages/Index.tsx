@@ -138,19 +138,19 @@ const Index = () => {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[1, 2, 3].map((part) => (
-              <div key={part} className="bg-card border border-border p-6 text-center hover:border-primary/50 transition-colors" style={{ borderRadius: "3px" }}>
+              <a key={part} href="/grundkurs-buchen" className="bg-card border border-border p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer block" style={{ borderRadius: "3px" }}>
                 <div className="w-14 h-14 mx-auto mb-4 bg-primary/10 text-primary font-heading font-bold text-xl flex items-center justify-center" style={{ borderRadius: "3px" }}>
                   {part}
                 </div>
                 <h3 className="font-heading font-bold text-foreground mb-1">Grundkurs {part}</h3>
                 <p className="text-sm text-muted-foreground font-body mb-3">4 Stunden Praxis</p>
                 <p className="text-lg font-heading font-bold text-primary">CHF 160.00</p>
-              </div>
+              </a>
             ))}
           </div>
           <div className="mt-6 bg-primary/5 border-l-4 border-primary p-4" style={{ borderRadius: "0 3px 3px 0" }}>
             <p className="text-sm text-muted-foreground font-body">
-              <strong className="text-foreground">💡 Tipp:</strong> Nutze unseren Chatbot unten rechts, um verfügbare Termine zu sehen und direkt zu buchen!
+              <strong className="text-foreground">💡 Tipp:</strong> Klicke auf einen Kursteil oben, um direkt verfügbare Termine zu sehen und zu buchen!
             </p>
           </div>
         </div>
