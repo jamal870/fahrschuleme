@@ -118,12 +118,7 @@ const Index = () => {
             <h2 className="text-3xl font-heading font-bold text-foreground mb-4">Motorrad-Kategorien</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {[
-              { title: "AM – Mofa", age: "Ab 15 Jahren", desc: "Mofa & Roller bis 50cm³, max. 45 km/h" },
-              { title: "A1 – 125cc", age: "Ab 16 Jahren", desc: "125cm³, max. 11 kW – perfekter Einstieg" },
-              { title: "A2 – 35kW", age: "Ab 18 Jahren", desc: "Bis 35 kW – nächste Stufe nach A1" },
-              { title: "A – Unbegrenzt", age: "Ab 20 Jahren", desc: "Unbegrenzte Leistung – Direktzugang" },
-            ].map((cat, i) => (
+            {tenantConfig.categories.map((cat, i) => (
               <div key={i} className="bg-card border border-border p-5 hover:border-primary/50 transition-colors" style={{ borderRadius: "3px" }}>
                 <h3 className="font-heading font-bold text-foreground text-lg mb-1">{cat.title}</h3>
                 <p className="text-primary text-xs font-heading font-bold mb-2">{cat.age}</p>
