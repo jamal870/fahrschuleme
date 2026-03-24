@@ -292,6 +292,7 @@ export default function ChatBot() {
     setIsSubmitting(true);
     const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
     const total = sels.reduce((s, { course }) => s + course.price, 0);
+    const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
 
     try {
       const { data: booking, error: bookingError } = await supabase
@@ -300,7 +301,7 @@ export default function ChatBot() {
           booking_type: 'grundkurs', first_name: studentData.firstName, last_name: studentData.lastName,
           address: studentData.address, birth_date: studentData.birthDate, fa_number: studentData.faNumber,
           email: studentData.email, phone: studentData.phone, payment_method: selectedPaymentMethod,
-          total_price: total, status: 'confirmed',
+          total_price: total, status: isOnlinePayment ? 'pending_payment' : 'confirmed',
         })
         .select('id').single();
 
@@ -311,23 +312,50 @@ export default function ChatBot() {
         await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
-      try {
-        await supabase.functions.invoke('send-transactional-email', {
-          body: {
-            templateName: 'booking-confirmation', recipientEmail: studentData.email,
-            idempotencyKey: `booking-confirm-${booking.id}`,
-            templateData: {
-              firstName: studentData.firstName, lastName: studentData.lastName,
-              address: studentData.address, birthDate: studentData.birthDate,
-              faNumber: studentData.faNumber, phone: studentData.phone, email: studentData.email,
-              courses: sels.map(({ part, course }) => ({ part, date: course.date, time: course.time, location: course.location, price: course.price })),
-              totalPrice: total.toFixed(2), paymentMethod: selectedPaymentMethod,
-              bookingId: booking.id, bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+      const sendConfirmationEmail = async () => {
+        try {
+          await supabase.functions.invoke('send-transactional-email', {
+            body: {
+              templateName: 'booking-confirmation', recipientEmail: studentData.email,
+              idempotencyKey: `booking-confirm-${booking.id}`,
+              templateData: {
+                firstName: studentData.firstName, lastName: studentData.lastName,
+                address: studentData.address, birthDate: studentData.birthDate,
+                faNumber: studentData.faNumber, phone: studentData.phone, email: studentData.email,
+                courses: sels.map(({ part, course }) => ({ part, date: course.date, time: course.time, location: course.location, price: course.price })),
+                totalPrice: total.toFixed(2), paymentMethod: selectedPaymentMethod,
+                bookingId: booking.id, bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+              },
             },
+          });
+        } catch (emailErr) { console.error('Email send error:', emailErr); }
+      };
+
+      if (isOnlinePayment) {
+        const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
+          body: {
+            bookingId: booking.id,
+            email: studentData.email,
+            customerName: `${studentData.firstName} ${studentData.lastName}`,
+            courses: sels.map(({ part, course }) => ({
+              part,
+              date: course.date,
+              time: course.time,
+              price: course.price,
+            })),
+            totalPrice: total,
           },
         });
-      } catch (emailErr) { console.error('Email send error:', emailErr); }
 
+        if (fnError || !data?.url) {
+          throw new Error(fnError?.message || 'Zahlung konnte nicht initialisiert werden');
+        }
+
+        window.location.href = data.url;
+        return;
+      }
+
+      await sendConfirmationEmail();
       setBookingStep(0);
       addMsg({
         role: "bot",
