@@ -1,0 +1,1 @@
+CREATE POLICY "Allow public update of pending bookings status" ON public.bookings FOR UPDATE TO public USING (status = 'pending_payment') WITH CHECK (status = 'confirmed');
