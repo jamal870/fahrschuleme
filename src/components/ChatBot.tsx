@@ -62,10 +62,7 @@ interface FahrstundenSummary {
 
 type ConfirmationResult = "confirmed" | "payment_started" | "failed";
 
-const PAYMENT_METHODS = [
-  { id: "card", label: "Online bezahlen (Stripe/Twint)", desc: "Sichere Onlinezahlung via Stripe Checkout.", icon: "💳" },
-  { id: "cash", label: "Barzahlung am Kurstag", desc: "Zahlung bar vor Ort am Kurstag.", icon: "💵" },
-];
+const PAYMENT_METHODS = tenantConfig.booking.paymentMethods;
 
 const mainMenu: QuickButton[] = [
   { label: "🏍️ Grundkurs buchen", action: "start_booking" },
