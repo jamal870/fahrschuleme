@@ -490,17 +490,23 @@ export default function ChatBot() {
     }
 
     try {
-      const { data: booking, error: bookingError } = await supabase
-        .from('bookings')
-        .insert({
-          booking_type: 'fahrstunde', first_name: studentData.firstName, last_name: studentData.lastName,
-          address: studentData.address, birth_date: studentData.birthDate, fa_number: studentData.faNumber,
-          email: studentData.email, phone: studentData.phone, payment_method: selectedPaymentMethod,
-          total_price: price, status: isOnlinePayment ? 'pending_payment' : 'confirmed',
-        })
-        .select('id').single();
+      const { data: bookingResult, error: bookingError } = await supabase.functions.invoke('create-booking', {
+        body: {
+          bookingType: 'fahrstunde',
+          firstName: studentData.firstName, lastName: studentData.lastName,
+          email: studentData.email, phone: studentData.phone,
+          address: studentData.address, faNumber: studentData.faNumber,
+          birthDate: studentData.birthDate,
+          paymentMethod: selectedPaymentMethod,
+          totalPrice: price, status: isOnlinePayment ? 'pending_payment' : 'confirmed',
+          fahrstundenServiceId: fsService.id,
+          fahrstundenPackageId: fsPackage?.id || null,
+          instructor: fsInstructor?.name || null,
+        },
+      });
 
-      if (bookingError) throw bookingError;
+      if (bookingError || !bookingResult?.bookingId) throw new Error(bookingError?.message || bookingResult?.error || "Buchung fehlgeschlagen");
+      const booking = { id: bookingResult.bookingId };
 
       const sendConfirmationEmail = async () => {
         try {
