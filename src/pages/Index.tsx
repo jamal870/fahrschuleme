@@ -25,8 +25,8 @@ const Index = () => {
             <a href="#preise" className="hover:text-primary transition-colors">Preise</a>
             <a href="#kontakt" className="hover:text-primary transition-colors">Kontakt</a>
             <a
-              href="https://buchen.drive-me.ch/grundkurs-buchen"
-              target="_blank"
+              href={tenantConfig.booking.externalBookingUrl || "/grundkurs-buchen"}
+              target={tenantConfig.booking.externalBookingUrl ? "_blank" : undefined}
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
               style={{ borderRadius: "3px" }}
