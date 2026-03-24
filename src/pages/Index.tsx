@@ -198,12 +198,7 @@ const Index = () => {
             <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
               <h3 className="text-xl font-heading font-bold text-primary mb-4">Auto</h3>
               <div className="space-y-3">
-                {[
-                  { name: "Admin Beitrag einmalig", price: "130.-", note: "Beinhaltet Administrationsgebühren und Vollkaskoversicherung" },
-                  { name: "Einzellektion (45min)", price: "95.-" },
-                  { name: "Doppellektion (2x45Min)", price: "190.-" },
-                  { name: "Auf Rechnung (45min)", price: "95.-" },
-                ].map((item, i) => (
+                {tenantConfig.pricing.auto.map((item, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between">
                       <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
