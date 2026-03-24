@@ -9,25 +9,24 @@ export default function BuchungErfolgreich() {
   const bookingId = searchParams.get("booking_id");
   const [loading, setLoading] = useState(true);
   const [confirmed, setConfirmed] = useState(false);
+  const [firstName, setFirstName] = useState("");
 
   useEffect(() => {
     if (!bookingId) { setLoading(false); return; }
 
-    // Poll for booking confirmation (webhook confirms it server-side)
     let attempts = 0;
-    const maxAttempts = 30; // 30 * 2s = 60s max wait
+    const maxAttempts = 30;
 
     const poll = async () => {
-      const { data } = await supabase
-        .from("bookings")
-        .select("status, first_name, email")
-        .eq("id", bookingId)
-        .single();
+      const { data } = await supabase.rpc("get_booking_status", { booking_uuid: bookingId });
 
-      if (data?.status === "confirmed") {
-        setConfirmed(true);
-        setLoading(false);
-        return;
+      if (data && data.length > 0) {
+        setFirstName(data[0].first_name || "");
+        if (data[0].status === "confirmed") {
+          setConfirmed(true);
+          setLoading(false);
+          return;
+        }
       }
 
       attempts++;
@@ -64,8 +63,9 @@ export default function BuchungErfolgreich() {
             <CheckCircle className="w-20 h-20 text-primary mx-auto mb-6" />
             <h1 className="text-3xl font-heading font-bold text-foreground mb-3">Buchung & Zahlung erfolgreich!</h1>
             <p className="text-muted-foreground font-body mb-2">
-              Vielen Dank für deine Buchung. Die Bestätigung wird per E-Mail gesendet.
+              Vielen Dank für deine Buchung{firstName ? `, ${firstName}` : ""}.
             </p>
+            <p className="text-sm text-muted-foreground font-body mb-6">Die Bestätigung wird per E-Mail gesendet.</p>
             <Button asChild className="mt-4 font-heading uppercase" style={{ borderRadius: "3px" }}>
               <Link to="/">Zurück zur Startseite</Link>
             </Button>
