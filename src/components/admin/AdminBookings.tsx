@@ -64,7 +64,40 @@ const AdminBookings = () => {
     setBookingItems(data || []);
   };
 
-  const statusColor = (s: string) => {
+  const handlePdf = (type: string, b: Booking) => {
+    const data = { ...b, items: [] as string[] };
+    const suffix = `${b.last_name}_${b.id.slice(0, 6)}`;
+    let doc;
+    switch (type) {
+      case "invoice":
+        doc = generateInvoice(data);
+        downloadPdf(doc, `Rechnung_${suffix}.pdf`);
+        break;
+      case "confirmation":
+        doc = generateBookingConfirmation(data);
+        downloadPdf(doc, `Bestaetigung_${suffix}.pdf`);
+        break;
+      case "receipt":
+        doc = generateReceipt(data);
+        downloadPdf(doc, `Quittung_${suffix}.pdf`);
+        break;
+      case "reminder1":
+        doc = generateReminder(data, 1);
+        downloadPdf(doc, `Erinnerung_${suffix}.pdf`);
+        break;
+      case "reminder2":
+        doc = generateReminder(data, 2);
+        downloadPdf(doc, `Mahnung2_${suffix}.pdf`);
+        break;
+      case "reminder3":
+        doc = generateReminder(data, 3);
+        downloadPdf(doc, `LetzteMahnung_${suffix}.pdf`);
+        break;
+    }
+    toast.success("PDF wurde erstellt");
+  };
+
+
     switch (s) {
       case "confirmed": return "default";
       case "cancelled": return "destructive";
