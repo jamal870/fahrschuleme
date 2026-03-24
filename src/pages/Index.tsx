@@ -280,10 +280,10 @@ const Index = () => {
             <h2 className="text-2xl font-heading font-bold text-foreground mb-6">Kontakt</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { icon: <MapPin className="w-5 h-5 text-primary" />, label: "Adresse", value: "Landstrasse 99\nCenter Passage 2. OG\nRaum 2.35, 5430 Wettingen" },
-                { icon: <Phone className="w-5 h-5 text-primary" />, label: "Telefon", value: "078 974 44 74" },
-                { icon: <Mail className="w-5 h-5 text-primary" />, label: "E-Mail", value: "info@drive-me.ch" },
-                { icon: <Clock className="w-5 h-5 text-primary" />, label: "Öffnungszeiten", value: "Mo–Sa 08:00–22:00" },
+                { icon: <MapPin className="w-5 h-5 text-primary" />, label: "Adresse", value: `${tenantConfig.contact.address.street}\n${tenantConfig.contact.address.detail}\n${tenantConfig.contact.address.city}` },
+                { icon: <Phone className="w-5 h-5 text-primary" />, label: "Telefon", value: tenantConfig.contact.phone },
+                { icon: <Mail className="w-5 h-5 text-primary" />, label: "E-Mail", value: tenantConfig.contact.email },
+                { icon: <Clock className="w-5 h-5 text-primary" />, label: "Öffnungszeiten", value: tenantConfig.contact.openingHours },
               ].map((c, i) => (
                 <div key={i} className="flex items-start gap-3">
                   {c.icon}
