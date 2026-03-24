@@ -43,10 +43,10 @@ const Index = () => {
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground leading-none mb-4">
               Motorradführerschein<br />
-              <span className="text-primary">in Wettingen</span>
+              <span className="text-primary">in {tenantConfig.location.city}</span>
             </h1>
             <p className="text-lg font-body text-muted-foreground leading-relaxed mb-8 max-w-lg">
-              Drive Me – Erfahrene Instruktoren · Kleine Gruppen · Mo–Sa 08–22 Uhr
+              {tenantConfig.brand.name} – {tenantConfig.brand.tagline} · {tenantConfig.contact.openingHours}
             </p>
             <div className="flex flex-wrap gap-3">
               <a
