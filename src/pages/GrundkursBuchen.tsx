@@ -136,10 +136,7 @@ export default function GrundkursBuchen() {
           bookingId: booking.id,
           email,
           customerName: `${firstName} ${lastName}`,
-          courses: selectedCoursesWithParts.map(({ part, course }) => ({
-            part, date: course.date, time: course.time, price: course.price,
-          })),
-          totalPrice: total,
+          customerName: `${firstName} ${lastName}`,
         },
       });
 
