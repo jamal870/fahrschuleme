@@ -323,7 +323,9 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t-2 border-primary bg-card py-6">
         <div className="max-w-6xl mx-auto px-6 text-center text-xs text-muted-foreground font-body">
-          © 2026 Drive me Fahrschule. Alle Rechte vorbehalten.
+          {tenantConfig.footer.copyright}
+        </div>
+      </footer>
         </div>
       </footer>
 
