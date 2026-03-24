@@ -753,7 +753,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "Kosten" });
       addMsg({
         role: "bot",
-        content: "Je nach Kategorie und Stundenanzahl. Wir erstellen gerne ein persönliches Angebot. **Ratenzahlung möglich!**",
+        content: "Je nach Kategorie und Stundenanzahl. Wir erstellen gerne ein persönliches Angebot.",
         buttons: faqFollowUp,
       });
     }
