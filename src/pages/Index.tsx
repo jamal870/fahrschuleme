@@ -211,10 +211,7 @@ const Index = () => {
 
               <h4 className="text-lg font-heading font-bold text-primary mt-6 mb-3">Auto Abonnements</h4>
               <div className="space-y-3">
-                {[
-                  { name: "10er Abo", price: "900.-", note: "Kaufe 10 Fahrstunden und spare 50.- auf den Gesamtpreis" },
-                  { name: "20er Abo", price: "1760.-", note: "Kaufe 20 Fahrstunden und spare 150.- auf den Gesamtpreis" },
-                ].map((item, i) => (
+                {tenantConfig.pricing.autoAbos.map((item, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between">
                       <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
