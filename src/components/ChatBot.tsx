@@ -413,7 +413,7 @@ export default function ChatBot() {
     addMsg({ role: "user", content: "Fahrstunden buchen" });
     addMsg({
       role: "bot",
-      content: "Fahrstunden bei Drive Me – flexibel Mo–Sa von 08–22 Uhr.\n\nWas möchtest du buchen?",
+      content: tenantConfig.chatbot.fahrstundenIntro,
       buttons: [
         { label: "Einzelstunde", action: "fs_single" },
         { label: "Paket 5 Stunden", action: "fs_pkg5" },
