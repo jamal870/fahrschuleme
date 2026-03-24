@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
+import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,11 +19,64 @@ serve(async (req) => {
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
-    const { bookingId, email, customerName, courses, totalPrice } = await req.json();
+    // Use service role to fetch authoritative prices from DB
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      { auth: { persistSession: false } }
+    );
 
-    if (!bookingId || !email || !courses || !totalPrice) {
-      throw new Error("Missing required fields: bookingId, email, courses, totalPrice");
+    const { bookingId, email, customerName } = await req.json();
+
+    if (!bookingId || !email) {
+      throw new Error("Missing required fields: bookingId, email");
     }
+
+    // Verify booking exists and is pending_payment
+    const { data: booking, error: bookingError } = await supabase
+      .from("bookings")
+      .select("id, status")
+      .eq("id", bookingId)
+      .eq("status", "pending_payment")
+      .single();
+
+    if (bookingError || !booking) {
+      throw new Error("Booking not found or not in pending_payment status");
+    }
+
+    // Fetch booking items to get course IDs
+    const { data: items } = await supabase
+      .from("booking_items")
+      .select("course_date_id")
+      .eq("booking_id", bookingId);
+
+    const courseIds = items?.map((i: any) => i.course_date_id).filter(Boolean) || [];
+    if (courseIds.length === 0) {
+      throw new Error("No course items found for this booking");
+    }
+
+    // Fetch authoritative prices from database (NEVER trust client prices)
+    const { data: courses, error: coursesError } = await supabase
+      .from("course_dates")
+      .select("id, part, date, time, price")
+      .in("id", courseIds);
+
+    if (coursesError || !courses || courses.length === 0) {
+      throw new Error("Could not fetch course data from database");
+    }
+
+    // Build line items from DB prices
+    const lineItems = courses.map((course: any) => ({
+      price_data: {
+        currency: "chf",
+        product_data: {
+          name: `MGK Teil ${course.part}`,
+          description: `${course.date} – ${course.time}`,
+        },
+        unit_amount: Math.round(course.price * 100),
+      },
+      quantity: 1,
+    }));
 
     // Check if customer already exists
     const customers = await stripe.customers.list({ email, limit: 1 });
@@ -30,19 +84,6 @@ serve(async (req) => {
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
     }
-
-    // Build line items from selected courses
-    const lineItems = courses.map((course: { part: number; date: string; time: string; price: number }) => ({
-      price_data: {
-        currency: "chf",
-        product_data: {
-          name: `MGK Teil ${course.part}`,
-          description: `${course.date} – ${course.time}`,
-        },
-        unit_amount: Math.round(course.price * 100), // Stripe expects cents
-      },
-      quantity: 1,
-    }));
 
     const origin = req.headers.get("origin") || "https://buchen.drive-me.ch";
 
