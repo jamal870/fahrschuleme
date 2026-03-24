@@ -658,7 +658,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "Preise & Kosten" });
       addMsg({
         role: "bot",
-        content: "Unsere Preise hängen von Kategorie und Stundenanzahl ab:\n\n🏍️ **Grundkurs Motorrad** – CHF 160.– pro Teil\n📅 **Fahrstunden** – Preis auf Anfrage\n\nRatenzahlung via Crowd4Cash möglich ✅",
+        content: "Unsere Preise hängen von Kategorie und Stundenanzahl ab:\n\n🏍️ **Grundkurs Motorrad** – CHF 160.– pro Teil\n📅 **Fahrstunden** – siehe unsere Preisliste oder direkt anfragen",
         buttons: [
           { label: "Ja, Angebot anfragen", action: "request_quote" },
           { label: "Direkt anrufen: 078 974 44 74", action: "call_direct" },
