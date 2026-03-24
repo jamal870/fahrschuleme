@@ -711,7 +711,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "WhatsApp" });
       addMsg({
         role: "bot",
-        content: "📱 Schreib uns direkt auf WhatsApp:\n\n👉 [wa.me/41789744474](https://wa.me/41789744474)",
+        content: `📱 Schreib uns direkt auf WhatsApp:\n\n👉 [WhatsApp öffnen](${tenantConfig.contact.whatsappUrl})`,
         buttons: [{ label: "Zurück zum Menü", action: "main_menu" }],
       });
     }
