@@ -109,10 +109,40 @@ const AdminBookings = () => {
                     <TableCell><Badge variant="outline">{b.booking_type}</Badge></TableCell>
                     <TableCell>CHF {b.total_price}</TableCell>
                     <TableCell><Badge variant={statusColor(b.status) as any}>{b.status}</Badge></TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right flex items-center justify-end gap-1">
                       <Button variant="ghost" size="icon" onClick={() => viewDetails(b)}>
                         <Eye className="w-4 h-4" />
                       </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <FileText className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel className="text-xs">PDF erstellen</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => handlePdf("invoice", b)}>
+                            <FileText className="w-3.5 h-3.5 mr-2" /> Rechnung
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handlePdf("confirmation", b)}>
+                            <CheckCircle className="w-3.5 h-3.5 mr-2" /> Buchungsbestätigung
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handlePdf("receipt", b)}>
+                            <Receipt className="w-3.5 h-3.5 mr-2" /> Quittung
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => handlePdf("reminder1", b)}>
+                            <AlertTriangle className="w-3.5 h-3.5 mr-2" /> 1. Zahlungserinnerung
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handlePdf("reminder2", b)}>
+                            <AlertTriangle className="w-3.5 h-3.5 mr-2" /> 2. Mahnung
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handlePdf("reminder3", b)} className="text-destructive">
+                            <AlertTriangle className="w-3.5 h-3.5 mr-2" /> Letzte Mahnung
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}
