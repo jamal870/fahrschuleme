@@ -100,11 +100,7 @@ const Index = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { title: "Passive Sicherheit", desc: "Technisch einwandfreies Motorrad, vollständige Schutzausrüstung mit Protektoren, Handschuhen, Stiefeln und geprüftem Helm." },
-              { title: "Aktive Sicherheit", desc: "Entsteht durch deine Fahrtechnik, präzise Fahrzeugbeherrschung und die in unseren Kursen vermittelten Fähigkeiten." },
-              { title: "Training", desc: "Diese Fahrtechniken trainieren wir im 12-Stunden-Grundkurs und in individuell abgestimmten Motorrad Fahrstunden." },
-            ].map((item, i) => (
+            {tenantConfig.safetyPoints.map((item, i) => (
               <div key={i} className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
                 <h3 className="font-heading font-bold text-foreground mb-2 text-lg">{item.title}</h3>
                 <p className="text-sm text-muted-foreground font-body">{item.desc}</p>
