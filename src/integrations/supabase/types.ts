@@ -359,6 +359,13 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_booking_status: {
+        Args: { booking_uuid: string }
+        Returns: {
+          first_name: string
+          status: string
+        }[]
+      }
       increment_spots: { Args: { course_id: string }; Returns: undefined }
       move_to_dlq: {
         Args: {
