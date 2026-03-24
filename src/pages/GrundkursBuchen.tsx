@@ -103,6 +103,13 @@ export default function GrundkursBuchen() {
       .map(([part, course]) => ({ part: parseInt(part), course: course! }));
     const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
     const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
+    const checkoutWindow = window.open("about:blank", "_blank", "noopener,noreferrer");
+
+    if (!checkoutWindow) {
+      toast.error("Popup blockiert – bitte Popups erlauben und erneut versuchen.");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const { data: booking, error: bookingError } = await supabase
@@ -112,7 +119,7 @@ export default function GrundkursBuchen() {
           first_name: firstName, last_name: lastName, email, phone, address,
           fa_number: faNumber, birth_date: birthDate,
           payment_method: "stripe",
-          total_price: total, status: 'pending',
+          total_price: total, status: 'pending_payment',
         })
         .select('id').single();
 
@@ -140,11 +147,12 @@ export default function GrundkursBuchen() {
         throw new Error(stripeError?.message || "Stripe-Zahlung konnte nicht gestartet werden.");
       }
 
-      // Open Stripe checkout in new tab
-      window.open(stripeData.url, '_blank');
+      checkoutWindow.location.href = stripeData.url;
       toast.success("Zahlungsseite geöffnet – bitte im neuen Tab bezahlen. Nach erfolgreicher Zahlung erhältst du die Bestätigung per E-Mail.");
-      setIsSubmitting(false);
     } catch (err) {
+      if (!checkoutWindow.closed) {
+        checkoutWindow.close();
+      }
       console.error('Booking error:', err);
       toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
     } finally {
