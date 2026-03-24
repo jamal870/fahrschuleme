@@ -316,7 +316,6 @@ export default function ChatBot() {
 
       for (const { course } of sels) {
         await supabase.from('booking_items').insert({ booking_id: booking.id, course_date_id: course.id });
-        await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
       const sendConfirmationEmail = async () => {
