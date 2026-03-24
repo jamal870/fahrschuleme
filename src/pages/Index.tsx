@@ -194,21 +194,107 @@ const Index = () => {
       <section id="preise" className="bg-section-alt py-16">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-10">
-            <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Preise</p>
-            <h2 className="text-3xl font-heading font-bold text-foreground mb-4">Preise & Kosten</h2>
+            <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Unsere Preise</p>
+            <h2 className="text-3xl font-heading font-bold text-foreground mb-2">Preise & Kosten</h2>
+            <p className="text-muted-foreground font-body max-w-2xl mx-auto text-sm">
+              Finde das perfekte Fahrstundenpaket, das zu deinen Bedürfnissen passt.
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-            {[
-              { title: "Grundkurs (je Teil)", price: "CHF 160.–", desc: "3 Teile à 4 Stunden" },
-              { title: "Fahrstunden", price: "Auf Anfrage", desc: "Einzeln oder als Paket" },
-              { title: "Ratenzahlung", price: "Möglich ✅", desc: "Via Crowd4Cash" },
-            ].map((item, i) => (
-              <div key={i} className="bg-card border border-border p-6 text-center" style={{ borderRadius: "3px" }}>
-                <h3 className="font-heading font-bold text-foreground mb-1">{item.title}</h3>
-                <p className="text-xl font-heading font-bold text-primary mb-1">{item.price}</p>
-                <p className="text-xs text-muted-foreground font-body">{item.desc}</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Auto */}
+            <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
+              <h3 className="text-xl font-heading font-bold text-primary mb-4">Auto</h3>
+              <div className="space-y-3">
+                {[
+                  { name: "Admin Beitrag einmalig", price: "130.-", note: "Beinhaltet Administrationsgebühren und Vollkaskoversicherung" },
+                  { name: "Einzellektion (45min)", price: "95.-" },
+                  { name: "Doppellektion (2x45Min)", price: "190.-" },
+                  { name: "Auf Rechnung (45min)", price: "95.-" },
+                ].map((item, i) => (
+                  <div key={i}>
+                    <div className="flex items-center justify-between">
+                      <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
+                      <span className="text-sm font-heading font-bold text-foreground ml-2">{item.price}</span>
+                    </div>
+                    {item.note && <p className="text-xs text-muted-foreground font-body mt-0.5">{item.note}</p>}
+                  </div>
+                ))}
               </div>
-            ))}
+
+              <h4 className="text-lg font-heading font-bold text-primary mt-6 mb-3">Auto Abonnements</h4>
+              <div className="space-y-3">
+                {[
+                  { name: "10er Abo", price: "900.-", note: "Kaufe 10 Fahrstunden und spare 50.- auf den Gesamtpreis" },
+                  { name: "20er Abo", price: "1760.-", note: "Kaufe 20 Fahrstunden und spare 150.- auf den Gesamtpreis" },
+                ].map((item, i) => (
+                  <div key={i}>
+                    <div className="flex items-center justify-between">
+                      <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
+                      <span className="text-sm font-heading font-bold text-foreground ml-2">{item.price}</span>
+                    </div>
+                    {item.note && <p className="text-xs text-muted-foreground font-body mt-0.5">{item.note}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Motorrad */}
+            <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
+              <h3 className="text-xl font-heading font-bold text-primary mb-4">Motorrad</h3>
+              <div className="space-y-3">
+                {[
+                  { name: "Einzellektion (60Min)", price: "130.-" },
+                  { name: "Doppellektion (2x45Min)", price: "180.-" },
+                  { name: "Motorrad Vorschulung Doppellektion", price: "180.-" },
+                  { name: "Vor-Prüfungsfahrt inkl. Prüfung (120min)", price: "180.-" },
+                ].map((item, i) => (
+                  <div key={i}>
+                    <div className="flex items-center justify-between">
+                      <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
+                      <span className="text-sm font-heading font-bold text-foreground ml-2">{item.price}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <h4 className="text-lg font-heading font-bold text-foreground mt-6 mb-3">Motorrad Grundkurs</h4>
+              <div className="space-y-3">
+                {[
+                  { name: "M1 (4h)", price: "160.-" },
+                  { name: "M2 (4h)", price: "160.-" },
+                  { name: "M3 (4h)", price: "160.-" },
+                  { name: "Motorrad Tageskurs (4h)", price: "200.-" },
+                ].map((item, i) => (
+                  <div key={i}>
+                    <div className="flex items-center justify-between">
+                      <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
+                      <span className="text-sm font-heading font-bold text-foreground ml-2">{item.price}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Verkehrskunde & Nothelfer */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-8">
+            <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
+              <h3 className="text-xl font-heading font-bold text-primary mb-3">Verkehrskunde</h3>
+              <div className="flex items-center justify-between">
+                <span className="font-body font-medium text-foreground text-sm">Verkehrskunde</span>
+                <span className="text-sm font-heading font-bold text-foreground">180.-</span>
+              </div>
+              <p className="text-xs text-muted-foreground font-body mt-1">Inkl. der obligatorischen VKU-Unterlagen</p>
+            </div>
+            <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
+              <h3 className="text-xl font-heading font-bold text-primary mb-3">Nothelfer</h3>
+              <div className="flex items-center justify-between">
+                <span className="font-body font-medium text-foreground text-sm">Nothelfer</span>
+                <span className="text-sm font-heading font-bold text-foreground">120.-</span>
+              </div>
+              <p className="text-xs text-muted-foreground font-body mt-1">Inkl. Kursdokumentation und Nothelferausweis (6 Jahre gültig)</p>
+            </div>
           </div>
         </div>
       </section>
