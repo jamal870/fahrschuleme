@@ -227,12 +227,7 @@ const Index = () => {
             <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
               <h3 className="text-xl font-heading font-bold text-primary mb-4">Motorrad</h3>
               <div className="space-y-3">
-                {[
-                  { name: "Einzellektion (60Min)", price: "130.-" },
-                  { name: "Doppellektion (2x45Min)", price: "180.-" },
-                  { name: "Motorrad Vorschulung Doppellektion", price: "180.-" },
-                  { name: "Vor-Prüfungsfahrt inkl. Prüfung (120min)", price: "180.-" },
-                ].map((item, i) => (
+                {tenantConfig.pricing.motorrad.map((item, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between">
                       <span className="font-body font-medium text-foreground text-sm">{item.name}</span>
