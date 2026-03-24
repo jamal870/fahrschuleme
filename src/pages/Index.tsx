@@ -1,6 +1,7 @@
 import { Phone, Mail, MapPin, Clock, Users, ChevronRight, Bike, Car, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
+import { tenantConfig } from "@/config/tenant";
 
 const Index = () => {
   return (
