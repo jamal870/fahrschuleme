@@ -1,22 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bike, Check, ChevronLeft, ChevronRight, MapPin, Clock, User, AlertCircle, CreditCard, Loader2 } from "lucide-react";
+import { Bike, Check, MapPin, Clock, User, AlertCircle, CreditCard, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { motorradGrundkurse, type CourseDate } from "@/data/courses";
+import type { CourseDate } from "@/data/courses";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-
-const STEPS = [
-  { label: "MGK Teil 1", part: 1 },
-  { label: "MGK Teil 2", part: 2 },
-  { label: "MGK Teil 3", part: 3 },
-  { label: "Bestätigen", part: 0 },
-];
 
 const bookingSchema = z.object({
   firstName: z.string().trim().min(1, "Vorname ist ein Pflichtfeld"),
@@ -27,16 +20,12 @@ const bookingSchema = z.object({
   faNumber: z.string().trim().min(1, "FA-Nummer ist ein Pflichtfeld").max(30, "FA-Nummer darf maximal 30 Zeichen haben"),
   birthDate: z.string().trim().min(1, "Geburtsdatum ist ein Pflichtfeld"),
   category: z.string().min(1, "Kategorie ist ein Pflichtfeld"),
-  paymentMethod: z.string().min(1, "Zahlungsmethode ist ein Pflichtfeld"),
 });
 
 export default function GrundkursBuchen() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [selections, setSelections] = useState<Record<number, CourseDate | null>>({
-    1: null,
-    2: null,
-    3: null,
-  });
+  const [selections, setSelections] = useState<Record<number, CourseDate | null>>({ 1: null, 2: null, 3: null });
+  const [coursesData, setCoursesData] = useState<Record<number, CourseDate[]>>({});
+  const [loadingPart, setLoadingPart] = useState<number | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -45,41 +34,64 @@ export default function GrundkursBuchen() {
   const [faNumber, setFaNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [category, setCategory] = useState("A (Motorrad)");
-  const [paymentMethod, setPaymentMethod] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const selectCourse = (part: number, course: CourseDate) => {
-    setSelections((prev) => ({ ...prev, [part]: course }));
-  };
+  const part2Ref = useRef<HTMLDivElement>(null);
+  const part3Ref = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
-  const canGoNext = () => {
-    if (currentStep < 3) {
-      const part = STEPS[currentStep].part;
-      return selections[part] !== null;
+  // Load part 1 on mount
+  useEffect(() => {
+    loadCourseDates(1);
+  }, []);
+
+  const loadCourseDates = async (part: number) => {
+    setLoadingPart(part);
+    const { data, error } = await supabase
+      .from('course_dates')
+      .select('*')
+      .eq('part', part)
+      .gt('spots_available', 0)
+      .order('date');
+    if (!error && data) {
+      setCoursesData(prev => ({
+        ...prev,
+        [part]: data.map((d: any) => ({
+          id: d.id, day: d.day, date: d.date, time: d.time, location: d.location,
+          instructor: d.instructor || undefined, price: Number(d.price), spotsAvailable: d.spots_available,
+        })),
+      }));
     }
-    return true;
+    setLoadingPart(null);
   };
 
-  const goNext = () => {
-    if (currentStep < 3 && canGoNext()) {
-      setCurrentStep((s) => s + 1);
-    }
-  };
+  const selectCourse = async (part: number, course: CourseDate) => {
+    setSelections(prev => ({ ...prev, [part]: course }));
 
-  const goBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep((s) => s - 1);
+    // Auto-load and scroll to next part
+    const nextPart = part + 1;
+    if (nextPart <= 3) {
+      if (!coursesData[nextPart]) {
+        await loadCourseDates(nextPart);
+      }
+      setTimeout(() => {
+        const ref = nextPart === 2 ? part2Ref : part3Ref;
+        ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 200);
+    } else {
+      // All parts selected, scroll to form
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 200);
     }
   };
 
   const handleSubmit = async () => {
-    const result = bookingSchema.safeParse({ firstName, lastName, email, phone, address, faNumber, birthDate, category, paymentMethod });
+    const result = bookingSchema.safeParse({ firstName, lastName, email, phone, address, faNumber, birthDate, category });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((e) => {
-        fieldErrors[e.path[0] as string] = e.message;
-      });
+      result.error.errors.forEach((e) => { fieldErrors[e.path[0] as string] = e.message; });
       setErrors(fieldErrors);
       return;
     }
@@ -93,105 +105,42 @@ export default function GrundkursBuchen() {
     const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
 
     try {
-      // Determine initial status based on payment method
-      const isOnlinePayment = paymentMethod === "Online bezahlen (Stripe/Twint)";
-      const initialStatus = isOnlinePayment ? "pending_payment" : "confirmed";
-
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
         .insert({
           booking_type: 'grundkurs',
-          first_name: firstName,
-          last_name: lastName,
-          email,
-          phone,
-          address,
-          fa_number: faNumber,
-          birth_date: birthDate,
-          payment_method: paymentMethod,
-          total_price: total,
-          status: initialStatus,
+          first_name: firstName, last_name: lastName, email, phone, address,
+          fa_number: faNumber, birth_date: birthDate,
+          payment_method: "Barzahlung am Kurstag",
+          total_price: total, status: 'confirmed',
         })
-        .select('id')
-        .single();
+        .select('id').single();
 
       if (bookingError) throw bookingError;
 
       for (const course of selectedCourses) {
-        await supabase.from('booking_items').insert({
-          booking_id: booking.id,
-          course_date_id: course.id,
-        });
+        await supabase.from('booking_items').insert({ booking_id: booking.id, course_date_id: course.id });
         await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
-      // Send booking confirmation email (for non-online payments; online payments send after Stripe success)
-      const sendConfirmationEmail = async () => {
-        try {
-          await supabase.functions.invoke('send-transactional-email', {
-            body: {
-              templateName: 'booking-confirmation',
-              recipientEmail: email,
-              idempotencyKey: `booking-confirm-${booking.id}`,
-              templateData: {
-                firstName,
-                lastName,
-                address,
-                birthDate,
-                faNumber,
-                phone,
-                email,
-                category,
-                courses: selectedCoursesWithParts.map(({ part, course }) => ({
-                  part,
-                  date: course.date,
-                  time: course.time,
-                  location: course.location,
-                  price: course.price,
-                })),
-                totalPrice: total.toFixed(2),
-                paymentMethod,
-                bookingId: booking.id,
-                bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
-              },
-            },
-          });
-        } catch (emailErr) {
-          console.error('Email send error:', emailErr);
-        }
-      };
-
-      // If online payment, redirect to Stripe Checkout
-      if (isOnlinePayment) {
-        const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
+      // Send confirmation email
+      try {
+        await supabase.functions.invoke('send-transactional-email', {
           body: {
-            bookingId: booking.id,
-            email,
-            customerName: `${firstName} ${lastName}`,
-            courses: selectedCoursesWithParts.map(({ part, course }) => ({
-              part,
-              date: course.date,
-              time: course.time,
-              price: course.price,
-            })),
-            totalPrice: total,
+            templateName: 'booking-confirmation', recipientEmail: email,
+            idempotencyKey: `booking-confirm-${booking.id}`,
+            templateData: {
+              firstName, lastName, address, birthDate, faNumber, phone, email, category,
+              courses: selectedCoursesWithParts.map(({ part, course }) => ({
+                part, date: course.date, time: course.time, location: course.location, price: course.price,
+              })),
+              totalPrice: total.toFixed(2), paymentMethod: "Barzahlung am Kurstag",
+              bookingId: booking.id,
+              bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+            },
           },
         });
-
-        if (fnError || !data?.url) {
-          throw new Error(fnError?.message || 'Zahlung konnte nicht initialisiert werden');
-        }
-
-        // Send confirmation email before redirecting
-        await sendConfirmationEmail();
-
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-        return;
-      }
-
-      // Non-online payment: send email and show success
-      await sendConfirmationEmail();
+      } catch (emailErr) { console.error('Email send error:', emailErr); }
 
       toast.success("Buchung erfolgreich!", {
         description: `${selectedCourses.length} Kursteile für CHF ${total.toFixed(2)} gebucht. Bestätigung an ${email}.`,
@@ -207,8 +156,8 @@ export default function GrundkursBuchen() {
   const selectedCourses = Object.entries(selections)
     .filter(([, v]) => v !== null)
     .map(([part, course]) => ({ part: parseInt(part), course: course! }));
-
   const totalPrice = selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
+  const allPartsSelected = selections[1] && selections[2] && selections[3];
 
   return (
     <div className="min-h-screen bg-background">
@@ -216,7 +165,8 @@ export default function GrundkursBuchen() {
       <nav className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <Bike className="w-7 h-7 text-primary" />
-          <span className="text-xl font-bold font-[Outfit] text-foreground">Drive me</span>
+          <span className="text-xl font-bold font-[Outfit] text-foreground">Drive</span>
+          <span className="text-xl text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
           <span className="text-xs text-muted-foreground font-medium mt-1">Fahrschule</span>
         </Link>
       </nav>
@@ -237,336 +187,257 @@ export default function GrundkursBuchen() {
           </p>
         </div>
 
-        {/* Stepper */}
-        <div className="flex items-center justify-center gap-0 mb-10">
-          {STEPS.map((step, i) => {
-            const isDone = i < currentStep;
-            const isActive = i === currentStep;
-            return (
-              <div key={i} className="flex items-center">
-                <button
-                  onClick={() => {
-                    if (i <= currentStep) setCurrentStep(i);
-                  }}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors shrink-0 ${
-                    isDone
-                      ? "bg-accent text-accent-foreground"
-                      : isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {isDone ? <Check className="w-5 h-5" /> : i + 1}
-                </button>
-                <span
-                  className={`hidden sm:block text-xs font-medium mx-2 ${
-                    isActive ? "text-foreground" : "text-muted-foreground"
-                  }`}
-                >
-                  {step.label}
-                </span>
-                {i < STEPS.length - 1 && (
-                  <div className={`w-8 sm:w-12 h-0.5 ${i < currentStep ? "bg-accent" : "bg-border"}`} />
-                )}
-              </div>
-            );
-          })}
-        </div>
+        {/* Part 1 - Always visible */}
+        <CourseSection
+          partNum={1}
+          courses={coursesData[1] || []}
+          selected={selections[1]}
+          onSelect={(course) => selectCourse(1, course)}
+          loading={loadingPart === 1}
+        />
 
-        {/* Content */}
-        <AnimatePresence mode="wait">
-          {currentStep < 3 ? (
+        {/* Part 2 - Shown after Part 1 selected */}
+        <AnimatePresence>
+          {selections[1] && (
             <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
+              ref={part2Ref}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4 }}
             >
-              <CourseStepContent
-                part={motorradGrundkurse[currentStep]}
-                selected={selections[STEPS[currentStep].part]}
-                onSelect={(course) => selectCourse(STEPS[currentStep].part, course)}
-              />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="confirm"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ConfirmationStep
-                selectedCourses={selectedCourses}
-                totalPrice={totalPrice}
-                firstName={firstName}
-                setFirstName={setFirstName}
-                lastName={lastName}
-                setLastName={setLastName}
-                email={email}
-                setEmail={setEmail}
-                phone={phone}
-                setPhone={setPhone}
-                address={address}
-                setAddress={setAddress}
-                faNumber={faNumber}
-                setFaNumber={setFaNumber}
-                birthDate={birthDate}
-                setBirthDate={setBirthDate}
-                category={category}
-                setCategory={setCategory}
-                paymentMethod={paymentMethod}
-                setPaymentMethod={setPaymentMethod}
-                errors={errors}
-              />
+              <div className="mt-10">
+                <CourseSection
+                  partNum={2}
+                  courses={coursesData[2] || []}
+                  selected={selections[2]}
+                  onSelect={(course) => selectCourse(2, course)}
+                  loading={loadingPart === 2}
+                />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Navigation */}
-        <div className="flex justify-between mt-8">
-          <Button
-            variant="outline"
-            onClick={goBack}
-            disabled={currentStep === 0}
-            className="gap-2"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Zurück
-          </Button>
-
-          {currentStep < 3 ? (
-            <Button onClick={goNext} disabled={!canGoNext()} className="gap-2">
-              Weiter zu {STEPS[currentStep + 1]?.label}
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          ) : (
-            <Button
-              onClick={handleSubmit}
-              disabled={selectedCourses.length === 0 || isSubmitting}
-              className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground"
+        {/* Part 3 - Shown after Part 2 selected */}
+        <AnimatePresence>
+          {selections[2] && (
+            <motion.div
+              ref={part3Ref}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4 }}
             >
-              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              {paymentMethod === "Online bezahlen (Stripe/Twint)" ? (
-                <>💳 Jetzt bezahlen</>
-              ) : (
-                <>Jetzt Buchen <ChevronRight className="w-4 h-4" /></>
-              )}
-            </Button>
+              <div className="mt-10">
+                <CourseSection
+                  partNum={3}
+                  courses={coursesData[3] || []}
+                  selected={selections[3]}
+                  onSelect={(course) => selectCourse(3, course)}
+                  loading={loadingPart === 3}
+                />
+              </div>
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
+
+        {/* Confirmation form - Shown after all 3 parts selected */}
+        <AnimatePresence>
+          {allPartsSelected && (
+            <motion.div
+              ref={formRef}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="mt-10">
+                <h2 className="text-2xl font-bold font-[Outfit] text-primary mb-6 flex items-center gap-2">
+                  ✅ Buchung bestätigen
+                </h2>
+
+                {/* Summary */}
+                <div className="bg-card border border-border rounded-xl p-5 mb-6">
+                  <h3 className="font-semibold text-foreground mb-4">Ihre gewählten Kurstermine:</h3>
+                  <div className="space-y-4">
+                    {selectedCourses.map(({ part, course }) => (
+                      <div key={part}>
+                        <div className="bg-primary text-primary-foreground text-center py-1.5 rounded-lg text-sm font-semibold mb-2">
+                          MGK Teil {part}
+                        </div>
+                        <div className="space-y-0.5">
+                          <p className="text-sm text-muted-foreground">📅 {course.date} &nbsp; 🕐 {course.time}</p>
+                          <p className="text-sm text-muted-foreground">📍 {course.location}</p>
+                          <p className="font-bold text-primary">CHF {course.price.toFixed(2)}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="border-t border-border mt-4 pt-4 text-right">
+                    <p className="text-sm text-muted-foreground">
+                      Gesamtbetrag: <span className="text-2xl font-bold text-foreground">CHF {totalPrice.toFixed(2)}</span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Personal Details */}
+                <div className="bg-muted/50 rounded-xl p-6">
+                  <h3 className="font-semibold text-primary mb-4">Persönliche Daten</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm font-medium">Vorname <span className="text-destructive">*</span></Label>
+                      <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Max" className="mt-1" />
+                      {errors.firstName && <p className="text-xs text-destructive mt-1">{errors.firstName}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Nachname <span className="text-destructive">*</span></Label>
+                      <Input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Muster" className="mt-1" />
+                      {errors.lastName && <p className="text-xs text-destructive mt-1">{errors.lastName}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">E-Mail <span className="text-destructive">*</span></Label>
+                      <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="max@example.com" className="mt-1" />
+                      {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Telefon <span className="text-destructive">*</span></Label>
+                      <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+41 79 123 45 67" className="mt-1" />
+                      {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
+                    </div>
+                    <div className="sm:col-span-2">
+                      <Label className="text-sm font-medium">Adresse <span className="text-destructive">*</span></Label>
+                      <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Musterstrasse 1, 5400 Baden" className="mt-1" />
+                      {errors.address && <p className="text-xs text-destructive mt-1">{errors.address}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Geburtsdatum <span className="text-destructive">*</span></Label>
+                      <Input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mt-1" />
+                      {errors.birthDate && <p className="text-xs text-destructive mt-1">{errors.birthDate}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">FA-Nummer <span className="text-destructive">*</span></Label>
+                      <Input value={faNumber} onChange={(e) => setFaNumber(e.target.value)} placeholder="z.B. CH-1234567890" maxLength={30} className="mt-1" />
+                      {errors.faNumber && <p className="text-xs text-destructive mt-1">{errors.faNumber}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Kategorie</Label>
+                      <Select value={category} onValueChange={setCategory}>
+                        <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="A (Motorrad)">A (Motorrad)</SelectItem>
+                          <SelectItem value="A1 (Leichtmotorrad)">A1 (Leichtmotorrad)</SelectItem>
+                          <SelectItem value="A2">A2</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 bg-primary/5 border-l-4 border-primary rounded-r-lg p-4">
+                    <p className="text-sm text-foreground flex items-start gap-2">
+                      <CreditCard className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
+                      <span>
+                        <strong>Zahlungshinweis:</strong> Die Zahlung erfolgt bar vor Ort am Kurstag.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Submit */}
+                <div className="flex justify-end mt-8">
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg"
+                  >
+                    {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                    Jetzt Buchen
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 }
 
-function CourseStepContent({
-  part,
+function CourseSection({
+  partNum,
+  courses,
   selected,
   onSelect,
+  loading,
 }: {
-  part: (typeof motorradGrundkurse)[0];
+  partNum: number;
+  courses: CourseDate[];
   selected: CourseDate | null;
   onSelect: (course: CourseDate) => void;
+  loading: boolean;
 }) {
   return (
     <div>
       <h2 className="text-2xl font-bold font-[Outfit] text-primary mb-1 flex items-center gap-2">
-        🏍️ {part.title}
+        🏍️ MGK Teil {partNum} – Datum wählen
+        {selected && <Check className="w-5 h-5 text-accent" />}
       </h2>
-      <p className="text-sm text-muted-foreground mb-6">{part.description}</p>
+      <p className="text-sm text-muted-foreground mb-6">
+        {partNum === 1 ? "Wählen Sie Ihren Wunschtermin für den ersten Kursteil." :
+         `Teil ${partNum} muss nach Teil ${partNum - 1} stattfinden.`}
+      </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-        {part.dates.map((course) => {
-          const isSelected = selected?.id === course.id;
-          return (
-            <motion.button
-              key={course.id}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => onSelect(course)}
-              className={`text-left bg-card rounded-xl border-2 p-4 transition-colors ${
-                isSelected
-                  ? "border-primary bg-primary/5 shadow-md"
-                  : "border-border hover:border-primary/30"
-              }`}
-            >
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                {course.day}
-              </p>
-              <p className="font-bold text-foreground text-lg font-[Outfit]">{course.date}</p>
-              <div className="mt-2 space-y-1">
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                  <Clock className="w-3 h-3" /> {course.time}
-                </p>
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                  <MapPin className="w-3 h-3" /> {course.location}
-                </p>
-                {course.instructor && (
-                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                    <User className="w-3 h-3" /> {course.instructor}
-                  </p>
-                )}
-              </div>
-              <p className="font-bold text-primary mt-3">CHF {course.price.toFixed(2)}</p>
-              <span
-                className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full mt-1 ${
-                  course.spotsAvailable <= 2
-                    ? "bg-destructive/15 text-destructive"
-                    : "bg-accent/15 text-accent"
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          <span className="ml-2 text-muted-foreground">Kursdaten werden geladen...</span>
+        </div>
+      ) : courses.length === 0 ? (
+        <p className="text-sm text-muted-foreground flex items-center gap-2 py-8">
+          <AlertCircle className="w-4 h-4" /> Keine verfügbaren Termine gefunden.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {courses.map((course) => {
+            const isSelected = selected?.id === course.id;
+            return (
+              <motion.button
+                key={course.id}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => onSelect(course)}
+                className={`text-left bg-card rounded-xl border-2 p-4 transition-colors ${
+                  isSelected
+                    ? "border-primary bg-primary/5 shadow-md"
+                    : "border-border hover:border-primary/30"
                 }`}
               >
-                {course.spotsAvailable} Plätze frei
-              </span>
-            </motion.button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function ConfirmationStep({
-  selectedCourses,
-  totalPrice,
-  firstName, setFirstName,
-  lastName, setLastName,
-  email, setEmail,
-  phone, setPhone,
-  address, setAddress,
-  faNumber, setFaNumber,
-  birthDate, setBirthDate,
-  category, setCategory,
-  paymentMethod, setPaymentMethod,
-  errors,
-}: {
-  selectedCourses: { part: number; course: CourseDate }[];
-  totalPrice: number;
-  firstName: string; setFirstName: (v: string) => void;
-  lastName: string; setLastName: (v: string) => void;
-  email: string; setEmail: (v: string) => void;
-  phone: string; setPhone: (v: string) => void;
-  address: string; setAddress: (v: string) => void;
-  faNumber: string; setFaNumber: (v: string) => void;
-  birthDate: string; setBirthDate: (v: string) => void;
-  category: string; setCategory: (v: string) => void;
-  paymentMethod: string; setPaymentMethod: (v: string) => void;
-  errors: Record<string, string>;
-}) {
-  return (
-    <div>
-      <h2 className="text-2xl font-bold font-[Outfit] text-primary mb-6 flex items-center gap-2">
-        ✅ Buchung bestätigen
-      </h2>
-
-      {/* Selected courses summary */}
-      <div className="bg-card border border-border rounded-xl p-5 mb-6">
-        <h3 className="font-semibold text-foreground mb-4">Ihre gewählten Kurstermine:</h3>
-
-        {selectedCourses.length === 0 ? (
-          <p className="text-sm text-muted-foreground flex items-center gap-2">
-            <AlertCircle className="w-4 h-4" /> Keine Kurse ausgewählt. Bitte gehen Sie zurück und wählen Sie Ihre Termine.
-          </p>
-        ) : (
-          <div className="space-y-4">
-            {selectedCourses.map(({ part, course }) => (
-              <div key={part}>
-                <div className="bg-primary text-primary-foreground text-center py-1.5 rounded-lg text-sm font-semibold mb-2">
-                  MGK Teil {part}
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
+                <p className="font-bold text-foreground text-lg font-[Outfit]">{course.date}</p>
+                <div className="mt-2 space-y-1">
+                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                    <Clock className="w-3 h-3" /> {course.time}
+                  </p>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                    <MapPin className="w-3 h-3" /> {course.location}
+                  </p>
+                  {course.instructor && (
+                    <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <User className="w-3 h-3" /> {course.instructor}
+                    </p>
+                  )}
                 </div>
-                <div className="space-y-0.5">
-                  <p className="font-bold text-foreground">M {part}</p>
-                  <p className="text-sm text-muted-foreground">📅 {course.date} &nbsp; 🕐 {course.time}</p>
-                  <p className="text-sm text-muted-foreground">📍 {course.location}</p>
-                  <p className="font-bold text-primary">CHF {course.price.toFixed(2)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="border-t border-border mt-4 pt-4 text-right">
-          <p className="text-sm text-muted-foreground">
-            Gesamtbetrag:{" "}
-            <span className="text-2xl font-bold text-foreground">CHF {totalPrice.toFixed(2)}</span>
-          </p>
+                <p className="font-bold text-primary mt-3">CHF {course.price.toFixed(2)}</p>
+                <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full mt-1 ${
+                  course.spotsAvailable <= 2 ? "bg-destructive/15 text-destructive" : "bg-accent/15 text-accent"
+                }`}>
+                  {course.spotsAvailable} Plätze frei
+                </span>
+              </motion.button>
+            );
+          })}
         </div>
-      </div>
-
-      {/* Personal Details */}
-      <div className="bg-muted/50 rounded-xl p-6">
-        <h3 className="font-semibold text-primary mb-4">Persönliche Daten</h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <Label className="text-sm font-medium">Vorname <span className="text-destructive">*</span></Label>
-            <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Max" className="mt-1" />
-            {errors.firstName && <p className="text-xs text-destructive mt-1">{errors.firstName}</p>}
-          </div>
-          <div>
-            <Label className="text-sm font-medium">Nachname <span className="text-destructive">*</span></Label>
-            <Input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Muster" className="mt-1" />
-            {errors.lastName && <p className="text-xs text-destructive mt-1">{errors.lastName}</p>}
-          </div>
-          <div>
-            <Label className="text-sm font-medium">E-Mail <span className="text-destructive">*</span></Label>
-            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="max@example.com" className="mt-1" />
-            {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
-          </div>
-          <div>
-            <Label className="text-sm font-medium">Telefon <span className="text-destructive">*</span></Label>
-            <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+41 79 123 45 67" className="mt-1" />
-            {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
-          </div>
-          <div className="sm:col-span-2">
-            <Label className="text-sm font-medium">Adresse <span className="text-destructive">*</span></Label>
-            <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Musterstrasse 1, 5400 Baden" className="mt-1" />
-            {errors.address && <p className="text-xs text-destructive mt-1">{errors.address}</p>}
-          </div>
-          <div>
-            <Label className="text-sm font-medium">Geburtsdatum <span className="text-destructive">*</span></Label>
-            <Input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mt-1" />
-            {errors.birthDate && <p className="text-xs text-destructive mt-1">{errors.birthDate}</p>}
-          </div>
-          <div>
-            <Label className="text-sm font-medium">FA-Nummer <span className="text-destructive">*</span></Label>
-            <Input value={faNumber} onChange={(e) => setFaNumber(e.target.value)} placeholder="z.B. CH-1234567890" maxLength={30} className="mt-1" />
-            {errors.faNumber && <p className="text-xs text-destructive mt-1">{errors.faNumber}</p>}
-          </div>
-          <div>
-            <Label className="text-sm font-medium">Kategorie</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="A (Motorrad)">A (Motorrad)</SelectItem>
-                <SelectItem value="A1 (Leichtmotorrad)">A1 (Leichtmotorrad)</SelectItem>
-                <SelectItem value="A2">A2</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label className="text-sm font-medium">Zahlungsmethode <span className="text-destructive">*</span></Label>
-            <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-              <SelectTrigger className="mt-1"><SelectValue placeholder="Bitte wählen" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Barzahlung am Kurstag">Barzahlung am Kurstag</SelectItem>
-                <SelectItem value="Online bezahlen (Stripe/Twint)">Online bezahlen (Stripe/Twint)</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.paymentMethod && <p className="text-xs text-destructive mt-1">{errors.paymentMethod}</p>}
-          </div>
-        </div>
-
-        <div className="mt-6 bg-primary/5 border-l-4 border-primary rounded-r-lg p-4">
-          <p className="text-sm text-foreground flex items-start gap-2">
-            <CreditCard className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
-            <span>
-              <strong>Zahlungshinweis:</strong> Bei Barzahlung erhalten Sie eine Buchungsbestätigung. Die Zahlung erfolgt am Kurstag.
-            </span>
-          </p>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
