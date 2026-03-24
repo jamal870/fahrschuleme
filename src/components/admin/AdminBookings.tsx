@@ -5,9 +5,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { RefreshCw, Eye } from "lucide-react";
+import { RefreshCw, Eye, FileText, Receipt, AlertTriangle, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CardTitle } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
+import {
+  generateInvoice,
+  generateBookingConfirmation,
+  generateReminder,
+  generateReceipt,
+  downloadPdf,
+} from "@/lib/pdf-generator";
 
 interface Booking {
   id: string;
