@@ -140,9 +140,9 @@ export default function GrundkursBuchen() {
       }
 
       try {
-        checkoutWindow.location.replace(stripeData.url);
+        checkoutWindow!.location.replace(stripeData.url);
       } catch {
-        checkoutWindow.location.href = stripeData.url;
+        checkoutWindow!.location.href = stripeData.url;
       }
       toast.success("Zahlungsseite geöffnet – bitte im neuen Tab bezahlen. Nach erfolgreicher Zahlung erhältst du die Bestätigung per E-Mail.");
     } catch (err) {
