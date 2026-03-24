@@ -97,7 +97,7 @@ const AdminBookings = () => {
     toast.success("PDF wurde erstellt");
   };
 
-
+  const statusColor = (s: string) => {
     switch (s) {
       case "confirmed": return "default";
       case "cancelled": return "destructive";
