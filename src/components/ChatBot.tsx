@@ -528,8 +528,6 @@ export default function ChatBot() {
           body: {
             bookingId: booking.id, email: studentData.email,
             customerName: `${studentData.firstName} ${studentData.lastName}`,
-            courses: [{ part: 0, date: fsService.name, time: fsService.duration, price }],
-            totalPrice: price,
           },
         });
         if (fnError || !data?.url) throw new Error('Zahlung konnte nicht initialisiert werden');
