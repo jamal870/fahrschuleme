@@ -15,14 +15,10 @@ const Admin = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/admin/login");
-        return;
-      }
+      if (!session) { navigate("/admin/login"); return; }
       setLoading(false);
     };
     checkAuth();
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_OUT") navigate("/admin/login");
     });
@@ -34,38 +30,29 @@ const Admin = () => {
     toast.success("Abgemeldet");
   };
 
-  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">Laden...</div>;
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground font-body">Laden...</div>;
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card">
+      <header className="border-b-2 border-primary bg-card">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Bike className="w-6 h-6 text-primary" />
-            <span className="font-bold font-[Outfit] text-foreground">Drive me</span>
-            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">Admin</span>
+            <span className="font-heading font-bold text-foreground">DRIVE ME</span>
+            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 font-heading font-bold" style={{ borderRadius: "3px" }}>ADMIN</span>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleLogout}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Abmelden
+          <Button variant="ghost" size="sm" onClick={handleLogout} className="font-body">
+            <LogOut className="w-4 h-4 mr-2" /> Abmelden
           </Button>
         </div>
       </header>
-
       <main className="max-w-7xl mx-auto px-6 py-8">
         <Tabs defaultValue="courses" className="space-y-6">
           <TabsList>
-            <TabsTrigger value="courses">Kurstermine</TabsTrigger>
-            <TabsTrigger value="bookings">Buchungen</TabsTrigger>
+            <TabsTrigger value="courses" className="font-heading uppercase text-xs">Kurstermine</TabsTrigger>
+            <TabsTrigger value="bookings" className="font-heading uppercase text-xs">Buchungen</TabsTrigger>
           </TabsList>
-
-          <TabsContent value="courses">
-            <AdminCourseDates />
-          </TabsContent>
-
-          <TabsContent value="bookings">
-            <AdminBookings />
-          </TabsContent>
+          <TabsContent value="courses"><AdminCourseDates /></TabsContent>
+          <TabsContent value="bookings"><AdminBookings /></TabsContent>
         </Tabs>
       </main>
     </div>
