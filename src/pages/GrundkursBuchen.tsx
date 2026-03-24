@@ -103,7 +103,7 @@ export default function GrundkursBuchen() {
       .map(([part, course]) => ({ part: parseInt(part), course: course! }));
     const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
     const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
-    const checkoutWindow = window.open("about:blank", "_blank", "noopener,noreferrer");
+    const checkoutWindow = window.open("", "_blank");
 
     if (!checkoutWindow) {
       toast.error("Popup blockiert – bitte Popups erlauben und erneut versuchen.");
@@ -147,11 +147,17 @@ export default function GrundkursBuchen() {
         throw new Error(stripeError?.message || "Stripe-Zahlung konnte nicht gestartet werden.");
       }
 
-      checkoutWindow.location.href = stripeData.url;
+      try {
+        checkoutWindow.location.replace(stripeData.url);
+      } catch {
+        checkoutWindow.location.href = stripeData.url;
+      }
       toast.success("Zahlungsseite geöffnet – bitte im neuen Tab bezahlen. Nach erfolgreicher Zahlung erhältst du die Bestätigung per E-Mail.");
     } catch (err) {
-      if (!checkoutWindow.closed) {
+      try {
         checkoutWindow.close();
+      } catch {
+        // no-op
       }
       console.error('Booking error:', err);
       toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
