@@ -136,7 +136,6 @@ export default function GrundkursBuchen() {
           bookingId: booking.id,
           email,
           customerName: `${firstName} ${lastName}`,
-          customerName: `${firstName} ${lastName}`,
         },
       });
 
