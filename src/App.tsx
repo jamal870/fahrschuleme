@@ -18,9 +18,10 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/grundkurs" element={<GrundkursBuchen />} />
           <Route path="/grundkurs-buchen" element={<GrundkursBuchen />} />
           <Route path="/buchung-erfolgreich" element={<BuchungErfolgreich />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
@@ -29,7 +30,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
