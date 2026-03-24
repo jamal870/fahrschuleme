@@ -138,7 +138,7 @@ const Index = () => {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[1, 2, 3].map((part) => (
-              <a key={part} href="/grundkurs-buchen" className="bg-card border border-border p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer block" style={{ borderRadius: "3px" }}>
+              <a key={part} href="#/grundkurs" className="bg-card border border-border p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer block" style={{ borderRadius: "3px" }}>
                 <div className="w-14 h-14 mx-auto mb-4 bg-primary/10 text-primary font-heading font-bold text-xl flex items-center justify-center" style={{ borderRadius: "3px" }}>
                   {part}
                 </div>
