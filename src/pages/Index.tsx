@@ -9,13 +9,8 @@ const Index = () => {
       {/* Nav */}
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex flex-col leading-tight">
-              <span className="text-[22px] font-heading font-bold text-foreground uppercase" style={{ letterSpacing: "0.05em" }}>
-                DRIVE <span className="text-primary lowercase tracking-normal" style={{ fontStyle: "italic", letterSpacing: "0.02em" }}>me</span>
-              </span>
-              <span className="text-[10px] font-body text-muted-foreground -mt-1">Fahrschule</span>
-            </div>
+          <Link to="/" className="flex items-center">
+            <img src={driveMeLogo} alt="Drive me Fahrschule" className="h-12 w-auto" />
           </Link>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
             <a href="#grundkurs" className="hover:text-primary transition-colors">Grundkurs</a>
