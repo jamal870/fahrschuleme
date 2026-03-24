@@ -110,7 +110,7 @@ export default function ChatBot() {
         setOpen(true);
         setAutoOpened(true);
       }
-    }, 8000);
+    }, tenantConfig.chatbot.autoOpenDelayMs);
     return () => clearTimeout(timer);
   }, [open, autoOpened]);
 
