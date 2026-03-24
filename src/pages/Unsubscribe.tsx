@@ -63,9 +63,11 @@ export default function Unsubscribe() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
       <nav className="absolute top-0 left-0 right-0 max-w-5xl mx-auto px-6 py-5 flex items-center">
         <Link to="/" className="flex items-center gap-2">
-          <Bike className="w-7 h-7 text-primary" />
-          <span className="text-xl font-bold font-[Outfit] text-foreground">Drive me</span>
-          <span className="text-xs text-muted-foreground font-medium mt-1">Fahrschule</span>
+          <span className="flex items-baseline gap-0.5">
+            <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
+            <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
+          </span>
+          <span className="text-[10px] font-body text-muted-foreground">Fahrschule</span>
         </Link>
       </nav>
 
