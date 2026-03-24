@@ -12,7 +12,7 @@ const Index = () => {
             <div className="flex flex-col leading-tight">
               <span className="flex items-baseline gap-0.5">
                 <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
-                <span className="text-[26px] text-foreground" style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 700 }}>me</span>
+                <span className="text-[28px] text-foreground" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
               </span>
               <span className="text-[10px] font-body text-muted-foreground -mt-1">Fahrschule</span>
             </div>
