@@ -337,7 +337,7 @@ export default function GrundkursBuchen() {
                     <p className="text-sm text-foreground flex items-start gap-2">
                       <CreditCard className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
                       <span>
-                        <strong>Zahlungshinweis:</strong> Die Zahlung erfolgt bar vor Ort am Kurstag.
+                        <strong>Zahlungshinweis:</strong> Nach dem Absenden wirst du zur sicheren Zahlung via Stripe weitergeleitet.
                       </span>
                     </p>
                   </div>
