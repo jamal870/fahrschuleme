@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, Clock, Users, Shield, ChevronRight, Bike, Car } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Users, ChevronRight, Bike, Car, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
 
@@ -10,8 +10,10 @@ const Index = () => {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex flex-col leading-tight">
-              <span className="text-xl font-heading font-bold text-foreground tracking-tight">DRIVE ME</span>
-              <span className="text-[10px] font-body text-muted-foreground -mt-0.5">Fahrschule</span>
+              <span className="text-[22px] font-heading font-bold text-foreground uppercase" style={{ letterSpacing: "0.05em" }}>
+                DRIVE <span className="text-primary">ME</span>
+              </span>
+              <span className="text-[10px] font-body text-muted-foreground -mt-1">Fahrschule</span>
             </div>
           </Link>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
@@ -171,7 +173,7 @@ const Index = () => {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { icon: <Shield className="w-5 h-5 text-primary mt-0.5 shrink-0" />, title: "Ratenzahlung möglich", desc: "In Zusammenarbeit mit Crowd4Cash – flexible Finanzierung." },
+                { icon: <CreditCard className="w-5 h-5 text-primary mt-0.5 shrink-0" />, title: "Ratenzahlung möglich", desc: "In Zusammenarbeit mit Crowd4Cash – flexible Finanzierung." },
                 { icon: <Bike className="w-5 h-5 text-primary mt-0.5 shrink-0" />, title: "Kein eigenes Motorrad?", desc: "Kein Problem! Wir helfen dir, ein geeignetes Motorrad zu mieten." },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3 bg-card border border-border p-4" style={{ borderRadius: "3px" }}>
