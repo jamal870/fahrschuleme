@@ -293,14 +293,13 @@ export default function ChatBot() {
     const total = sels.reduce((s, { course }) => s + course.price, 0);
 
     try {
-      const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
         .insert({
           booking_type: 'grundkurs', first_name: studentData.firstName, last_name: studentData.lastName,
           address: studentData.address, birth_date: studentData.birthDate, fa_number: studentData.faNumber,
           email: studentData.email, phone: studentData.phone, payment_method: selectedPaymentMethod,
-          total_price: total, status: isOnlinePayment ? 'pending_payment' : 'confirmed',
+          total_price: total, status: 'confirmed',
         })
         .select('id').single();
 
@@ -311,69 +310,23 @@ export default function ChatBot() {
         await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
-      const sendConfirmationEmail = async () => {
-        try {
-          await supabase.functions.invoke('send-transactional-email', {
-            body: {
-              templateName: 'booking-confirmation', recipientEmail: studentData.email,
-              idempotencyKey: `booking-confirm-${booking.id}`,
-              templateData: {
-                firstName: studentData.firstName, lastName: studentData.lastName,
-                address: studentData.address, birthDate: studentData.birthDate,
-                faNumber: studentData.faNumber, phone: studentData.phone, email: studentData.email,
-                courses: sels.map(({ part, course }) => ({ part, date: course.date, time: course.time, location: course.location, price: course.price })),
-                totalPrice: total.toFixed(2), paymentMethod: selectedPaymentMethod,
-                bookingId: booking.id, bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
-              },
-            },
-          });
-        } catch (emailErr) { console.error('Email send error:', emailErr); }
-      };
-
-      if (isOnlinePayment) {
-        const { data, error: fnError } = await supabase.functions.invoke('create-course-payment', {
+      try {
+        await supabase.functions.invoke('send-transactional-email', {
           body: {
-            bookingId: booking.id, email: studentData.email,
-            customerName: `${studentData.firstName} ${studentData.lastName}`,
-            courses: sels.map(({ part, course }) => ({ part, date: course.date, time: course.time, price: course.price })),
-            totalPrice: total,
+            templateName: 'booking-confirmation', recipientEmail: studentData.email,
+            idempotencyKey: `booking-confirm-${booking.id}`,
+            templateData: {
+              firstName: studentData.firstName, lastName: studentData.lastName,
+              address: studentData.address, birthDate: studentData.birthDate,
+              faNumber: studentData.faNumber, phone: studentData.phone, email: studentData.email,
+              courses: sels.map(({ part, course }) => ({ part, date: course.date, time: course.time, location: course.location, price: course.price })),
+              totalPrice: total.toFixed(2), paymentMethod: selectedPaymentMethod,
+              bookingId: booking.id, bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
+            },
           },
         });
-        if (fnError || !data?.url) throw new Error('Zahlung konnte nicht initialisiert werden');
-        window.open(data.url, '_blank');
-        addMsg({ role: "bot", content: `⏳ **Warte auf Zahlung...**\n\nStripe Checkout wurde geöffnet. Bitte schliesse die Zahlung ab.` });
+      } catch (emailErr) { console.error('Email send error:', emailErr); }
 
-        const pollPayment = async () => {
-          const maxAttempts = 60;
-          for (let i = 0; i < maxAttempts; i++) {
-            await new Promise(r => setTimeout(r, 5000));
-            const { data: updatedBooking } = await supabase.from('bookings').select('status').eq('id', booking.id).single();
-            if (updatedBooking?.status === 'confirmed') {
-              await sendConfirmationEmail();
-              setBookingStep(0);
-              addMsg({
-                role: "bot",
-                content: `✅ **Zahlung erfolgreich!**\n\n🎉 Buchung bestätigt!\n👤 ${studentData.firstName} ${studentData.lastName}\n📧 Bestätigung an **${studentData.email}**\n💰 CHF ${total.toFixed(2)}\n\nVielen Dank! 🏍️`,
-                buttons: [
-                  { label: "Neue Buchung", action: "start_booking" },
-                  { label: "Zurück zum Menü", action: "main_menu" },
-                ],
-              });
-              toast.success("Zahlung erfolgreich!");
-              return;
-            }
-          }
-          addMsg({
-            role: "bot",
-            content: `⚠️ Zahlung konnte nicht bestätigt werden. Bitte kontaktiere uns.`,
-            buttons: [{ label: "📞 Kontakt", action: "contact" }],
-          });
-        };
-        pollPayment();
-        return;
-      }
-
-      await sendConfirmationEmail();
       setBookingStep(0);
       addMsg({
         role: "bot",
