@@ -111,8 +111,8 @@ export default function GrundkursBuchen() {
           booking_type: 'grundkurs',
           first_name: firstName, last_name: lastName, email, phone, address,
           fa_number: faNumber, birth_date: birthDate,
-          payment_method: "Barzahlung am Kurstag",
-          total_price: total, status: 'confirmed',
+          payment_method: "stripe",
+          total_price: total, status: 'pending',
         })
         .select('id').single();
 
@@ -123,28 +123,25 @@ export default function GrundkursBuchen() {
         await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
-      // Send confirmation email
-      try {
-        await supabase.functions.invoke('send-transactional-email', {
-          body: {
-            templateName: 'booking-confirmation', recipientEmail: email,
-            idempotencyKey: `booking-confirm-${booking.id}`,
-            templateData: {
-              firstName, lastName, address, birthDate, faNumber, phone, email, category,
-              courses: selectedCoursesWithParts.map(({ part, course }) => ({
-                part, date: course.date, time: course.time, location: course.location, price: course.price,
-              })),
-              totalPrice: total.toFixed(2), paymentMethod: "Barzahlung am Kurstag",
-              bookingId: booking.id,
-              bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
-            },
-          },
-        });
-      } catch (emailErr) { console.error('Email send error:', emailErr); }
-
-      toast.success("Buchung erfolgreich!", {
-        description: `${selectedCourses.length} Kursteile für CHF ${total.toFixed(2)} gebucht. Bestätigung an ${email}.`,
+      // Create Stripe checkout session
+      const { data: stripeData, error: stripeError } = await supabase.functions.invoke('create-course-payment', {
+        body: {
+          bookingId: booking.id,
+          email,
+          customerName: `${firstName} ${lastName}`,
+          courses: selectedCoursesWithParts.map(({ part, course }) => ({
+            part, date: course.date, time: course.time, price: course.price,
+          })),
+          totalPrice: total,
+        },
       });
+
+      if (stripeError || !stripeData?.url) {
+        throw new Error(stripeError?.message || "Stripe-Zahlung konnte nicht gestartet werden.");
+      }
+
+      // Redirect to Stripe checkout
+      window.location.href = stripeData.url;
     } catch (err) {
       console.error('Booking error:', err);
       toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
@@ -164,10 +161,13 @@ export default function GrundkursBuchen() {
       {/* Header */}
       <nav className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <Bike className="w-7 h-7 text-primary" />
-          <span className="text-xl font-bold font-[Outfit] text-foreground">Drive</span>
-          <span className="text-xl text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
-          <span className="text-xs text-muted-foreground font-medium mt-1">Fahrschule</span>
+          <div className="flex flex-col leading-tight">
+            <span className="flex items-baseline gap-0.5">
+              <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
+              <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
+            </span>
+            <span className="text-[10px] font-body text-muted-foreground -mt-1">Fahrschule</span>
+          </div>
         </Link>
       </nav>
 
@@ -337,7 +337,7 @@ export default function GrundkursBuchen() {
                     <p className="text-sm text-foreground flex items-start gap-2">
                       <CreditCard className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
                       <span>
-                        <strong>Zahlungshinweis:</strong> Die Zahlung erfolgt bar vor Ort am Kurstag.
+                        <strong>Zahlungshinweis:</strong> Nach dem Absenden wirst du zur sicheren Zahlung via Stripe weitergeleitet.
                       </span>
                     </p>
                   </div>

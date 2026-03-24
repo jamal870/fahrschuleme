@@ -24,8 +24,11 @@ export default function BuchungErfolgreich() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
       <nav className="absolute top-0 left-0 right-0 max-w-5xl mx-auto px-6 py-5 flex items-center">
         <Link to="/" className="flex items-center gap-2">
-          <span className="text-xl font-heading font-bold text-foreground">DRIVE ME</span>
-          <span className="text-xs text-muted-foreground font-body">Fahrschule</span>
+          <span className="flex items-baseline gap-0.5">
+            <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
+            <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
+          </span>
+          <span className="text-[10px] font-body text-muted-foreground">Fahrschule</span>
         </Link>
       </nav>
       <div className="text-center max-w-lg">
