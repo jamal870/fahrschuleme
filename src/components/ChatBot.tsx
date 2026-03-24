@@ -59,6 +59,8 @@ interface FahrstundenSummary {
   paymentMethod: string;
 }
 
+type ConfirmationResult = "confirmed" | "payment_started" | "failed";
+
 const PAYMENT_METHODS = [
   { id: "card", label: "Online bezahlen (Stripe/Twint)", desc: "Sichere Onlinezahlung via Stripe Checkout.", icon: "💳" },
   { id: "cash", label: "Barzahlung am Kurstag", desc: "Zahlung bar vor Ort am Kurstag.", icon: "💵" },
@@ -287,18 +289,18 @@ export default function ChatBot() {
     }
   };
 
-  const handleFinalConfirm = async () => {
-    if (!studentData || isSubmitting) return;
+  const handleFinalConfirm = async (): Promise<ConfirmationResult> => {
+    if (!studentData || isSubmitting) return "failed";
     setIsSubmitting(true);
     const sels = Object.entries(selections).map(([p, c]) => ({ part: parseInt(p), course: c }));
     const total = sels.reduce((s, { course }) => s + course.price, 0);
     const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
-    const checkoutWindow = isOnlinePayment ? window.open("about:blank", "_blank", "noopener,noreferrer") : null;
+    const checkoutWindow = isOnlinePayment ? window.open("", "_blank") : null;
 
     if (isOnlinePayment && !checkoutWindow) {
       toast.error("Popup blockiert – bitte Popups erlauben und erneut versuchen.");
       setIsSubmitting(false);
-      return;
+      return "failed";
     }
 
     try {
@@ -358,7 +360,11 @@ export default function ChatBot() {
           throw new Error(fnError?.message || 'Zahlung konnte nicht initialisiert werden');
         }
 
-        checkoutWindow.location.href = data.url;
+        try {
+          checkoutWindow.location.replace(data.url);
+        } catch {
+          checkoutWindow.location.href = data.url;
+        }
 
         addMsg({
           role: "bot",
@@ -370,7 +376,7 @@ export default function ChatBot() {
         });
         toast.success("Zahlungsseite geöffnet – bitte im neuen Tab bezahlen.");
         setBookingStep(0);
-        return;
+        return "payment_started";
       }
 
       await sendConfirmationEmail();
@@ -384,12 +390,18 @@ export default function ChatBot() {
         ],
       });
       toast.success("Buchung bestätigt!");
+      return "confirmed";
     } catch (err) {
-      if (checkoutWindow && !checkoutWindow.closed) {
-        checkoutWindow.close();
+      if (checkoutWindow) {
+        try {
+          checkoutWindow.close();
+        } catch {
+          // no-op
+        }
       }
       console.error('Booking error:', err);
       toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
+      return "failed";
     } finally {
       setIsSubmitting(false);
     }
@@ -474,17 +486,17 @@ export default function ChatBot() {
     }, 400);
   };
 
-  const handleFsConfirm = async () => {
-    if (!studentData || !fsService || isSubmitting) return;
+  const handleFsConfirm = async (): Promise<ConfirmationResult> => {
+    if (!studentData || !fsService || isSubmitting) return "failed";
     setIsSubmitting(true);
     const price = fsPackage ? fsPackage.totalPrice : fsService.price;
     const isOnlinePayment = selectedPaymentMethod === "Online bezahlen (Stripe/Twint)";
-    const checkoutWindow = isOnlinePayment ? window.open("about:blank", "_blank", "noopener,noreferrer") : null;
+    const checkoutWindow = isOnlinePayment ? window.open("", "_blank") : null;
 
     if (isOnlinePayment && !checkoutWindow) {
       toast.error("Popup blockiert – bitte Popups erlauben und erneut versuchen.");
       setIsSubmitting(false);
-      return;
+      return "failed";
     }
 
     try {
@@ -530,7 +542,11 @@ export default function ChatBot() {
           },
         });
         if (fnError || !data?.url) throw new Error('Zahlung konnte nicht initialisiert werden');
-        checkoutWindow.location.href = data.url;
+        try {
+          checkoutWindow.location.replace(data.url);
+        } catch {
+          checkoutWindow.location.href = data.url;
+        }
         addMsg({ role: "bot", content: `⏳ **Warte auf Zahlung...**\n\nStripe Checkout wurde geöffnet.` });
 
         const pollPayment = async () => {
@@ -553,7 +569,7 @@ export default function ChatBot() {
           addMsg({ role: "bot", content: `⚠️ Zahlung nicht bestätigt. Bitte kontaktiere uns.`, buttons: [{ label: "📞 Kontakt", action: "contact" }] });
         };
         pollPayment();
-        return;
+        return "payment_started";
       }
 
       await sendConfirmationEmail();
@@ -564,12 +580,18 @@ export default function ChatBot() {
         buttons: [{ label: "Zurück zum Menü", action: "main_menu" }],
       });
       toast.success("Fahrstunde gebucht!");
+      return "confirmed";
     } catch (err) {
-      if (checkoutWindow && !checkoutWindow.closed) {
-        checkoutWindow.close();
+      if (checkoutWindow) {
+        try {
+          checkoutWindow.close();
+        } catch {
+          // no-op
+        }
       }
       console.error('Booking error:', err);
       toast.error("Buchung fehlgeschlagen.");
+      return "failed";
     } finally {
       setIsSubmitting(false);
     }
@@ -1297,12 +1319,16 @@ function PaymentSelector({ onSelect }: { onSelect: (id: string) => void }) {
   );
 }
 
-function ConfirmationCard({ summary, onConfirm }: { summary: BookingSummary; onConfirm: () => void }) {
-  const [confirmed, setConfirmed] = useState(false);
+function ConfirmationCard({ summary, onConfirm }: { summary: BookingSummary; onConfirm: () => Promise<ConfirmationResult> }) {
+  const [status, setStatus] = useState<"idle" | "submitting" | "confirmed" | "payment_started">("idle");
   const total = summary.selections.reduce((s, { course }) => s + course.price, 0);
 
-  if (confirmed) {
+  if (status === "confirmed") {
     return <div className="bg-primary/10 border border-primary/20 p-3 text-center" style={{ borderRadius: "3px" }}><p className="text-xs font-medium text-primary flex items-center justify-center gap-1 font-body"><Check className="w-3.5 h-3.5" /> Buchung bestätigt</p></div>;
+  }
+
+  if (status === "payment_started") {
+    return <div className="bg-primary/10 border border-primary/20 p-3 text-center" style={{ borderRadius: "3px" }}><p className="text-xs font-medium text-primary flex items-center justify-center gap-1 font-body"><CreditCard className="w-3.5 h-3.5" /> Zahlungsfenster geöffnet</p></div>;
   }
 
   return (
@@ -1328,20 +1354,45 @@ function ConfirmationCard({ summary, onConfirm }: { summary: BookingSummary; onC
         <div><p className="text-[10px] text-muted-foreground font-body">Bezahlung</p><p className="text-xs font-medium text-foreground font-body">{summary.paymentMethod}</p></div>
         <div className="text-right"><p className="text-[10px] text-muted-foreground font-body">Gesamt</p><p className="text-base font-heading font-bold text-primary">CHF {total.toFixed(2)}</p></div>
       </div>
-      <Button size="sm" onClick={() => { setConfirmed(true); onConfirm(); }} className="w-full h-9 text-xs gap-1.5 font-heading uppercase" style={{ borderRadius: "3px" }}>
-        <Check className="w-3.5 h-3.5" /> Gebührenpflichtig bestätigen
+      <Button
+        size="sm"
+        disabled={status === "submitting"}
+        onClick={async () => {
+          if (status === "submitting") return;
+          setStatus("submitting");
+          const result = await onConfirm();
+          if (result === "confirmed") {
+            setStatus("confirmed");
+          } else if (result === "payment_started") {
+            setStatus("payment_started");
+          } else {
+            setStatus("idle");
+          }
+        }}
+        className="w-full h-9 text-xs gap-1.5 font-heading uppercase"
+        style={{ borderRadius: "3px" }}
+      >
+        {status === "submitting" ? (
+          <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Wird verarbeitet…</>
+        ) : (
+          <><Check className="w-3.5 h-3.5" /> Gebührenpflichtig bestätigen</>
+        )}
       </Button>
       <p className="text-[9px] text-muted-foreground text-center font-body">Mit der Bestätigung akzeptierst du unsere AGB und Datenschutzrichtlinien.</p>
     </motion.div>
   );
 }
 
-function FahrstundenConfirmationCard({ summary, onConfirm }: { summary: FahrstundenSummary; onConfirm: () => void }) {
-  const [confirmed, setConfirmed] = useState(false);
+function FahrstundenConfirmationCard({ summary, onConfirm }: { summary: FahrstundenSummary; onConfirm: () => Promise<ConfirmationResult> }) {
+  const [status, setStatus] = useState<"idle" | "submitting" | "confirmed" | "payment_started">("idle");
   const price = summary.selectedPackage ? summary.selectedPackage.totalPrice : summary.service.price;
 
-  if (confirmed) {
+  if (status === "confirmed") {
     return <div className="bg-primary/10 border border-primary/20 p-3 text-center" style={{ borderRadius: "3px" }}><p className="text-xs font-medium text-primary flex items-center justify-center gap-1 font-body"><Check className="w-3.5 h-3.5" /> Buchung bestätigt</p></div>;
+  }
+
+  if (status === "payment_started") {
+    return <div className="bg-primary/10 border border-primary/20 p-3 text-center" style={{ borderRadius: "3px" }}><p className="text-xs font-medium text-primary flex items-center justify-center gap-1 font-body"><CreditCard className="w-3.5 h-3.5" /> Zahlungsfenster geöffnet</p></div>;
   }
 
   return (
@@ -1364,8 +1415,29 @@ function FahrstundenConfirmationCard({ summary, onConfirm }: { summary: Fahrstun
         <div><p className="text-[10px] text-muted-foreground font-body">Bezahlung</p><p className="text-xs font-medium text-foreground font-body">{summary.paymentMethod}</p></div>
         <div className="text-right"><p className="text-[10px] text-muted-foreground font-body">Gesamt</p><p className="text-base font-heading font-bold text-primary">CHF {price.toFixed(2)}</p></div>
       </div>
-      <Button size="sm" onClick={() => { setConfirmed(true); onConfirm(); }} className="w-full h-9 text-xs gap-1.5 font-heading uppercase" style={{ borderRadius: "3px" }}>
-        <Check className="w-3.5 h-3.5" /> Gebührenpflichtig bestätigen
+      <Button
+        size="sm"
+        disabled={status === "submitting"}
+        onClick={async () => {
+          if (status === "submitting") return;
+          setStatus("submitting");
+          const result = await onConfirm();
+          if (result === "confirmed") {
+            setStatus("confirmed");
+          } else if (result === "payment_started") {
+            setStatus("payment_started");
+          } else {
+            setStatus("idle");
+          }
+        }}
+        className="w-full h-9 text-xs gap-1.5 font-heading uppercase"
+        style={{ borderRadius: "3px" }}
+      >
+        {status === "submitting" ? (
+          <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Wird verarbeitet…</>
+        ) : (
+          <><Check className="w-3.5 h-3.5" /> Gebührenpflichtig bestätigen</>
+        )}
       </Button>
       <p className="text-[9px] text-muted-foreground text-center font-body">Mit der Bestätigung akzeptierst du unsere AGB und Datenschutzrichtlinien.</p>
     </motion.div>
