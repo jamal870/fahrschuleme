@@ -119,11 +119,11 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {tenantConfig.categories.map((cat, i) => (
-              <div key={i} className="bg-card border border-border p-5 hover:border-primary/50 transition-colors" style={{ borderRadius: "3px" }}>
+              <a key={i} href="/grundkurs-buchen" className="bg-card border border-border p-5 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer block" style={{ borderRadius: "3px" }}>
                 <h3 className="font-heading font-bold text-foreground text-lg mb-1">{cat.title}</h3>
                 <p className="text-primary text-xs font-heading font-bold mb-2">{cat.age}</p>
                 <p className="text-xs text-muted-foreground font-body">{cat.desc}</p>
-              </div>
+              </a>
             ))}
           </div>
         </div>
