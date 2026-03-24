@@ -5,9 +5,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { RefreshCw, Eye } from "lucide-react";
+import { RefreshCw, Eye, FileText, Receipt, AlertTriangle, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CardTitle } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
+import {
+  generateInvoice,
+  generateBookingConfirmation,
+  generateReminder,
+  generateReceipt,
+  downloadPdf,
+} from "@/lib/pdf-generator";
 
 interface Booking {
   id: string;
@@ -56,6 +64,39 @@ const AdminBookings = () => {
     setBookingItems(data || []);
   };
 
+  const handlePdf = (type: string, b: Booking) => {
+    const data = { ...b, items: [] as string[] };
+    const suffix = `${b.last_name}_${b.id.slice(0, 6)}`;
+    let doc;
+    switch (type) {
+      case "invoice":
+        doc = generateInvoice(data);
+        downloadPdf(doc, `Rechnung_${suffix}.pdf`);
+        break;
+      case "confirmation":
+        doc = generateBookingConfirmation(data);
+        downloadPdf(doc, `Bestaetigung_${suffix}.pdf`);
+        break;
+      case "receipt":
+        doc = generateReceipt(data);
+        downloadPdf(doc, `Quittung_${suffix}.pdf`);
+        break;
+      case "reminder1":
+        doc = generateReminder(data, 1);
+        downloadPdf(doc, `Erinnerung_${suffix}.pdf`);
+        break;
+      case "reminder2":
+        doc = generateReminder(data, 2);
+        downloadPdf(doc, `Mahnung2_${suffix}.pdf`);
+        break;
+      case "reminder3":
+        doc = generateReminder(data, 3);
+        downloadPdf(doc, `LetzteMahnung_${suffix}.pdf`);
+        break;
+    }
+    toast.success("PDF wurde erstellt");
+  };
+
   const statusColor = (s: string) => {
     switch (s) {
       case "confirmed": return "default";
@@ -101,10 +142,40 @@ const AdminBookings = () => {
                     <TableCell><Badge variant="outline">{b.booking_type}</Badge></TableCell>
                     <TableCell>CHF {b.total_price}</TableCell>
                     <TableCell><Badge variant={statusColor(b.status) as any}>{b.status}</Badge></TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right flex items-center justify-end gap-1">
                       <Button variant="ghost" size="icon" onClick={() => viewDetails(b)}>
                         <Eye className="w-4 h-4" />
                       </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <FileText className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel className="text-xs">PDF erstellen</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => handlePdf("invoice", b)}>
+                            <FileText className="w-3.5 h-3.5 mr-2" /> Rechnung
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handlePdf("confirmation", b)}>
+                            <CheckCircle className="w-3.5 h-3.5 mr-2" /> Buchungsbestätigung
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handlePdf("receipt", b)}>
+                            <Receipt className="w-3.5 h-3.5 mr-2" /> Quittung
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => handlePdf("reminder1", b)}>
+                            <AlertTriangle className="w-3.5 h-3.5 mr-2" /> 1. Zahlungserinnerung
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handlePdf("reminder2", b)}>
+                            <AlertTriangle className="w-3.5 h-3.5 mr-2" /> 2. Mahnung
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handlePdf("reminder3", b)} className="text-destructive">
+                            <AlertTriangle className="w-3.5 h-3.5 mr-2" /> Letzte Mahnung
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}
