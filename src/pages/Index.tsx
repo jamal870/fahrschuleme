@@ -173,7 +173,7 @@ const Index = () => {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { icon: <Shield className="w-5 h-5 text-primary mt-0.5 shrink-0" />, title: "Ratenzahlung möglich", desc: "In Zusammenarbeit mit Crowd4Cash – flexible Finanzierung." },
+                { icon: <CreditCard className="w-5 h-5 text-primary mt-0.5 shrink-0" />, title: "Ratenzahlung möglich", desc: "In Zusammenarbeit mit Crowd4Cash – flexible Finanzierung." },
                 { icon: <Bike className="w-5 h-5 text-primary mt-0.5 shrink-0" />, title: "Kein eigenes Motorrad?", desc: "Kein Problem! Wir helfen dir, ein geeignetes Motorrad zu mieten." },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3 bg-card border border-border p-4" style={{ borderRadius: "3px" }}>
