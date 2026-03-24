@@ -814,7 +814,11 @@ export default function ChatBot() {
             <div className="bg-card border-b border-border px-5 py-4 flex items-center justify-between shrink-0" style={{ borderLeft: "4px solid hsl(18, 80%, 50%)" }}>
               <div className="flex items-center gap-3">
                 <div>
-                  <h3 className="font-heading font-bold text-sm text-foreground">DRIVE ME FAHRSCHULE</h3>
+                  <h3 className="font-heading font-bold text-sm text-foreground flex items-baseline gap-0.5">
+                    <span>DRIVE</span>
+                    <span className="text-primary" style={{ fontFamily: "'Kaushan Script', cursive", fontSize: "16px", textTransform: "none" }}>me</span>
+                    <span className="ml-1">FAHRSCHULE</span>
+                  </h3>
                   <p className="text-xs text-muted-foreground font-body">Grundkurse & Fahrstunden</p>
                 </div>
               </div>
