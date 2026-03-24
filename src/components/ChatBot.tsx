@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { faqData, instructors } from "@/data/courses";
+import { faqData } from "@/data/courses";
 import type { CourseDate, FahrstundenService, FahrstundenPackage, Instructor } from "@/data/courses";
+import { tenantConfig } from "@/config/tenant";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
