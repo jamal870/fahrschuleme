@@ -326,8 +326,6 @@ const Index = () => {
           {tenantConfig.footer.copyright}
         </div>
       </footer>
-        </div>
-      </footer>
 
       {/* Chatbot */}
       <ChatBot />
