@@ -140,8 +140,10 @@ export default function GrundkursBuchen() {
         throw new Error(stripeError?.message || "Stripe-Zahlung konnte nicht gestartet werden.");
       }
 
-      // Redirect to Stripe checkout
-      window.location.href = stripeData.url;
+      // Open Stripe checkout in new tab
+      window.open(stripeData.url, '_blank');
+      toast.success("Zahlungsseite geöffnet – bitte im neuen Tab bezahlen. Nach erfolgreicher Zahlung erhältst du die Bestätigung per E-Mail.");
+      setIsSubmitting(false);
     } catch (err) {
       console.error('Booking error:', err);
       toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");

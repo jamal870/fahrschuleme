@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,15 +9,76 @@ export default function BuchungErfolgreich() {
   const bookingId = searchParams.get("booking_id");
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState<any>(null);
+  const emailSentRef = useRef(false);
 
   useEffect(() => {
     if (!bookingId) { setLoading(false); return; }
-    const fetchBooking = async () => {
+
+    const confirmAndNotify = async () => {
+      // Fetch booking
       const { data } = await supabase.from("bookings").select("*").eq("id", bookingId).single();
+      if (!data) { setLoading(false); return; }
+
+      // Update status to confirmed if pending
+      if (data.status === "pending_payment" || data.status === "pending") {
+        await supabase.from("bookings").update({ status: "confirmed" }).eq("id", bookingId);
+        data.status = "confirmed";
+      }
+
       setBooking(data);
       setLoading(false);
+
+      // Send confirmation email only once
+      if (!emailSentRef.current) {
+        emailSentRef.current = true;
+
+        // Fetch booking items for email
+        const { data: items } = await supabase.from("booking_items").select("course_date_id").eq("booking_id", bookingId);
+        const courseIds = items?.map(i => i.course_date_id).filter(Boolean) || [];
+
+        let courses: any[] = [];
+        if (courseIds.length > 0) {
+          const { data: courseData } = await supabase.from("course_dates").select("*").in("id", courseIds);
+          courses = courseData || [];
+        }
+
+        const total = courses.reduce((s: number, c: any) => s + (c.price || 0), 0);
+
+        try {
+          await supabase.functions.invoke("send-transactional-email", {
+            body: {
+              templateName: "booking-confirmation",
+              recipientEmail: data.email,
+              idempotencyKey: `booking-confirm-${bookingId}`,
+              templateData: {
+                firstName: data.first_name,
+                lastName: data.last_name,
+                address: data.address,
+                birthDate: data.birth_date,
+                faNumber: data.fa_number,
+                phone: data.phone,
+                email: data.email,
+                courses: courses.map(c => ({
+                  part: c.part,
+                  date: c.date,
+                  time: c.time,
+                  location: c.location,
+                  price: c.price,
+                })),
+                totalPrice: total.toFixed(2),
+                paymentMethod: data.payment_method,
+                bookingId: bookingId,
+                bookingDate: new Date().toLocaleDateString("de-CH", { day: "numeric", month: "long", year: "numeric" }),
+              },
+            },
+          });
+        } catch (emailErr) {
+          console.error("Email send error:", emailErr);
+        }
+      }
     };
-    fetchBooking();
+
+    confirmAndNotify();
   }, [bookingId]);
 
   return (

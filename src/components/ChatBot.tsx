@@ -351,7 +351,20 @@ export default function ChatBot() {
           throw new Error(fnError?.message || 'Zahlung konnte nicht initialisiert werden');
         }
 
-        window.location.href = data.url;
+        // Open Stripe in new tab
+        window.open(data.url, '_blank');
+
+        // Show waiting message
+        addMsg({
+          role: "bot",
+          content: `💳 **Zahlung geöffnet** – bitte schliesse die Zahlung im neuen Tab ab.\n\nNach erfolgreicher Zahlung erhältst du die Bestätigung per E-Mail an **${studentData.email}**.`,
+          buttons: [
+            { label: "Neue Buchung", action: "start_booking" },
+            { label: "Zurück zum Menü", action: "main_menu" },
+          ],
+        });
+        toast.success("Zahlungsseite geöffnet – bitte im neuen Tab bezahlen.");
+        setBookingStep(0);
         return;
       }
 
