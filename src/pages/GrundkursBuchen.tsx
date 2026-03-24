@@ -127,7 +127,6 @@ export default function GrundkursBuchen() {
 
       for (const course of selectedCourses) {
         await supabase.from('booking_items').insert({ booking_id: booking.id, course_date_id: course.id });
-        await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
       // Create Stripe checkout session

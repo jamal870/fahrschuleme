@@ -32,16 +32,21 @@ serve(async (req) => {
       throw new Error("Missing required fields: bookingId, email");
     }
 
-    // Verify booking exists and is pending_payment
+    // Verify booking exists, is pending_payment, AND email matches
     const { data: booking, error: bookingError } = await supabase
       .from("bookings")
-      .select("id, status")
+      .select("id, status, email")
       .eq("id", bookingId)
       .eq("status", "pending_payment")
       .single();
 
     if (bookingError || !booking) {
       throw new Error("Booking not found or not in pending_payment status");
+    }
+
+    // Verify caller's email matches booking email (prevents unauthorized access)
+    if (booking.email !== email) {
+      throw new Error("Email does not match booking");
     }
 
     // Fetch booking items to get course IDs
