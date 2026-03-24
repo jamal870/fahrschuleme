@@ -111,8 +111,8 @@ export default function GrundkursBuchen() {
           booking_type: 'grundkurs',
           first_name: firstName, last_name: lastName, email, phone, address,
           fa_number: faNumber, birth_date: birthDate,
-          payment_method: "Barzahlung am Kurstag",
-          total_price: total, status: 'confirmed',
+          payment_method: "stripe",
+          total_price: total, status: 'pending',
         })
         .select('id').single();
 
@@ -123,28 +123,25 @@ export default function GrundkursBuchen() {
         await supabase.rpc('decrement_spots', { course_id: course.id });
       }
 
-      // Send confirmation email
-      try {
-        await supabase.functions.invoke('send-transactional-email', {
-          body: {
-            templateName: 'booking-confirmation', recipientEmail: email,
-            idempotencyKey: `booking-confirm-${booking.id}`,
-            templateData: {
-              firstName, lastName, address, birthDate, faNumber, phone, email, category,
-              courses: selectedCoursesWithParts.map(({ part, course }) => ({
-                part, date: course.date, time: course.time, location: course.location, price: course.price,
-              })),
-              totalPrice: total.toFixed(2), paymentMethod: "Barzahlung am Kurstag",
-              bookingId: booking.id,
-              bookingDate: new Date().toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' }),
-            },
-          },
-        });
-      } catch (emailErr) { console.error('Email send error:', emailErr); }
-
-      toast.success("Buchung erfolgreich!", {
-        description: `${selectedCourses.length} Kursteile für CHF ${total.toFixed(2)} gebucht. Bestätigung an ${email}.`,
+      // Create Stripe checkout session
+      const { data: stripeData, error: stripeError } = await supabase.functions.invoke('create-course-payment', {
+        body: {
+          bookingId: booking.id,
+          email,
+          customerName: `${firstName} ${lastName}`,
+          courses: selectedCoursesWithParts.map(({ part, course }) => ({
+            part, date: course.date, time: course.time, price: course.price,
+          })),
+          totalPrice: total,
+        },
       });
+
+      if (stripeError || !stripeData?.url) {
+        throw new Error(stripeError?.message || "Stripe-Zahlung konnte nicht gestartet werden.");
+      }
+
+      // Redirect to Stripe checkout
+      window.location.href = stripeData.url;
     } catch (err) {
       console.error('Booking error:', err);
       toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
