@@ -140,6 +140,32 @@ serve(async (req) => {
         if (itemError) throw itemError;
       }
 
+      // Send admin notification email
+      const courseSummary = courses.map((c: any) => `MGK Teil ${c.part}`).join(', ');
+      const now = new Date();
+      const bookingDateStr = now.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+      await supabase.functions.invoke('send-transactional-email', {
+        body: {
+          templateName: 'admin-booking-notification',
+          idempotencyKey: `admin-notify-${booking.id}`,
+          templateData: {
+            bookingId: booking.id,
+            bookingType,
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            email: email.trim().toLowerCase(),
+            phone: phone.trim(),
+            address: address.trim(),
+            birthDate: birthDate.trim(),
+            faNumber: faNumber.trim(),
+            paymentMethod,
+            totalPrice: serverTotal.toFixed(2),
+            bookingDate: bookingDateStr,
+            items: courseSummary,
+          },
+        },
+      });
+
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverTotal }), {
         status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
