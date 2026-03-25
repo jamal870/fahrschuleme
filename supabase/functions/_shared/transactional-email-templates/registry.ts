@@ -11,8 +11,10 @@ export interface TemplateEntry {
 
 import { template as bookingConfirmation } from './booking-confirmation.tsx'
 import { template as fahrstundenConfirmation } from './fahrstunden-confirmation.tsx'
+import { template as adminBookingNotification } from './admin-booking-notification.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'booking-confirmation': bookingConfirmation,
   'fahrstunden-confirmation': fahrstundenConfirmation,
+  'admin-booking-notification': adminBookingNotification,
 }
