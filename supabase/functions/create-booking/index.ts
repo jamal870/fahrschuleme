@@ -240,6 +240,31 @@ serve(async (req) => {
         });
       if (itemError) throw itemError;
 
+      // Send admin notification email
+      const fNow = new Date();
+      const fBookingDateStr = fNow.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+      await supabase.functions.invoke('send-transactional-email', {
+        body: {
+          templateName: 'admin-booking-notification',
+          idempotencyKey: `admin-notify-${booking.id}`,
+          templateData: {
+            bookingId: booking.id,
+            bookingType,
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            email: email.trim().toLowerCase(),
+            phone: phone.trim(),
+            address: address.trim(),
+            birthDate: birthDate.trim(),
+            faNumber: faNumber.trim(),
+            paymentMethod,
+            totalPrice: serverPrice.toFixed(2),
+            bookingDate: fBookingDateStr,
+            items: serviceName,
+          },
+        },
+      });
+
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverPrice }), {
         status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
