@@ -4,7 +4,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 import { TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
 
 // Configuration baked in at scaffold time
-const SITE_NAME = "web-support-buddy"
+const SITE_NAME = "Drive me Fahrschule"
 const SENDER_DOMAIN = "notify.drive-me.ch"
 const FROM_DOMAIN = "notify.drive-me.ch"
 
