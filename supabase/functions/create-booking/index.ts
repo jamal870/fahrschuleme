@@ -144,8 +144,16 @@ serve(async (req) => {
       const courseSummary = courses.map((c: any) => `MGK Teil ${c.part}`).join(', ');
       const now = new Date();
       const bookingDateStr = now.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
-      await supabase.functions.invoke('send-transactional-email', {
-        body: {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${serviceKey}`,
+          "apikey": serviceKey,
+        },
+        body: JSON.stringify({
           templateName: 'admin-booking-notification',
           idempotencyKey: `admin-notify-${booking.id}`,
           templateData: {
@@ -163,7 +171,7 @@ serve(async (req) => {
             bookingDate: bookingDateStr,
             items: courseSummary,
           },
-        },
+        }),
       });
 
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverTotal }), {
