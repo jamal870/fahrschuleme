@@ -11,6 +11,12 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 
+// Parse "DD.MM.YYYY" to a comparable Date
+function parseCourseDate(dateStr: string): Date {
+  const [day, month, year] = dateStr.split('.');
+  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+}
+
 const bookingSchema = z.object({
   firstName: z.string().trim().min(1, "Vorname ist ein Pflichtfeld"),
   lastName: z.string().trim().min(1, "Nachname ist ein Pflichtfeld"),
@@ -67,14 +73,17 @@ export default function GrundkursBuchen() {
   };
 
   const selectCourse = async (part: number, course: CourseDate) => {
-    setSelections(prev => ({ ...prev, [part]: course }));
+    // Clear subsequent selections when changing a previous part
+    const updated: Record<number, CourseDate | null> = { ...selections, [part]: course };
+    for (let p = part + 1; p <= 3; p++) {
+      updated[p] = null;
+    }
+    setSelections(updated);
 
     // Auto-load and scroll to next part
     const nextPart = part + 1;
     if (nextPart <= 3) {
-      if (!coursesData[nextPart]) {
-        await loadCourseDates(nextPart);
-      }
+      await loadCourseDates(nextPart);
       setTimeout(() => {
         const ref = nextPart === 2 ? part2Ref : part3Ref;
         ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -164,6 +173,16 @@ export default function GrundkursBuchen() {
   const totalPrice = selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
   const allPartsSelected = selections[1] && selections[2] && selections[3];
 
+  // Filter courses for a part: only show dates after the previous part's selected date
+  const getFilteredCourses = (part: number): CourseDate[] => {
+    const courses = coursesData[part] || [];
+    if (part === 1) return courses;
+    const prevSelected = selections[part - 1];
+    if (!prevSelected) return courses;
+    const prevDate = parseCourseDate(prevSelected.date);
+    return courses.filter(c => parseCourseDate(c.date) > prevDate);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -198,7 +217,7 @@ export default function GrundkursBuchen() {
         {/* Part 1 - Always visible */}
         <CourseSection
           partNum={1}
-          courses={coursesData[1] || []}
+          courses={getFilteredCourses(1)}
           selected={selections[1]}
           onSelect={(course) => selectCourse(1, course)}
           loading={loadingPart === 1}
@@ -217,7 +236,7 @@ export default function GrundkursBuchen() {
               <div className="mt-10">
                 <CourseSection
                   partNum={2}
-                  courses={coursesData[2] || []}
+                  courses={getFilteredCourses(2)}
                   selected={selections[2]}
                   onSelect={(course) => selectCourse(2, course)}
                   loading={loadingPart === 2}
@@ -240,7 +259,7 @@ export default function GrundkursBuchen() {
               <div className="mt-10">
                 <CourseSection
                   partNum={3}
-                  courses={coursesData[3] || []}
+                  courses={getFilteredCourses(3)}
                   selected={selections[3]}
                   onSelect={(course) => selectCourse(3, course)}
                   loading={loadingPart === 3}
