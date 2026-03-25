@@ -145,13 +145,13 @@ serve(async (req) => {
       const now = new Date();
       const bookingDateStr = now.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
       const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-      await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const adminEmailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${serviceKey}`,
-          "apikey": serviceKey,
+          "Authorization": `Bearer ${anonKey}`,
+          "apikey": anonKey,
         },
         body: JSON.stringify({
           templateName: 'admin-booking-notification',
@@ -173,6 +173,15 @@ serve(async (req) => {
           },
         }),
       });
+
+      if (!adminEmailResponse.ok) {
+        console.error("[CREATE-BOOKING] Admin notification failed", {
+          status: adminEmailResponse.status,
+          bookingId: booking.id,
+          bookingType,
+          body: await adminEmailResponse.text(),
+        });
+      }
 
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverTotal }), {
         status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -252,13 +261,13 @@ serve(async (req) => {
       const fNow = new Date();
       const fBookingDateStr = fNow.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
       const fSupabaseUrl = Deno.env.get("SUPABASE_URL")!;
-      const fServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-      await fetch(`${fSupabaseUrl}/functions/v1/send-transactional-email`, {
+      const fAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const fAdminEmailResponse = await fetch(`${fSupabaseUrl}/functions/v1/send-transactional-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${fServiceKey}`,
-          "apikey": fServiceKey,
+          "Authorization": `Bearer ${fAnonKey}`,
+          "apikey": fAnonKey,
         },
         body: JSON.stringify({
           templateName: 'admin-booking-notification',
@@ -280,6 +289,15 @@ serve(async (req) => {
           },
         }),
       });
+
+      if (!fAdminEmailResponse.ok) {
+        console.error("[CREATE-BOOKING] Admin notification failed", {
+          status: fAdminEmailResponse.status,
+          bookingId: booking.id,
+          bookingType,
+          body: await fAdminEmailResponse.text(),
+        });
+      }
 
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverPrice }), {
         status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
