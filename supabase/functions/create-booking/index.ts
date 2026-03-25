@@ -251,8 +251,16 @@ serve(async (req) => {
       // Send admin notification email
       const fNow = new Date();
       const fBookingDateStr = fNow.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
-      await supabase.functions.invoke('send-transactional-email', {
-        body: {
+      const fSupabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const fServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      await fetch(`${fSupabaseUrl}/functions/v1/send-transactional-email`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${fServiceKey}`,
+          "apikey": fServiceKey,
+        },
+        body: JSON.stringify({
           templateName: 'admin-booking-notification',
           idempotencyKey: `admin-notify-${booking.id}`,
           templateData: {
@@ -270,7 +278,7 @@ serve(async (req) => {
             bookingDate: fBookingDateStr,
             items: serviceName,
           },
-        },
+        }),
       });
 
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverPrice }), {
