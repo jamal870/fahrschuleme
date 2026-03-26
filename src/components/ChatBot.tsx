@@ -880,13 +880,13 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.9 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-4 right-4 z-50 w-[390px] max-w-[calc(100vw-2rem)] h-[620px] max-h-[calc(100vh-2rem)] bg-card shadow-2xl border border-border flex flex-col overflow-hidden md:rounded-lg rounded-none md:bottom-4 md:right-4 md:w-[390px] md:h-[620px]"
+            className="fixed bottom-0 right-0 z-50 w-full h-full bg-card shadow-2xl border border-border flex flex-col overflow-hidden md:bottom-4 md:right-4 md:w-[440px] md:h-[680px] md:max-h-[calc(100vh-2rem)] md:rounded-xl"
             style={{
               // Mobile: full screen
             }}
           >
             {/* Header */}
-            <div className="bg-card border-b border-border px-5 py-4 flex items-center justify-between shrink-0" style={{ borderLeft: "4px solid hsl(18, 80%, 50%)" }}>
+            <div className="bg-card border-b border-border px-5 py-4 flex items-center justify-between shrink-0" style={{ borderLeft: "4px solid hsl(var(--primary))" }}>
               <div className="flex items-center gap-3">
                 <div>
                   <h3 className="font-heading font-bold text-sm text-foreground flex items-baseline gap-0.5">
@@ -928,8 +928,8 @@ export default function ChatBot() {
             )}
 
             {/* Messages */}
-            <ScrollArea className="flex-1 px-4 py-3" ref={scrollRef}>
-              <div className="space-y-4 pb-2">
+            <ScrollArea className="flex-1 px-5 py-4" ref={scrollRef}>
+              <div className="space-y-5 pb-2">
                 <AnimatePresence initial={false}>
                   {messages.map((msg) => (
                     <motion.div
@@ -940,7 +940,7 @@ export default function ChatBot() {
                     >
                       <div className="max-w-[90%] space-y-2">
                         <div
-                          className={`px-4 py-2.5 text-sm leading-relaxed font-body ${
+                          className={`px-4 py-3 text-[13px] leading-relaxed font-body ${
                             msg.role === "user"
                               ? "bg-primary text-primary-foreground rounded-lg rounded-br-sm"
                               : "bg-card text-foreground rounded-lg rounded-bl-sm shadow-sm border border-border"
@@ -950,7 +950,7 @@ export default function ChatBot() {
                         </div>
 
                         {msg.courseCards && (
-                          <div className="grid grid-cols-1 gap-2 max-h-[280px] overflow-y-auto pr-1">
+                          <div className="grid grid-cols-1 gap-2.5 max-h-[320px] overflow-y-auto pr-1">
                             {msg.courseCards.courses.map((course) => (
                               <CourseCard key={course.id} course={course} onSelect={() => selectCourse(msg.courseCards!.partNum, course)} />
                             ))}
@@ -974,12 +974,12 @@ export default function ChatBot() {
                         }} />}
 
                         {msg.buttons && (
-                          <div className="flex flex-wrap gap-1.5">
+                          <div className="flex flex-wrap gap-2 mt-1">
                             {msg.buttons.map((btn, i) => (
                               <button
                                 key={i}
                                 onClick={() => handleAction(btn.action)}
-                                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-body bg-card text-primary border border-primary/30 hover:bg-primary hover:text-primary-foreground transition-colors"
+                                className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium font-body bg-card text-primary border border-primary/30 hover:bg-primary hover:text-primary-foreground transition-colors"
                                 style={{ borderRadius: "20px" }}
                               >
                                 {btn.icon}
@@ -996,16 +996,16 @@ export default function ChatBot() {
             </ScrollArea>
 
             {/* Input */}
-            <div className="px-4 py-3 border-t border-border bg-card shrink-0">
+            <div className="px-5 py-4 border-t border-border bg-card shrink-0">
               <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Schreib eine Nachricht..."
-                  className="flex-1 bg-muted border-0 text-sm h-10 font-body"
-                  style={{ borderRadius: "20px" }}
+                  className="flex-1 bg-muted border-0 text-[13px] h-11 font-body"
+                  style={{ borderRadius: "22px" }}
                 />
-                <Button type="submit" size="icon" className="h-10 w-10 shrink-0 bg-primary hover:bg-primary/90" style={{ borderRadius: "20px" }}>
+                <Button type="submit" size="icon" className="h-11 w-11 shrink-0 bg-primary hover:bg-primary/90" style={{ borderRadius: "22px" }}>
                   <Send className="w-4 h-4" />
                 </Button>
               </form>
