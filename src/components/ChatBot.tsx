@@ -1229,13 +1229,8 @@ function CourseCard({ course, onSelect }: { course: CourseDate; onSelect: () => 
     </motion.button>
   );
 }
-            {course.spotsAvailable} Plätze
-          </span>
-        </div>
-      </div>
-    </motion.button>
-  );
-}
+
+
 
 function StudentForm({ onSubmit }: { onSubmit: (data: StudentFormData) => void }) {
   const [data, setData] = useState<StudentFormData>({ firstName: "", lastName: "", address: "", birthDate: "", faNumber: "", email: "", phone: "" });
