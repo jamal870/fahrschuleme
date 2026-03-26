@@ -43,7 +43,7 @@ const BookingConfirmationEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Section style={headerSection}>
-          <Img src="https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo.png" alt="Drive me Fahrschule" width="220" style={logoStyle} />
+          <Img src="https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo-new.png" alt="Drive me Fahrschule" width="220" style={logoStyle} />
         </Section>
 
         <Heading style={h1}>Buchungsbestätigung</Heading>
@@ -223,8 +223,8 @@ export const template = {
 // Styles — brand color: hsl(195, 85%, 42%) ≈ #1098b8
 const main = { backgroundColor: '#ffffff', fontFamily: "'DM Sans', Arial, sans-serif" }
 const container = { padding: '30px 25px', maxWidth: '600px', margin: '0 auto' }
-const headerSection = { marginBottom: '16px' }
-const logoStyle = { margin: '0' }
+const headerSection = { backgroundColor: '#1a2344', padding: '24px 25px', borderRadius: '8px 8px 0 0', marginBottom: '16px', textAlign: 'center' as const }
+const logoStyle = { margin: '0 auto' }
 
 const h1 = { fontSize: '24px', fontWeight: '700' as const, color: '#1a2b3c', margin: '0 0 20px' }
 const h2 = { fontSize: '18px', fontWeight: '700' as const, color: '#1a2b3c', margin: '0 0 12px' }
