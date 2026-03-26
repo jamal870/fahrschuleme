@@ -957,7 +957,7 @@ export default function ChatBot() {
                               <p className="text-[10px] text-muted-foreground font-body">📍 {selections[msg.courseCards.partNum].location} · CHF {selections[msg.courseCards.partNum].price.toFixed(2)}</p>
                             </div>
                           ) : (
-                            <div className="grid grid-cols-1 gap-2.5 max-h-[320px] overflow-y-auto pr-1">
+                            <div className="grid grid-cols-1 gap-1.5 max-h-[220px] overflow-y-auto pr-1">
                               {msg.courseCards.courses.map((course) => (
                                 <CourseCard key={course.id} course={course} onSelect={() => selectCourse(msg.courseCards!.partNum, course)} />
                               ))}
