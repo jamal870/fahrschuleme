@@ -1,10 +1,11 @@
 import * as React from 'npm:react@18.3.1'
 import {
-  Body, Container, Head, Heading, Html, Preview, Text, Section, Hr,
+  Body, Container, Head, Heading, Html, Img, Preview, Text, Section, Hr,
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = "Drive me Fahrschule"
+const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo.png"
 
 interface AdminBookingNotificationProps {
   bookingId?: string
@@ -42,16 +43,21 @@ const AdminBookingNotificationEmail = ({
     <Preview>Neue Buchung eingegangen – {SITE_NAME}</Preview>
     <Body style={main}>
       <Container style={container}>
+        {/* Header with logo and orange accent bar */}
+        <Section style={headerSection}>
+          <Img src={LOGO_URL} alt="Drive me Fahrschule" width="180" style={logoStyle} />
+        </Section>
+        <Section style={orangeBar} />
+
         <Heading style={h1}>📋 Neue Buchung eingegangen</Heading>
 
         <Text style={text}>
           Es ist eine neue Buchung über die Website eingegangen.
         </Text>
 
-        <Hr style={divider} />
-
-        <Heading style={h2}>Kundendaten</Heading>
-        <Section style={detailsSection}>
+        {/* Kundendaten Card */}
+        <Section style={card}>
+          <Heading style={cardTitle}>Kundendaten</Heading>
           {firstName && lastName && <Text style={detailRow}><strong>Name:</strong> {firstName} {lastName}</Text>}
           {email && <Text style={detailRow}><strong>E-Mail:</strong> {email}</Text>}
           {phone && <Text style={detailRow}><strong>Telefon:</strong> {phone}</Text>}
@@ -60,31 +66,31 @@ const AdminBookingNotificationEmail = ({
           {faNumber && <Text style={detailRow}><strong>FABER Nr.:</strong> {faNumber}</Text>}
         </Section>
 
-        <Hr style={divider} />
-
-        <Heading style={h2}>Buchungsdetails</Heading>
-        <Section style={detailsSection}>
+        {/* Buchungsdetails Card */}
+        <Section style={card}>
+          <Heading style={cardTitle}>Buchungsdetails</Heading>
           {bookingId && <Text style={detailRow}><strong>Bestellnummer:</strong> {bookingId.slice(0, 8).toUpperCase()}</Text>}
           {bookingDate && <Text style={detailRow}><strong>Datum:</strong> {bookingDate}</Text>}
           {bookingType && <Text style={detailRow}><strong>Typ:</strong> {bookingType === 'grundkurs' ? 'Motorrad-Grundkurs (MGK)' : 'Fahrstunde'}</Text>}
           {paymentMethod && <Text style={detailRow}><strong>Zahlungsmethode:</strong> {paymentMethod}</Text>}
-          {totalPrice && <Text style={detailRow}><strong>Betrag:</strong> CHF {totalPrice}</Text>}
+          {totalPrice && <Text style={priceRow}><strong>Betrag:</strong> CHF {totalPrice}</Text>}
         </Section>
 
+        {/* Gebuchte Leistungen */}
         {items && (
-          <>
-            <Hr style={divider} />
-            <Heading style={h2}>Gebuchte Leistungen</Heading>
-            <Text style={text}>{items}</Text>
-          </>
+          <Section style={card}>
+            <Heading style={cardTitle}>Gebuchte Leistungen</Heading>
+            <Text style={detailRow}>{items}</Text>
+          </Section>
         )}
 
         <Hr style={divider} />
 
+        {/* Footer */}
         <Text style={footer}>
-          Diese E-Mail wurde automatisch generiert.{'\n'}
-          {SITE_NAME}
+          Diese E-Mail wurde automatisch generiert.
         </Text>
+        <Text style={footerBrand}>{SITE_NAME}</Text>
       </Container>
     </Body>
   </Html>
@@ -113,12 +119,21 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-const main = { backgroundColor: '#ffffff', fontFamily: "'DM Sans', Arial, sans-serif" }
-const container = { padding: '30px 25px', maxWidth: '600px', margin: '0 auto' }
-const h1 = { fontSize: '22px', fontWeight: '700' as const, color: '#1a2b3c', margin: '0 0 16px' }
-const h2 = { fontSize: '16px', fontWeight: '700' as const, color: '#1a2b3c', margin: '0 0 10px' }
-const text = { fontSize: '14px', color: '#3a4a5a', lineHeight: '1.7', margin: '0 0 16px', whiteSpace: 'pre-line' as const }
-const detailsSection = { margin: '0 0 8px' }
-const detailRow = { fontSize: '13px', color: '#3a4a5a', lineHeight: '1.6', margin: '0 0 4px' }
-const divider = { borderColor: '#e0eaef', margin: '18px 0' }
-const footer = { fontSize: '12px', color: '#8a9aaa', margin: '20px 0 0', whiteSpace: 'pre-line' as const }
+// ── Styles ──
+const main = { backgroundColor: '#f4f4f5', fontFamily: "'DM Sans', Arial, sans-serif" }
+const container = { padding: '32px 24px', maxWidth: '600px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '8px' }
+const headerSection = { marginBottom: '4px', textAlign: 'center' as const }
+const logoStyle = { margin: '0 auto' }
+const orangeBar = { backgroundColor: '#e8501a', height: '4px', borderRadius: '2px', margin: '0 0 24px' }
+
+const h1 = { fontSize: '22px', fontWeight: '700' as const, color: '#1a1a1a', margin: '0 0 8px' }
+const text = { fontSize: '14px', color: '#555555', lineHeight: '1.6', margin: '0 0 20px' }
+
+const card = { backgroundColor: '#fafafa', borderRadius: '6px', padding: '16px 18px', margin: '0 0 12px', border: '1px solid #eeeeee' }
+const cardTitle = { fontSize: '14px', fontWeight: '700' as const, color: '#e8501a', margin: '0 0 10px', textTransform: 'uppercase' as const, letterSpacing: '0.5px' }
+const detailRow = { fontSize: '13px', color: '#3a3a3a', lineHeight: '1.6', margin: '0 0 4px' }
+const priceRow = { fontSize: '15px', color: '#1a1a1a', lineHeight: '1.6', margin: '4px 0 0', fontWeight: '600' as const }
+
+const divider = { borderColor: '#e5e5e5', margin: '20px 0 16px' }
+const footer = { fontSize: '11px', color: '#999999', margin: '0', textAlign: 'center' as const }
+const footerBrand = { fontSize: '11px', color: '#e8501a', margin: '2px 0 0', textAlign: 'center' as const, fontWeight: '600' as const }
