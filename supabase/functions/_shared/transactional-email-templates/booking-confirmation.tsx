@@ -43,7 +43,7 @@ const BookingConfirmationEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Section style={headerSection}>
-          <Img src="https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo.png" alt="Drive me Fahrschule" width="220" style={logoStyle} />
+          <Img src="https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo-new.png" alt="Drive me Fahrschule" width="220" style={logoStyle} />
         </Section>
 
         <Heading style={h1}>Buchungsbestätigung</Heading>
