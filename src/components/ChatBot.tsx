@@ -880,7 +880,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.9 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-4 right-4 z-50 w-[390px] max-w-[calc(100vw-2rem)] h-[620px] max-h-[calc(100vh-2rem)] bg-card shadow-2xl border border-border flex flex-col overflow-hidden md:rounded-lg rounded-none md:bottom-4 md:right-4 md:w-[390px] md:h-[620px]"
+            className="fixed bottom-0 right-0 z-50 w-full h-full bg-card shadow-2xl border border-border flex flex-col overflow-hidden md:bottom-4 md:right-4 md:w-[440px] md:h-[680px] md:max-h-[calc(100vh-2rem)] md:rounded-xl"
             style={{
               // Mobile: full screen
             }}
