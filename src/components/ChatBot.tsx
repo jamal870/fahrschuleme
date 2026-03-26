@@ -996,16 +996,16 @@ export default function ChatBot() {
             </ScrollArea>
 
             {/* Input */}
-            <div className="px-4 py-3 border-t border-border bg-card shrink-0">
+            <div className="px-5 py-4 border-t border-border bg-card shrink-0">
               <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Schreib eine Nachricht..."
-                  className="flex-1 bg-muted border-0 text-sm h-10 font-body"
-                  style={{ borderRadius: "20px" }}
+                  className="flex-1 bg-muted border-0 text-[13px] h-11 font-body"
+                  style={{ borderRadius: "22px" }}
                 />
-                <Button type="submit" size="icon" className="h-10 w-10 shrink-0 bg-primary hover:bg-primary/90" style={{ borderRadius: "20px" }}>
+                <Button type="submit" size="icon" className="h-11 w-11 shrink-0 bg-primary hover:bg-primary/90" style={{ borderRadius: "22px" }}>
                   <Send className="w-4 h-4" />
                 </Button>
               </form>
