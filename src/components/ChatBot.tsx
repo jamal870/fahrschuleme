@@ -940,7 +940,7 @@ export default function ChatBot() {
                     >
                       <div className="max-w-[90%] space-y-2">
                         <div
-                          className={`px-4 py-2.5 text-sm leading-relaxed font-body ${
+                          className={`px-4 py-3 text-[13px] leading-relaxed font-body ${
                             msg.role === "user"
                               ? "bg-primary text-primary-foreground rounded-lg rounded-br-sm"
                               : "bg-card text-foreground rounded-lg rounded-bl-sm shadow-sm border border-border"
