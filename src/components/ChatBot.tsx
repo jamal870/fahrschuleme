@@ -974,12 +974,12 @@ export default function ChatBot() {
                         }} />}
 
                         {msg.buttons && (
-                          <div className="flex flex-wrap gap-1.5">
+                          <div className="flex flex-wrap gap-2 mt-1">
                             {msg.buttons.map((btn, i) => (
                               <button
                                 key={i}
                                 onClick={() => handleAction(btn.action)}
-                                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-body bg-card text-primary border border-primary/30 hover:bg-primary hover:text-primary-foreground transition-colors"
+                                className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium font-body bg-card text-primary border border-primary/30 hover:bg-primary hover:text-primary-foreground transition-colors"
                                 style={{ borderRadius: "20px" }}
                               >
                                 {btn.icon}
