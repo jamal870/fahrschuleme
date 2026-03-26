@@ -950,7 +950,7 @@ export default function ChatBot() {
                         </div>
 
                         {msg.courseCards && (
-                          <div className="grid grid-cols-1 gap-2 max-h-[280px] overflow-y-auto pr-1">
+                          <div className="grid grid-cols-1 gap-2.5 max-h-[320px] overflow-y-auto pr-1">
                             {msg.courseCards.courses.map((course) => (
                               <CourseCard key={course.id} course={course} onSelect={() => selectCourse(msg.courseCards!.partNum, course)} />
                             ))}
