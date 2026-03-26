@@ -928,8 +928,8 @@ export default function ChatBot() {
             )}
 
             {/* Messages */}
-            <ScrollArea className="flex-1 px-4 py-3" ref={scrollRef}>
-              <div className="space-y-4 pb-2">
+            <ScrollArea className="flex-1 px-5 py-4" ref={scrollRef}>
+              <div className="space-y-5 pb-2">
                 <AnimatePresence initial={false}>
                   {messages.map((msg) => (
                     <motion.div
