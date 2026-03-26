@@ -957,7 +957,7 @@ export default function ChatBot() {
                               <p className="text-[10px] text-muted-foreground font-body">📍 {selections[msg.courseCards.partNum].location} · CHF {selections[msg.courseCards.partNum].price.toFixed(2)}</p>
                             </div>
                           ) : (
-                            <div className="grid grid-cols-1 gap-2.5 max-h-[320px] overflow-y-auto pr-1">
+                            <div className="grid grid-cols-1 gap-1.5 max-h-[220px] overflow-y-auto pr-1">
                               {msg.courseCards.courses.map((course) => (
                                 <CourseCard key={course.id} course={course} onSelect={() => selectCourse(msg.courseCards!.partNum, course)} />
                               ))}
@@ -1206,18 +1206,22 @@ function InstructorSelector({ onSelect }: { onSelect: (inst: Instructor | null) 
 
 function CourseCard({ course, onSelect }: { course: CourseDate; onSelect: () => void }) {
   return (
-    <motion.button whileTap={{ scale: 0.98 }} onClick={onSelect} className="w-full text-left bg-card border border-border p-3 hover:border-primary/40 transition-colors" style={{ borderRadius: "3px" }}>
-      <div className="flex justify-between items-start">
-        <div className="space-y-0.5">
-          <p className="text-[10px] font-heading font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
-          <p className="font-heading font-bold text-sm text-foreground">{course.date}</p>
-          <p className="text-xs text-muted-foreground font-body">🕐 {course.time}</p>
-          <p className="text-xs text-muted-foreground font-body">📍 {course.location}</p>
-          {course.instructor && <p className="text-xs text-muted-foreground font-body">👤 {course.instructor}</p>}
+    <motion.button whileTap={{ scale: 0.98 }} onClick={onSelect} className="w-full text-left bg-card border border-border px-3 py-2 hover:border-primary/40 transition-colors" style={{ borderRadius: "3px" }}>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-heading font-bold uppercase text-muted-foreground">{course.day}</span>
+            <span className="font-heading font-bold text-xs text-foreground">{course.date}</span>
+          </div>
+          <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-body mt-0.5">
+            <span>🕐 {course.time}</span>
+            <span>📍 {course.location}</span>
+            {course.instructor && <span>👤 {course.instructor}</span>}
+          </div>
         </div>
-        <div className="text-right space-y-1">
-          <p className="font-heading font-bold text-sm text-primary">CHF {course.price.toFixed(2)}</p>
-          <span className={`inline-block text-[10px] font-medium px-2 py-0.5 ${course.spotsAvailable <= 2 ? "bg-destructive/15 text-destructive" : "bg-primary/10 text-primary"}`} style={{ borderRadius: "3px" }}>
+        <div className="text-right shrink-0 flex flex-col items-end gap-0.5">
+          <p className="font-heading font-bold text-xs text-primary">CHF {course.price.toFixed(2)}</p>
+          <span className={`text-[9px] font-medium px-1.5 py-0.5 ${course.spotsAvailable <= 2 ? "bg-destructive/15 text-destructive" : "bg-primary/10 text-primary"}`} style={{ borderRadius: "3px" }}>
             {course.spotsAvailable} Plätze
           </span>
         </div>
@@ -1225,6 +1229,8 @@ function CourseCard({ course, onSelect }: { course: CourseDate; onSelect: () => 
     </motion.button>
   );
 }
+
+
 
 function StudentForm({ onSubmit }: { onSubmit: (data: StudentFormData) => void }) {
   const [data, setData] = useState<StudentFormData>({ firstName: "", lastName: "", address: "", birthDate: "", faNumber: "", email: "", phone: "" });
