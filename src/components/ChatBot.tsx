@@ -950,11 +950,19 @@ export default function ChatBot() {
                         </div>
 
                         {msg.courseCards && (
-                          <div className="grid grid-cols-1 gap-2.5 max-h-[320px] overflow-y-auto pr-1">
-                            {msg.courseCards.courses.map((course) => (
-                              <CourseCard key={course.id} course={course} onSelect={() => selectCourse(msg.courseCards!.partNum, course)} />
-                            ))}
-                          </div>
+                          selections[msg.courseCards.partNum] ? (
+                            <div className="bg-primary/10 border border-primary/20 p-3" style={{ borderRadius: "3px" }}>
+                              <p className="text-[10px] font-heading font-bold text-primary uppercase mb-1">✅ MGK Teil {msg.courseCards.partNum} gewählt</p>
+                              <p className="text-xs font-medium text-foreground font-body">{selections[msg.courseCards.partNum].date} – {selections[msg.courseCards.partNum].time}</p>
+                              <p className="text-[10px] text-muted-foreground font-body">📍 {selections[msg.courseCards.partNum].location} · CHF {selections[msg.courseCards.partNum].price.toFixed(2)}</p>
+                            </div>
+                          ) : (
+                            <div className="grid grid-cols-1 gap-2.5 max-h-[320px] overflow-y-auto pr-1">
+                              {msg.courseCards.courses.map((course) => (
+                                <CourseCard key={course.id} course={course} onSelect={() => selectCourse(msg.courseCards!.partNum, course)} />
+                              ))}
+                            </div>
+                          )
                         )}
 
                         {msg.categorySelector && <CategorySelector onSelect={selectFsCategory} />}
