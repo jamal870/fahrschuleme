@@ -143,6 +143,9 @@ const cardTitle = { fontSize: '14px', fontWeight: '700' as const, color: '#e8501
 const detailRow = { fontSize: '13px', color: '#3a3a3a', lineHeight: '1.6', margin: '0 0 4px' }
 const priceRow = { fontSize: '15px', color: '#1a1a1a', lineHeight: '1.6', margin: '4px 0 0', fontWeight: '600' as const }
 
+const pendingPaymentBanner = { backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', padding: '12px 16px', margin: '0 0 20px' }
+const pendingPaymentText = { fontSize: '13px', color: '#856404', lineHeight: '1.5', margin: '0', fontWeight: '600' as const }
+
 const divider = { borderColor: '#e5e5e5', margin: '20px 0 16px' }
 const footer = { fontSize: '11px', color: '#999999', margin: '0', textAlign: 'center' as const }
 const footerBrand = { fontSize: '11px', color: '#e8501a', margin: '2px 0 0', textAlign: 'center' as const, fontWeight: '600' as const }
