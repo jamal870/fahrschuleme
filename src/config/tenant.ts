@@ -136,7 +136,6 @@ export const tenantConfig: TenantConfig = {
   booking: {
     externalBookingUrl: "https://buchen.drive-me.ch/grundkurs-buchen",
     paymentMethods: [
-      { id: "card", label: "Online bezahlen (Stripe/Twint)", desc: "Sichere Onlinezahlung via Stripe Checkout.", icon: "💳" },
       { id: "cash", label: "Barzahlung am Kurstag", desc: "Zahlung bar vor Ort am Kurstag.", icon: "💵" },
     ],
     bankDetails: {
