@@ -104,8 +104,11 @@ const AdminBookingNotificationEmail = ({
 
 export const template = {
   component: AdminBookingNotificationEmail,
-  subject: (data: Record<string, any>) =>
-    `Neue Buchung: ${data.firstName || ''} ${data.lastName || ''} – ${data.bookingType === 'grundkurs' ? 'MGK' : 'Fahrstunde'}`,
+  subject: (data: Record<string, any>) => {
+    const isOnline = data.paymentMethod && (data.paymentMethod.toLowerCase().includes('stripe') || data.paymentMethod.toLowerCase().includes('online'));
+    const prefix = isOnline ? '⏳ Zahlung ausstehend' : 'Neue Buchung';
+    return `${prefix}: ${data.firstName || ''} ${data.lastName || ''} – ${data.bookingType === 'grundkurs' ? 'MGK' : 'Fahrstunde'}`;
+  },
   displayName: 'Admin-Buchungsbenachrichtigung',
   to: 'info@drive-me.ch',
   previewData: {
