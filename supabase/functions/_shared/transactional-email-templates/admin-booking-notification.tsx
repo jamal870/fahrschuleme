@@ -51,9 +51,15 @@ const AdminBookingNotificationEmail = ({
 
         <Heading style={h1}>📋 Neue Buchung eingegangen</Heading>
 
-        <Text style={text}>
-          Es ist eine neue Buchung über die Website eingegangen.
-        </Text>
+        {paymentMethod && paymentMethod.toLowerCase().includes('stripe') || paymentMethod && paymentMethod.toLowerCase().includes('online') ? (
+          <Section style={pendingPaymentBanner}>
+            <Text style={pendingPaymentText}>⏳ Zahlung ausstehend – Kunde wurde zur Online-Zahlung weitergeleitet. Buchung wird erst nach erfolgreicher Zahlung bestätigt.</Text>
+          </Section>
+        ) : (
+          <Text style={text}>
+            Es ist eine neue Buchung über die Website eingegangen.
+          </Text>
+        )}
 
         {/* Kundendaten Card */}
         <Section style={card}>
@@ -98,8 +104,11 @@ const AdminBookingNotificationEmail = ({
 
 export const template = {
   component: AdminBookingNotificationEmail,
-  subject: (data: Record<string, any>) =>
-    `Neue Buchung: ${data.firstName || ''} ${data.lastName || ''} – ${data.bookingType === 'grundkurs' ? 'MGK' : 'Fahrstunde'}`,
+  subject: (data: Record<string, any>) => {
+    const isOnline = data.paymentMethod && (data.paymentMethod.toLowerCase().includes('stripe') || data.paymentMethod.toLowerCase().includes('online'));
+    const prefix = isOnline ? '⏳ Zahlung ausstehend' : 'Neue Buchung';
+    return `${prefix}: ${data.firstName || ''} ${data.lastName || ''} – ${data.bookingType === 'grundkurs' ? 'MGK' : 'Fahrstunde'}`;
+  },
   displayName: 'Admin-Buchungsbenachrichtigung',
   to: 'info@drive-me.ch',
   previewData: {
@@ -133,6 +142,9 @@ const card = { backgroundColor: '#fafafa', borderRadius: '6px', padding: '16px 1
 const cardTitle = { fontSize: '14px', fontWeight: '700' as const, color: '#e8501a', margin: '0 0 10px', textTransform: 'uppercase' as const, letterSpacing: '0.5px' }
 const detailRow = { fontSize: '13px', color: '#3a3a3a', lineHeight: '1.6', margin: '0 0 4px' }
 const priceRow = { fontSize: '15px', color: '#1a1a1a', lineHeight: '1.6', margin: '4px 0 0', fontWeight: '600' as const }
+
+const pendingPaymentBanner = { backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', padding: '12px 16px', margin: '0 0 20px' }
+const pendingPaymentText = { fontSize: '13px', color: '#856404', lineHeight: '1.5', margin: '0', fontWeight: '600' as const }
 
 const divider = { borderColor: '#e5e5e5', margin: '20px 0 16px' }
 const footer = { fontSize: '11px', color: '#999999', margin: '0', textAlign: 'center' as const }
