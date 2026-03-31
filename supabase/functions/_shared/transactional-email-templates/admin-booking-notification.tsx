@@ -51,9 +51,15 @@ const AdminBookingNotificationEmail = ({
 
         <Heading style={h1}>📋 Neue Buchung eingegangen</Heading>
 
-        <Text style={text}>
-          Es ist eine neue Buchung über die Website eingegangen.
-        </Text>
+        {paymentMethod && paymentMethod.toLowerCase().includes('stripe') || paymentMethod && paymentMethod.toLowerCase().includes('online') ? (
+          <Section style={pendingPaymentBanner}>
+            <Text style={pendingPaymentText}>⏳ Zahlung ausstehend – Kunde wurde zur Online-Zahlung weitergeleitet. Buchung wird erst nach erfolgreicher Zahlung bestätigt.</Text>
+          </Section>
+        ) : (
+          <Text style={text}>
+            Es ist eine neue Buchung über die Website eingegangen.
+          </Text>
+        )}
 
         {/* Kundendaten Card */}
         <Section style={card}>
