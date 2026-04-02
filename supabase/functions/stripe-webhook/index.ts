@@ -124,6 +124,58 @@ serve(async (req) => {
         } catch (emailErr) {
           console.error("[STRIPE-WEBHOOK] Email error:", emailErr);
         }
+
+        // Send admin notification now that payment is confirmed
+        try {
+          const bookingItems = await supabase
+            .from("booking_items")
+            .select("course_date_id, fahrstunden_service_id, fahrstunden_package_id")
+            .eq("booking_id", bookingId);
+
+          let itemsSummary = "";
+          if (courses.length > 0) {
+            itemsSummary = courses.map((c: any) => `MGK Teil ${c.part}`).join(', ');
+          } else {
+            // Fahrstunde - get service/package name
+            const item = bookingItems.data?.[0];
+            if (item?.fahrstunden_package_id) {
+              const { data: pkg } = await supabase.from("fahrstunden_packages").select("name").eq("id", item.fahrstunden_package_id).single();
+              itemsSummary = pkg?.name || "Fahrstunden-Paket";
+            } else if (item?.fahrstunden_service_id) {
+              const { data: svc } = await supabase.from("fahrstunden_services").select("name").eq("id", item.fahrstunden_service_id).single();
+              itemsSummary = svc?.name || "Fahrstunde";
+            }
+          }
+
+          const adminBookingDate = new Date().toLocaleDateString("de-CH", {
+            day: "numeric", month: "long", year: "numeric",
+          });
+
+          await supabase.functions.invoke("send-transactional-email", {
+            body: {
+              templateName: "admin-booking-notification",
+              idempotencyKey: `admin-notify-${bookingId}`,
+              templateData: {
+                bookingId: bookingId,
+                bookingType: booking.booking_type,
+                firstName: booking.first_name,
+                lastName: booking.last_name,
+                email: booking.email,
+                phone: booking.phone,
+                address: booking.address,
+                birthDate: booking.birth_date,
+                faNumber: booking.fa_number,
+                paymentMethod: booking.payment_method,
+                totalPrice: (booking.total_price || 0).toFixed(2),
+                bookingDate: adminBookingDate,
+                items: itemsSummary,
+              },
+            },
+          });
+          console.log(`[STRIPE-WEBHOOK] Admin notification sent for ${bookingId}`);
+        } catch (adminEmailErr) {
+          console.error("[STRIPE-WEBHOOK] Admin notification error:", adminEmailErr);
+        }
       }
     }
 
