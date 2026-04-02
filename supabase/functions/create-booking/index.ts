@@ -140,47 +140,50 @@ serve(async (req) => {
         if (itemError) throw itemError;
       }
 
-      // Send admin notification email
-      const courseSummary = courses.map((c: any) => `MGK Teil ${c.part}`).join(', ');
-      const now = new Date();
-      const bookingDateStr = now.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
-      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-      const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-      const adminEmailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${anonKey}`,
-          "apikey": anonKey,
-        },
-        body: JSON.stringify({
-          templateName: 'admin-booking-notification',
-          idempotencyKey: `admin-notify-${booking.id}`,
-          templateData: {
+      // Only send admin notification for non-Stripe bookings (cash etc.)
+      // Stripe bookings get notified after payment confirmation via webhook
+      if (status !== "pending_payment") {
+        const courseSummary = courses.map((c: any) => `MGK Teil ${c.part}`).join(', ');
+        const now = new Date();
+        const bookingDateStr = now.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+        const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+        const adminEmailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${anonKey}`,
+            "apikey": anonKey,
+          },
+          body: JSON.stringify({
+            templateName: 'admin-booking-notification',
+            idempotencyKey: `admin-notify-${booking.id}`,
+            templateData: {
+              bookingId: booking.id,
+              bookingType,
+              firstName: firstName.trim(),
+              lastName: lastName.trim(),
+              email: email.trim().toLowerCase(),
+              phone: phone.trim(),
+              address: address.trim(),
+              birthDate: birthDate.trim(),
+              faNumber: faNumber.trim(),
+              paymentMethod,
+              totalPrice: serverTotal.toFixed(2),
+              bookingDate: bookingDateStr,
+              items: courseSummary,
+            },
+          }),
+        });
+
+        if (!adminEmailResponse.ok) {
+          console.error("[CREATE-BOOKING] Admin notification failed", {
+            status: adminEmailResponse.status,
             bookingId: booking.id,
             bookingType,
-            firstName: firstName.trim(),
-            lastName: lastName.trim(),
-            email: email.trim().toLowerCase(),
-            phone: phone.trim(),
-            address: address.trim(),
-            birthDate: birthDate.trim(),
-            faNumber: faNumber.trim(),
-            paymentMethod,
-            totalPrice: serverTotal.toFixed(2),
-            bookingDate: bookingDateStr,
-            items: courseSummary,
-          },
-        }),
-      });
-
-      if (!adminEmailResponse.ok) {
-        console.error("[CREATE-BOOKING] Admin notification failed", {
-          status: adminEmailResponse.status,
-          bookingId: booking.id,
-          bookingType,
-          body: await adminEmailResponse.text(),
-        });
+            body: await adminEmailResponse.text(),
+          });
+        }
       }
 
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverTotal }), {
