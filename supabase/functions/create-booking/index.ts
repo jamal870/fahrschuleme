@@ -260,46 +260,48 @@ serve(async (req) => {
         });
       if (itemError) throw itemError;
 
-      // Send admin notification email
-      const fNow = new Date();
-      const fBookingDateStr = fNow.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
-      const fSupabaseUrl = Deno.env.get("SUPABASE_URL")!;
-      const fAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-      const fAdminEmailResponse = await fetch(`${fSupabaseUrl}/functions/v1/send-transactional-email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${fAnonKey}`,
-          "apikey": fAnonKey,
-        },
-        body: JSON.stringify({
-          templateName: 'admin-booking-notification',
-          idempotencyKey: `admin-notify-${booking.id}`,
-          templateData: {
+      // Only send admin notification for non-Stripe bookings
+      if (status !== "pending_payment") {
+        const fNow = new Date();
+        const fBookingDateStr = fNow.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+        const fSupabaseUrl = Deno.env.get("SUPABASE_URL")!;
+        const fAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+        const fAdminEmailResponse = await fetch(`${fSupabaseUrl}/functions/v1/send-transactional-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${fAnonKey}`,
+            "apikey": fAnonKey,
+          },
+          body: JSON.stringify({
+            templateName: 'admin-booking-notification',
+            idempotencyKey: `admin-notify-${booking.id}`,
+            templateData: {
+              bookingId: booking.id,
+              bookingType,
+              firstName: firstName.trim(),
+              lastName: lastName.trim(),
+              email: email.trim().toLowerCase(),
+              phone: phone.trim(),
+              address: address.trim(),
+              birthDate: birthDate.trim(),
+              faNumber: faNumber.trim(),
+              paymentMethod,
+              totalPrice: serverPrice.toFixed(2),
+              bookingDate: fBookingDateStr,
+              items: serviceName,
+            },
+          }),
+        });
+
+        if (!fAdminEmailResponse.ok) {
+          console.error("[CREATE-BOOKING] Admin notification failed", {
+            status: fAdminEmailResponse.status,
             bookingId: booking.id,
             bookingType,
-            firstName: firstName.trim(),
-            lastName: lastName.trim(),
-            email: email.trim().toLowerCase(),
-            phone: phone.trim(),
-            address: address.trim(),
-            birthDate: birthDate.trim(),
-            faNumber: faNumber.trim(),
-            paymentMethod,
-            totalPrice: serverPrice.toFixed(2),
-            bookingDate: fBookingDateStr,
-            items: serviceName,
-          },
-        }),
-      });
-
-      if (!fAdminEmailResponse.ok) {
-        console.error("[CREATE-BOOKING] Admin notification failed", {
-          status: fAdminEmailResponse.status,
-          bookingId: booking.id,
-          bookingType,
-          body: await fAdminEmailResponse.text(),
-        });
+            body: await fAdminEmailResponse.text(),
+          });
+        }
       }
 
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverPrice }), {
