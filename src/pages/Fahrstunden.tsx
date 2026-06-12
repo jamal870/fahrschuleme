@@ -2,8 +2,10 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ChatBot from "@/components/ChatBot";
 import { tenantConfig } from "@/config/tenant";
-import { CreditCard, Bike, Clock, Users } from "lucide-react";
+import { CreditCard, Bike, Clock, Users, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
+
+const FAHRSTUNDEN_APP_URL = "https://app.l-me.ch/api/anmeldung";
 
 const Fahrstunden = () => (
   <div className="min-h-screen bg-background">
@@ -12,9 +14,18 @@ const Fahrstunden = () => (
       <div className="max-w-6xl mx-auto px-6 py-16">
         <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Fahrstunden</p>
         <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">Motorrad & Auto Fahrstunden</h1>
-        <p className="text-muted-foreground font-body max-w-2xl">
-          Flexibel Mo–Sa von 08–22 Uhr. Ob Vorschulung, Grundschulung oder Perfektionsschulung – Schritt für Schritt lernst du alles, was du benötigst.
+        <p className="text-muted-foreground font-body max-w-2xl mb-6">
+          Flexibel Mo–Sa von 08–22 Uhr. Vorschulung, Grundschulung oder Perfektionsschulung – Schritt für Schritt lernst du alles, was du brauchst.
         </p>
+        <a
+          href={FAHRSTUNDEN_APP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
+          style={{ borderRadius: "3px" }}
+        >
+          Fahrstunde buchen <ExternalLink className="w-4 h-4" />
+        </a>
       </div>
     </header>
 
@@ -40,12 +51,23 @@ const Fahrstunden = () => (
     <section className="bg-card py-16">
       <div className="max-w-3xl mx-auto px-6 text-center">
         <h2 className="text-2xl font-heading font-bold text-foreground mb-4">Bereit für die erste Fahrstunde?</h2>
-        <p className="text-muted-foreground font-body mb-6">Ruf uns an oder buche direkt online.</p>
+        <p className="text-muted-foreground font-body mb-6">
+          Buche deine Fahrstunde direkt über unsere Fahrschul-App – einfach Termin auswählen und losfahren.
+        </p>
         <div className="flex flex-wrap gap-3 justify-center">
-          <a href={`tel:${tenantConfig.contact.phone}`} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90" style={{ borderRadius: "3px" }}>
+          <a
+            href={FAHRSTUNDEN_APP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
+            style={{ borderRadius: "3px" }}
+          >
+            Online buchen <ExternalLink className="w-4 h-4" />
+          </a>
+          <a href={`tel:${tenantConfig.contact.phone}`} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground" style={{ borderRadius: "3px" }}>
             {tenantConfig.contact.phone}
           </a>
-          <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground" style={{ borderRadius: "3px" }}>
+          <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-border text-foreground font-heading font-bold text-sm uppercase tracking-wide hover:bg-section-alt" style={{ borderRadius: "3px" }}>
             Kontakt
           </Link>
         </div>
