@@ -413,7 +413,21 @@ export interface Participant {
   present?: boolean;
 }
 
-export function generateParticipantList(course: ParticipantCourseInfo, participants: Participant[]): jsPDF {
+export type ParticipantFilter = "all" | "paid" | "unpaid";
+
+export function generateParticipantList(
+  course: ParticipantCourseInfo,
+  participants: Participant[],
+  filter: ParticipantFilter = "all"
+): jsPDF {
+  const filtered =
+    filter === "paid" ? participants.filter((p) => p.paid)
+    : filter === "unpaid" ? participants.filter((p) => !p.paid)
+    : participants;
+  const filterLabel =
+    filter === "paid" ? "Nur bezahlte" :
+    filter === "unpaid" ? "Nur offene" : "Alle";
+
   const doc = new jsPDF({ orientation: "landscape" });
   let y = addLogo(doc);
   y = addOrangeBar(doc, y, 257);
@@ -435,7 +449,8 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
   ry = addKeyValue(doc, "Ort:", course.location, ry, rightX, rightX + 30);
   if (course.instructor) ry = addKeyValue(doc, "Fahrlehrer:", course.instructor, ry, rightX, rightX + 30);
   if (course.instructor_number) ry = addKeyValue(doc, "Fahrlehrer-Nr.:", course.instructor_number, ry, rightX, rightX + 30);
-  ry = addKeyValue(doc, "Anzahl:", `${participants.length} Teilnehmer`, ry, rightX, rightX + 30);
+  ry = addKeyValue(doc, "Anzahl:", `${filtered.length} von ${participants.length} Teilnehmer`, ry, rightX, rightX + 30);
+  ry = addKeyValue(doc, "Filter:", filterLabel, ry, rightX, rightX + 30);
   y = Math.max(ly, ry) + 4;
 
   // Landscape page width ~ 297, usable 20..277 (w=257)
