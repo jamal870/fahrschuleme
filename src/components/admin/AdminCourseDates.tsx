@@ -179,11 +179,19 @@ const AdminCourseDates = () => {
     return map;
   }, [courses]);
 
-  // Nach Teil (M1/M2/M3/M4) gruppieren, innerhalb chronologisch, zukünftig / vergangen aufteilen
+  // Nach Teil (M1/M2/M3/M4) gruppieren, mit Filter + Suche, zukünftig / vergangen aufteilen
   const { upcomingGroups, pastGroups } = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const sorted = [...courses].sort((a, b) => {
+    const q = search.trim().toLowerCase();
+    const filtered = courses.filter((c) => {
+      if (partFilter !== "all" && c.part !== Number(partFilter)) return false;
+      if (!q) return true;
+      return [c.date, c.day, c.time, c.location, c.instructor, c.instructor_number, `m${c.part}`, `teil ${c.part}`]
+        .filter(Boolean)
+        .some((v) => String(v).toLowerCase().includes(q));
+    });
+    const sorted = [...filtered].sort((a, b) => {
       if (a.part !== b.part) return a.part - b.part;
       const da = parseDate(a.date)?.getTime() ?? 0;
       const db = parseDate(b.date)?.getTime() ?? 0;
@@ -203,7 +211,7 @@ const AdminCourseDates = () => {
         .sort(([a], [b]) => a - b)
         .map(([part, items]) => ({ part, items: reverse ? [...items].reverse() : items }));
     return { upcomingGroups: toGroups(upMap), pastGroups: toGroups(pastMap, true) };
-  }, [courses]);
+  }, [courses, partFilter, search]);
 
   const totalUpcoming = upcomingGroups.reduce((n, g) => n + g.items.length, 0);
   const totalPast = pastGroups.reduce((n, g) => n + g.items.length, 0);
