@@ -293,6 +293,26 @@ const AdminCourseDates = () => {
         <TabsContent value="list">
           <Card>
             <CardContent className="p-0">
+              <div className="flex flex-wrap items-center gap-2 p-3 border-b">
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Suchen (Datum, Ort, Fahrlehrer …)"
+                  className="max-w-xs h-9 font-body"
+                />
+                <Select value={partFilter} onValueChange={setPartFilter}>
+                  <SelectTrigger className="w-[160px] h-9 font-body"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Alle Kategorien</SelectItem>
+                    {[1, 2, 3, 4].map((p) => <SelectItem key={p} value={String(p)}>Nur M {p}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                {(search || partFilter !== "all") && (
+                  <Button variant="ghost" size="sm" onClick={() => { setSearch(""); setPartFilter("all"); }} className="font-body">
+                    Filter zurücksetzen
+                  </Button>
+                )}
+              </div>
               {loading ? <p className="p-6 text-muted-foreground text-center font-body">Laden...</p> : (
                 <Table>
                   <TableHeader>
