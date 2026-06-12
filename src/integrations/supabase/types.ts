@@ -131,6 +131,7 @@ export type Database = {
           day: string
           id: string
           instructor: string | null
+          instructor_number: string | null
           location: string
           part: number
           price: number
@@ -144,6 +145,7 @@ export type Database = {
           day: string
           id: string
           instructor?: string | null
+          instructor_number?: string | null
           location?: string
           part: number
           price?: number
@@ -157,6 +159,7 @@ export type Database = {
           day?: string
           id?: string
           instructor?: string | null
+          instructor_number?: string | null
           location?: string
           part?: number
           price?: number
@@ -165,6 +168,54 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      course_signatures: {
+        Row: {
+          booking_id: string
+          course_date_id: string
+          created_at: string
+          id: string
+          present: boolean
+          signature_data: string | null
+          signed_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          booking_id: string
+          course_date_id: string
+          created_at?: string
+          id?: string
+          present?: boolean
+          signature_data?: string | null
+          signed_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          booking_id?: string
+          course_date_id?: string
+          created_at?: string
+          id?: string
+          present?: boolean
+          signature_data?: string | null
+          signed_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_signatures_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_signatures_course_date_id_fkey"
+            columns: ["course_date_id"]
+            isOneToOne: false
+            referencedRelation: "course_dates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       email_send_log: {
         Row: {
