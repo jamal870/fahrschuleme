@@ -141,7 +141,7 @@ export const tenantConfig: TenantConfig = {
       { id: "card", label: "Online bezahlen (Twint/Karte)", desc: "Sichere Zahlung via Stripe.", icon: "💳" },
     ],
     bankDetails: {
-      accountHolder: "Fahrschule Drive me GmbH",
+      accountHolder: "Fahrschule me GmbH",
       bank: "PostFinance",
       accountNumber: "15-263666-6",
       iban: "CH9509000000152636666",
