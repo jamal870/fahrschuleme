@@ -497,7 +497,7 @@ export function generateParticipantList(
     return doc.splitTextToSize(text, maxW - 2) as string[];
   };
 
-  participants.forEach((p, i) => {
+  filtered.forEach((p, i) => {
     // Pre-compute wrapped text per text-column so we know the row height
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8.5);
