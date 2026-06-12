@@ -177,6 +177,26 @@ const AdminCourseDates = () => {
     return map;
   }, [courses]);
 
+  // Chronologisch sortieren & in zukünftig / vergangen aufteilen
+  const { upcoming, past } = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const sorted = [...courses].sort((a, b) => {
+      const da = parseDate(a.date)?.getTime() ?? 0;
+      const db = parseDate(b.date)?.getTime() ?? 0;
+      if (da !== db) return da - db;
+      return a.part - b.part;
+    });
+    const upcoming: CourseDate[] = [];
+    const past: CourseDate[] = [];
+    for (const c of sorted) {
+      const d = parseDate(c.date);
+      if (d && d.getTime() >= today.getTime()) upcoming.push(c);
+      else past.push(c);
+    }
+    return { upcoming, past: past.reverse() }; // vergangene: neueste zuerst
+  }, [courses]);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
