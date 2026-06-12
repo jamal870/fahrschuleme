@@ -93,7 +93,7 @@ serve(async (req) => {
       const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
       await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}`, apikey: anonKey },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}`, apikey: serviceKey },
         body: JSON.stringify({
           templateName: "waitlist-admin-notification",
           idempotencyKey: `waitlist-${entry.id}`,
