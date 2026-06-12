@@ -1,0 +1,1 @@
+ALTER TABLE public.course_dates ADD COLUMN IF NOT EXISTS instructor_number text;

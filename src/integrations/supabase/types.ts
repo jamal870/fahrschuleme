@@ -131,6 +131,7 @@ export type Database = {
           day: string
           id: string
           instructor: string | null
+          instructor_number: string | null
           location: string
           part: number
           price: number
@@ -144,6 +145,7 @@ export type Database = {
           day: string
           id: string
           instructor?: string | null
+          instructor_number?: string | null
           location?: string
           part: number
           price?: number
@@ -157,6 +159,7 @@ export type Database = {
           day?: string
           id?: string
           instructor?: string | null
+          instructor_number?: string | null
           location?: string
           part?: number
           price?: number
