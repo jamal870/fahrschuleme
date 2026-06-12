@@ -9,6 +9,9 @@ import Admin from "./pages/Admin.tsx";
 import AdminLogin from "./pages/AdminLogin.tsx";
 import BuchungErfolgreich from "./pages/BuchungErfolgreich.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
+import Impressum from "./pages/Impressum.tsx";
+import Datenschutz from "./pages/Datenschutz.tsx";
+import AGB from "./pages/AGB.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -25,6 +28,9 @@ const App = () => (
           <Route path="/grundkurs-buchen" element={<GrundkursBuchen />} />
           <Route path="/buchung-erfolgreich" element={<BuchungErfolgreich />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
+          <Route path="/impressum" element={<Impressum />} />
+          <Route path="/datenschutz" element={<Datenschutz />} />
+          <Route path="/agb" element={<AGB />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

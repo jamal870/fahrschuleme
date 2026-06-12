@@ -328,8 +328,15 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t-2 border-primary bg-card py-6">
-        <div className="max-w-6xl mx-auto px-6 text-center text-xs text-muted-foreground font-body">
-          {tenantConfig.footer.copyright}
+        <div className="max-w-6xl mx-auto px-6 text-center text-xs text-muted-foreground font-body space-y-2">
+          <div className="space-x-3">
+            <Link to="/impressum" className="hover:text-primary">Impressum</Link>
+            <span>·</span>
+            <Link to="/datenschutz" className="hover:text-primary">Datenschutz</Link>
+            <span>·</span>
+            <Link to="/agb" className="hover:text-primary">AGB</Link>
+          </div>
+          <div>{tenantConfig.footer.copyright}</div>
         </div>
       </footer>
 
