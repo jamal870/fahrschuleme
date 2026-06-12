@@ -398,6 +398,7 @@ export interface ParticipantCourseInfo {
   time: string;
   location: string;
   instructor?: string | null;
+  instructor_number?: string | null;
 }
 
 export interface Participant {
@@ -408,41 +409,50 @@ export interface Participant {
   fa_number: string;
   payment_method: string;
   paid: boolean;
+  signature?: string | null;
+  present?: boolean;
 }
 
 export function generateParticipantList(course: ParticipantCourseInfo, participants: Participant[]): jsPDF {
-  const doc = new jsPDF();
+  const doc = new jsPDF({ orientation: "landscape" });
   let y = addLogo(doc);
-  y = addOrangeBar(doc, y);
+  y = addOrangeBar(doc, y, 257);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
   doc.setTextColor(...DARK);
-  doc.text("TEILNEHMERLISTE", 20, y + 4);
+  doc.text("TEILNEHMERLISTE / ANWESENHEIT", 20, y + 4);
   y += 12;
 
-  y = addKeyValue(doc, "Kurs:", `MGK Teil ${course.part}`, y);
-  y = addKeyValue(doc, "Datum:", `${course.day}, ${course.date}`, y);
-  y = addKeyValue(doc, "Zeit:", course.time, y);
-  y = addKeyValue(doc, "Ort:", course.location, y);
-  if (course.instructor) y = addKeyValue(doc, "Fahrlehrer:", course.instructor, y);
-  y = addKeyValue(doc, "Anzahl:", `${participants.length} Teilnehmer`, y);
-  y += 4;
+  // Two-column header
+  const leftX = 20;
+  const rightX = 160;
+  let ly = y;
+  let ry = y;
+  ly = addKeyValue(doc, "Kurs:", `MGK Teil ${course.part}`, ly, leftX, leftX + 25);
+  ly = addKeyValue(doc, "Datum:", `${course.day}, ${course.date}`, ly, leftX, leftX + 25);
+  ly = addKeyValue(doc, "Zeit:", course.time, ly, leftX, leftX + 25);
+  ry = addKeyValue(doc, "Ort:", course.location, ry, rightX, rightX + 30);
+  if (course.instructor) ry = addKeyValue(doc, "Fahrlehrer:", course.instructor, ry, rightX, rightX + 30);
+  if (course.instructor_number) ry = addKeyValue(doc, "Fahrlehrer-Nr.:", course.instructor_number, ry, rightX, rightX + 30);
+  ry = addKeyValue(doc, "Anzahl:", `${participants.length} Teilnehmer`, ry, rightX, rightX + 30);
+  y = Math.max(ly, ry) + 4;
 
+  // Landscape page width ~ 297, usable 20..277 (w=257)
   const cols = [
     { label: "#", x: 20, w: 8 },
-    { label: "Name", x: 28, w: 46 },
-    { label: "Telefon", x: 74, w: 28 },
-    { label: "Geb.", x: 102, w: 22 },
-    { label: "FA-Nr.", x: 124, w: 26 },
-    { label: "Zahlung", x: 150, w: 18 },
-    { label: "Anw.", x: 168, w: 10 },
-    { label: "Unterschrift", x: 178, w: 12 },
+    { label: "Name", x: 28, w: 60 },
+    { label: "Telefon", x: 88, w: 30 },
+    { label: "Geb.", x: 118, w: 22 },
+    { label: "FA-Nr.", x: 140, w: 28 },
+    { label: "Zahlung", x: 168, w: 18 },
+    { label: "Anw.", x: 186, w: 12 },
+    { label: "Unterschrift", x: 198, w: 79 },
   ];
 
   // Header bar
   doc.setFillColor(...ORANGE);
-  doc.rect(20, y, 170, 8, "F");
+  doc.rect(20, y, 257, 8, "F");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...WHITE);
@@ -452,29 +462,29 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);
 
-  const rowH = 12;
+  const rowH = 16;
   participants.forEach((p, i) => {
-    if (y > 260) {
+    if (y > 185) {
       addFooter(doc);
       doc.addPage();
       y = 20;
     }
     if (i % 2 === 0) {
       doc.setFillColor(...BG_WARM);
-      doc.rect(20, y, 170, rowH, "F");
+      doc.rect(20, y, 257, rowH, "F");
     }
     doc.setDrawColor(...LIGHT_GRAY);
     cols.forEach((c) => doc.line(c.x, y, c.x, y + rowH));
-    doc.line(190, y, 190, y + rowH);
-    doc.line(20, y + rowH, 190, y + rowH);
+    doc.line(277, y, 277, y + rowH);
+    doc.line(20, y + rowH, 277, y + rowH);
 
-    const cy = y + 7;
+    const cy = y + 9;
     doc.setTextColor(...DARK);
     doc.text(String(i + 1), cols[0].x + 2, cy);
-    doc.text(`${p.first_name} ${p.last_name}`.slice(0, 26), cols[1].x + 1, cy);
-    doc.text((p.phone || "").slice(0, 15), cols[2].x + 1, cy);
+    doc.text(`${p.first_name} ${p.last_name}`.slice(0, 32), cols[1].x + 1, cy);
+    doc.text((p.phone || "").slice(0, 16), cols[2].x + 1, cy);
     doc.text((p.birth_date || "").slice(0, 12), cols[3].x + 1, cy);
-    doc.text((p.fa_number || "").slice(0, 14), cols[4].x + 1, cy);
+    doc.text((p.fa_number || "").slice(0, 16), cols[4].x + 1, cy);
 
     if (p.paid) {
       doc.setTextColor(34, 139, 34);
@@ -485,6 +495,28 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
     }
     doc.setTextColor(...DARK);
 
+    // Attendance checkbox
+    const boxX = cols[6].x + 3;
+    const boxY = y + 5;
+    doc.setDrawColor(...DARK);
+    doc.rect(boxX, boxY, 5, 5);
+    if (p.present) {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(34, 139, 34);
+      doc.text("X", boxX + 0.8, boxY + 4.4);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.setTextColor(...DARK);
+    }
+
+    // Signature image if present
+    if (p.signature) {
+      try {
+        doc.addImage(p.signature, "PNG", cols[7].x + 2, y + 1.5, cols[7].w - 4, rowH - 3);
+      } catch (_e) { /* ignore invalid image */ }
+    }
+
     y += rowH;
   });
 
@@ -492,7 +524,7 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(...GRAY);
-  doc.text("Bitte Anwesenheit abhaken und Teilnehmer unterschreiben lassen.", 20, y);
+  doc.text("Mit der Unterschrift wird die Teilnahme am o.g. Kurstag bestätigt.", 20, y);
 
   addFooter(doc);
   return doc;
