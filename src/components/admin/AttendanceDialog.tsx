@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { PenLine, FileDown, RefreshCw, Check } from "lucide-react";
+import { PenLine, FileDown, RefreshCw, Check, ChevronDown } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import SignaturePad from "./SignaturePad";
-import { generateParticipantList, downloadPdf, type Participant } from "@/lib/pdf-generator";
+import { generateParticipantList, downloadPdf, type Participant, type ParticipantFilter } from "@/lib/pdf-generator";
 import type { Tables } from "@/integrations/supabase/types";
 
 type CourseDate = Tables<"course_dates">;
