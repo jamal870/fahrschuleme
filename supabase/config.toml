@@ -29,3 +29,9 @@ verify_jwt = false
 
 [functions.add-to-waitlist]
 verify_jwt = false
+
+[functions.parse-course-photo]
+verify_jwt = true
+
+[functions.ical-feed]
+verify_jwt = false
