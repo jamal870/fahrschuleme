@@ -387,6 +387,117 @@ export function generateReceipt(data: BookingData): jsPDF {
   return doc;
 }
 
+// ═══════════════════════════════════════════════════════════════
+// ── 5. Teilnehmerliste (Course Participant List) ─────────────
+// ═══════════════════════════════════════════════════════════════
+
+export interface ParticipantCourseInfo {
+  part: number;
+  date: string;
+  day: string;
+  time: string;
+  location: string;
+  instructor?: string | null;
+}
+
+export interface Participant {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  birth_date: string;
+  fa_number: string;
+  payment_method: string;
+  paid: boolean;
+}
+
+export function generateParticipantList(course: ParticipantCourseInfo, participants: Participant[]): jsPDF {
+  const doc = new jsPDF();
+  let y = addLogo(doc);
+  y = addOrangeBar(doc, y);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.setTextColor(...DARK);
+  doc.text("TEILNEHMERLISTE", 20, y + 4);
+  y += 12;
+
+  y = addKeyValue(doc, "Kurs:", `MGK Teil ${course.part}`, y);
+  y = addKeyValue(doc, "Datum:", `${course.day}, ${course.date}`, y);
+  y = addKeyValue(doc, "Zeit:", course.time, y);
+  y = addKeyValue(doc, "Ort:", course.location, y);
+  if (course.instructor) y = addKeyValue(doc, "Fahrlehrer:", course.instructor, y);
+  y = addKeyValue(doc, "Anzahl:", `${participants.length} Teilnehmer`, y);
+  y += 4;
+
+  const cols = [
+    { label: "#", x: 20, w: 8 },
+    { label: "Name", x: 28, w: 46 },
+    { label: "Telefon", x: 74, w: 28 },
+    { label: "Geb.", x: 102, w: 22 },
+    { label: "FA-Nr.", x: 124, w: 26 },
+    { label: "Zahlung", x: 150, w: 18 },
+    { label: "Anw.", x: 168, w: 10 },
+    { label: "Unterschrift", x: 178, w: 12 },
+  ];
+
+  // Header bar
+  doc.setFillColor(...ORANGE);
+  doc.rect(20, y, 170, 8, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...WHITE);
+  cols.forEach((c) => doc.text(c.label, c.x + 1, y + 5.5));
+  y += 8;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+
+  const rowH = 12;
+  participants.forEach((p, i) => {
+    if (y > 260) {
+      addFooter(doc);
+      doc.addPage();
+      y = 20;
+    }
+    if (i % 2 === 0) {
+      doc.setFillColor(...BG_WARM);
+      doc.rect(20, y, 170, rowH, "F");
+    }
+    doc.setDrawColor(...LIGHT_GRAY);
+    cols.forEach((c) => doc.line(c.x, y, c.x, y + rowH));
+    doc.line(190, y, 190, y + rowH);
+    doc.line(20, y + rowH, 190, y + rowH);
+
+    const cy = y + 7;
+    doc.setTextColor(...DARK);
+    doc.text(String(i + 1), cols[0].x + 2, cy);
+    doc.text(`${p.first_name} ${p.last_name}`.slice(0, 26), cols[1].x + 1, cy);
+    doc.text((p.phone || "").slice(0, 15), cols[2].x + 1, cy);
+    doc.text((p.birth_date || "").slice(0, 12), cols[3].x + 1, cy);
+    doc.text((p.fa_number || "").slice(0, 14), cols[4].x + 1, cy);
+
+    if (p.paid) {
+      doc.setTextColor(34, 139, 34);
+      doc.text("OK", cols[5].x + 4, cy);
+    } else {
+      doc.setTextColor(...GRAY);
+      doc.text("Bar", cols[5].x + 4, cy);
+    }
+    doc.setTextColor(...DARK);
+
+    y += rowH;
+  });
+
+  y += 6;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...GRAY);
+  doc.text("Bitte Anwesenheit abhaken und Teilnehmer unterschreiben lassen.", 20, y);
+
+  addFooter(doc);
+  return doc;
+}
+
 // ── Download Helper ──
 
 export function downloadPdf(doc: jsPDF, filename: string) {
