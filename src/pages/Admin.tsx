@@ -7,6 +7,7 @@ import { Bike, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import AdminCourseDates from "@/components/admin/AdminCourseDates";
 import AdminBookings from "@/components/admin/AdminBookings";
+import AdminWaitlist from "@/components/admin/AdminWaitlist";
 
 const Admin = () => {
   const [loading, setLoading] = useState(true);
@@ -53,9 +54,11 @@ const Admin = () => {
           <TabsList>
             <TabsTrigger value="courses" className="font-heading uppercase text-xs">Kurstermine</TabsTrigger>
             <TabsTrigger value="bookings" className="font-heading uppercase text-xs">Buchungen</TabsTrigger>
+            <TabsTrigger value="waitlist" className="font-heading uppercase text-xs">Warteliste</TabsTrigger>
           </TabsList>
           <TabsContent value="courses"><AdminCourseDates /></TabsContent>
           <TabsContent value="bookings"><AdminBookings /></TabsContent>
+          <TabsContent value="waitlist"><AdminWaitlist /></TabsContent>
         </Tabs>
       </main>
     </div>

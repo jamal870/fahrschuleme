@@ -345,6 +345,56 @@ export type Database = {
         }
         Relationships: []
       }
+      waitlist: {
+        Row: {
+          course_date_id: string
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          notes: string | null
+          notified_at: string | null
+          phone: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          course_date_id: string
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          notes?: string | null
+          notified_at?: string | null
+          phone: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          course_date_id?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          notes?: string | null
+          notified_at?: string | null
+          phone?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waitlist_course_date_id_fkey"
+            columns: ["course_date_id"]
+            isOneToOne: false
+            referencedRelation: "course_dates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

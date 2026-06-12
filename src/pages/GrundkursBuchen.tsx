@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { WaitlistDialog } from "@/components/WaitlistDialog";
 
 // Parse "DD.MM.YYYY" to a comparable Date
 function parseCourseDate(dateStr: string): Date {
@@ -58,7 +59,6 @@ export default function GrundkursBuchen() {
       .from('course_dates')
       .select('*')
       .eq('part', part)
-      .gt('spots_available', 0)
       .order('date');
     if (!error && data) {
       setCoursesData(prev => ({
@@ -403,6 +403,8 @@ function CourseSection({
   onSelect: (course: CourseDate) => void;
   loading: boolean;
 }) {
+  const [waitlistCourse, setWaitlistCourse] = useState<CourseDate | null>(null);
+
   return (
     <div>
       <h2 className="text-2xl font-bold font-[Outfit] text-primary mb-1 flex items-center gap-2">
@@ -427,6 +429,40 @@ function CourseSection({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {courses.map((course) => {
             const isSelected = selected?.id === course.id;
+            const isFull = course.spotsAvailable <= 0;
+
+            if (isFull) {
+              return (
+                <div
+                  key={course.id}
+                  className="text-left bg-muted/40 rounded-xl border-2 border-dashed border-border p-4 opacity-90"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
+                  <p className="font-bold text-muted-foreground text-lg font-[Outfit] line-through">{course.date}</p>
+                  <div className="mt-2 space-y-1">
+                    <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <Clock className="w-3 h-3" /> {course.time}
+                    </p>
+                    <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <MapPin className="w-3 h-3" /> {course.location}
+                    </p>
+                  </div>
+                  <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mt-3 bg-destructive/15 text-destructive">
+                    Ausgebucht
+                  </span>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="w-full mt-3 text-xs h-8"
+                    onClick={() => setWaitlistCourse(course)}
+                  >
+                    📝 Auf Warteliste
+                  </Button>
+                </div>
+              );
+            }
+
             return (
               <motion.button
                 key={course.id}
@@ -458,13 +494,21 @@ function CourseSection({
                 <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full mt-1 ${
                   course.spotsAvailable <= 2 ? "bg-destructive/15 text-destructive" : "bg-accent/15 text-accent"
                 }`}>
-                  {course.spotsAvailable} Plätze frei
+                  {course.spotsAvailable} {course.spotsAvailable === 1 ? "Platz" : "Plätze"} frei
                 </span>
               </motion.button>
             );
           })}
         </div>
       )}
+
+      <WaitlistDialog
+        open={!!waitlistCourse}
+        onOpenChange={(o) => { if (!o) setWaitlistCourse(null); }}
+        courseDateId={waitlistCourse?.id || ""}
+        courseLabel={waitlistCourse ? `MGK Teil ${partNum} · ${waitlistCourse.date} · ${waitlistCourse.time}` : ""}
+      />
     </div>
   );
 }
+
