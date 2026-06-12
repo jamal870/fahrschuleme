@@ -463,61 +463,103 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);
 
-  const rowH = 16;
   const formatPaymentMethod = (pm: string): string => {
     const v = (pm || "").toLowerCase();
     if (v.includes("bar")) return "Bar";
     if (v.includes("twint")) return "TWINT";
     if (v.includes("stripe") || v.includes("karte") || v.includes("card")) return "Karte";
     if (v.includes("überweis") || v.includes("uberweis") || v.includes("rechnung") || v.includes("bank")) return "Überw.";
-    return (pm || "–").slice(0, 10);
+    return pm || "–";
+  };
+
+  const MIN_ROW_H = 16;
+  const LINE_H = 3.6;
+  const PAGE_BOTTOM = 195; // landscape A4 = 210mm, leave room for footer
+
+  // Wrap text safely; jsPDF splitTextToSize requires the current font set
+  const wrap = (text: string, maxW: number): string[] => {
+    if (!text) return [""];
+    return doc.splitTextToSize(text, maxW - 2) as string[];
   };
 
   participants.forEach((p, i) => {
-    if (y > 185) {
+    // Pre-compute wrapped text per text-column so we know the row height
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    const wrapped: Record<number, string[]> = {
+      1: wrap(`${p.first_name} ${p.last_name}`.trim(), cols[1].w),
+      2: wrap(p.phone || "–", cols[2].w),
+      3: wrap(p.birth_date || "–", cols[3].w),
+      4: wrap(p.fa_number || "–", cols[4].w),
+      5: wrap(formatPaymentMethod(p.payment_method), cols[5].w),
+      6: wrap(p.paid ? "Bezahlt" : "Offen", cols[6].w),
+    };
+    const maxLines = Math.max(1, ...Object.values(wrapped).map((l) => l.length));
+    const rowH = Math.max(MIN_ROW_H, 6 + maxLines * LINE_H + 4);
+
+    // Page break before drawing this row
+    if (y + rowH > PAGE_BOTTOM) {
       addFooter(doc);
       doc.addPage();
       y = 20;
+      // redraw column header on new page
+      doc.setFillColor(...ORANGE);
+      doc.rect(20, y, 257, 8, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(...WHITE);
+      cols.forEach((c) => doc.text(c.label, c.x + 1, y + 5.5));
+      y += 8;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
     }
+
+    // Zebra background
     if (i % 2 === 0) {
       doc.setFillColor(...BG_WARM);
       doc.rect(20, y, 257, rowH, "F");
     }
+    // Column separators + bottom border
     doc.setDrawColor(...LIGHT_GRAY);
     cols.forEach((c) => doc.line(c.x, y, c.x, y + rowH));
     doc.line(277, y, 277, y + rowH);
     doc.line(20, y + rowH, 277, y + rowH);
 
-    const cy = y + 9;
-    doc.setTextColor(...DARK);
-    doc.text(String(i + 1), cols[0].x + 2, cy);
-    doc.text(`${p.first_name} ${p.last_name}`.slice(0, 28), cols[1].x + 1, cy);
-    doc.text((p.phone || "").slice(0, 14), cols[2].x + 1, cy);
-    doc.text((p.birth_date || "").slice(0, 10), cols[3].x + 1, cy);
-    doc.text((p.fa_number || "").slice(0, 12), cols[4].x + 1, cy);
+    // Vertical centering: start at top with padding, account for line count
+    const textBlockH = maxLines * LINE_H;
+    const topPad = (rowH - textBlockH) / 2 + 2.8;
 
-    // Zahlart
-    doc.setTextColor(...DARK);
-    doc.text(formatPaymentMethod(p.payment_method), cols[5].x + 1, cy);
+    const drawLines = (colIdx: number, lines: string[], color: readonly [number, number, number], bold = false) => {
+      doc.setFont("helvetica", bold ? "bold" : "normal");
+      doc.setFontSize(8.5);
+      doc.setTextColor(...color);
+      lines.forEach((ln, k) => {
+        doc.text(ln, cols[colIdx].x + 1, y + topPad + k * LINE_H);
+      });
+    };
 
-    // Status (Bezahlt / Offen)
-    if (p.paid) {
-      doc.setTextColor(34, 139, 34);
-      doc.setFont("helvetica", "bold");
-      doc.text("Bezahlt", cols[6].x + 1, cy);
-    } else {
-      doc.setTextColor(197, 48, 48);
-      doc.setFont("helvetica", "bold");
-      doc.text("Offen", cols[6].x + 1, cy);
-    }
+    // # (single line, vertically centered)
     doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
     doc.setTextColor(...DARK);
+    doc.text(String(i + 1), cols[0].x + 2, y + rowH / 2 + 1.5);
 
-    // Attendance checkbox
-    const boxX = cols[7].x + 3;
-    const boxY = y + 5;
+    drawLines(1, wrapped[1], DARK);
+    drawLines(2, wrapped[2], DARK);
+    drawLines(3, wrapped[3], DARK);
+    drawLines(4, wrapped[4], DARK);
+    drawLines(5, wrapped[5], DARK);
+    drawLines(6, wrapped[6], p.paid ? [34, 139, 34] as const : [197, 48, 48] as const, true);
+
+    // Attendance checkbox (vertically centered)
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(...DARK);
+    const boxSize = 5;
+    const boxX = cols[7].x + (cols[7].w - boxSize) / 2;
+    const boxY = y + (rowH - boxSize) / 2;
     doc.setDrawColor(...DARK);
-    doc.rect(boxX, boxY, 5, 5);
+    doc.rect(boxX, boxY, boxSize, boxSize);
     if (p.present) {
       doc.setFont("helvetica", "bold");
       doc.setFontSize(11);
@@ -528,7 +570,7 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
       doc.setTextColor(...DARK);
     }
 
-    // Signature image if present
+    // Signature image
     if (p.signature) {
       try {
         doc.addImage(p.signature, "PNG", cols[8].x + 2, y + 1.5, cols[8].w - 4, rowH - 3);
