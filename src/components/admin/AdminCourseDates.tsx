@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, RefreshCw, Users, Copy, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, FileDown } from "lucide-react";
 import { generateParticipantList, downloadPdf, type Participant } from "@/lib/pdf-generator";
@@ -117,7 +118,7 @@ const AdminCourseDates = () => {
 
   const handleNew = () => { setForm(emptyForm); setEditing(false); setDialogOpen(true); };
 
-  const handleParticipantList = async (course: CourseDate) => {
+  const handleParticipantList = async (course: CourseDate, filter: "all" | "paid" | "unpaid" = "all") => {
     const { data: items, error } = await supabase
       .from("booking_items")
       .select("booking_id, bookings!inner(id, first_name, last_name, phone, birth_date, fa_number, payment_method, status)")
@@ -146,9 +147,11 @@ const AdminCourseDates = () => {
       { part: course.part, date: course.date, day: course.day, time: course.time,
         location: course.location, instructor: course.instructor,
         instructor_number: course.instructor_number },
-      participants
+      participants,
+      filter
     );
-    downloadPdf(pdf, `Teilnehmerliste_MGK${course.part}_${course.date.replace(/\./g, "-")}.pdf`);
+    const suffix = filter === "paid" ? "_bezahlt" : filter === "unpaid" ? "_offen" : "";
+    downloadPdf(pdf, `Teilnehmerliste_MGK${course.part}_${course.date.replace(/\./g, "-")}${suffix}.pdf`);
   };
 
   // ── Calendar grid ──
@@ -273,9 +276,18 @@ const AdminCourseDates = () => {
                             <Button variant="ghost" size="icon" title="Anwesenheit & Unterschriften" onClick={() => setAttendanceCourse(c)}>
                               <ClipboardCheck className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="icon" title="Teilnehmerliste (PDF)" onClick={() => handleParticipantList(c)}>
-                              <Users className="w-4 h-4" />
-                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" title="Teilnehmerliste (PDF)">
+                                  <Users className="w-4 h-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleParticipantList(c, "all")}>Alle Teilnehmer</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleParticipantList(c, "paid")}>Nur bezahlte</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleParticipantList(c, "unpaid")}>Nur offene</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                             <Button variant="ghost" size="icon" title="Duplizieren" onClick={() => handleDuplicate(c)}>
                               <Copy className="w-4 h-4" />
                             </Button>

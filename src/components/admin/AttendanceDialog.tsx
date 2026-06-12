@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { PenLine, FileDown, RefreshCw, Check } from "lucide-react";
+import { PenLine, FileDown, RefreshCw, Check, ChevronDown } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import SignaturePad from "./SignaturePad";
-import { generateParticipantList, downloadPdf, type Participant } from "@/lib/pdf-generator";
+import { generateParticipantList, downloadPdf, type Participant, type ParticipantFilter } from "@/lib/pdf-generator";
 import type { Tables } from "@/integrations/supabase/types";
 
 type CourseDate = Tables<"course_dates">;
@@ -113,7 +114,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     toast.success("Unterschrift entfernt");
   };
 
-  const exportPdf = () => {
+  const exportPdf = (filter: ParticipantFilter = "all") => {
     if (!course) return;
     const participants: (Participant & { signature?: string | null; present?: boolean })[] = rows.map((r) => ({
       first_name: r.first_name, last_name: r.last_name,
@@ -127,9 +128,11 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       { part: course.part, date: course.date, day: course.day, time: course.time,
         location: course.location, instructor: course.instructor,
         instructor_number: (course as any).instructor_number },
-      participants
+      participants,
+      filter
     );
-    downloadPdf(pdf, `Anwesenheit_MGK${course.part}_${course.date.replace(/\./g, "-")}.pdf`);
+    const suffix = filter === "paid" ? "_bezahlt" : filter === "unpaid" ? "_offen" : "";
+    downloadPdf(pdf, `Anwesenheit_MGK${course.part}_${course.date.replace(/\./g, "-")}${suffix}.pdf`);
   };
 
   return (
@@ -149,9 +152,18 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
             <Button variant="outline" size="sm" onClick={load} disabled={loading} className="font-body">
               <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
             </Button>
-            <Button size="sm" onClick={exportPdf} disabled={rows.length === 0} className="font-body">
-              <FileDown className="w-4 h-4 mr-1" /> Liste als PDF
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" disabled={rows.length === 0} className="font-body">
+                  <FileDown className="w-4 h-4 mr-1" /> Liste als PDF <ChevronDown className="w-4 h-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => exportPdf("all")}>Alle Teilnehmer</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => exportPdf("paid")}>Nur bezahlte</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => exportPdf("unpaid")}>Nur offene</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
