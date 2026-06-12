@@ -70,7 +70,7 @@ const CourseMovedEmail = ({
         )}
 
         <Text style={text}>
-          Bei Fragen erreichst du uns jederzeit unter <a href="mailto:info@l-me.ch" style={link}>info@l-me.ch</a> oder telefonisch unter 078 974 44 74.
+          Bei Fragen erreichst du uns jederzeit unter <a href="mailto:info@l-me.ch" style={link}>info@l-me.ch</a> oder telefonisch unter 076 779 03 83.
         </Text>
 
         <Hr style={divider} />
