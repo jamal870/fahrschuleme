@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import Seo from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
 import grundkurs1 from "@/assets/grundkurs-1.png";
 import grundkurs2 from "@/assets/grundkurs-2.png";
@@ -13,6 +14,11 @@ const grundkursImages = [grundkurs1, grundkurs2, grundkurs3];
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Fahrschule me Wettingen – Auto, Motorrad & Grundkurs"
+        description="Autoprüfung, Motorrad-Grundkurs und Fahrstunden in Wettingen. Erfahrene Instruktoren, faire Preise, flexible Termine Mo–Sa 08–22 Uhr."
+        path="/"
+      />
       <SiteHeader />
 
       {/* Hero */}

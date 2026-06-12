@@ -1,6 +1,7 @@
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ChatBot from "@/components/ChatBot";
+import Seo from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
 
 const PriceBlock = ({ items }: { items: { name: string; price: string; note?: string }[] }) => (
@@ -19,6 +20,11 @@ const PriceBlock = ({ items }: { items: { name: string; price: string; note?: st
 
 const Preise = () => (
   <div className="min-h-screen bg-background">
+    <Seo
+      title="Preise Auto & Motorrad – Fahrschule me Wettingen"
+      description="Transparente Preise für Fahrstunden, Motorrad-Grundkurs, Verkehrskunde und Nothelfer in Wettingen. Faire Abos verfügbar."
+      path="/preise"
+    />
     <SiteHeader />
     <header className="bg-card border-b border-border">
       <div className="max-w-6xl mx-auto px-6 py-16 text-center">

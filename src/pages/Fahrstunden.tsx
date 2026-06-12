@@ -1,6 +1,7 @@
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ChatBot from "@/components/ChatBot";
+import Seo from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
 import { CreditCard, Bike, Clock, Users, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -9,6 +10,11 @@ const FAHRSTUNDEN_APP_URL = "https://app.l-me.ch/api/anmeldung";
 
 const Fahrstunden = () => (
   <div className="min-h-screen bg-background">
+    <Seo
+      title="Fahrstunden Auto & Motorrad in Wettingen | Fahrschule me"
+      description="Individuelle Auto- und Motorrad-Fahrstunden in Wettingen. Einzel- und Doppellektionen, 10er- und 20er-Abos. Jetzt Termin buchen bei Fahrschule me."
+      path="/fahrstunden"
+    />
     <SiteHeader />
     <header className="bg-card border-b border-border">
       <div className="max-w-6xl mx-auto px-6 py-16">

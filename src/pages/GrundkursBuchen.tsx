@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { WaitlistDialog } from "@/components/WaitlistDialog";
 import BrandLogo from "@/components/BrandLogo";
 import SiteHeader from "@/components/SiteHeader";
+import Seo from "@/components/Seo";
 
 // Parse "DD.MM.YYYY" to a comparable Date
 function parseCourseDate(dateStr: string): Date {
@@ -201,6 +202,11 @@ export default function GrundkursBuchen() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Motorrad-Grundkurs buchen Wettingen | Fahrschule me"
+        description="Motorrad-Grundkurs (MGK) Teil 1, 2 und 3 direkt online buchen. Freie Plätze in Wettingen anzeigen und sofort reservieren."
+        path="/grundkurs"
+      />
       <SiteHeader />
 
 
