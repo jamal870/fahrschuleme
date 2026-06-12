@@ -519,7 +519,14 @@ const BulkCreateDialog = ({ open, onClose, onCreated }: { open: boolean; onClose
     const { error } = await supabase.from("course_dates").insert(rows);
     setBusy(false);
     if (error) toast.error("Fehler: " + error.message);
-    else { toast.success(`${rows.length} Kurstermine erstellt`); onCreated(); onClose(); }
+    else {
+      toast.success(`${rows.length} Kurstermine erstellt`); onCreated(); onClose();
+      // Fire-and-forget GCal sync for each row
+      rows.forEach((r) => {
+        supabase.functions.invoke("sync-course-to-gcal", { body: { courseDateId: r.id, action: "upsert" } })
+          .catch((e) => console.warn("[gcal sync]", e?.message || e));
+      });
+    }
   };
 
   return (
