@@ -4,7 +4,7 @@ import { tenantConfig } from "@/config/tenant";
 
 const team = [
   {
-    name: "Jamal Ettana",
+    name: "Jimmy Ettana",
     role: "Geschäftsführer",
     qualification: "Staatlich geprüfter Fahrlehrer für Auto und Motorrad",
     hobbies: "Motorrad fahren, reisen, essen",
