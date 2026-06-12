@@ -275,9 +275,18 @@ const AdminCourseDates = () => {
                             <Button variant="ghost" size="icon" title="Anwesenheit & Unterschriften" onClick={() => setAttendanceCourse(c)}>
                               <ClipboardCheck className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="icon" title="Teilnehmerliste (PDF)" onClick={() => handleParticipantList(c)}>
-                              <Users className="w-4 h-4" />
-                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" title="Teilnehmerliste (PDF)">
+                                  <Users className="w-4 h-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleParticipantList(c, "all")}>Alle Teilnehmer</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleParticipantList(c, "paid")}>Nur bezahlte</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleParticipantList(c, "unpaid")}>Nur offene</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                             <Button variant="ghost" size="icon" title="Duplizieren" onClick={() => handleDuplicate(c)}>
                               <Copy className="w-4 h-4" />
                             </Button>
