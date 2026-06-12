@@ -342,10 +342,10 @@ const AdminCourseDates = () => {
                       return (
                         <>
                           {upcomingGroups.map((g) => (
-                            <React.Fragment key={`up-${g.part}`}>
+                            <Fragment key={`up-${g.part}`}>
                               {groupHeader(g.part, g.items.length)}
                               {g.items.map((c) => renderRow(c))}
-                            </React.Fragment>
+                            </Fragment>
                           ))}
                           {totalUpcoming === 0 && totalPast === 0 && (
                             <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">Keine Kurstermine vorhanden</TableCell></TableRow>
@@ -366,10 +366,10 @@ const AdminCourseDates = () => {
                                 </TableCell>
                               </TableRow>
                               {showPast && pastGroups.map((g) => (
-                                <React.Fragment key={`past-${g.part}`}>
+                                <Fragment key={`past-${g.part}`}>
                                   {groupHeader(g.part, g.items.length)}
                                   {g.items.map((c) => renderRow(c, true))}
-                                </React.Fragment>
+                                </Fragment>
                               ))}
                             </>
                           )}
