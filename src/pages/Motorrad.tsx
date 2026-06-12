@@ -1,6 +1,7 @@
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ChatBot from "@/components/ChatBot";
+import Seo from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
 import { Link } from "react-router-dom";
 import grundkurs1 from "@/assets/grundkurs-1.png";
@@ -11,6 +12,11 @@ const images = [grundkurs1, grundkurs2, grundkurs3];
 
 const Motorrad = () => (
   <div className="min-h-screen bg-background">
+    <Seo
+      title="Motorrad Führerschein Wettingen – A1, A2, A | Fahrschule me"
+      description="Motorrad-Ausbildung in Wettingen: Grundkurs (MGK), Vorprüfungsfahrt, individuelle Fahrstunden für Kategorien A1, A2 und A. Jetzt informieren."
+      path="/motorrad"
+    />
     <SiteHeader />
     <header className="bg-card border-b border-border">
       <div className="max-w-6xl mx-auto px-6 py-16">

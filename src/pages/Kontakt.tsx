@@ -1,11 +1,17 @@
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ChatBot from "@/components/ChatBot";
+import Seo from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 
 const Kontakt = () => (
   <div className="min-h-screen bg-background">
+    <Seo
+      title="Kontakt – Fahrschule me Wettingen | Telefon, WhatsApp, E-Mail"
+      description="So erreichst du Fahrschule me: Telefon, WhatsApp und E-Mail. Bahnhofstrasse 56, 5430 Wettingen. Mo–Sa 08–22 Uhr."
+      path="/kontakt"
+    />
     <SiteHeader />
     <header className="bg-card border-b border-border">
       <div className="max-w-6xl mx-auto px-6 py-16">
