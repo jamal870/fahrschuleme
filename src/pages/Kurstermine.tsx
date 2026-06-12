@@ -20,13 +20,11 @@ interface CourseRow {
 
 const SITE_URL = "https://fahrschule-me.ch";
 
-// "01.05.2026" -> "2026-05-01"
 const toIsoDate = (d: string) => {
   const [dd, mm, yyyy] = d.split(".");
   return `${yyyy}-${mm}-${dd}`;
 };
 
-// "13:00 – 17:00" -> ["13:00", "17:00"]
 const splitTime = (t: string) => {
   const m = t.match(/(\d{1,2}:\d{2})\s*[–-]\s*(\d{1,2}:\d{2})/);
   return m ? [m[1], m[2]] : ["08:00", "12:00"];
@@ -71,7 +69,7 @@ const buildEventJsonLd = (rows: CourseRow[]) =>
         url: `${SITE_URL}/#/grundkurs`,
         validFrom: new Date().toISOString(),
       },
-      description: `Motorrad-Grundkurs Teil ${r.part} (4h) in ${r.location}. Kategorien A1, A2, A. Gesetzlich vorgeschriebener Kurs (12 Stunden, 3 Teile).`,
+      description: `Motorrad-Grundkurs Teil ${r.part} (4h) in ${r.location}. Kategorien A1, A2, A.`,
     };
   });
 
@@ -97,92 +95,6 @@ const Kurstermine = () => {
       setLoading(false);
     })();
   }, []);
-
-
-const Kurstermine = () => {
-  const [rows, setRows] = useState<CourseRow[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    document.title = "Motorrad-Grundkurs Termine 2026 Wettingen | Fahrschule me";
-
-    const metas: { name?: string; property?: string; content: string }[] = [
-      {
-        name: "description",
-        content:
-          "Alle aktuellen Termine für den Motorrad-Grundkurs (MGK) in Wettingen. Teil 1, 2 und 3 – freie Plätze, Preise und direkte Buchung bei Fahrschule me.",
-      },
-      { property: "og:title", content: "Motorrad-Grundkurs Termine – Fahrschule me Wettingen" },
-      {
-        property: "og:description",
-        content: "Verfügbare MGK-Termine 2026 in Wettingen. Jetzt online buchen.",
-      },
-      { property: "og:url", content: `${SITE_URL}/#/kurstermine` },
-      { property: "og:type", content: "website" },
-    ];
-
-    const created: HTMLElement[] = [];
-    metas.forEach((m) => {
-      const sel = m.name ? `meta[name="${m.name}"]` : `meta[property="${m.property}"]`;
-      let el = document.head.querySelector<HTMLMetaElement>(sel);
-      if (!el) {
-        el = document.createElement("meta");
-        if (m.name) el.setAttribute("name", m.name);
-        if (m.property) el.setAttribute("property", m.property);
-        document.head.appendChild(el);
-        created.push(el);
-      }
-      el.setAttribute("content", m.content);
-    });
-
-    let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    const prevCanonical = canonical?.getAttribute("href") || null;
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.setAttribute("rel", "canonical");
-      document.head.appendChild(canonical);
-      created.push(canonical);
-    }
-    canonical.setAttribute("href", `${SITE_URL}/kurstermine`);
-
-    return () => {
-      created.forEach((el) => el.remove());
-      if (canonical && prevCanonical) canonical.setAttribute("href", prevCanonical);
-    };
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const { data, error } = await supabase
-        .from("course_dates")
-        .select("id, part, day, date, time, location, instructor, spots_available, price")
-        .order("date");
-      if (!error && data) {
-        // Filter to today and future
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const future = (data as CourseRow[]).filter((r) => {
-          const iso = toIsoDate(r.date);
-          return new Date(iso) >= today;
-        });
-        setRows(future);
-      }
-      setLoading(false);
-    })();
-  }, []);
-
-  // Inject JSON-LD whenever rows change
-  useEffect(() => {
-    if (!rows.length) return;
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.text = JSON.stringify(buildEventJsonLd(rows));
-    script.setAttribute("data-page", "kurstermine");
-    document.head.appendChild(script);
-    return () => {
-      script.remove();
-    };
-  }, [rows]);
 
   const byPart = (p: number) => rows.filter((r) => r.part === p);
 
@@ -238,6 +150,12 @@ const Kurstermine = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Motorrad-Grundkurs Termine 2026 Wettingen | Fahrschule me"
+        description="Alle aktuellen MGK-Termine in Wettingen. Teil 1, 2 und 3 – freie Plätze, Preise und direkte Buchung bei Fahrschule me."
+        path="/kurstermine"
+        jsonLd={rows.length ? buildEventJsonLd(rows) : undefined}
+      />
       <SiteHeader />
       <main className="max-w-5xl mx-auto px-6 py-10">
         <h1 className="font-heading text-3xl md:text-4xl font-bold mb-2">
