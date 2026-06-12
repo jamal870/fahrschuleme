@@ -90,10 +90,10 @@ serve(async (req) => {
     // Notify admin (best-effort)
     try {
       const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-      const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
       await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${anonKey}`, apikey: anonKey },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}`, apikey: serviceKey },
         body: JSON.stringify({
           templateName: "waitlist-admin-notification",
           idempotencyKey: `waitlist-${entry.id}`,

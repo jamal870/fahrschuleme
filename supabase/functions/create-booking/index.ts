@@ -39,7 +39,7 @@ serve(async (req) => {
     const body = await req.json();
     const {
       bookingType, firstName, lastName, email, phone, address,
-      faNumber, birthDate, paymentMethod, totalPrice, status,
+      faNumber, birthDate, paymentMethod, totalPrice,
       courseDateIds, // for grundkurs: array of course_date IDs
       fahrstundenServiceId, fahrstundenPackageId, instructor, // for fahrstunde
     } = body;
@@ -66,13 +66,10 @@ serve(async (req) => {
       });
     }
 
-    // Validate status
-    const validStatuses = ["pending_payment", "confirmed"];
-    if (!validStatuses.includes(status)) {
-      return new Response(JSON.stringify({ error: "Ungültiger Status" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    // Derive status server-side based on payment method (never trust client)
+    const pmLower = String(paymentMethod || "").toLowerCase();
+    const isOnlinePayment = pmLower.includes("stripe") || pmLower.includes("twint") || pmLower.includes("online") || pmLower.includes("karte");
+    const status = isOnlinePayment ? "pending_payment" : "confirmed";
 
     // Rate limit by email
     if (!checkRateLimit(email.toLowerCase().trim())) {
@@ -147,13 +144,13 @@ serve(async (req) => {
         const now = new Date();
         const bookingDateStr = now.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
         const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-        const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+        const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
         const adminEmailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${anonKey}`,
-            "apikey": anonKey,
+            "Authorization": `Bearer ${serviceKey}`,
+            "apikey": serviceKey,
           },
           body: JSON.stringify({
             templateName: 'admin-booking-notification',
@@ -265,13 +262,13 @@ serve(async (req) => {
         const fNow = new Date();
         const fBookingDateStr = fNow.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
         const fSupabaseUrl = Deno.env.get("SUPABASE_URL")!;
-        const fAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+        const fServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
         const fAdminEmailResponse = await fetch(`${fSupabaseUrl}/functions/v1/send-transactional-email`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${fAnonKey}`,
-            "apikey": fAnonKey,
+            "Authorization": `Bearer ${fServiceKey}`,
+            "apikey": fServiceKey,
           },
           body: JSON.stringify({
             templateName: 'admin-booking-notification',
@@ -315,7 +312,7 @@ serve(async (req) => {
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error("[CREATE-BOOKING] Error:", msg);
-    return new Response(JSON.stringify({ error: msg }), {
+    return new Response(JSON.stringify({ error: "Buchung fehlgeschlagen. Bitte versuche es erneut oder kontaktiere uns." }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
