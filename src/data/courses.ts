@@ -167,7 +167,7 @@ export const faqData = [
   },
   {
     question: "Wie kann ich bezahlen?",
-    answer: "Du kannst **bar oder mit Karte vor Ort** am ersten Kurstag bezahlen.\n\n🏦 **Banküberweisung:**\nFahrschule me GmbH\nBank: PostFinance\nKontonummer: 15-263666-6\nIBAN: CH9509000000152636666\nBIC: POFICHBEXXX",
+    answer: "Du kannst **bar oder mit Karte vor Ort** am ersten Kurstag bezahlen.\n\n🏦 **Banküberweisung:**\nJamal Ettanaghmalti\nBank: PostFinance\nIBAN: CH5009000000167884324\nBIC: POFICHBEXXX",
   },
   {
     question: "Wie kann ich mich anmelden?",
