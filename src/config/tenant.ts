@@ -107,9 +107,9 @@ export interface TenantConfig {
 
 export const tenantConfig: TenantConfig = {
   brand: {
-    name: "Fahrschule Me",
+    name: "Fahrschule me",
     tagline: "Erfahrene Instruktoren · Kleine Gruppen",
-    logoText: { main: "Fahrschule", accent: "Me", sub: "Wettingen" },
+    logoText: { main: "Fahrschule", accent: "me", sub: "Wettingen" },
     logoUrl: "",
   },
 
@@ -141,7 +141,7 @@ export const tenantConfig: TenantConfig = {
       { id: "card", label: "Online bezahlen (Twint/Karte)", desc: "Sichere Zahlung via Stripe.", icon: "💳" },
     ],
     bankDetails: {
-      accountHolder: "Fahrschule Drive me GmbH",
+      accountHolder: "Fahrschule me GmbH",
       bank: "PostFinance",
       accountNumber: "15-263666-6",
       iban: "CH9509000000152636666",
@@ -192,13 +192,13 @@ export const tenantConfig: TenantConfig = {
   ],
 
   chatbot: {
-    welcomeMessage: "Hoi! 👋 Willkommen bei **Fahrschule Me** in Wettingen.\nWie kann ich dir helfen?",
-    grundkursIntro: "Super! Der Motorrad-Grundkurs bei Fahrschule Me dauert 12 Stunden (3 Teile). Er ist gesetzlich vorgeschrieben für alle Kategorien.\n\nWelche Kategorie interessiert dich?",
-    fahrstundenIntro: "Fahrstunden bei Fahrschule Me – flexibel Mo–Sa von 08–22 Uhr.\n\nWas möchtest du buchen?",
+    welcomeMessage: "Hoi! 👋 Willkommen bei **Fahrschule me** in Wettingen.\nWie kann ich dir helfen?",
+    grundkursIntro: "Super! Der Motorrad-Grundkurs bei Fahrschule me dauert 12 Stunden (3 Teile). Er ist gesetzlich vorgeschrieben für alle Kategorien.\n\nWelche Kategorie interessiert dich?",
+    fahrstundenIntro: "Fahrstunden bei Fahrschule me – flexibel Mo–Sa von 08–22 Uhr.\n\nWas möchtest du buchen?",
     autoOpenDelayMs: 8000,
   },
 
   footer: {
-    copyright: "© 2026 Fahrschule Me. Alle Rechte vorbehalten.",
+    copyright: "© 2026 Fahrschule me. Alle Rechte vorbehalten.",
   },
 };
