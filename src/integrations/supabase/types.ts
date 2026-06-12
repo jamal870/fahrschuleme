@@ -396,6 +396,51 @@ export type Database = {
         }
         Relationships: []
       }
+      team_members: {
+        Row: {
+          character: string | null
+          created_at: string
+          hobbies: string | null
+          id: string
+          is_visible: boolean
+          motto: string | null
+          name: string
+          phone: string | null
+          qualification: string | null
+          role: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          character?: string | null
+          created_at?: string
+          hobbies?: string | null
+          id?: string
+          is_visible?: boolean
+          motto?: string | null
+          name: string
+          phone?: string | null
+          qualification?: string | null
+          role: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          character?: string | null
+          created_at?: string
+          hobbies?: string | null
+          id?: string
+          is_visible?: boolean
+          motto?: string | null
+          name?: string
+          phone?: string | null
+          qualification?: string | null
+          role?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
