@@ -152,9 +152,18 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
             <Button variant="outline" size="sm" onClick={load} disabled={loading} className="font-body">
               <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
             </Button>
-            <Button size="sm" onClick={exportPdf} disabled={rows.length === 0} className="font-body">
-              <FileDown className="w-4 h-4 mr-1" /> Liste als PDF
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" disabled={rows.length === 0} className="font-body">
+                  <FileDown className="w-4 h-4 mr-1" /> Liste als PDF <ChevronDown className="w-4 h-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => exportPdf("all")}>Alle Teilnehmer</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => exportPdf("paid")}>Nur bezahlte</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => exportPdf("unpaid")}>Nur offene</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
