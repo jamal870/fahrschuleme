@@ -3,31 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fahrschule ME – Auto & Motorrad Fahrschule in Wettingen</title>
-    <meta name="description" content="Autoprüfung und Motorradprüfung sicher bestehen mit Fahrschule ME in Wettingen. Obligatorische Grundkurse, individuelle Fahrstunden und flexible Termine." />
-    <meta name="author" content="Fahrschule ME" />
-
-    <link rel="canonical" href="https://fahrschule-me.ch/" />
+    <title>Fahrschule me – Auto- & Motorradfahrschule Wettingen</title>
+    <meta name="description" content="Fahrschule me in Wettingen: Autoprüfung, Motorrad-Grundkurs (MGK) und individuelle Fahrstunden mit erfahrenen Instruktoren. Flexible Termine Mo–Sa 08–22 Uhr." />
+    <meta name="author" content="Fahrschule me" />
     <meta name="robots" content="index, follow" />
 
+    <!-- Open Graph (sitewide fallback for social crawlers) -->
+    <meta property="og:site_name" content="Fahrschule me" />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_CH" />
     <meta property="og:url" content="https://fahrschule-me.ch/" />
-    <meta property="og:title" content="Fahrschule ME – Auto & Motorrad Fahrschule in Wettingen" />
-    <meta property="og:description" content="Autoprüfung und Motorradprüfung sicher bestehen mit Fahrschule ME in Wettingen. Obligatorische Grundkurse, individuelle Fahrstunden und flexible Termine." />
+    <meta property="og:title" content="Fahrschule me – Auto- & Motorradfahrschule Wettingen" />
+    <meta property="og:description" content="Autoprüfung und Motorrad-Grundkurs sicher bestehen mit Fahrschule me in Wettingen. Erfahrene Instruktoren, kleine Gruppen, flexible Termine." />
+    <meta property="og:image" content="https://fahrschule-me.ch/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Fahrschule me – Auto & Motorrad Wettingen" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Fahrschule ME – Auto & Motorrad Fahrschule in Wettingen" />
-    <meta name="twitter:description" content="Autoprüfung und Motorradprüfung sicher bestehen mit Fahrschule ME in Wettingen. Obligatorische Grundkurse, individuelle Fahrstunden und flexible Termine." />
+    <meta name="twitter:title" content="Fahrschule me – Auto- & Motorradfahrschule Wettingen" />
+    <meta name="twitter:description" content="Autoprüfung und Motorrad-Grundkurs sicher bestehen mit Fahrschule me in Wettingen." />
+    <meta name="twitter:image" content="https://fahrschule-me.ch/og-image.jpg" />
 
+    <!-- Sitewide LocalBusiness / DrivingSchool schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "DrivingSchool",
-      "name": "Fahrschule ME",
+      "name": "Fahrschule me",
       "url": "https://fahrschule-me.ch/",
+      "image": "https://fahrschule-me.ch/og-image.jpg",
+      "telephone": "+41789744474",
       "email": "info@l-me.ch",
-      "areaServed": "Wettingen und Umgebung",
-      "address": { "@type": "PostalAddress", "addressLocality": "Wettingen", "addressCountry": "CH" }
+      "priceRange": "CHF 95–200",
+      "areaServed": ["Wettingen", "Baden", "Neuenhof", "Würenlos", "Spreitenbach"],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Bahnhofstrasse 56",
+        "postalCode": "5430",
+        "addressLocality": "Wettingen",
+        "addressCountry": "CH"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 47.4694,
+        "longitude": 8.3270
+      },
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+        "opens": "08:00",
+        "closes": "22:00"
+      }],
+      "sameAs": ["https://buchen.drive-me.ch/"]
     }
     </script>
 </head>
@@ -47,7 +76,7 @@
             "/grundkurs", "/grundkurs-buchen", "/buchung-erfolgreich",
             "/unsubscribe", "/admin", "/fahrstunden", "/motorrad",
             "/preise", "/kontakt", "/impressum", "/datenschutz", "/agb",
-            "/team"
+            "/team", "/kurstermine"
           ];
           var isKnown = knownPrefixes.some(function (k) {
             return p === k || p.indexOf(k + "/") === 0;
