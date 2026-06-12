@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import Seo from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
 
 interface CourseRow {
@@ -17,7 +18,7 @@ interface CourseRow {
   price: number;
 }
 
-const SITE_URL = "https://buchen.drive-me.ch";
+const SITE_URL = "https://fahrschule-me.ch";
 
 // "01.05.2026" -> "2026-05-01"
 const toIsoDate = (d: string) => {
@@ -73,6 +74,30 @@ const buildEventJsonLd = (rows: CourseRow[]) =>
       description: `Motorrad-Grundkurs Teil ${r.part} (4h) in ${r.location}. Kategorien A1, A2, A. Gesetzlich vorgeschriebener Kurs (12 Stunden, 3 Teile).`,
     };
   });
+
+const Kurstermine = () => {
+  const [rows, setRows] = useState<CourseRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase
+        .from("course_dates")
+        .select("id, part, day, date, time, location, instructor, spots_available, price")
+        .order("date");
+      if (!error && data) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const future = (data as CourseRow[]).filter((r) => {
+          const iso = toIsoDate(r.date);
+          return new Date(iso) >= today;
+        });
+        setRows(future);
+      }
+      setLoading(false);
+    })();
+  }, []);
+
 
 const Kurstermine = () => {
   const [rows, setRows] = useState<CourseRow[]>([]);
