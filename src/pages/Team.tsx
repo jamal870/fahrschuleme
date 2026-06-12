@@ -1,29 +1,36 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Phone } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
+import { supabase } from "@/integrations/supabase/client";
 
-const team = [
-  {
-    name: "Jimmy Ettana",
-    role: "Geschäftsführer",
-    qualification: "Staatlich geprüfter Fahrlehrer für Auto und Motorrad",
-    hobbies: "Motorrad fahren, reisen, essen",
-    character: "freundlich, hilfsbereit, geduldig, zuverlässig und unkompliziert",
-    motto: "Gemeinsam (Fahrlehrer und Fahrschüler) sind wir stark und schaffen alles!",
-    phone: "078 974 44 74",
-  },
-  {
-    name: "Rebecca Rüegg",
-    role: "Auto-Fahrlehrerin",
-    qualification: "Autofahrlehrerin mit eidg. Fachausweis",
-    hobbies: "Freunde und Familie treffen, Natur geniessen, Fitness",
-    character: "geduldig, freundlich, ehrlich und zwischendurch mal über sich selbst am schmunzeln",
-    motto: "Dein Ziel ist mein Ziel: die Führerprüfung bestehen – unkompliziert, effizient und mit einer Prise Humor.",
-    phone: "078 851 48 58",
-  },
-];
+type TeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  qualification: string | null;
+  hobbies: string | null;
+  character: string | null;
+  motto: string | null;
+  phone: string | null;
+};
 
 const Team = () => {
+  const [team, setTeam] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("team_members")
+        .select("id, name, role, qualification, hobbies, character, motto, phone")
+        .eq("is_visible", true)
+        .order("sort_order", { ascending: true });
+      setTeam((data as TeamMember[]) ?? []);
+      setLoading(false);
+    })();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
@@ -59,38 +66,50 @@ const Team = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {team.map((m) => (
-            <article key={m.name} className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
-              <h3 className="text-2xl font-heading font-bold text-foreground">{m.name}</h3>
-              <p className="text-primary font-heading font-bold uppercase tracking-wide text-xs mt-1 mb-4">{m.role}</p>
-              <p className="text-sm text-muted-foreground font-body mb-4">{m.qualification}</p>
+        {loading ? (
+          <div className="text-center text-muted-foreground font-body">Laden...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {team.map((m) => (
+              <article key={m.id} className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
+                <h3 className="text-2xl font-heading font-bold text-foreground">{m.name}</h3>
+                <p className="text-primary font-heading font-bold uppercase tracking-wide text-xs mt-1 mb-4">{m.role}</p>
+                {m.qualification && <p className="text-sm text-muted-foreground font-body mb-4">{m.qualification}</p>}
 
-              <dl className="space-y-3 text-sm font-body">
-                <div>
-                  <dt className="font-heading font-bold text-foreground">Hobbys</dt>
-                  <dd className="text-muted-foreground">{m.hobbies}</dd>
-                </div>
-                <div>
-                  <dt className="font-heading font-bold text-foreground">Charakter</dt>
-                  <dd className="text-muted-foreground">{m.character}</dd>
-                </div>
-                <div>
-                  <dt className="font-heading font-bold text-foreground">Motto</dt>
-                  <dd className="text-muted-foreground italic">«{m.motto}»</dd>
-                </div>
-              </dl>
+                <dl className="space-y-3 text-sm font-body">
+                  {m.hobbies && (
+                    <div>
+                      <dt className="font-heading font-bold text-foreground">Hobbys</dt>
+                      <dd className="text-muted-foreground">{m.hobbies}</dd>
+                    </div>
+                  )}
+                  {m.character && (
+                    <div>
+                      <dt className="font-heading font-bold text-foreground">Charakter</dt>
+                      <dd className="text-muted-foreground">{m.character}</dd>
+                    </div>
+                  )}
+                  {m.motto && (
+                    <div>
+                      <dt className="font-heading font-bold text-foreground">Motto</dt>
+                      <dd className="text-muted-foreground italic">«{m.motto}»</dd>
+                    </div>
+                  )}
+                </dl>
 
-              <a
-                href={`tel:${m.phone.replace(/\s/g, "")}`}
-                className="mt-5 inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
-                style={{ borderRadius: "3px" }}
-              >
-                <Phone className="w-4 h-4" /> {m.phone}
-              </a>
-            </article>
-          ))}
-        </div>
+                {m.phone && (
+                  <a
+                    href={`tel:${m.phone.replace(/\s/g, "")}`}
+                    className="mt-5 inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
+                    style={{ borderRadius: "3px" }}
+                  >
+                    <Phone className="w-4 h-4" /> {m.phone}
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
       </main>
 
       <footer className="border-t-2 border-primary bg-card py-6">
