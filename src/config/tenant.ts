@@ -192,13 +192,13 @@ export const tenantConfig: TenantConfig = {
   ],
 
   chatbot: {
-    welcomeMessage: "Hoi! 👋 Willkommen bei **Drive Me Fahrschule** in Wettingen.\nWie kann ich dir helfen?",
-    grundkursIntro: "Super! Der Motorrad-Grundkurs bei Drive Me dauert 12 Stunden (3 Teile). Er ist gesetzlich vorgeschrieben für alle Kategorien.\n\nWelche Kategorie interessiert dich?",
-    fahrstundenIntro: "Fahrstunden bei Drive Me – flexibel Mo–Sa von 08–22 Uhr.\n\nWas möchtest du buchen?",
+    welcomeMessage: "Hoi! 👋 Willkommen bei **Fahrschule Me** in Wettingen.\nWie kann ich dir helfen?",
+    grundkursIntro: "Super! Der Motorrad-Grundkurs bei Fahrschule Me dauert 12 Stunden (3 Teile). Er ist gesetzlich vorgeschrieben für alle Kategorien.\n\nWelche Kategorie interessiert dich?",
+    fahrstundenIntro: "Fahrstunden bei Fahrschule Me – flexibel Mo–Sa von 08–22 Uhr.\n\nWas möchtest du buchen?",
     autoOpenDelayMs: 8000,
   },
 
   footer: {
-    copyright: "© 2026 Drive me Fahrschule. Alle Rechte vorbehalten.",
+    copyright: "© 2026 Fahrschule Me. Alle Rechte vorbehalten.",
   },
 };
