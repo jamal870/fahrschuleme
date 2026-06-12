@@ -93,7 +93,7 @@ export const template = {
   subject: (data: Record<string, any>) =>
     `📅 Kurs-Erinnerung: MGK Teil ${data.coursePart} am ${data.courseDate} (${data.participantCount} Teilnehmer)`,
   displayName: 'Kurs-Erinnerung (Admin)',
-  to: 'info@drive-me.ch',
+  to: 'info@l-me.ch',
   previewData: {
     coursePart: 1,
     courseDate: '28.03.2026',

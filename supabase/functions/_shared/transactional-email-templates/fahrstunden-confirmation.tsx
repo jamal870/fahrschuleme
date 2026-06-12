@@ -74,7 +74,7 @@ const FahrstundenConfirmationEmail = ({
         <Section style={importantSection}>
           <Heading style={h2Important}>⚠️ WICHTIG</Heading>
           <Text style={importantText}>
-            Stornierungen oder Umbuchungen sind bis 24 Stunden vor der Fahrstunde schriftlich an info@drive-me.ch möglich, danach wird der volle Betrag in Rechnung gestellt.
+            Stornierungen oder Umbuchungen sind bis 24 Stunden vor der Fahrstunde schriftlich an info@l-me.ch möglich, danach wird der volle Betrag in Rechnung gestellt.
           </Text>
         </Section>
 

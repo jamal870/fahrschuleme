@@ -163,7 +163,7 @@ export const faqData = [
   },
   {
     question: "Stornierung & Umbuchung",
-    answer: "Die Anmeldung ist **verbindlich**. Umbuchungen bzw. Stornierungen sind bis **5 Arbeitstage** vor Kursbeginn schriftlich an **info@drive-me.ch** möglich. Danach wird die volle Kursgebühr in Rechnung gestellt.\n\nFahrstunden müssen **24 Stunden** vorher abgesagt werden.",
+    answer: "Die Anmeldung ist **verbindlich**. Umbuchungen bzw. Stornierungen sind bis **5 Arbeitstage** vor Kursbeginn schriftlich an **info@l-me.ch** möglich. Danach wird die volle Kursgebühr in Rechnung gestellt.\n\nFahrstunden müssen **24 Stunden** vorher abgesagt werden.",
   },
   {
     question: "Wie kann ich bezahlen?",
