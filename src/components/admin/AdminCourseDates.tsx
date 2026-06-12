@@ -244,6 +244,23 @@ const AdminCourseDates = () => {
           <Button variant="outline" size="sm" onClick={fetchCourses} className="font-body">
             <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
           </Button>
+          <Button variant="outline" size="sm" onClick={async () => {
+            const today = new Date(); today.setHours(0,0,0,0);
+            const future = courses.filter((c) => { const d = parseDate(c.date); return d && d.getTime() >= today.getTime(); });
+            if (future.length === 0) { toast.info("Keine zukünftigen Termine zum Synchronisieren"); return; }
+            toast.info(`Sync läuft für ${future.length} Termine...`);
+            let ok = 0, fail = 0;
+            for (const c of future) {
+              try {
+                const { error } = await supabase.functions.invoke("sync-course-to-gcal", { body: { courseDateId: c.id, action: "upsert" } });
+                if (error) throw error; ok++;
+              } catch (e) { console.warn(e); fail++; }
+            }
+            if (fail === 0) toast.success(`${ok} Termine in Google Kalender synchronisiert`);
+            else toast.warning(`${ok} ok, ${fail} fehlgeschlagen`);
+          }} className="font-body">
+            <CalendarPlus className="w-4 h-4 mr-1" /> Google Sync
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setBulkOpen(true)} className="font-body">
             <CalendarPlus className="w-4 h-4 mr-1" /> Mehrere anlegen
           </Button>
