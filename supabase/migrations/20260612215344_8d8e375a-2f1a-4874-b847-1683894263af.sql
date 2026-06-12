@@ -1,0 +1,1 @@
+CREATE POLICY "Service role can insert waitlist" ON public.waitlist FOR INSERT TO service_role WITH CHECK (true);
