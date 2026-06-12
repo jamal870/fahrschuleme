@@ -26,7 +26,7 @@ const Kontakt = () => (
         {[
           { icon: <Phone className="w-6 h-6 text-primary" />, label: "Telefon", value: tenantConfig.contact.phone, href: `tel:${tenantConfig.contact.phone}` },
           { icon: <Mail className="w-6 h-6 text-primary" />, label: "E-Mail", value: tenantConfig.contact.email, href: `mailto:${tenantConfig.contact.email}` },
-          { icon: <MapPin className="w-6 h-6 text-primary" />, label: "Adresse", value: `${tenantConfig.contact.address.street}\n${tenantConfig.contact.address.city}` },
+          { icon: <MapPin className="w-6 h-6 text-primary" />, label: "Adresse", value: `${tenantConfig.contact.address.street}\n${tenantConfig.contact.address.detail}\n${tenantConfig.contact.address.city}` },
           { icon: <Clock className="w-6 h-6 text-primary" />, label: "Öffnungszeiten", value: tenantConfig.contact.openingHours },
         ].map((c, i) => (
           <div key={i} className="bg-card border border-border p-6 flex items-start gap-4" style={{ borderRadius: "3px" }}>
