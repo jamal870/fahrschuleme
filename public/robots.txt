@@ -19,4 +19,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://buchen.drive-me.ch/sitemap.xml
+Sitemap: https://fahrschule-me.ch/sitemap.xml
