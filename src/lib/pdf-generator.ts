@@ -514,7 +514,7 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
     doc.setTextColor(...DARK);
 
     // Attendance checkbox
-    const boxX = cols[6].x + 3;
+    const boxX = cols[7].x + 3;
     const boxY = y + 5;
     doc.setDrawColor(...DARK);
     doc.rect(boxX, boxY, 5, 5);
@@ -531,7 +531,7 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
     // Signature image if present
     if (p.signature) {
       try {
-        doc.addImage(p.signature, "PNG", cols[7].x + 2, y + 1.5, cols[7].w - 4, rowH - 3);
+        doc.addImage(p.signature, "PNG", cols[8].x + 2, y + 1.5, cols[8].w - 4, rowH - 3);
       } catch (_e) { /* ignore invalid image */ }
     }
 
