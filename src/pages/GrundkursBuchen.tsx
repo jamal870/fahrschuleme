@@ -12,6 +12,7 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { WaitlistDialog } from "@/components/WaitlistDialog";
 import BrandLogo from "@/components/BrandLogo";
+import SiteHeader from "@/components/SiteHeader";
 
 // Parse "DD.MM.YYYY" to a comparable Date
 function parseCourseDate(dateStr: string): Date {
@@ -200,12 +201,9 @@ export default function GrundkursBuchen() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <nav className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <BrandLogo imgClassName="h-12 w-auto" />
-        </Link>
-      </nav>
+      <SiteHeader />
+
+
 
       <div className="max-w-5xl mx-auto px-6 pb-20">
         {/* Title */}
