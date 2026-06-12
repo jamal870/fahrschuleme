@@ -174,14 +174,28 @@ export default function GrundkursBuchen() {
   const totalPrice = selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
   const allPartsSelected = selections[1] && selections[2] && selections[3];
 
-  // Filter courses for a part: only show dates after the previous part's selected date
+  // Filter courses: hide past dates, enforce chronological order, one course per day
   const getFilteredCourses = (part: number): CourseDate[] => {
-    const courses = coursesData[part] || [];
-    if (part === 1) return courses;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const courses = (coursesData[part] || [])
+      .filter(c => parseCourseDate(c.date) >= today)
+      .sort((a, b) => parseCourseDate(a.date).getTime() - parseCourseDate(b.date).getTime());
+
+    // Collect already-selected dates from other parts (one course per day rule)
+    const usedDates = new Set(
+      Object.entries(selections)
+        .filter(([p, v]) => v !== null && parseInt(p) !== part)
+        .map(([, v]) => v!.date)
+    );
+
+    if (part === 1) {
+      return courses.filter(c => !usedDates.has(c.date));
+    }
     const prevSelected = selections[part - 1];
-    if (!prevSelected) return courses;
+    if (!prevSelected) return courses.filter(c => !usedDates.has(c.date));
     const prevDate = parseCourseDate(prevSelected.date);
-    return courses.filter(c => parseCourseDate(c.date) > prevDate);
+    return courses.filter(c => parseCourseDate(c.date) > prevDate && !usedDates.has(c.date));
   };
 
   return (
