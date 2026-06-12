@@ -114,11 +114,11 @@ export const tenantConfig: TenantConfig = {
 
   contact: {
     phone: "078 974 44 74",
-    email: "info@drive-me.ch",
+    email: "info@l-me.ch",
     whatsappUrl: "https://wa.me/41789744474",
     address: {
-      street: "Landstrasse 99",
-      detail: "Center Passage 2. OG\nRaum 2.35",
+      street: "Bahnhofstrasse 56",
+      detail: "",
       city: "5430 Wettingen",
     },
     openingHours: "Mo–Sa 08:00–22:00",
@@ -179,8 +179,8 @@ export const tenantConfig: TenantConfig = {
       { name: "Motorrad Tageskurs (4h)", price: "200.-" },
     ],
     extras: [
-      { title: "Verkehrskunde", name: "Verkehrskunde", price: "180.-", note: "Inkl. der obligatorischen VKU-Unterlagen" },
-      { title: "Nothelfer", name: "Nothelfer", price: "120.-", note: "Inkl. Kursdokumentation und Nothelferausweis (6 Jahre gültig)" },
+      { title: "Verkehrskunde", name: "Verkehrskunde", price: "130.-", note: "Inkl. der obligatorischen VKU-Unterlagen" },
+      { title: "Nothelfer", name: "Nothelfer", price: "130.-", note: "Inkl. Kursdokumentation und Nothelferausweis (6 Jahre gültig)" },
     ],
   },
 

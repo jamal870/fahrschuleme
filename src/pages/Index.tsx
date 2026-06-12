@@ -2,6 +2,11 @@ import { Phone, Mail, MapPin, Clock, Users, ChevronRight, Bike, Car, CreditCard 
 import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
 import { tenantConfig } from "@/config/tenant";
+import grundkurs1 from "@/assets/grundkurs-1.png";
+import grundkurs2 from "@/assets/grundkurs-2.png";
+import grundkurs3 from "@/assets/grundkurs-3.png";
+
+const grundkursImages = [grundkurs1, grundkurs2, grundkurs3];
 
 const Index = () => {
   return (
@@ -139,7 +144,8 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[1, 2, 3].map((part) => (
               <a key={part} href="#/grundkurs" className="bg-card border border-border p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer block" style={{ borderRadius: "3px" }}>
-                <div className="w-14 h-14 mx-auto mb-4 bg-primary/10 text-primary font-heading font-bold text-xl flex items-center justify-center" style={{ borderRadius: "3px" }}>
+                <img src={grundkursImages[part - 1]} alt={`Grundkurs ${part}`} className="w-32 h-32 mx-auto mb-3 object-contain" loading="lazy" />
+                <div className="w-10 h-10 mx-auto mb-3 bg-primary/10 text-primary font-heading font-bold text-base flex items-center justify-center" style={{ borderRadius: "3px" }}>
                   {part}
                 </div>
                 <h3 className="font-heading font-bold text-foreground mb-1">Grundkurs {part}</h3>
