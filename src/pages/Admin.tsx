@@ -73,10 +73,7 @@ const Admin = () => {
       <header className="border-b-2 border-primary bg-card">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="flex items-baseline gap-0.5">
-              <span className="text-[18px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
-              <span className="text-[22px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
-            </span>
+            <BrandLogo imgClassName="h-10 w-auto" />
             <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 font-heading font-bold" style={{ borderRadius: "3px" }}>ADMIN</span>
           </div>
           <Button variant="ghost" size="sm" onClick={handleLogout} className="font-body">
