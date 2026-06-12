@@ -7,6 +7,8 @@ const SiteFooter = () => (
       <div className="space-x-3">
         <Link to="/" className="hover:text-primary">Start</Link>
         <span>·</span>
+        <Link to="/kurstermine" className="hover:text-primary">Kurstermine</Link>
+        <span>·</span>
         <Link to="/kontakt" className="hover:text-primary">Kontakt</Link>
         <span>·</span>
         <Link to="/impressum" className="hover:text-primary">Impressum</Link>

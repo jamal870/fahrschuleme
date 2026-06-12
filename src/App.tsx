@@ -18,6 +18,7 @@ import Fahrstunden from "./pages/Fahrstunden.tsx";
 import Motorrad from "./pages/Motorrad.tsx";
 import Preise from "./pages/Preise.tsx";
 import Kontakt from "./pages/Kontakt.tsx";
+import Kurstermine from "./pages/Kurstermine.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/motorrad" element={<Motorrad />} />
           <Route path="/preise" element={<Preise />} />
           <Route path="/kontakt" element={<Kontakt />} />
+          <Route path="/kurstermine" element={<Kurstermine />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
