@@ -118,8 +118,8 @@ export const tenantConfig: TenantConfig = {
     email: "info@l-me.ch",
     whatsappUrl: "https://wa.me/41767790383",
     address: {
-      street: "Bahnhofstrasse 56",
-      detail: "",
+      street: "Fahrschule me",
+      detail: "Bahnhofstrasse 56",
       city: "5430 Wettingen",
     },
     openingHours: "Mo–Sa 08:00–22:00",
