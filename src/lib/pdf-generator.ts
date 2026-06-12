@@ -441,13 +441,14 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
   // Landscape page width ~ 297, usable 20..277 (w=257)
   const cols = [
     { label: "#", x: 20, w: 8 },
-    { label: "Name", x: 28, w: 60 },
-    { label: "Telefon", x: 88, w: 30 },
-    { label: "Geb.", x: 118, w: 22 },
-    { label: "FA-Nr.", x: 140, w: 28 },
-    { label: "Zahlung", x: 168, w: 18 },
-    { label: "Anw.", x: 186, w: 12 },
-    { label: "Unterschrift", x: 198, w: 79 },
+    { label: "Name", x: 28, w: 54 },
+    { label: "Telefon", x: 82, w: 28 },
+    { label: "Geb.", x: 110, w: 20 },
+    { label: "FA-Nr.", x: 130, w: 24 },
+    { label: "Zahlart", x: 154, w: 22 },
+    { label: "Status", x: 176, w: 18 },
+    { label: "Anw.", x: 194, w: 12 },
+    { label: "Unterschrift", x: 206, w: 71 },
   ];
 
   // Header bar
@@ -463,6 +464,15 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
   doc.setFontSize(8.5);
 
   const rowH = 16;
+  const formatPaymentMethod = (pm: string): string => {
+    const v = (pm || "").toLowerCase();
+    if (v.includes("bar")) return "Bar";
+    if (v.includes("twint")) return "TWINT";
+    if (v.includes("stripe") || v.includes("karte") || v.includes("card")) return "Karte";
+    if (v.includes("überweis") || v.includes("uberweis") || v.includes("rechnung") || v.includes("bank")) return "Überw.";
+    return (pm || "–").slice(0, 10);
+  };
+
   participants.forEach((p, i) => {
     if (y > 185) {
       addFooter(doc);
@@ -481,22 +491,30 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
     const cy = y + 9;
     doc.setTextColor(...DARK);
     doc.text(String(i + 1), cols[0].x + 2, cy);
-    doc.text(`${p.first_name} ${p.last_name}`.slice(0, 32), cols[1].x + 1, cy);
-    doc.text((p.phone || "").slice(0, 16), cols[2].x + 1, cy);
-    doc.text((p.birth_date || "").slice(0, 12), cols[3].x + 1, cy);
-    doc.text((p.fa_number || "").slice(0, 16), cols[4].x + 1, cy);
+    doc.text(`${p.first_name} ${p.last_name}`.slice(0, 28), cols[1].x + 1, cy);
+    doc.text((p.phone || "").slice(0, 14), cols[2].x + 1, cy);
+    doc.text((p.birth_date || "").slice(0, 10), cols[3].x + 1, cy);
+    doc.text((p.fa_number || "").slice(0, 12), cols[4].x + 1, cy);
 
+    // Zahlart
+    doc.setTextColor(...DARK);
+    doc.text(formatPaymentMethod(p.payment_method), cols[5].x + 1, cy);
+
+    // Status (Bezahlt / Offen)
     if (p.paid) {
       doc.setTextColor(34, 139, 34);
-      doc.text("OK", cols[5].x + 4, cy);
+      doc.setFont("helvetica", "bold");
+      doc.text("Bezahlt", cols[6].x + 1, cy);
     } else {
-      doc.setTextColor(...GRAY);
-      doc.text("Bar", cols[5].x + 4, cy);
+      doc.setTextColor(197, 48, 48);
+      doc.setFont("helvetica", "bold");
+      doc.text("Offen", cols[6].x + 1, cy);
     }
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(...DARK);
 
     // Attendance checkbox
-    const boxX = cols[6].x + 3;
+    const boxX = cols[7].x + 3;
     const boxY = y + 5;
     doc.setDrawColor(...DARK);
     doc.rect(boxX, boxY, 5, 5);
@@ -513,7 +531,7 @@ export function generateParticipantList(course: ParticipantCourseInfo, participa
     // Signature image if present
     if (p.signature) {
       try {
-        doc.addImage(p.signature, "PNG", cols[7].x + 2, y + 1.5, cols[7].w - 4, rowH - 3);
+        doc.addImage(p.signature, "PNG", cols[8].x + 2, y + 1.5, cols[8].w - 4, rowH - 3);
       } catch (_e) { /* ignore invalid image */ }
     }
 
