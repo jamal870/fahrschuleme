@@ -58,6 +58,8 @@ const AdminCourseDates = () => {
   const [attendanceCourse, setAttendanceCourse] = useState<CourseDate | null>(null);
   const [calMonth, setCalMonth] = useState(() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); });
   const [showPast, setShowPast] = useState(false);
+  const [partFilter, setPartFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
 
   const fetchCourses = async () => {
     setLoading(true);
