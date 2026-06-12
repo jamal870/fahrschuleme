@@ -72,6 +72,18 @@ const AdminCourseDates = () => {
 
   const generateId = (f: CourseForm) => `mgk${f.part}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
 
+  const syncGcal = async (courseDateId: string, action: "upsert" | "delete") => {
+    try {
+      const { error } = await supabase.functions.invoke("sync-course-to-gcal", {
+        body: { courseDateId, action },
+      });
+      if (error) throw error;
+    } catch (e: any) {
+      console.warn("[gcal sync]", e?.message || e);
+      toast.warning("Google-Kalender-Sync fehlgeschlagen (Termin gespeichert)");
+    }
+  };
+
   const handleSave = async () => {
     if (!form.date || !form.day || !form.time) { toast.error("Bitte alle Pflichtfelder ausfüllen"); return; }
     const payload = {
@@ -83,11 +95,18 @@ const AdminCourseDates = () => {
     if (editing) {
       const { error } = await supabase.from("course_dates").update(payload).eq("id", form.id);
       if (error) toast.error("Fehler: " + error.message);
-      else { toast.success("Kurstermin aktualisiert"); setDialogOpen(false); fetchCourses(); }
+      else {
+        toast.success("Kurstermin aktualisiert"); setDialogOpen(false); fetchCourses();
+        syncGcal(form.id, "upsert");
+      }
     } else {
-      const { error } = await supabase.from("course_dates").insert({ id: generateId(form), ...payload });
+      const newId = generateId(form);
+      const { error } = await supabase.from("course_dates").insert({ id: newId, ...payload });
       if (error) toast.error("Fehler: " + error.message);
-      else { toast.success("Kurstermin erstellt"); setDialogOpen(false); fetchCourses(); }
+      else {
+        toast.success("Kurstermin erstellt"); setDialogOpen(false); fetchCourses();
+        syncGcal(newId, "upsert");
+      }
     }
   };
 
@@ -114,6 +133,7 @@ const AdminCourseDates = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Kurstermin wirklich löschen?")) return;
+    await syncGcal(id, "delete");
     const { error } = await supabase.from("course_dates").delete().eq("id", id);
     if (error) toast.error("Fehler: " + error.message);
     else { toast.success("Gelöscht"); fetchCourses(); }
