@@ -129,6 +129,7 @@ export type Database = {
           created_at: string
           date: string
           day: string
+          gcal_event_id: string | null
           id: string
           instructor: string | null
           instructor_number: string | null
@@ -143,6 +144,7 @@ export type Database = {
           created_at?: string
           date: string
           day: string
+          gcal_event_id?: string | null
           id: string
           instructor?: string | null
           instructor_number?: string | null
@@ -157,6 +159,7 @@ export type Database = {
           created_at?: string
           date?: string
           day?: string
+          gcal_event_id?: string | null
           id?: string
           instructor?: string | null
           instructor_number?: string | null
