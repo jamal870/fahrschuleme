@@ -332,13 +332,25 @@ const AdminCourseDates = () => {
                           </TableCell>
                         </TableRow>
                       );
+                      const groupHeader = (part: number, count: number) => (
+                        <TableRow key={`hdr-${part}`} className="bg-primary/10 hover:bg-primary/10">
+                          <TableCell colSpan={10} className="py-2 font-heading uppercase text-sm tracking-wide text-primary">
+                            Kategorie M {part} <span className="text-muted-foreground font-body normal-case tracking-normal">· {count} Termin{count === 1 ? "" : "e"}</span>
+                          </TableCell>
+                        </TableRow>
+                      );
                       return (
                         <>
-                          {upcoming.map((c) => renderRow(c))}
-                          {upcoming.length === 0 && past.length === 0 && (
+                          {upcomingGroups.map((g) => (
+                            <React.Fragment key={`up-${g.part}`}>
+                              {groupHeader(g.part, g.items.length)}
+                              {g.items.map((c) => renderRow(c))}
+                            </React.Fragment>
+                          ))}
+                          {totalUpcoming === 0 && totalPast === 0 && (
                             <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">Keine Kurstermine vorhanden</TableCell></TableRow>
                           )}
-                          {past.length > 0 && (
+                          {totalPast > 0 && (
                             <>
                               <TableRow className="bg-muted/40 hover:bg-muted/40">
                                 <TableCell colSpan={10} className="py-2">
@@ -349,11 +361,16 @@ const AdminCourseDates = () => {
                                     className="font-body w-full justify-start"
                                   >
                                     <ChevronDown className={`w-4 h-4 mr-2 transition-transform ${showPast ? "rotate-0" : "-rotate-90"}`} />
-                                    Vergangene Termine ({past.length}) {showPast ? "ausblenden" : "anzeigen"}
+                                    Vergangene Termine ({totalPast}) {showPast ? "ausblenden" : "anzeigen"}
                                   </Button>
                                 </TableCell>
                               </TableRow>
-                              {showPast && past.map((c) => renderRow(c, true))}
+                              {showPast && pastGroups.map((g) => (
+                                <React.Fragment key={`past-${g.part}`}>
+                                  {groupHeader(g.part, g.items.length)}
+                                  {g.items.map((c) => renderRow(c, true))}
+                                </React.Fragment>
+                              ))}
                             </>
                           )}
                         </>
