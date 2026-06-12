@@ -114,7 +114,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     toast.success("Unterschrift entfernt");
   };
 
-  const exportPdf = () => {
+  const exportPdf = (filter: ParticipantFilter = "all") => {
     if (!course) return;
     const participants: (Participant & { signature?: string | null; present?: boolean })[] = rows.map((r) => ({
       first_name: r.first_name, last_name: r.last_name,
@@ -128,9 +128,11 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       { part: course.part, date: course.date, day: course.day, time: course.time,
         location: course.location, instructor: course.instructor,
         instructor_number: (course as any).instructor_number },
-      participants
+      participants,
+      filter
     );
-    downloadPdf(pdf, `Anwesenheit_MGK${course.part}_${course.date.replace(/\./g, "-")}.pdf`);
+    const suffix = filter === "paid" ? "_bezahlt" : filter === "unpaid" ? "_offen" : "";
+    downloadPdf(pdf, `Anwesenheit_MGK${course.part}_${course.date.replace(/\./g, "-")}${suffix}.pdf`);
   };
 
   return (
