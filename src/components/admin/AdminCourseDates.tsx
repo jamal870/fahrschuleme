@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, Users, Copy, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, FileDown } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, Users, Copy, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, FileDown, ChevronDown } from "lucide-react";
 import { generateParticipantList, downloadPdf, type Participant } from "@/lib/pdf-generator";
 import AttendanceDialog from "./AttendanceDialog";
 import type { Tables } from "@/integrations/supabase/types";
@@ -57,6 +57,7 @@ const AdminCourseDates = () => {
   const [bulkOpen, setBulkOpen] = useState(false);
   const [attendanceCourse, setAttendanceCourse] = useState<CourseDate | null>(null);
   const [calMonth, setCalMonth] = useState(() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); });
+  const [showPast, setShowPast] = useState(false);
 
   const fetchCourses = async () => {
     setLoading(true);
@@ -176,6 +177,26 @@ const AdminCourseDates = () => {
     return map;
   }, [courses]);
 
+  // Chronologisch sortieren & in zukünftig / vergangen aufteilen
+  const { upcoming, past } = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const sorted = [...courses].sort((a, b) => {
+      const da = parseDate(a.date)?.getTime() ?? 0;
+      const db = parseDate(b.date)?.getTime() ?? 0;
+      if (da !== db) return da - db;
+      return a.part - b.part;
+    });
+    const upcoming: CourseDate[] = [];
+    const past: CourseDate[] = [];
+    for (const c of sorted) {
+      const d = parseDate(c.date);
+      if (d && d.getTime() >= today.getTime()) upcoming.push(c);
+      else past.push(c);
+    }
+    return { upcoming, past: past.reverse() }; // vergangene: neueste zuerst
+  }, [courses]);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
@@ -263,47 +284,72 @@ const AdminCourseDates = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {courses.map((c) => (
-                      <TableRow key={c.id}>
-                        <TableCell className="font-medium">Teil {c.part}</TableCell>
-                        <TableCell>{c.day}</TableCell><TableCell>{c.date}</TableCell><TableCell>{c.time}</TableCell>
-                        <TableCell>{c.location}</TableCell><TableCell>{c.instructor || "–"}</TableCell>
-                        <TableCell>{c.instructor_number || "–"}</TableCell>
-                        <TableCell>CHF {c.price}</TableCell>
-                        <TableCell><span className={c.spots_available <= 1 ? "text-destructive font-semibold" : ""}>{c.spots_available}</span></TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex gap-1 justify-end">
-                            <Button variant="ghost" size="icon" title="Anwesenheit & Unterschriften" onClick={() => setAttendanceCourse(c)}>
-                              <ClipboardCheck className="w-4 h-4" />
-                            </Button>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" title="Teilnehmerliste (PDF)">
-                                  <Users className="w-4 h-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => handleParticipantList(c, "all")}>Alle Teilnehmer</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleParticipantList(c, "paid")}>Nur bezahlte</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleParticipantList(c, "unpaid")}>Nur offene</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                            <Button variant="ghost" size="icon" title="Duplizieren" onClick={() => handleDuplicate(c)}>
-                              <Copy className="w-4 h-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" title="Bearbeiten" onClick={() => handleEdit(c)}>
-                              <Pencil className="w-4 h-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" title="Löschen" onClick={() => handleDelete(c.id)}>
-                              <Trash2 className="w-4 h-4 text-destructive" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {courses.length === 0 && (
-                      <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">Keine Kurstermine vorhanden</TableCell></TableRow>
-                    )}
+                    {(() => {
+                      const renderRow = (c: CourseDate, dim = false) => (
+                        <TableRow key={c.id} className={dim ? "opacity-60" : ""}>
+                          <TableCell className="font-medium">Teil {c.part}</TableCell>
+                          <TableCell>{c.day}</TableCell><TableCell>{c.date}</TableCell><TableCell>{c.time}</TableCell>
+                          <TableCell>{c.location}</TableCell><TableCell>{c.instructor || "–"}</TableCell>
+                          <TableCell>{c.instructor_number || "–"}</TableCell>
+                          <TableCell>CHF {c.price}</TableCell>
+                          <TableCell><span className={c.spots_available <= 1 ? "text-destructive font-semibold" : ""}>{c.spots_available}</span></TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex gap-1 justify-end">
+                              <Button variant="ghost" size="icon" title="Anwesenheit & Unterschriften" onClick={() => setAttendanceCourse(c)}>
+                                <ClipboardCheck className="w-4 h-4" />
+                              </Button>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" title="Teilnehmerliste (PDF)">
+                                    <Users className="w-4 h-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem onClick={() => handleParticipantList(c, "all")}>Alle Teilnehmer</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleParticipantList(c, "paid")}>Nur bezahlte</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleParticipantList(c, "unpaid")}>Nur offene</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                              <Button variant="ghost" size="icon" title="Duplizieren" onClick={() => handleDuplicate(c)}>
+                                <Copy className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" title="Bearbeiten" onClick={() => handleEdit(c)}>
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" title="Löschen" onClick={() => handleDelete(c.id)}>
+                                <Trash2 className="w-4 h-4 text-destructive" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                      return (
+                        <>
+                          {upcoming.map((c) => renderRow(c))}
+                          {upcoming.length === 0 && past.length === 0 && (
+                            <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">Keine Kurstermine vorhanden</TableCell></TableRow>
+                          )}
+                          {past.length > 0 && (
+                            <>
+                              <TableRow className="bg-muted/40 hover:bg-muted/40">
+                                <TableCell colSpan={10} className="py-2">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setShowPast((v) => !v)}
+                                    className="font-body w-full justify-start"
+                                  >
+                                    <ChevronDown className={`w-4 h-4 mr-2 transition-transform ${showPast ? "rotate-0" : "-rotate-90"}`} />
+                                    Vergangene Termine ({past.length}) {showPast ? "ausblenden" : "anzeigen"}
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                              {showPast && past.map((c) => renderRow(c, true))}
+                            </>
+                          )}
+                        </>
+                      );
+                    })()}
                   </TableBody>
                 </Table>
               )}
