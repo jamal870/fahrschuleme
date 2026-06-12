@@ -284,47 +284,72 @@ const AdminCourseDates = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {courses.map((c) => (
-                      <TableRow key={c.id}>
-                        <TableCell className="font-medium">Teil {c.part}</TableCell>
-                        <TableCell>{c.day}</TableCell><TableCell>{c.date}</TableCell><TableCell>{c.time}</TableCell>
-                        <TableCell>{c.location}</TableCell><TableCell>{c.instructor || "–"}</TableCell>
-                        <TableCell>{c.instructor_number || "–"}</TableCell>
-                        <TableCell>CHF {c.price}</TableCell>
-                        <TableCell><span className={c.spots_available <= 1 ? "text-destructive font-semibold" : ""}>{c.spots_available}</span></TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex gap-1 justify-end">
-                            <Button variant="ghost" size="icon" title="Anwesenheit & Unterschriften" onClick={() => setAttendanceCourse(c)}>
-                              <ClipboardCheck className="w-4 h-4" />
-                            </Button>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" title="Teilnehmerliste (PDF)">
-                                  <Users className="w-4 h-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => handleParticipantList(c, "all")}>Alle Teilnehmer</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleParticipantList(c, "paid")}>Nur bezahlte</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleParticipantList(c, "unpaid")}>Nur offene</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                            <Button variant="ghost" size="icon" title="Duplizieren" onClick={() => handleDuplicate(c)}>
-                              <Copy className="w-4 h-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" title="Bearbeiten" onClick={() => handleEdit(c)}>
-                              <Pencil className="w-4 h-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" title="Löschen" onClick={() => handleDelete(c.id)}>
-                              <Trash2 className="w-4 h-4 text-destructive" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {courses.length === 0 && (
-                      <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">Keine Kurstermine vorhanden</TableCell></TableRow>
-                    )}
+                    {(() => {
+                      const renderRow = (c: CourseDate, dim = false) => (
+                        <TableRow key={c.id} className={dim ? "opacity-60" : ""}>
+                          <TableCell className="font-medium">Teil {c.part}</TableCell>
+                          <TableCell>{c.day}</TableCell><TableCell>{c.date}</TableCell><TableCell>{c.time}</TableCell>
+                          <TableCell>{c.location}</TableCell><TableCell>{c.instructor || "–"}</TableCell>
+                          <TableCell>{c.instructor_number || "–"}</TableCell>
+                          <TableCell>CHF {c.price}</TableCell>
+                          <TableCell><span className={c.spots_available <= 1 ? "text-destructive font-semibold" : ""}>{c.spots_available}</span></TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex gap-1 justify-end">
+                              <Button variant="ghost" size="icon" title="Anwesenheit & Unterschriften" onClick={() => setAttendanceCourse(c)}>
+                                <ClipboardCheck className="w-4 h-4" />
+                              </Button>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" title="Teilnehmerliste (PDF)">
+                                    <Users className="w-4 h-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem onClick={() => handleParticipantList(c, "all")}>Alle Teilnehmer</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleParticipantList(c, "paid")}>Nur bezahlte</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleParticipantList(c, "unpaid")}>Nur offene</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                              <Button variant="ghost" size="icon" title="Duplizieren" onClick={() => handleDuplicate(c)}>
+                                <Copy className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" title="Bearbeiten" onClick={() => handleEdit(c)}>
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" title="Löschen" onClick={() => handleDelete(c.id)}>
+                                <Trash2 className="w-4 h-4 text-destructive" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                      return (
+                        <>
+                          {upcoming.map((c) => renderRow(c))}
+                          {upcoming.length === 0 && past.length === 0 && (
+                            <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">Keine Kurstermine vorhanden</TableCell></TableRow>
+                          )}
+                          {past.length > 0 && (
+                            <>
+                              <TableRow className="bg-muted/40 hover:bg-muted/40">
+                                <TableCell colSpan={10} className="py-2">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setShowPast((v) => !v)}
+                                    className="font-body w-full justify-start"
+                                  >
+                                    <ChevronDown className={`w-4 h-4 mr-2 transition-transform ${showPast ? "rotate-0" : "-rotate-90"}`} />
+                                    Vergangene Termine ({past.length}) {showPast ? "ausblenden" : "anzeigen"}
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                              {showPast && past.map((c) => renderRow(c, true))}
+                            </>
+                          )}
+                        </>
+                      );
+                    })()}
                   </TableBody>
                 </Table>
               )}
