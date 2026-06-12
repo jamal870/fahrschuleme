@@ -14,6 +14,7 @@ import { template as fahrstundenConfirmation } from './fahrstunden-confirmation.
 import { template as adminBookingNotification } from './admin-booking-notification.tsx'
 import { template as courseReminder } from './course-reminder.tsx'
 import { template as waitlistAdminNotification } from './waitlist-admin-notification.tsx'
+import { template as courseMoved } from './course-moved.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'booking-confirmation': bookingConfirmation,
@@ -21,4 +22,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'admin-booking-notification': adminBookingNotification,
   'course-reminder': courseReminder,
   'waitlist-admin-notification': waitlistAdminNotification,
+  'course-moved': courseMoved,
 }
