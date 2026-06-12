@@ -8,7 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, Users } from "lucide-react";
+import { generateParticipantList, downloadPdf, type Participant } from "@/lib/pdf-generator";
 import type { Tables } from "@/integrations/supabase/types";
 
 type CourseDate = Tables<"course_dates">;
@@ -99,6 +100,39 @@ const AdminCourseDates = () => {
     setForm(emptyForm);
     setEditing(false);
     setDialogOpen(true);
+  };
+
+  const handleParticipantList = async (course: CourseDate) => {
+    const { data: items, error } = await supabase
+      .from("booking_items")
+      .select("booking_id, bookings!inner(first_name, last_name, phone, birth_date, fa_number, payment_method, status)")
+      .eq("course_date_id", course.id);
+
+    if (error) { toast.error("Fehler beim Laden der Teilnehmer"); return; }
+
+    const participants: Participant[] = (items || [])
+      .map((it: any) => it.bookings)
+      .filter((b: any) => b && b.status === "confirmed")
+      .map((b: any) => ({
+        first_name: b.first_name,
+        last_name: b.last_name,
+        phone: b.phone,
+        birth_date: b.birth_date,
+        fa_number: b.fa_number,
+        payment_method: b.payment_method,
+        paid: !(b.payment_method || "").toLowerCase().includes("bar"),
+      }));
+
+    if (participants.length === 0) {
+      toast.info("Noch keine bestätigten Teilnehmer für diesen Kurs");
+      return;
+    }
+
+    const pdf = generateParticipantList(
+      { part: course.part, date: course.date, day: course.day, time: course.time, location: course.location, instructor: course.instructor },
+      participants
+    );
+    downloadPdf(pdf, `Teilnehmerliste_MGK${course.part}_${course.date.replace(/\./g, "-")}.pdf`);
   };
 
   return (
@@ -207,6 +241,9 @@ const AdminCourseDates = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex gap-1 justify-end">
+                        <Button variant="ghost" size="icon" title="Teilnehmerliste (PDF)" onClick={() => handleParticipantList(c)}>
+                          <Users className="w-4 h-4" />
+                        </Button>
                         <Button variant="ghost" size="icon" onClick={() => handleEdit(c)}>
                           <Pencil className="w-4 h-4" />
                         </Button>
