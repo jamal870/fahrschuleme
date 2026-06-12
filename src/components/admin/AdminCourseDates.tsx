@@ -117,7 +117,7 @@ const AdminCourseDates = () => {
 
   const handleNew = () => { setForm(emptyForm); setEditing(false); setDialogOpen(true); };
 
-  const handleParticipantList = async (course: CourseDate) => {
+  const handleParticipantList = async (course: CourseDate, filter: "all" | "paid" | "unpaid" = "all") => {
     const { data: items, error } = await supabase
       .from("booking_items")
       .select("booking_id, bookings!inner(id, first_name, last_name, phone, birth_date, fa_number, payment_method, status)")
@@ -146,9 +146,11 @@ const AdminCourseDates = () => {
       { part: course.part, date: course.date, day: course.day, time: course.time,
         location: course.location, instructor: course.instructor,
         instructor_number: course.instructor_number },
-      participants
+      participants,
+      filter
     );
-    downloadPdf(pdf, `Teilnehmerliste_MGK${course.part}_${course.date.replace(/\./g, "-")}.pdf`);
+    const suffix = filter === "paid" ? "_bezahlt" : filter === "unpaid" ? "_offen" : "";
+    downloadPdf(pdf, `Teilnehmerliste_MGK${course.part}_${course.date.replace(/\./g, "-")}${suffix}.pdf`);
   };
 
   // ── Calendar grid ──
