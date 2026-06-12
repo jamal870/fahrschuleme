@@ -14,6 +14,10 @@ import Datenschutz from "./pages/Datenschutz.tsx";
 import AGB from "./pages/AGB.tsx";
 import Team from "./pages/Team.tsx";
 import MotorradFuehrerscheinWettingen from "./pages/MotorradFuehrerscheinWettingen.tsx";
+import Fahrstunden from "./pages/Fahrstunden.tsx";
+import Motorrad from "./pages/Motorrad.tsx";
+import Preise from "./pages/Preise.tsx";
+import Kontakt from "./pages/Kontakt.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -38,6 +42,10 @@ const App = () => (
           <Route path="/team" element={<Team />} />
           <Route path="/motorrad-fuehrerschein-wettingen" element={<MotorradFuehrerscheinWettingen />} />
           <Route path="/motorrad-fuhrerschein-wettingen" element={<MotorradFuehrerscheinWettingen />} />
+          <Route path="/fahrstunden" element={<Fahrstunden />} />
+          <Route path="/motorrad" element={<Motorrad />} />
+          <Route path="/preise" element={<Preise />} />
+          <Route path="/kontakt" element={<Kontakt />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

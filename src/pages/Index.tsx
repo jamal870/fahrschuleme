@@ -1,7 +1,8 @@
-import { Phone, Mail, MapPin, Clock, Users, ChevronRight, Bike, Car, CreditCard } from "lucide-react";
+import { MapPin, Clock, Users, Bike, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
-import BrandLogo from "@/components/BrandLogo";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 import { tenantConfig } from "@/config/tenant";
 import grundkurs1 from "@/assets/grundkurs-1.png";
 import grundkurs2 from "@/assets/grundkurs-2.png";
@@ -12,30 +13,7 @@ const grundkursImages = [grundkurs1, grundkurs2, grundkurs3];
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
-      {/* Nav */}
-      <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-1">
-            <BrandLogo imgClassName="h-12 w-auto" />
-          </Link>
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
-            <a href="#grundkurs" className="hover:text-primary transition-colors">Grundkurs</a>
-            <a href="#fahrstunden" className="hover:text-primary transition-colors">Fahrstunden</a>
-            <a href="#kategorien" className="hover:text-primary transition-colors">Kategorien</a>
-            <a href="#preise" className="hover:text-primary transition-colors">Preise</a>
-            <a href="#kontakt" className="hover:text-primary transition-colors">Kontakt</a>
-            <a
-              href={tenantConfig.booking.externalBookingUrl || "/grundkurs-buchen"}
-              target={tenantConfig.booking.externalBookingUrl ? "_blank" : undefined}
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
-              style={{ borderRadius: "3px" }}
-            >
-              Jetzt Buchen
-            </a>
-          </div>
-        </div>
-      </nav>
+      <SiteHeader />
 
       {/* Hero */}
       <header className="bg-card">
@@ -321,19 +299,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t-2 border-primary bg-card py-6">
-        <div className="max-w-6xl mx-auto px-6 text-center text-xs text-muted-foreground font-body space-y-2">
-          <div className="space-x-3">
-            <Link to="/impressum" className="hover:text-primary">Impressum</Link>
-            <span>·</span>
-            <Link to="/datenschutz" className="hover:text-primary">Datenschutz</Link>
-            <span>·</span>
-            <Link to="/agb" className="hover:text-primary">AGB</Link>
-          </div>
-          <div>{tenantConfig.footer.copyright}</div>
-        </div>
-      </footer>
+      <SiteFooter />
 
       {/* Chatbot */}
       <ChatBot />
