@@ -48,7 +48,7 @@ serve(async (req) => {
     console.log(`[send-course-reminders] Found ${dueCourses.length} courses in ${REMINDER_DAYS} days`);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
     let sent = 0;
     for (const course of dueCourses) {
@@ -74,7 +74,7 @@ serve(async (req) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${anonKey}`,
+          Authorization: `Bearer ${serviceKey}`,
           apikey: anonKey,
         },
         body: JSON.stringify({
