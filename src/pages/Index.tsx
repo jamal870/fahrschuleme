@@ -1,6 +1,7 @@
 import { Phone, Mail, MapPin, Clock, Users, ChevronRight, Bike, Car, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
+import BrandLogo from "@/components/BrandLogo";
 import { tenantConfig } from "@/config/tenant";
 import grundkurs1 from "@/assets/grundkurs-1.png";
 import grundkurs2 from "@/assets/grundkurs-2.png";
@@ -15,13 +16,7 @@ const Index = () => {
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1">
-            <div className="flex flex-col leading-tight">
-              <span className="flex items-baseline gap-0.5">
-                <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>{tenantConfig.brand.logoText.main}</span>
-                <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>{tenantConfig.brand.logoText.accent}</span>
-              </span>
-              <span className="text-[10px] font-body text-muted-foreground -mt-1">{tenantConfig.brand.logoText.sub}</span>
-            </div>
+            <BrandLogo imgClassName="h-12 w-auto" />
           </Link>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
             <a href="#grundkurs" className="hover:text-primary transition-colors">Grundkurs</a>

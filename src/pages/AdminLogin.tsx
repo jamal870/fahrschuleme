@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Lock } from "lucide-react";
+import BrandLogo from "@/components/BrandLogo";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -34,10 +35,7 @@ const AdminLogin = () => {
       <Card className="w-full max-w-md" style={{ borderRadius: "3px" }}>
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <span className="flex items-baseline gap-0.5">
-              <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
-              <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
-            </span>
+            <BrandLogo imgClassName="h-12 w-auto" />
           </div>
           <CardTitle className="text-lg font-heading uppercase">Admin Login</CardTitle>
         </CardHeader>

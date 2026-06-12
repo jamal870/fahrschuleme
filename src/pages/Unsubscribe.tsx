@@ -3,6 +3,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import { Bike, Loader2, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import BrandLogo from "@/components/BrandLogo";
 
 type Status = "loading" | "valid" | "already_unsubscribed" | "invalid" | "success" | "error";
 
@@ -63,11 +64,7 @@ export default function Unsubscribe() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
       <nav className="absolute top-0 left-0 right-0 max-w-5xl mx-auto px-6 py-5 flex items-center">
         <Link to="/" className="flex items-center gap-2">
-          <span className="flex items-baseline gap-0.5">
-            <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
-            <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
-          </span>
-          <span className="text-[10px] font-body text-muted-foreground">Fahrschule</span>
+          <BrandLogo imgClassName="h-12 w-auto" />
         </Link>
       </nav>
 

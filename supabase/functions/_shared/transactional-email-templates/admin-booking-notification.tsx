@@ -110,7 +110,7 @@ export const template = {
     return `${prefix}: ${data.firstName || ''} ${data.lastName || ''} – ${data.bookingType === 'grundkurs' ? 'MGK' : 'Fahrstunde'}`;
   },
   displayName: 'Admin-Buchungsbenachrichtigung',
-  to: 'info@drive-me.ch',
+  to: 'info@l-me.ch',
   previewData: {
     bookingId: 'a1b2c3d4-e5f6-7890',
     bookingType: 'grundkurs',

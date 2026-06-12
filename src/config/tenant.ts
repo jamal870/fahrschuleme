@@ -107,9 +107,10 @@ export interface TenantConfig {
 
 export const tenantConfig: TenantConfig = {
   brand: {
-    name: "Drive Me Fahrschule",
+    name: "L me Fahrschule",
     tagline: "Erfahrene Instruktoren · Kleine Gruppen",
-    logoText: { main: "Drive", accent: "me", sub: "Fahrschule" },
+    logoText: { main: "L", accent: "me", sub: "Fahrschule" },
+    logoUrl: "/logo-lme.png",
   },
 
   contact: {

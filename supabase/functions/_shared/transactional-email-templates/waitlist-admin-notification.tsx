@@ -64,7 +64,7 @@ export const template = {
   component: WaitlistEmail,
   subject: (d: Record<string, any>) => `📝 Warteliste: ${d.firstName} ${d.lastName} – MGK Teil ${d.coursePart} (${d.courseDate})`,
   displayName: 'Warteliste-Anmeldung (Admin)',
-  to: 'info@drive-me.ch',
+  to: 'info@l-me.ch',
   previewData: {
     coursePart: 1, courseDate: '28.03.2026', courseDay: 'Samstag', courseTime: '13:00 – 17:00', courseLocation: 'Wettingen',
     firstName: 'Anna', lastName: 'Müller', email: 'anna@example.com', phone: '079 123 45 67', notes: 'Flexibel',

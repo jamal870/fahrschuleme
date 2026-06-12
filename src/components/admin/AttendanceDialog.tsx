@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { PenLine, FileDown, RefreshCw, Check, ChevronDown } from "lucide-react";
+import { PenLine, FileDown, RefreshCw, Check, ChevronDown, ArrowRightLeft } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import SignaturePad from "./SignaturePad";
 import { generateParticipantList, downloadPdf, type Participant, type ParticipantFilter } from "@/lib/pdf-generator";
@@ -18,6 +21,7 @@ interface AttendanceRow {
   first_name: string;
   last_name: string;
   phone: string;
+  email: string;
   birth_date: string;
   fa_number: string;
   payment_method: string;
@@ -37,12 +41,19 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
   const [signFor, setSignFor] = useState<AttendanceRow | null>(null);
 
+  // Move-participant state
+  const [moveFor, setMoveFor] = useState<AttendanceRow | null>(null);
+  const [moveTargets, setMoveTargets] = useState<CourseDate[]>([]);
+  const [moveTargetId, setMoveTargetId] = useState<string>("");
+  const [moveReason, setMoveReason] = useState<string>("");
+  const [moving, setMoving] = useState(false);
+
   const load = async () => {
     if (!course) return;
     setLoading(true);
     const { data: items, error } = await supabase
       .from("booking_items")
-      .select("booking_id, bookings!inner(id, first_name, last_name, phone, birth_date, fa_number, payment_method, status)")
+      .select("booking_id, bookings!inner(id, first_name, last_name, phone, email, birth_date, fa_number, payment_method, status)")
       .eq("course_date_id", course.id);
     if (error) { toast.error("Fehler beim Laden"); setLoading(false); return; }
 
@@ -67,7 +78,8 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       return {
         booking_id: b.id,
         first_name: b.first_name, last_name: b.last_name,
-        phone: b.phone, birth_date: b.birth_date,
+        phone: b.phone, email: b.email,
+        birth_date: b.birth_date,
         fa_number: b.fa_number, payment_method: b.payment_method,
         signature_id: s?.id, signature_data: s?.signature_data,
         present: s?.present ?? false,
@@ -114,6 +126,41 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     toast.success("Unterschrift entfernt");
   };
 
+  const openMove = async (row: AttendanceRow) => {
+    if (!course) return;
+    setMoveFor(row); setMoveTargetId(""); setMoveReason("");
+    const { data, error } = await supabase
+      .from("course_dates")
+      .select("*")
+      .eq("part", course.part)
+      .neq("id", course.id)
+      .gt("spots_available", 0)
+      .order("date");
+    if (error) { toast.error("Fehler beim Laden der Zielkurse"); return; }
+    setMoveTargets((data as CourseDate[]) || []);
+  };
+
+  const confirmMove = async () => {
+    if (!moveFor || !course || !moveTargetId) return;
+    setMoving(true);
+    const { data, error } = await supabase.functions.invoke("move-booking-participant", {
+      body: {
+        booking_id: moveFor.booking_id,
+        from_course_date_id: course.id,
+        to_course_date_id: moveTargetId,
+        reason: moveReason || null,
+      },
+    });
+    setMoving(false);
+    if (error || (data as any)?.error) {
+      toast.error("Verschieben fehlgeschlagen: " + (error?.message || (data as any)?.error));
+      return;
+    }
+    toast.success("Teilnehmer verschoben – Bestätigung per E-Mail versendet.");
+    setMoveFor(null);
+    await load();
+  };
+
   const exportPdf = (filter: ParticipantFilter = "all") => {
     if (!course) return;
     const participants: (Participant & { signature?: string | null; present?: boolean })[] = rows.map((r) => ({
@@ -137,16 +184,16 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-auto">
         <DialogHeader>
           <DialogTitle className="font-heading uppercase">
-            Anwesenheit & Unterschriften – Teil {course?.part} · {course?.day}, {course?.date}
+            Anwesenheit & Verwaltung – Teil {course?.part} · {course?.day}, {course?.date}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
           <p className="text-sm text-muted-foreground font-body">
-            {rows.length} bestätigte Teilnehmer · Tippe in der Spalte „Unterschrift" auf das Feld, um zu unterschreiben.
+            {rows.length} bestätigte Teilnehmer · Verschieben nur innerhalb gleicher Teil-Nummer möglich.
           </p>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={load} disabled={loading} className="font-body">
@@ -181,6 +228,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                 <TableHead>Geb.</TableHead>
                 <TableHead>FA-Nr.</TableHead>
                 <TableHead>Unterschrift</TableHead>
+                <TableHead className="text-right">Verschieben</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -207,12 +255,18 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                       </Button>
                     )}
                   </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="outline" size="sm" onClick={() => openMove(r)} className="font-body">
+                      <ArrowRightLeft className="w-4 h-4 mr-1" /> Verschieben
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         )}
 
+        {/* Sign sub-dialog */}
         <Dialog open={!!signFor} onOpenChange={(v) => !v && setSignFor(null)}>
           <DialogContent className="max-w-xl">
             <DialogHeader>
@@ -227,6 +281,63 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                 onCancel={() => setSignFor(null)}
               />
             )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Move sub-dialog */}
+        <Dialog open={!!moveFor} onOpenChange={(v) => !v && setMoveFor(null)}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="font-heading uppercase">
+                Teilnehmer verschieben – {moveFor?.first_name} {moveFor?.last_name}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground font-body">
+                Aktueller Kurs: <strong>Teil {course?.part} · {course?.day}, {course?.date} · {course?.time}</strong>
+              </p>
+
+              <div className="space-y-2">
+                <Label className="font-body">Neuer Termin (nur Teil {course?.part})</Label>
+                {moveTargets.length === 0 ? (
+                  <p className="text-sm text-destructive font-body">
+                    Kein anderer Teil-{course?.part}-Kurs mit freien Plätzen gefunden.
+                  </p>
+                ) : (
+                  <Select value={moveTargetId} onValueChange={setMoveTargetId}>
+                    <SelectTrigger><SelectValue placeholder="Zielkurs wählen..." /></SelectTrigger>
+                    <SelectContent>
+                      {moveTargets.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.day}, {c.date} · {c.time} · {c.location}
+                          {c.instructor ? ` · ${c.instructor}` : ""} · {c.spots_available} frei
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="font-body">Hinweis für die E-Mail (optional)</Label>
+                <Textarea
+                  value={moveReason}
+                  onChange={(e) => setMoveReason(e.target.value)}
+                  placeholder="z.B. Termin musste aus organisatorischen Gründen verschoben werden."
+                  rows={3}
+                />
+              </div>
+
+              <p className="text-xs text-muted-foreground font-body">
+                Der Teilnehmer wird automatisch per E-Mail über den neuen Termin informiert.
+              </p>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setMoveFor(null)} className="font-body">Abbrechen</Button>
+              <Button onClick={confirmMove} disabled={!moveTargetId || moving} className="font-body">
+                {moving ? "Verschiebe..." : "Verschieben & benachrichtigen"}
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </DialogContent>

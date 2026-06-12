@@ -109,7 +109,7 @@ const BookingConfirmationEmail = ({
 
         {/* --- Stornierung --- */}
         <Text style={smallText}>
-          Diese Anmeldung ist verbindlich: Umbuchungen bzw. Stornierungen sind bis 5 Tage vor Kursbeginn schriftlich an info@drive-me.ch möglich, danach wird die volle Kursgebühr in Rechnung gestellt.
+          Diese Anmeldung ist verbindlich: Umbuchungen bzw. Stornierungen sind bis 5 Tage vor Kursbeginn schriftlich an info@l-me.ch möglich, danach wird die volle Kursgebühr in Rechnung gestellt.
         </Text>
 
         <Hr style={divider} />

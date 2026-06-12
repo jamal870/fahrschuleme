@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { WaitlistDialog } from "@/components/WaitlistDialog";
+import BrandLogo from "@/components/BrandLogo";
 
 // Parse "DD.MM.YYYY" to a comparable Date
 function parseCourseDate(dateStr: string): Date {
@@ -188,13 +189,7 @@ export default function GrundkursBuchen() {
       {/* Header */}
       <nav className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex flex-col leading-tight">
-            <span className="flex items-baseline gap-0.5">
-              <span className="text-[22px] font-heading font-bold text-foreground" style={{ letterSpacing: "0.05em" }}>Drive</span>
-              <span className="text-[28px] text-primary" style={{ fontFamily: "'Kaushan Script', cursive" }}>me</span>
-            </span>
-            <span className="text-[10px] font-body text-muted-foreground -mt-1">Fahrschule</span>
-          </div>
+          <BrandLogo imgClassName="h-12 w-auto" />
         </Link>
       </nav>
 
