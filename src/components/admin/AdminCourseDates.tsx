@@ -58,6 +58,8 @@ const AdminCourseDates = () => {
   const [attendanceCourse, setAttendanceCourse] = useState<CourseDate | null>(null);
   const [calMonth, setCalMonth] = useState(() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); });
   const [showPast, setShowPast] = useState(false);
+  const [partFilter, setPartFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
 
   const fetchCourses = async () => {
     setLoading(true);
@@ -177,11 +179,19 @@ const AdminCourseDates = () => {
     return map;
   }, [courses]);
 
-  // Nach Teil (M1/M2/M3/M4) gruppieren, innerhalb chronologisch, zukünftig / vergangen aufteilen
+  // Nach Teil (M1/M2/M3/M4) gruppieren, mit Filter + Suche, zukünftig / vergangen aufteilen
   const { upcomingGroups, pastGroups } = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const sorted = [...courses].sort((a, b) => {
+    const q = search.trim().toLowerCase();
+    const filtered = courses.filter((c) => {
+      if (partFilter !== "all" && c.part !== Number(partFilter)) return false;
+      if (!q) return true;
+      return [c.date, c.day, c.time, c.location, c.instructor, c.instructor_number, `m${c.part}`, `teil ${c.part}`]
+        .filter(Boolean)
+        .some((v) => String(v).toLowerCase().includes(q));
+    });
+    const sorted = [...filtered].sort((a, b) => {
       if (a.part !== b.part) return a.part - b.part;
       const da = parseDate(a.date)?.getTime() ?? 0;
       const db = parseDate(b.date)?.getTime() ?? 0;
@@ -201,7 +211,7 @@ const AdminCourseDates = () => {
         .sort(([a], [b]) => a - b)
         .map(([part, items]) => ({ part, items: reverse ? [...items].reverse() : items }));
     return { upcomingGroups: toGroups(upMap), pastGroups: toGroups(pastMap, true) };
-  }, [courses]);
+  }, [courses, partFilter, search]);
 
   const totalUpcoming = upcomingGroups.reduce((n, g) => n + g.items.length, 0);
   const totalPast = pastGroups.reduce((n, g) => n + g.items.length, 0);
@@ -283,6 +293,26 @@ const AdminCourseDates = () => {
         <TabsContent value="list">
           <Card>
             <CardContent className="p-0">
+              <div className="flex flex-wrap items-center gap-2 p-3 border-b">
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Suchen (Datum, Ort, Fahrlehrer …)"
+                  className="max-w-xs h-9 font-body"
+                />
+                <Select value={partFilter} onValueChange={setPartFilter}>
+                  <SelectTrigger className="w-[160px] h-9 font-body"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Alle Kategorien</SelectItem>
+                    {[1, 2, 3, 4].map((p) => <SelectItem key={p} value={String(p)}>Nur M {p}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                {(search || partFilter !== "all") && (
+                  <Button variant="ghost" size="sm" onClick={() => { setSearch(""); setPartFilter("all"); }} className="font-body">
+                    Filter zurücksetzen
+                  </Button>
+                )}
+              </div>
               {loading ? <p className="p-6 text-muted-foreground text-center font-body">Laden...</p> : (
                 <Table>
                   <TableHeader>
