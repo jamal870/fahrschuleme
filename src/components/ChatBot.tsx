@@ -662,7 +662,7 @@ export default function ChatBot() {
         content: "Unsere Preise hängen von Kategorie und Stundenanzahl ab:\n\n🏍️ **Grundkurs Motorrad** – CHF 160.– pro Teil\n📅 **Fahrstunden** – siehe unsere Preisliste oder direkt anfragen",
         buttons: [
           { label: "Ja, Angebot anfragen", action: "request_quote" },
-          { label: "Direkt anrufen: 078 974 44 74", action: "call_direct" },
+          { label: "Direkt anrufen: 076 779 03 83", action: "call_direct" },
         ],
       });
     }

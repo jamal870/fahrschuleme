@@ -114,9 +114,9 @@ export const tenantConfig: TenantConfig = {
   },
 
   contact: {
-    phone: "078 974 44 74",
+    phone: "076 779 03 83",
     email: "info@l-me.ch",
-    whatsappUrl: "https://wa.me/41789744474",
+    whatsappUrl: "https://wa.me/41767790383",
     address: {
       street: "Bahnhofstrasse 56",
       detail: "",
