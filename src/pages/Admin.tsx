@@ -9,6 +9,7 @@ import AdminCourseDates from "@/components/admin/AdminCourseDates";
 import AdminBookings from "@/components/admin/AdminBookings";
 import AdminWaitlist from "@/components/admin/AdminWaitlist";
 import AdminTeam from "@/components/admin/AdminTeam";
+import BrandLogo from "@/components/BrandLogo";
 
 const Admin = () => {
   const [loading, setLoading] = useState(true);

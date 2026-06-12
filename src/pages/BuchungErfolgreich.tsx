@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { CheckCircle, Loader2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function BuchungErfolgreich() {
   const [searchParams] = useSearchParams();

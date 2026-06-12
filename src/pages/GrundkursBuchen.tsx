@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { WaitlistDialog } from "@/components/WaitlistDialog";
+import BrandLogo from "@/components/BrandLogo";
 
 // Parse "DD.MM.YYYY" to a comparable Date
 function parseCourseDate(dateStr: string): Date {

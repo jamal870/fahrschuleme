@@ -3,6 +3,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import { Bike, Loader2, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import BrandLogo from "@/components/BrandLogo";
 
 type Status = "loading" | "valid" | "already_unsubscribed" | "invalid" | "success" | "error";
 
