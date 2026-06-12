@@ -177,25 +177,34 @@ const AdminCourseDates = () => {
     return map;
   }, [courses]);
 
-  // Chronologisch sortieren & in zukünftig / vergangen aufteilen
-  const { upcoming, past } = useMemo(() => {
+  // Nach Teil (M1/M2/M3/M4) gruppieren, innerhalb chronologisch, zukünftig / vergangen aufteilen
+  const { upcomingGroups, pastGroups } = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const sorted = [...courses].sort((a, b) => {
+      if (a.part !== b.part) return a.part - b.part;
       const da = parseDate(a.date)?.getTime() ?? 0;
       const db = parseDate(b.date)?.getTime() ?? 0;
-      if (da !== db) return da - db;
-      return a.part - b.part;
+      return da - db;
     });
-    const upcoming: CourseDate[] = [];
-    const past: CourseDate[] = [];
+    const upMap = new Map<number, CourseDate[]>();
+    const pastMap = new Map<number, CourseDate[]>();
     for (const c of sorted) {
       const d = parseDate(c.date);
-      if (d && d.getTime() >= today.getTime()) upcoming.push(c);
-      else past.push(c);
+      const target = d && d.getTime() >= today.getTime() ? upMap : pastMap;
+      const arr = target.get(c.part) || [];
+      arr.push(c);
+      target.set(c.part, arr);
     }
-    return { upcoming, past: past.reverse() }; // vergangene: neueste zuerst
+    const toGroups = (m: Map<number, CourseDate[]>, reverse = false) =>
+      [...m.entries()]
+        .sort(([a], [b]) => a - b)
+        .map(([part, items]) => ({ part, items: reverse ? [...items].reverse() : items }));
+    return { upcomingGroups: toGroups(upMap), pastGroups: toGroups(pastMap, true) };
   }, [courses]);
+
+  const totalUpcoming = upcomingGroups.reduce((n, g) => n + g.items.length, 0);
+  const totalPast = pastGroups.reduce((n, g) => n + g.items.length, 0);
 
   return (
     <div className="space-y-4">
