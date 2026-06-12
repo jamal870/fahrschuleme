@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { WaitlistDialog } from "@/components/WaitlistDialog";
 
 // Parse "DD.MM.YYYY" to a comparable Date
 function parseCourseDate(dateStr: string): Date {
@@ -58,7 +59,6 @@ export default function GrundkursBuchen() {
       .from('course_dates')
       .select('*')
       .eq('part', part)
-      .gt('spots_available', 0)
       .order('date');
     if (!error && data) {
       setCoursesData(prev => ({
