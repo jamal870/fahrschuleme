@@ -102,15 +102,16 @@ export default function ChatBot() {
   const [dbServices, setDbServices] = useState<FahrstundenService[]>([]);
   const [dbPackages, setDbPackages] = useState<FahrstundenPackage[]>([]);
 
-  // Auto-open after 8 seconds
+  // Auto-open (deaktiviert wenn autoOpenDelayMs <= 0)
   useEffect(() => {
-    if (autoOpened) return;
+    const delay = tenantConfig.chatbot.autoOpenDelayMs;
+    if (autoOpened || !delay || delay <= 0) return;
     const timer = setTimeout(() => {
       if (!open) {
         setOpen(true);
         setAutoOpened(true);
       }
-    }, tenantConfig.chatbot.autoOpenDelayMs);
+    }, delay);
     return () => clearTimeout(timer);
   }, [open, autoOpened]);
 
