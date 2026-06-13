@@ -212,41 +212,46 @@ serve(async (req) => {
           });
         }
 
-        const adminEmailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${serviceKey}`,
-            "apikey": serviceKey,
-          },
-          body: JSON.stringify({
-            templateName: 'admin-booking-notification',
-            idempotencyKey: `admin-notify-${booking.id}`,
-            templateData: {
+        const ADMIN_EMAILS = ['info@l-me.ch', 'jamal@drive-me.ch'];
+        for (const adminEmail of ADMIN_EMAILS) {
+          const adminEmailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${serviceKey}`,
+              "apikey": serviceKey,
+            },
+            body: JSON.stringify({
+              templateName: 'admin-booking-notification',
+              recipientEmail: adminEmail,
+              idempotencyKey: `admin-notify-${booking.id}-${adminEmail}`,
+              templateData: {
+                bookingId: booking.id,
+                bookingType,
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                email: email.trim().toLowerCase(),
+                phone: phone.trim(),
+                address: address.trim(),
+                birthDate: birthDate.trim(),
+                faNumber: faNumber.trim(),
+                paymentMethod,
+                totalPrice: serverTotal.toFixed(2),
+                bookingDate: bookingDateStr,
+                items: courseSummary,
+              },
+            }),
+          });
+
+          if (!adminEmailResponse.ok) {
+            console.error("[CREATE-BOOKING] Admin notification failed", {
+              status: adminEmailResponse.status,
               bookingId: booking.id,
               bookingType,
-              firstName: firstName.trim(),
-              lastName: lastName.trim(),
-              email: email.trim().toLowerCase(),
-              phone: phone.trim(),
-              address: address.trim(),
-              birthDate: birthDate.trim(),
-              faNumber: faNumber.trim(),
-              paymentMethod,
-              totalPrice: serverTotal.toFixed(2),
-              bookingDate: bookingDateStr,
-              items: courseSummary,
-            },
-          }),
-        });
-
-        if (!adminEmailResponse.ok) {
-          console.error("[CREATE-BOOKING] Admin notification failed", {
-            status: adminEmailResponse.status,
-            bookingId: booking.id,
-            bookingType,
-            body: await adminEmailResponse.text(),
-          });
+              adminEmail,
+              body: await adminEmailResponse.text(),
+            });
+          }
         }
       }
 
