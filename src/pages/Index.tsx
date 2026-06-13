@@ -99,6 +99,30 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Erklärvideo */}
+      <section className="bg-card py-16">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-8">
+            <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">In 60 Sekunden erklärt</p>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
+              So einfach kommst du zum Motorradführerschein
+            </h2>
+          </div>
+          <div className="mx-auto max-w-sm overflow-hidden shadow-2xl" style={{ borderRadius: "3px" }}>
+            <video
+              src="/erklarvideo.mp4"
+              controls
+              playsInline
+              preload="metadata"
+              poster="/og-image.jpg"
+              className="w-full h-auto block bg-black"
+            />
+          </div>
+        </div>
+      </section>
+
+
+
       {/* Sicherheit */}
       <section className="bg-section-alt py-16">
         <div className="max-w-6xl mx-auto px-6">
