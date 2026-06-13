@@ -122,8 +122,12 @@ serve(async (req) => {
         });
       }
 
-      // Use server-side price (never trust client)
-      const serverTotal = courses.reduce((sum: number, c: any) => sum + Number(c.price), 0);
+      // Use server-side price (never trust client) — apply MGK/Grundkurs promo if active
+      const promoPrice = (await getActivePromoPrice(supabase, "mgk")) ?? (await getActivePromoPrice(supabase, "grundkurs"));
+      const serverTotal = courses.reduce(
+        (sum: number, c: any) => sum + (promoPrice != null ? promoPrice : Number(c.price)),
+        0
+      );
 
       // Create booking
       const { data: booking, error: bookingError } = await supabase
