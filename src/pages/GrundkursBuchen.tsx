@@ -426,7 +426,7 @@ export default function GrundkursBuchen() {
                     className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg"
                   >
                     {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    Jetzt Buchen
+                    {paymentMethod === "stripe" ? "Weiter zur Zahlung" : "Jetzt verbindlich buchen"}
                   </Button>
                 </div>
               </div>
