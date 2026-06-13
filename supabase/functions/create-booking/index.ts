@@ -344,12 +344,49 @@ serve(async (req) => {
         });
       if (itemError) throw itemError;
 
-      // Only send admin notification for non-Stripe bookings
+      // Only send notifications for non-Stripe bookings
       if (status !== "pending_payment") {
         const fNow = new Date();
         const fBookingDateStr = fNow.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
         const fSupabaseUrl = Deno.env.get("SUPABASE_URL")!;
         const fServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+        // Customer confirmation
+        const fCustomerEmailResponse = await fetch(`${fSupabaseUrl}/functions/v1/send-transactional-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${fServiceKey}`,
+            "apikey": fServiceKey,
+          },
+          body: JSON.stringify({
+            templateName: 'fahrstunden-confirmation',
+            recipientEmail: email.trim().toLowerCase(),
+            idempotencyKey: `fahrstunden-confirm-${booking.id}`,
+            templateData: {
+              firstName: firstName.trim(),
+              lastName: lastName.trim(),
+              address: address.trim(),
+              birthDate: birthDate.trim(),
+              faNumber: faNumber.trim(),
+              phone: phone.trim(),
+              email: email.trim().toLowerCase(),
+              serviceName,
+              totalPrice: serverPrice.toFixed(2),
+              paymentMethod,
+              bookingId: booking.id,
+              bookingDate: fBookingDateStr,
+            },
+          }),
+        });
+        if (!fCustomerEmailResponse.ok) {
+          console.error("[CREATE-BOOKING] Customer confirmation failed", {
+            status: fCustomerEmailResponse.status,
+            bookingId: booking.id,
+            body: await fCustomerEmailResponse.text(),
+          });
+        }
+
         const fAdminEmailResponse = await fetch(`${fSupabaseUrl}/functions/v1/send-transactional-email`, {
           method: "POST",
           headers: {
