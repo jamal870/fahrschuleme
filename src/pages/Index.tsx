@@ -345,14 +345,14 @@ const Index = () => {
               Wähle deinen Wunschtermin und buche deinen Motorrad-Grundkurs bequem online.
             </p>
           </div>
-          <div className="border border-border overflow-hidden bg-card shadow-sm" style={{ borderRadius: "3px" }}>
-            <iframe
-              src="/#/grundkurs-buchen"
-              title="Grundkurs buchen"
-              className="w-full border-0"
-              style={{ height: "800px" }}
-              loading="lazy"
-            />
+          <div className="text-center">
+            <Link
+              to="/grundkurs-buchen"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
+              style={{ borderRadius: "3px" }}
+            >
+              Zum Buchungsformular
+            </Link>
           </div>
         </div>
       </section>
