@@ -83,10 +83,9 @@ const FahrstundenConfirmationEmail = ({
         {/* --- Bankverbindung --- */}
         <Heading style={h2}>Unsere Bankverbindung</Heading>
         <Text style={text}>
-          Fahrschule Drive me GmbH{'\n'}
+          Jamal Ettanaghmalti{'\n'}
           Bank: PostFinance{'\n'}
-          Kontonummer: 15-263666-6{'\n'}
-          IBAN: CH9509000000152636666{'\n'}
+          IBAN: CH5009000000167884324{'\n'}
           BIC: POFICHBEXXX
         </Text>
 
