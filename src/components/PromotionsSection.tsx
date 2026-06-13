@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Tag } from "lucide-react";
 
 interface Promotion {
   id: string;
@@ -19,7 +19,7 @@ const PromotionsSection = () => {
       const nowIso = new Date().toISOString();
       const { data } = await supabase
         .from("promotions")
-        .select("id,title,description,price,badge,starts_at,ends_at")
+        .select("id,title,description,price,badge,starts_at,ends_at,sort_order")
         .eq("active", true)
         .order("sort_order", { ascending: true });
       const filtered = (data || []).filter((p: any) => {
@@ -36,36 +36,99 @@ const PromotionsSection = () => {
   if (loading || items.length === 0) return null;
 
   return (
-    <section id="aktionen" className="bg-primary/5 py-16">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-10">
-          <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2 flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4" /> Aktuelle Aktionen
-          </p>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
-            Spare jetzt mit unseren Angeboten
+    <section id="aktionen" className="relative overflow-hidden py-20 bg-foreground">
+      {/* Background decorations */}
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-[0.08]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)",
+          backgroundSize: "24px 24px",
+        }}
+      />
+      <div
+        aria-hidden
+        className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-3xl opacity-30"
+        style={{ background: "hsl(var(--primary))" }}
+      />
+      <div
+        aria-hidden
+        className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-20"
+        style={{ background: "hsl(var(--primary))" }}
+      />
+
+      <div className="relative max-w-6xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-1.5 mb-4 border border-primary/40" style={{ borderRadius: "3px" }}>
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="text-xs font-heading font-bold uppercase tracking-widest">Limitierte Aktionen</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-heading font-bold text-background mb-3">
+            Nur jetzt: <span className="text-primary">Spare richtig</span>
           </h2>
+          <p className="text-background/60 font-body max-w-xl mx-auto">
+            Aktuelle Angebote – solange verfügbar. Schnell sein lohnt sich.
+          </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map((p) => (
-            <div
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((p, idx) => (
+            <article
               key={p.id}
-              className="bg-card border-2 border-primary p-6 flex flex-col relative"
-              style={{ borderRadius: "3px" }}
+              className="group relative bg-card p-7 flex flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-1"
+              style={{
+                borderRadius: "3px",
+                boxShadow: "0 20px 50px -20px hsl(var(--primary) / 0.5)",
+              }}
             >
+              {/* Top accent stripe */}
+              <div
+                className="absolute top-0 left-0 right-0 h-1"
+                style={{ background: "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.4))" }}
+              />
+
+              {/* Corner number */}
+              <span className="absolute top-4 right-4 font-heading font-bold text-6xl text-primary/10 leading-none select-none">
+                {String(idx + 1).padStart(2, "0")}
+              </span>
+
               {p.badge && (
-                <span className="absolute -top-3 left-4 bg-primary text-primary-foreground text-xs font-heading font-bold uppercase px-3 py-1 tracking-wide" style={{ borderRadius: "3px" }}>
+                <div className="inline-flex items-center gap-1.5 self-start bg-primary text-primary-foreground text-[10px] font-heading font-bold uppercase tracking-widest px-3 py-1.5 mb-5" style={{ borderRadius: "3px" }}>
+                  <Tag className="w-3 h-3" />
                   {p.badge}
-                </span>
+                </div>
               )}
-              <h3 className="font-heading font-bold text-foreground text-xl mb-2 mt-2">{p.title}</h3>
+
+              <h3 className="font-heading font-bold text-foreground text-2xl mb-3 leading-tight relative">
+                {p.title}
+              </h3>
+
               {p.description && (
-                <p className="text-sm text-muted-foreground font-body mb-4 flex-1 whitespace-pre-line">{p.description}</p>
+                <p className="text-sm text-muted-foreground font-body mb-6 flex-1 whitespace-pre-line leading-relaxed relative">
+                  {p.description}
+                </p>
               )}
+
               {p.price && (
-                <p className="text-2xl font-heading font-bold text-primary mt-auto">{p.price}</p>
+                <div className="relative pt-5 border-t border-border flex items-baseline gap-2">
+                  <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Aktionspreis</span>
+                  <span className="ml-auto font-heading font-bold text-3xl text-primary">
+                    {p.price}
+                  </span>
+                </div>
               )}
-            </div>
+
+              {/* Hover glow */}
+              <div
+                aria-hidden
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 0%, hsl(var(--primary) / 0.08), transparent 60%)",
+                }}
+              />
+            </article>
           ))}
         </div>
       </div>
