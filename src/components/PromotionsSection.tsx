@@ -112,12 +112,19 @@ const PromotionsSection = () => {
                 </p>
               )}
 
-              {p.price && (
-                <div className="relative pt-5 border-t border-border flex items-baseline gap-2">
+              {(p.price || p.discount_price != null) && (
+                <div className="relative pt-5 border-t border-border flex items-baseline gap-2 flex-wrap">
                   <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Aktionspreis</span>
-                  <span className="ml-auto font-heading font-bold text-3xl text-primary">
-                    {p.price}
-                  </span>
+                  <div className="ml-auto flex items-baseline gap-2">
+                    {p.original_price != null && (
+                      <span className="font-body text-lg text-muted-foreground line-through">
+                        CHF {Number(p.original_price).toFixed(0)}.-
+                      </span>
+                    )}
+                    <span className="font-heading font-bold text-3xl text-primary">
+                      {p.price || `CHF ${Number(p.discount_price).toFixed(0)}.-`}
+                    </span>
+                  </div>
                 </div>
               )}
 
