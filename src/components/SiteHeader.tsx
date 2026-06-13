@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import { tenantConfig } from "@/config/tenant";
 
@@ -7,16 +8,18 @@ const navItem =
   "hover:text-primary transition-colors py-1 border-b-2 border-transparent";
 const activeItem = "text-primary border-primary";
 
-const audienceTab =
-  "px-4 py-1.5 text-xs font-heading font-bold uppercase tracking-wide transition-colors";
-
 const SiteHeader = () => {
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+
   return (
     <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-1">
+        <Link to="/" className="flex items-center gap-1" onClick={close}>
           <BrandLogo imgClassName="h-12 w-auto" />
         </Link>
+
+        {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
           <NavLink to="/fuer-fahrlehrer" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Für Fahrlehrer
@@ -57,7 +60,55 @@ const SiteHeader = () => {
             Jetzt Buchen
           </a>
         </div>
+
+        {/* Mobile toggle */}
+        <button
+          type="button"
+          className="md:hidden p-2 text-foreground hover:text-primary"
+          aria-label={open ? "Menü schliessen" : "Menü öffnen"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </div>
+
+      {/* Mobile nav */}
+      {open && (
+        <div className="md:hidden border-t border-border bg-card">
+          <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1 text-sm font-medium font-body text-muted-foreground">
+            <NavLink to="/fuer-fahrlehrer" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Für Fahrlehrer
+            </NavLink>
+            <div className="h-px bg-border my-1" />
+            <NavLink to="/grundkurs" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Grundkurs
+            </NavLink>
+            <NavLink to="/fahrstunden" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Fahrstunden
+            </NavLink>
+            <NavLink to="/motorrad" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Motorrad
+            </NavLink>
+            <NavLink to="/preise" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Preise
+            </NavLink>
+            <NavLink to="/kontakt" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Kontakt
+            </NavLink>
+            <a
+              href={tenantConfig.booking.externalBookingUrl || "#/grundkurs"}
+              target={tenantConfig.booking.externalBookingUrl ? "_blank" : undefined}
+              rel="noopener noreferrer"
+              onClick={close}
+              className="mt-3 inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
+              style={{ borderRadius: "3px" }}
+            >
+              Jetzt Buchen
+            </a>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
