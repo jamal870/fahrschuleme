@@ -116,9 +116,10 @@ export default function GrundkursBuchen() {
       .map(([part, course]) => ({ part: parseInt(part), course: course! }));
     const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
     const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
-    const checkoutWindow = window.open("", "_blank");
+    const isOnline = paymentMethod === "stripe";
+    const checkoutWindow = isOnline ? window.open("", "_blank") : null;
 
-    if (!checkoutWindow) {
+    if (isOnline && !checkoutWindow) {
       toast.error("Popup blockiert – bitte Popups erlauben und erneut versuchen.");
       setIsSubmitting(false);
       return;
@@ -131,13 +132,20 @@ export default function GrundkursBuchen() {
           bookingType: 'grundkurs',
           firstName, lastName, email, phone, address,
           faNumber, birthDate,
-          paymentMethod: "stripe",
-          totalPrice: total, status: 'pending_payment',
+          paymentMethod,
+          totalPrice: total,
           courseDateIds: selectedCourses.map(c => c.id),
         },
       });
 
       if (bookingError || !bookingResult?.bookingId) throw new Error(bookingError?.message || bookingResult?.error || "Buchung fehlgeschlagen");
+
+      if (!isOnline) {
+        toast.success("Buchung erfolgreich! Du erhältst die Bestätigung per E-Mail mit Zahlungsinformationen.");
+        // Redirect to success page
+        window.location.hash = `#/buchung-erfolgreich?booking_id=${bookingResult.bookingId}`;
+        return;
+      }
 
       // Create Stripe checkout session
       const { data: stripeData, error: stripeError } = await supabase.functions.invoke('create-course-payment', {
@@ -160,7 +168,7 @@ export default function GrundkursBuchen() {
       toast.success("Zahlungsseite geöffnet – bitte im neuen Tab bezahlen. Nach erfolgreicher Zahlung erhältst du die Bestätigung per E-Mail.");
     } catch (err) {
       try {
-        checkoutWindow.close();
+        checkoutWindow?.close();
       } catch {
         // no-op
       }
