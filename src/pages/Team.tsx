@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Phone } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
 import { supabase } from "@/integrations/supabase/client";
+import Seo from "@/components/Seo";
 
 type TeamMember = {
   id: string;
