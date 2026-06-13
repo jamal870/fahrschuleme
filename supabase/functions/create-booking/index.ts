@@ -24,6 +24,23 @@ function checkRateLimit(email: string): boolean {
   return true;
 }
 
+// Fetch active promotion discount price for a given category (or null)
+async function getActivePromoPrice(supabase: any, category: string): Promise<number | null> {
+  const nowIso = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("promotions")
+    .select("discount_price, starts_at, ends_at")
+    .eq("category", category)
+    .eq("active", true)
+    .not("discount_price", "is", null);
+  if (error || !data) return null;
+  const match = data.find((p: any) =>
+    (!p.starts_at || p.starts_at <= nowIso) &&
+    (!p.ends_at || p.ends_at >= nowIso)
+  );
+  return match ? Number(match.discount_price) : null;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -105,8 +122,12 @@ serve(async (req) => {
         });
       }
 
-      // Use server-side price (never trust client)
-      const serverTotal = courses.reduce((sum: number, c: any) => sum + Number(c.price), 0);
+      // Use server-side price (never trust client) — apply MGK/Grundkurs promo if active
+      const promoPrice = (await getActivePromoPrice(supabase, "mgk")) ?? (await getActivePromoPrice(supabase, "grundkurs"));
+      const serverTotal = courses.reduce(
+        (sum: number, c: any) => sum + (promoPrice != null ? promoPrice : Number(c.price)),
+        0
+      );
 
       // Create booking
       const { data: booking, error: bookingError } = await supabase
@@ -197,7 +218,7 @@ serve(async (req) => {
       if (fahrstundenPackageId) {
         const { data: pkg, error: pkgError } = await supabase
           .from("fahrstunden_packages")
-          .select("id, total_price, name")
+          .select("id, total_price, name, service_id")
           .eq("id", fahrstundenPackageId)
           .single();
         if (pkgError || !pkg) {
@@ -207,10 +228,27 @@ serve(async (req) => {
         }
         serverPrice = Number(pkg.total_price);
         serviceName = pkg.name;
+        // Determine category from underlying service
+        const { data: svcRow } = await supabase
+          .from("fahrstunden_services")
+          .select("category, price")
+          .eq("id", pkg.service_id)
+          .single();
+        const cat = svcRow?.category === "motorrad" ? "fahrstunden_motorrad" : "fahrstunden_auto";
+        const promo = await getActivePromoPrice(supabase, cat);
+        if (promo != null && svcRow?.price) {
+          // recompute package total with discounted per-lesson price
+          const { data: pkgFull } = await supabase
+            .from("fahrstunden_packages")
+            .select("lessons")
+            .eq("id", fahrstundenPackageId)
+            .single();
+          if (pkgFull?.lessons) serverPrice = promo * Number(pkgFull.lessons);
+        }
       } else if (fahrstundenServiceId) {
         const { data: svc, error: svcError } = await supabase
           .from("fahrstunden_services")
-          .select("id, price, name")
+          .select("id, price, name, category")
           .eq("id", fahrstundenServiceId)
           .single();
         if (svcError || !svc) {
@@ -218,7 +256,9 @@ serve(async (req) => {
             status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
-        serverPrice = Number(svc.price);
+        const cat = svc.category === "motorrad" ? "fahrstunden_motorrad" : "fahrstunden_auto";
+        const promo = await getActivePromoPrice(supabase, cat);
+        serverPrice = promo != null ? promo : Number(svc.price);
         serviceName = svc.name;
       } else {
         return new Response(JSON.stringify({ error: "Kein Service oder Paket ausgewählt" }), {
