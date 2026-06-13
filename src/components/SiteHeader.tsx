@@ -18,9 +18,6 @@ const SiteHeader = () => {
           <BrandLogo imgClassName="h-12 w-auto" />
         </Link>
         <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
-          <NavLink to="/" end className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
-            Für Fahrschüler
-          </NavLink>
           <NavLink to="/fuer-fahrlehrer" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Für Fahrlehrer
           </NavLink>
