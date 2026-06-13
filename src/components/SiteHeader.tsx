@@ -7,9 +7,36 @@ const navItem =
   "hover:text-primary transition-colors py-1 border-b-2 border-transparent";
 const activeItem = "text-primary border-primary";
 
+const audienceTab =
+  "px-4 py-1.5 text-xs font-heading font-bold uppercase tracking-wide transition-colors";
+
 const SiteHeader = () => {
   return (
     <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
+      {/* Audience switcher */}
+      <div className="bg-section-alt border-b border-border">
+        <div className="max-w-6xl mx-auto px-6 py-2 flex justify-center md:justify-end gap-1">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              `${audienceTab} ${isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-primary"}`
+            }
+            style={{ borderRadius: "3px" }}
+          >
+            Für Fahrschüler
+          </NavLink>
+          <NavLink
+            to="/fuer-fahrlehrer"
+            className={({ isActive }) =>
+              `${audienceTab} ${isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-primary"}`
+            }
+            style={{ borderRadius: "3px" }}
+          >
+            Für Fahrlehrer
+          </NavLink>
+        </div>
+      </div>
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-1">
           <BrandLogo imgClassName="h-12 w-auto" />
