@@ -151,27 +151,31 @@ serve(async (req) => {
             day: "numeric", month: "long", year: "numeric",
           });
 
-          await supabase.functions.invoke("send-transactional-email", {
-            body: {
-              templateName: "admin-booking-notification",
-              idempotencyKey: `admin-notify-${bookingId}`,
-              templateData: {
-                bookingId: bookingId,
-                bookingType: booking.booking_type,
-                firstName: booking.first_name,
-                lastName: booking.last_name,
-                email: booking.email,
-                phone: booking.phone,
-                address: booking.address,
-                birthDate: booking.birth_date,
-                faNumber: booking.fa_number,
-                paymentMethod: booking.payment_method,
-                totalPrice: (booking.total_price || 0).toFixed(2),
-                bookingDate: adminBookingDate,
-                items: itemsSummary,
+          const ADMIN_EMAILS = ['info@l-me.ch', 'jamal@drive-me.ch'];
+          for (const adminEmail of ADMIN_EMAILS) {
+            await supabase.functions.invoke("send-transactional-email", {
+              body: {
+                templateName: "admin-booking-notification",
+                recipientEmail: adminEmail,
+                idempotencyKey: `admin-notify-${bookingId}-${adminEmail}`,
+                templateData: {
+                  bookingId: bookingId,
+                  bookingType: booking.booking_type,
+                  firstName: booking.first_name,
+                  lastName: booking.last_name,
+                  email: booking.email,
+                  phone: booking.phone,
+                  address: booking.address,
+                  birthDate: booking.birth_date,
+                  faNumber: booking.fa_number,
+                  paymentMethod: booking.payment_method,
+                  totalPrice: (booking.total_price || 0).toFixed(2),
+                  bookingDate: adminBookingDate,
+                  items: itemsSummary,
+                },
               },
-            },
-          });
+            });
+          }
           console.log(`[STRIPE-WEBHOOK] Admin notification sent for ${bookingId}`);
         } catch (adminEmailErr) {
           console.error("[STRIPE-WEBHOOK] Admin notification error:", adminEmailErr);

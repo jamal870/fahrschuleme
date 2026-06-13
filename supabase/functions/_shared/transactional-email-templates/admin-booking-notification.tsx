@@ -110,7 +110,7 @@ export const template = {
     return `${prefix}: ${data.firstName || ''} ${data.lastName || ''} – ${data.bookingType === 'grundkurs' ? 'MGK' : 'Fahrstunde'}`;
   },
   displayName: 'Admin-Buchungsbenachrichtigung',
-  to: 'info@l-me.ch',
+  // Admin recipients are passed explicitly by the caller (see create-booking / stripe-webhook)
   previewData: {
     bookingId: 'a1b2c3d4-e5f6-7890',
     bookingType: 'grundkurs',
