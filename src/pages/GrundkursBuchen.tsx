@@ -214,6 +214,9 @@ export default function GrundkursBuchen() {
       <div className="max-w-5xl mx-auto px-6 pb-20">
         {/* Title */}
         <div className="text-center mb-2">
+          <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-2">
+            Motorrad-Grundkurs in Wettingen buchen
+          </h1>
           <p className="text-primary text-xs font-semibold uppercase tracking-wider mb-1">Motorrad Grundkursdaten / Anmeldung</p>
           <p className="text-sm text-muted-foreground">+++Die Kursteile müssen unbedingt in der richtigen Reihenfolge absolviert werden+++</p>
         </div>
