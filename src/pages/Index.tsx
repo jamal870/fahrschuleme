@@ -347,7 +347,7 @@ const Index = () => {
           </div>
           <div className="border border-border overflow-hidden bg-card shadow-sm" style={{ borderRadius: "3px" }}>
             <iframe
-              src={tenantConfig.booking.externalBookingUrl || "/grundkurs-buchen"}
+              src="/#/grundkurs-buchen"
               title="Grundkurs buchen"
               className="w-full border-0"
               style={{ height: "800px" }}
