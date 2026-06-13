@@ -158,14 +158,60 @@ serve(async (req) => {
         if (itemError) throw itemError;
       }
 
-      // Only send admin notification for non-Stripe bookings (cash etc.)
+      // Only send admin notification + customer confirmation for non-Stripe bookings (cash etc.)
       // Stripe bookings get notified after payment confirmation via webhook
       if (status !== "pending_payment") {
+        // Fetch full course details for customer email
+        const { data: courseDetails } = await supabase
+          .from("course_dates")
+          .select("*")
+          .in("id", courseDateIds);
+        const coursesForEmail = (courseDetails || []).map((c: any) => ({
+          part: c.part, date: c.date, time: c.time, location: c.location, price: c.price,
+        }));
+
         const courseSummary = courses.map((c: any) => `MGK Teil ${c.part}`).join(', ');
         const now = new Date();
         const bookingDateStr = now.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
         const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
         const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+        // Customer confirmation
+        const customerEmailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${serviceKey}`,
+            "apikey": serviceKey,
+          },
+          body: JSON.stringify({
+            templateName: 'booking-confirmation',
+            recipientEmail: email.trim().toLowerCase(),
+            idempotencyKey: `booking-confirm-${booking.id}`,
+            templateData: {
+              firstName: firstName.trim(),
+              lastName: lastName.trim(),
+              address: address.trim(),
+              birthDate: birthDate.trim(),
+              faNumber: faNumber.trim(),
+              phone: phone.trim(),
+              email: email.trim().toLowerCase(),
+              courses: coursesForEmail,
+              totalPrice: serverTotal.toFixed(2),
+              paymentMethod,
+              bookingId: booking.id,
+              bookingDate: bookingDateStr,
+            },
+          }),
+        });
+        if (!customerEmailResponse.ok) {
+          console.error("[CREATE-BOOKING] Customer confirmation failed", {
+            status: customerEmailResponse.status,
+            bookingId: booking.id,
+            body: await customerEmailResponse.text(),
+          });
+        }
+
         const adminEmailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
           method: "POST",
           headers: {
@@ -203,6 +249,7 @@ serve(async (req) => {
           });
         }
       }
+
 
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverTotal }), {
         status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
