@@ -1,6 +1,34 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Clock, Users, MapPin, Bike, ChevronRight, ShieldCheck, GraduationCap, Calendar } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
+import Seo from "@/components/Seo";
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Wo finde ich den Motorrad-Grundkurs in Wettingen?",
+      acceptedAnswer: { "@type": "Answer", text: "Fahrschule me führt den Motorrad-Grundkurs (MGK) in Wettingen durch – zentral im Bezirk Baden, gut erreichbar aus Baden, Neuenhof, Würenlos und Spreitenbach." },
+    },
+    {
+      "@type": "Question",
+      name: "Wie lange dauert der Motorrad-Grundkurs?",
+      acceptedAnswer: { "@type": "Answer", text: "Der MGK besteht aus 3 Teilen à 4 Stunden (insgesamt 12 Stunden), die innerhalb von 4 Monaten abgeschlossen werden müssen." },
+    },
+    {
+      "@type": "Question",
+      name: "Welche Motorrad-Kategorien bietet Fahrschule me an?",
+      acceptedAnswer: { "@type": "Answer", text: "Wir unterrichten alle Motorrad-Kategorien: AM (Mofa/Roller), A1 (125 cm³), A2 (bis 35 kW) und A (unbeschränkt)." },
+    },
+    {
+      "@type": "Question",
+      name: "Was kostet der Motorrad-Grundkurs in Wettingen?",
+      acceptedAnswer: { "@type": "Answer", text: "Der vollständige MGK (3 Teile) kostet ab CHF 480. Aktuelle Preise findest du auf unserer Preisseite." },
+    },
+  ],
+};
 
 const categories = [
   { code: "AM", title: "Mofa / Roller", desc: "Einstieg in die motorisierte Zweiradwelt – Mofa und leichte Roller bis 50 cm³.", spec1: { label: "Alter", value: "ab 15 Jahren" }, spec2: { label: "Max", value: "45 km/h" } },
