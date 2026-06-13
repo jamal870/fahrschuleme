@@ -67,7 +67,7 @@ const PromotionsSection = () => {
             <span className="text-xs font-heading font-bold uppercase tracking-widest">Limitierte Aktionen</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-heading font-bold text-background mb-3">
-            Nur jetzt: <span className="text-primary">Spare richtig</span>
+            Nur jetzt: <span className="text-primary">{items[0]?.title || "Spare richtig"}</span>
           </h2>
           <p className="text-background/60 font-body max-w-xl mx-auto">
             Aktuelle Angebote – solange verfügbar. Schnell sein lohnt sich.
