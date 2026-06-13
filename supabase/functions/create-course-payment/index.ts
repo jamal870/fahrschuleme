@@ -35,7 +35,7 @@ serve(async (req) => {
     // Verify booking exists, is pending_payment, AND email matches
     const { data: booking, error: bookingError } = await supabase
       .from("bookings")
-      .select("id, status, email")
+      .select("id, status, email, total_price")
       .eq("id", bookingId)
       .eq("status", "pending_payment")
       .single();
@@ -70,15 +70,32 @@ serve(async (req) => {
       throw new Error("Could not fetch course data from database");
     }
 
-    // Build line items from DB prices
-    const lineItems = courses.map((course: any) => ({
+    const bookedTotalCents = Math.round(Number(booking.total_price) * 100);
+    const courseCount = courses.length;
+    const defaultCourseSumCents = courses.reduce((sum: number, course: any) => sum + Math.round(Number(course.price) * 100), 0);
+
+    // Use the already server-calculated booking total so active promotions are respected in checkout.
+    // If the booking total differs from the plain course sum, distribute the booked total across line items.
+    const unitAmounts = (() => {
+      if (courseCount === 0) return [] as number[];
+      if (bookedTotalCents <= 0 || bookedTotalCents === defaultCourseSumCents) {
+        return courses.map((course: any) => Math.round(Number(course.price) * 100));
+      }
+
+      const baseAmount = Math.floor(bookedTotalCents / courseCount);
+      const remainder = bookedTotalCents - baseAmount * courseCount;
+
+      return courses.map((_: any, index: number) => baseAmount + (index < remainder ? 1 : 0));
+    })();
+
+    const lineItems = courses.map((course: any, index: number) => ({
       price_data: {
         currency: "chf",
         product_data: {
           name: `MGK Teil ${course.part}`,
           description: `${course.date} – ${course.time}`,
         },
-        unit_amount: Math.round(course.price * 100),
+        unit_amount: unitAmounts[index],
       },
       quantity: 1,
     }));
