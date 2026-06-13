@@ -28,8 +28,10 @@ await renderMedia({
   codec: "h264",
   outputLocation: "/mnt/documents/fahrschule-me-erklarvideo.mp4",
   puppeteerInstance: browser,
-  muted: true,
+  muted: false,
+  audioCodec: "aac",
   concurrency: 1,
+  enforceAudioTrack: true,
 });
 
 await browser.close({ silent: false });
