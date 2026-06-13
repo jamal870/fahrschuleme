@@ -11,13 +11,41 @@ import grundkurs3 from "@/assets/grundkurs-3.png";
 
 const grundkursImages = [grundkurs1, grundkurs2, grundkurs3];
 
+const homeFaqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Wo macht Fahrschule me Fahrstunden im Raum Baden/Wettingen?",
+      acceptedAnswer: { "@type": "Answer", text: "Fahrschule me ist in Wettingen ansässig und bietet Auto- und Motorrad-Fahrstunden im Raum Baden, Wettingen, Neuenhof, Würenlos und Spreitenbach." },
+    },
+    {
+      "@type": "Question",
+      name: "Was kostet eine Autofahrstunde bei Fahrschule me?",
+      acceptedAnswer: { "@type": "Answer", text: "Eine Einzellektion (45 Min) kostet CHF 95. Mit den Abos (10er/20er) sparst du bis zu CHF 150 auf den Gesamtpreis." },
+    },
+    {
+      "@type": "Question",
+      name: "Wie melde ich mich für den Motorrad-Grundkurs (MGK) an?",
+      acceptedAnswer: { "@type": "Answer", text: "Du kannst dich direkt online über die Kurstermine-Seite anmelden. Die Buchung wird nach Zahlung automatisch bestätigt." },
+    },
+    {
+      "@type": "Question",
+      name: "Welche Öffnungs- und Unterrichtszeiten habt ihr?",
+      acceptedAnswer: { "@type": "Answer", text: "Fahrstunden und Kurse sind Montag bis Samstag von 08:00 bis 22:00 Uhr möglich – ideal auch nach Feierabend." },
+    },
+  ],
+};
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Seo
-        title="Fahrschule me Wettingen – Auto, Motorrad & Grundkurs"
-        description="Autoprüfung, Motorrad-Grundkurs und Fahrstunden in Wettingen. Erfahrene Instruktoren, faire Preise, flexible Termine Mo–Sa 08–22 Uhr."
+        title="Fahrschule me Wettingen – Auto, Motorrad & Grundkurs Baden"
+        description="Fahrschule in Wettingen & Baden: Autoprüfung, Motorrad-Grundkurs (MGK) und Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine Mo–Sa 08–22 Uhr."
         path="/"
+        jsonLd={homeFaqJsonLd}
       />
       <SiteHeader />
 
