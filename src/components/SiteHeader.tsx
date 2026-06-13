@@ -13,35 +13,19 @@ const audienceTab =
 const SiteHeader = () => {
   return (
     <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
-      {/* Audience switcher */}
-      <div className="bg-section-alt border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-2 flex justify-center md:justify-end gap-1">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              `${audienceTab} ${isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-primary"}`
-            }
-            style={{ borderRadius: "3px" }}
-          >
-            Für Fahrschüler
-          </NavLink>
-          <NavLink
-            to="/fuer-fahrlehrer"
-            className={({ isActive }) =>
-              `${audienceTab} ${isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-primary"}`
-            }
-            style={{ borderRadius: "3px" }}
-          >
-            Für Fahrlehrer
-          </NavLink>
-        </div>
-      </div>
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-1">
           <BrandLogo imgClassName="h-12 w-auto" />
         </Link>
         <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
+          <NavLink to="/" end className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
+            Für Fahrschüler
+          </NavLink>
+          <NavLink to="/fuer-fahrlehrer" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
+            Für Fahrlehrer
+          </NavLink>
+          <span className="text-border">|</span>
+
           <NavLink to="/grundkurs" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Grundkurs
           </NavLink>
