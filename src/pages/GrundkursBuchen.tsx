@@ -44,6 +44,7 @@ export default function GrundkursBuchen() {
   const [faNumber, setFaNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [category, setCategory] = useState("A (Motorrad)");
+  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "barzahlung" | "ueberweisung">("stripe");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -115,9 +116,10 @@ export default function GrundkursBuchen() {
       .map(([part, course]) => ({ part: parseInt(part), course: course! }));
     const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
     const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
-    const checkoutWindow = window.open("", "_blank");
+    const isOnline = paymentMethod === "stripe";
+    const checkoutWindow = isOnline ? window.open("", "_blank") : null;
 
-    if (!checkoutWindow) {
+    if (isOnline && !checkoutWindow) {
       toast.error("Popup blockiert – bitte Popups erlauben und erneut versuchen.");
       setIsSubmitting(false);
       return;
@@ -130,13 +132,20 @@ export default function GrundkursBuchen() {
           bookingType: 'grundkurs',
           firstName, lastName, email, phone, address,
           faNumber, birthDate,
-          paymentMethod: "stripe",
-          totalPrice: total, status: 'pending_payment',
+          paymentMethod,
+          totalPrice: total,
           courseDateIds: selectedCourses.map(c => c.id),
         },
       });
 
       if (bookingError || !bookingResult?.bookingId) throw new Error(bookingError?.message || bookingResult?.error || "Buchung fehlgeschlagen");
+
+      if (!isOnline) {
+        toast.success("Buchung erfolgreich! Du erhältst die Bestätigung per E-Mail mit Zahlungsinformationen.");
+        // Redirect to success page
+        window.location.hash = `#/buchung-erfolgreich?booking_id=${bookingResult.bookingId}`;
+        return;
+      }
 
       // Create Stripe checkout session
       const { data: stripeData, error: stripeError } = await supabase.functions.invoke('create-course-payment', {
@@ -159,7 +168,7 @@ export default function GrundkursBuchen() {
       toast.success("Zahlungsseite geöffnet – bitte im neuen Tab bezahlen. Nach erfolgreicher Zahlung erhältst du die Bestätigung per E-Mail.");
     } catch (err) {
       try {
-        checkoutWindow.close();
+        checkoutWindow?.close();
       } catch {
         // no-op
       }
@@ -376,13 +385,36 @@ export default function GrundkursBuchen() {
                     </div>
                   </div>
 
-                  <div className="mt-6 bg-primary/5 border-l-4 border-primary rounded-r-lg p-4">
-                    <p className="text-sm text-foreground flex items-start gap-2">
-                      <CreditCard className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
-                      <span>
-                        <strong>Zahlungshinweis:</strong> Nach dem Absenden wirst du zur sicheren Zahlung via Stripe weitergeleitet.
-                      </span>
-                    </p>
+                  <div className="mt-6">
+                    <h3 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                      <CreditCard className="w-4 h-4" /> Zahlungsart wählen
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {([
+                        { id: "stripe", label: "Online bezahlen", desc: "Karte / TWINT / Klarna via Stripe" },
+                        { id: "barzahlung", label: "Barzahlung", desc: "Vor Ort beim 1. Kurstag" },
+                        { id: "ueberweisung", label: "Überweisung", desc: "Rechnung per E-Mail" },
+                      ] as const).map((opt) => {
+                        const active = paymentMethod === opt.id;
+                        return (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setPaymentMethod(opt.id)}
+                            className={`text-left border-2 p-3 transition-colors ${active ? "border-primary bg-primary/5" : "border-border hover:border-primary/40 bg-card"}`}
+                            style={{ borderRadius: "3px" }}
+                          >
+                            <p className="font-heading font-bold text-sm text-foreground uppercase">{opt.label}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{opt.desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {paymentMethod === "stripe" ? (
+                      <p className="text-xs text-muted-foreground mt-3">Nach dem Absenden wirst du in einem neuen Tab zu Stripe weitergeleitet.</p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground mt-3">Deine Buchung wird sofort bestätigt. Die Zahlungsinformationen erhältst du per E-Mail.</p>
+                    )}
                   </div>
                 </div>
 
@@ -394,7 +426,7 @@ export default function GrundkursBuchen() {
                     className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg"
                   >
                     {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    Jetzt Buchen
+                    {paymentMethod === "stripe" ? "Weiter zur Zahlung" : "Jetzt verbindlich buchen"}
                   </Button>
                 </div>
               </div>
