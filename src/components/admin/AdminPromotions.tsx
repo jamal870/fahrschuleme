@@ -18,7 +18,18 @@ interface Promotion {
   sort_order: number;
   starts_at: string | null;
   ends_at: string | null;
+  category: string | null;
+  discount_price: number | null;
+  original_price: number | null;
 }
+
+const CATEGORIES = [
+  { value: "", label: "— Keine (nur Anzeige) —" },
+  { value: "mgk", label: "MGK (Motorrad Grundkurs)" },
+  { value: "grundkurs", label: "Grundkurs (alle Kurstermine)" },
+  { value: "fahrstunden_auto", label: "Fahrstunden Auto" },
+  { value: "fahrstunden_motorrad", label: "Fahrstunden Motorrad" },
+];
 
 const empty = {
   title: "",
@@ -27,6 +38,11 @@ const empty = {
   badge: "",
   active: true,
   sort_order: 0,
+  category: "",
+  discount_price: "",
+  original_price: "",
+  starts_at: "",
+  ends_at: "",
 };
 
 const AdminPromotions = () => {
