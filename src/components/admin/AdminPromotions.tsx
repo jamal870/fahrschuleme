@@ -73,6 +73,11 @@ const AdminPromotions = () => {
       badge: form.badge || null,
       active: form.active,
       sort_order: Number(form.sort_order) || 0,
+      category: form.category || null,
+      discount_price: form.discount_price ? Number(form.discount_price) : null,
+      original_price: form.original_price ? Number(form.original_price) : null,
+      starts_at: form.starts_at ? new Date(form.starts_at).toISOString() : null,
+      ends_at: form.ends_at ? new Date(form.ends_at).toISOString() : null,
     });
     if (error) { toast.error(error.message); return; }
     toast.success("Aktion erstellt");
