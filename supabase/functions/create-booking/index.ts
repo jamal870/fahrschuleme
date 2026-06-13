@@ -218,7 +218,7 @@ serve(async (req) => {
       if (fahrstundenPackageId) {
         const { data: pkg, error: pkgError } = await supabase
           .from("fahrstunden_packages")
-          .select("id, total_price, name")
+          .select("id, total_price, name, service_id")
           .eq("id", fahrstundenPackageId)
           .single();
         if (pkgError || !pkg) {
@@ -228,10 +228,27 @@ serve(async (req) => {
         }
         serverPrice = Number(pkg.total_price);
         serviceName = pkg.name;
+        // Determine category from underlying service
+        const { data: svcRow } = await supabase
+          .from("fahrstunden_services")
+          .select("category, price")
+          .eq("id", pkg.service_id)
+          .single();
+        const cat = svcRow?.category === "motorrad" ? "fahrstunden_motorrad" : "fahrstunden_auto";
+        const promo = await getActivePromoPrice(supabase, cat);
+        if (promo != null && svcRow?.price) {
+          // recompute package total with discounted per-lesson price
+          const { data: pkgFull } = await supabase
+            .from("fahrstunden_packages")
+            .select("lessons")
+            .eq("id", fahrstundenPackageId)
+            .single();
+          if (pkgFull?.lessons) serverPrice = promo * Number(pkgFull.lessons);
+        }
       } else if (fahrstundenServiceId) {
         const { data: svc, error: svcError } = await supabase
           .from("fahrstunden_services")
-          .select("id, price, name")
+          .select("id, price, name, category")
           .eq("id", fahrstundenServiceId)
           .single();
         if (svcError || !svc) {
@@ -239,7 +256,9 @@ serve(async (req) => {
             status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
-        serverPrice = Number(svc.price);
+        const cat = svc.category === "motorrad" ? "fahrstunden_motorrad" : "fahrstunden_auto";
+        const promo = await getActivePromoPrice(supabase, cat);
+        serverPrice = promo != null ? promo : Number(svc.price);
         serviceName = svc.name;
       } else {
         return new Response(JSON.stringify({ error: "Kein Service oder Paket ausgewählt" }), {
