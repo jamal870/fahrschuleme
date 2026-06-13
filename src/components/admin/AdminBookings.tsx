@@ -4,9 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { RefreshCw, Eye, FileText, Receipt, AlertTriangle, CheckCircle } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { RefreshCw, Eye, FileText, Receipt, AlertTriangle, CheckCircle, Pencil, Save, X } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import {
@@ -47,6 +50,9 @@ const AdminBookings = () => {
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [bookingItems, setBookingItems] = useState<BookingItem[]>([]);
+  const [editing, setEditing] = useState(false);
+  const [editData, setEditData] = useState<Booking | null>(null);
+  const [saving, setSaving] = useState(false);
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -60,8 +66,52 @@ const AdminBookings = () => {
 
   const viewDetails = async (booking: Booking) => {
     setSelectedBooking(booking);
+    setEditing(false);
+    setEditData(null);
     const { data } = await supabase.from("booking_items").select("*").eq("booking_id", booking.id);
     setBookingItems(data || []);
+  };
+
+  const startEdit = () => {
+    if (!selectedBooking) return;
+    setEditData({ ...selectedBooking });
+    setEditing(true);
+  };
+
+  const cancelEdit = () => {
+    setEditing(false);
+    setEditData(null);
+  };
+
+  const saveEdit = async () => {
+    if (!editData) return;
+    setSaving(true);
+    const { id, ...updates } = editData;
+    const { error } = await supabase
+      .from("bookings")
+      .update({
+        first_name: updates.first_name,
+        last_name: updates.last_name,
+        email: updates.email,
+        phone: updates.phone,
+        address: updates.address,
+        birth_date: updates.birth_date,
+        fa_number: updates.fa_number,
+        payment_method: updates.payment_method,
+        total_price: Number(updates.total_price),
+        status: updates.status,
+      })
+      .eq("id", id);
+    setSaving(false);
+    if (error) {
+      toast.error("Speichern fehlgeschlagen: " + error.message);
+      return;
+    }
+    toast.success("Buchung aktualisiert");
+    setSelectedBooking({ ...editData });
+    setEditing(false);
+    setEditData(null);
+    fetchBookings();
   };
 
   const handlePdf = (type: string, b: Booking) => {
@@ -190,12 +240,19 @@ const AdminBookings = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
-        <DialogContent className="max-w-lg">
+      <Dialog open={!!selectedBooking} onOpenChange={() => { setSelectedBooking(null); setEditing(false); setEditData(null); }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Buchungsdetails</DialogTitle>
+            <div className="flex items-center justify-between pr-6">
+              <DialogTitle>Buchungsdetails</DialogTitle>
+              {!editing && selectedBooking && (
+                <Button size="sm" variant="outline" onClick={startEdit}>
+                  <Pencil className="w-3.5 h-3.5 mr-1" /> Bearbeiten
+                </Button>
+              )}
+            </div>
           </DialogHeader>
-          {selectedBooking && (
+          {selectedBooking && !editing && (
             <div className="space-y-4 text-sm">
               <div className="grid grid-cols-2 gap-3">
                 <div><span className="text-muted-foreground">Name:</span> <strong>{selectedBooking.first_name} {selectedBooking.last_name}</strong></div>
@@ -205,6 +262,7 @@ const AdminBookings = () => {
                 <div><span className="text-muted-foreground">FA-Nummer:</span> {selectedBooking.fa_number}</div>
                 <div><span className="text-muted-foreground">Adresse:</span> {selectedBooking.address}</div>
                 <div><span className="text-muted-foreground">Zahlung:</span> {selectedBooking.payment_method}</div>
+                <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusColor(selectedBooking.status) as any}>{selectedBooking.status}</Badge></div>
                 <div><span className="text-muted-foreground">Betrag:</span> <strong>CHF {selectedBooking.total_price}</strong></div>
               </div>
 
@@ -223,6 +281,70 @@ const AdminBookings = () => {
                   </ul>
                 </div>
               )}
+            </div>
+          )}
+
+          {editData && editing && (
+            <div className="space-y-3 text-sm">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <Label>Vorname</Label>
+                  <Input value={editData.first_name ?? ""} onChange={(e) => setEditData({ ...editData, first_name: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>Nachname</Label>
+                  <Input value={editData.last_name ?? ""} onChange={(e) => setEditData({ ...editData, last_name: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>E-Mail</Label>
+                  <Input type="email" value={editData.email ?? ""} onChange={(e) => setEditData({ ...editData, email: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>Telefon</Label>
+                  <Input value={editData.phone ?? ""} onChange={(e) => setEditData({ ...editData, phone: e.target.value })} />
+                </div>
+                <div className="space-y-1 col-span-2">
+                  <Label>Adresse</Label>
+                  <Input value={editData.address ?? ""} onChange={(e) => setEditData({ ...editData, address: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>Geburtsdatum</Label>
+                  <Input value={editData.birth_date ?? ""} onChange={(e) => setEditData({ ...editData, birth_date: e.target.value })} placeholder="TT.MM.JJJJ" />
+                </div>
+                <div className="space-y-1">
+                  <Label>FA-Nummer</Label>
+                  <Input value={editData.fa_number ?? ""} onChange={(e) => setEditData({ ...editData, fa_number: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>Zahlungsmethode</Label>
+                  <Input value={editData.payment_method ?? ""} onChange={(e) => setEditData({ ...editData, payment_method: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>Betrag (CHF)</Label>
+                  <Input type="number" step="0.01" value={editData.total_price ?? 0} onChange={(e) => setEditData({ ...editData, total_price: Number(e.target.value) })} />
+                </div>
+                <div className="space-y-1 col-span-2">
+                  <Label>Status</Label>
+                  <Select value={editData.status} onValueChange={(v) => setEditData({ ...editData, status: v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">pending</SelectItem>
+                      <SelectItem value="pending_payment">pending_payment</SelectItem>
+                      <SelectItem value="confirmed">confirmed</SelectItem>
+                      <SelectItem value="paid">paid</SelectItem>
+                      <SelectItem value="cancelled">cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter className="gap-2">
+                <Button variant="outline" onClick={cancelEdit} disabled={saving}>
+                  <X className="w-4 h-4 mr-1" /> Abbrechen
+                </Button>
+                <Button onClick={saveEdit} disabled={saving}>
+                  <Save className="w-4 h-4 mr-1" /> {saving ? "Speichern..." : "Speichern"}
+                </Button>
+              </DialogFooter>
             </div>
           )}
         </DialogContent>
