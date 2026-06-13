@@ -379,10 +379,13 @@ export type Database = {
         Row: {
           active: boolean
           badge: string | null
+          category: string | null
           created_at: string
           description: string | null
+          discount_price: number | null
           ends_at: string | null
           id: string
+          original_price: number | null
           price: string | null
           sort_order: number
           starts_at: string | null
@@ -392,10 +395,13 @@ export type Database = {
         Insert: {
           active?: boolean
           badge?: string | null
+          category?: string | null
           created_at?: string
           description?: string | null
+          discount_price?: number | null
           ends_at?: string | null
           id?: string
+          original_price?: number | null
           price?: string | null
           sort_order?: number
           starts_at?: string | null
@@ -405,10 +411,13 @@ export type Database = {
         Update: {
           active?: boolean
           badge?: string | null
+          category?: string | null
           created_at?: string
           description?: string | null
+          discount_price?: number | null
           ends_at?: string | null
           id?: string
+          original_price?: number | null
           price?: string | null
           sort_order?: number
           starts_at?: string | null
