@@ -385,13 +385,36 @@ export default function GrundkursBuchen() {
                     </div>
                   </div>
 
-                  <div className="mt-6 bg-primary/5 border-l-4 border-primary rounded-r-lg p-4">
-                    <p className="text-sm text-foreground flex items-start gap-2">
-                      <CreditCard className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
-                      <span>
-                        <strong>Zahlungshinweis:</strong> Nach dem Absenden wirst du zur sicheren Zahlung via Stripe weitergeleitet.
-                      </span>
-                    </p>
+                  <div className="mt-6">
+                    <h3 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                      <CreditCard className="w-4 h-4" /> Zahlungsart wählen
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {([
+                        { id: "stripe", label: "Online bezahlen", desc: "Karte / TWINT / Klarna via Stripe" },
+                        { id: "barzahlung", label: "Barzahlung", desc: "Vor Ort beim 1. Kurstag" },
+                        { id: "ueberweisung", label: "Überweisung", desc: "Rechnung per E-Mail" },
+                      ] as const).map((opt) => {
+                        const active = paymentMethod === opt.id;
+                        return (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setPaymentMethod(opt.id)}
+                            className={`text-left border-2 p-3 transition-colors ${active ? "border-primary bg-primary/5" : "border-border hover:border-primary/40 bg-card"}`}
+                            style={{ borderRadius: "3px" }}
+                          >
+                            <p className="font-heading font-bold text-sm text-foreground uppercase">{opt.label}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{opt.desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {paymentMethod === "stripe" ? (
+                      <p className="text-xs text-muted-foreground mt-3">Nach dem Absenden wirst du in einem neuen Tab zu Stripe weitergeleitet.</p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground mt-3">Deine Buchung wird sofort bestätigt. Die Zahlungsinformationen erhältst du per E-Mail.</p>
+                    )}
                   </div>
                 </div>
 
