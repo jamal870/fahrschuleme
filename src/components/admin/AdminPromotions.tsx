@@ -171,16 +171,67 @@ const AdminPromotions = () => {
           <p className="text-muted-foreground">Noch keine Aktionen vorhanden.</p>
         ) : (
           <div className="space-y-3">
-            {items.map((p) => (
-              <div key={p.id} className="bg-card border border-border p-4 flex flex-col md:flex-row md:items-center gap-4" style={{ borderRadius: "3px" }}>
-                <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-2">
-                  <Input value={p.title} onChange={(e) => update(p.id, { title: e.target.value })} />
-                  <Input value={p.badge ?? ""} placeholder="Badge" onChange={(e) => update(p.id, { badge: e.target.value })} />
-                  <Input value={p.price ?? ""} placeholder="Preis" onChange={(e) => update(p.id, { price: e.target.value })} />
-                  <Input type="number" value={p.sort_order} onChange={(e) => update(p.id, { sort_order: Number(e.target.value) })} />
-                  <Textarea className="md:col-span-4" value={p.description ?? ""} placeholder="Beschreibung" onChange={(e) => update(p.id, { description: e.target.value })} />
+            {items.map((p) => {
+              const toLocal = (iso: string | null) => {
+                if (!iso) return "";
+                const d = new Date(iso);
+                const off = d.getTimezoneOffset();
+                return new Date(d.getTime() - off * 60000).toISOString().slice(0, 16);
+              };
+              return (
+              <div key={p.id} className="bg-card border border-border p-4 flex flex-col gap-3" style={{ borderRadius: "3px" }}>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                  <div>
+                    <Label className="text-xs">Titel</Label>
+                    <Input value={p.title} onChange={(e) => update(p.id, { title: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Badge</Label>
+                    <Input value={p.badge ?? ""} onChange={(e) => update(p.id, { badge: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Kategorie</Label>
+                    <select
+                      className="flex h-10 w-full border border-input bg-background px-3 py-2 text-sm"
+                      style={{ borderRadius: "3px" }}
+                      value={p.category ?? ""}
+                      onChange={(e) => update(p.id, { category: e.target.value || null })}
+                    >
+                      {CATEGORIES.map((c) => (
+                        <option key={c.value} value={c.value}>{c.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <Label className="text-xs">Aktionspreis (CHF)</Label>
+                    <Input type="number" step="0.01" value={p.discount_price ?? ""} onChange={(e) => update(p.id, { discount_price: e.target.value ? Number(e.target.value) : null })} />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Ursprungspreis (CHF)</Label>
+                    <Input type="number" step="0.01" value={p.original_price ?? ""} onChange={(e) => update(p.id, { original_price: e.target.value ? Number(e.target.value) : null })} />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Preis-Text</Label>
+                    <Input value={p.price ?? ""} onChange={(e) => update(p.id, { price: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Gültig ab</Label>
+                    <Input type="datetime-local" value={toLocal(p.starts_at)} onChange={(e) => update(p.id, { starts_at: e.target.value ? new Date(e.target.value).toISOString() : null })} />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Gültig bis</Label>
+                    <Input type="datetime-local" value={toLocal(p.ends_at)} onChange={(e) => update(p.id, { ends_at: e.target.value ? new Date(e.target.value).toISOString() : null })} />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Sortierung</Label>
+                    <Input type="number" value={p.sort_order} onChange={(e) => update(p.id, { sort_order: Number(e.target.value) })} />
+                  </div>
                 </div>
-                <div className="flex md:flex-col items-center gap-3">
+                <div>
+                  <Label className="text-xs">Beschreibung</Label>
+                  <Textarea value={p.description ?? ""} onChange={(e) => update(p.id, { description: e.target.value })} />
+                </div>
+                <div className="flex items-center justify-between gap-3 pt-2 border-t border-border">
                   <div className="flex items-center gap-2">
                     <Switch checked={p.active} onCheckedChange={(v) => update(p.id, { active: v })} />
                     <span className="text-xs font-body">{p.active ? "Aktiv" : "Aus"}</span>
@@ -190,7 +241,8 @@ const AdminPromotions = () => {
                   </Button>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
