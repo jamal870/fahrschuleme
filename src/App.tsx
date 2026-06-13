@@ -20,6 +20,7 @@ import Preise from "./pages/Preise.tsx";
 import Kontakt from "./pages/Kontakt.tsx";
 import Kurstermine from "./pages/Kurstermine.tsx";
 import StrassenverkehrsamtAargau from "./pages/StrassenverkehrsamtAargau.tsx";
+import FuerFahrlehrer from "./pages/FuerFahrlehrer.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
