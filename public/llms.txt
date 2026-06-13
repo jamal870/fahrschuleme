@@ -1,0 +1,24 @@
+# Fahrschule me
+
+> Auto- und Motorrad-Fahrschule in Wettingen (Bezirk Baden, Kanton Aargau, Schweiz). Bietet Autofahrstunden, Motorrad-Grundkurs (MGK) und alle Motorrad-Kategorien (AM, A1, A2, A). Termine Mo–Sa 08:00–22:00 Uhr.
+
+Inhaber: Jimmy Ettanaghmalti. Adresse: Bahnhofstrasse 56, 5430 Wettingen. Telefon: +41 76 779 03 83. E-Mail: info@l-me.ch. 4.9 ★ bei 171 Google-Bewertungen.
+
+## Pages
+
+- [Startseite](/): Übersicht aller Angebote, Kategorien und Kontaktinfos.
+- [Motorrad-Führerschein Wettingen](/motorrad-fuehrerschein-wettingen): Lokale Landingpage zu Kategorien AM, A1, A2, A und Grundkurs.
+- [Motorrad-Grundkurs (MGK)](/grundkurs): Informationen zum 3-teiligen Motorrad-Grundkurs in Wettingen.
+- [Grundkurs buchen](/grundkurs-buchen): Online-Buchung der MGK-Kursteile 1, 2 und 3.
+- [Kurstermine](/kurstermine): Aktuelle Termine für Motorrad-Grundkurse mit freien Plätzen.
+- [Fahrstunden](/fahrstunden): Autofahrstunden, Lektionen, Pakete (10er/20er-Abo).
+- [Motorrad](/motorrad): Motorrad-Ausbildung und Übersicht aller Kategorien.
+- [Preise](/preise): Preisübersicht Auto- und Motorrad-Fahrstunden, Abos und Kurse.
+- [Team](/team): Fahrlehrer und Instruktoren der Fahrschule me.
+- [Kontakt](/kontakt): Adresse, Telefon, E-Mail und Anfahrt.
+
+## Optional
+
+- [Impressum](/impressum): Rechtliche Angaben.
+- [Datenschutz](/datenschutz): Datenschutzerklärung gemäss DSG.
+- [AGB](/agb): Allgemeine Geschäftsbedingungen.

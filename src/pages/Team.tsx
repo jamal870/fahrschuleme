@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Phone } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
 import { supabase } from "@/integrations/supabase/client";
+import Seo from "@/components/Seo";
 
 type TeamMember = {
   id: string;
@@ -33,6 +34,11 @@ const Team = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Unser Team – Fahrlehrer Fahrschule me Wettingen"
+        description="Lerne unser Team kennen: erfahrene Auto- und Motorrad-Fahrlehrer der Fahrschule me in Wettingen mit Qualifikationen und Erfahrung im Raum Baden."
+        path="/team"
+      />
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-sm font-heading font-bold text-foreground hover:text-primary transition-colors">

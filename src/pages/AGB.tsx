@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import Seo from "@/components/Seo";
 
 const sections = [
   { title: "1. Geltungsbereich", body: "Diese AGB gelten für alle Dienstleistungen der Fahrschule me: Fahrstunden (Auto & Motorrad), VKU (Verkehrskundeunterricht), NHK (Nothilfekurs) sowie alle weiteren Ausbildungsangebote." },
@@ -16,6 +17,11 @@ const sections = [
 const AGB = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="AGB – Allgemeine Geschäftsbedingungen | Fahrschule me"
+        description="Allgemeine Geschäftsbedingungen der Fahrschule me Wettingen: Anmeldung, Preise, Absagen, Versicherung und Verhaltensregeln für Fahrstunden und Kurse."
+        path="/agb"
+      />
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-sm font-heading font-bold text-foreground hover:text-primary transition-colors">
