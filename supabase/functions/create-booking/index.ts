@@ -24,6 +24,23 @@ function checkRateLimit(email: string): boolean {
   return true;
 }
 
+// Fetch active promotion discount price for a given category (or null)
+async function getActivePromoPrice(supabase: any, category: string): Promise<number | null> {
+  const nowIso = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("promotions")
+    .select("discount_price, starts_at, ends_at")
+    .eq("category", category)
+    .eq("active", true)
+    .not("discount_price", "is", null);
+  if (error || !data) return null;
+  const match = data.find((p: any) =>
+    (!p.starts_at || p.starts_at <= nowIso) &&
+    (!p.ends_at || p.ends_at >= nowIso)
+  );
+  return match ? Number(match.discount_price) : null;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
