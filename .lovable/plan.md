@@ -1,26 +1,48 @@
+# Plan: l-me.ch → fahrschule-me.ch weiterleiten
 
+## Ziel
+Wenn jemand `l-me.ch` (oder `www.l-me.ch`) im Browser eingibt, soll er automatisch auf `https://www.fahrschule-me.ch` umgeleitet werden — inklusive aller Unterseiten (`l-me.ch/kontakt` → `fahrschule-me.ch/kontakt`).
 
-## Logo in E-Mail-Templates ändern
+## Voraussetzung
+Du musst Zugang zum DNS-Verwalter von `l-me.ch` haben (also dort, wo die Domain registriert ist — z. B. Hostpoint, Infomaniak, Cloudflare, GoDaddy etc.).
 
-Das neue Logo (blaues "L"-Quadrat + oranges "me" in Schreibschrift + "FAHRSCHULE · WETTINGEN") wird in beiden E-Mail-Templates eingesetzt.
+## Lösungsweg
 
-### Schritte
+Es gibt **zwei mögliche Wege**. Empfehlung: **Weg A** (sauberer, behält Pfade bei).
 
-1. **Logo-Bild hochladen** – Das hochgeladene Logo (`IMG_7345.png`, horizontale Version) ins Projekt kopieren und dann in den bestehenden Supabase Storage Bucket `email-assets` hochladen (ersetzt oder ergänzt das bisherige `drive-me-logo.png`).
+---
 
-2. **Booking-Confirmation Template updaten** (`supabase/functions/_shared/transactional-email-templates/booking-confirmation.tsx`)
-   - Logo-URL auf das neue Bild im Storage Bucket ändern
-   - Header-Hintergrund auf Dunkelblau (`#1a2344`) setzen, damit das Logo auf dunklem Hintergrund gut aussieht (wie im Original-Branding)
-   - Padding im Header anpassen
+### Weg A: l-me.ch als zweite Domain im Lovable-Projekt verbinden (empfohlen)
 
-3. **Admin-Notification Template updaten** (`supabase/functions/_shared/transactional-email-templates/admin-booking-notification.tsx`)
-   - Gleiche Logo-URL-Änderung
-   - Gleicher dunkler Header-Hintergrund
+1. **In Lovable**: Projekt-Einstellungen → Domains → „Connect Domain" → `l-me.ch` eingeben.
+2. **Zweites Mal** dasselbe mit `www.l-me.ch` machen.
+3. Lovable zeigt DNS-Einträge an (A-Record `185.158.133.1` + TXT-Record für Verifizierung).
+4. **Beim DNS-Anbieter von l-me.ch** diese Einträge eintragen.
+5. Warten bis Status „Active" (kann bis zu 72 h dauern, meist < 1 h).
+6. In Lovable `fahrschule-me.ch` als **Primary Domain** markieren → alle anderen Domains leiten automatisch dorthin um, inkl. Pfaden und HTTPS.
 
-4. **Edge Function neu deployen** – `send-transactional-email` und `preview-transactional-email` redeployen, damit die Änderungen live sind.
+**Ergebnis**: `l-me.ch/xyz` → `https://www.fahrschule-me.ch/xyz` mit 301-Redirect.
 
-### Technische Details
-- Das horizontale Logo (IMG_7345.png) wird verwendet, da es besser in E-Mail-Header passt
-- Storage-Pfad: `email-assets/drive-me-logo-new.png` (oder Überschreiben des bestehenden)
-- Header-Style: `backgroundColor: '#1a2344'`, `padding: '24px 25px'`, `borderRadius: '8px 8px 0 0'`
+---
 
+### Weg B: 301-Weiterleitung direkt beim DNS-/Hosting-Anbieter von l-me.ch
+
+Wenn dein Anbieter eine „Domain Forwarding" / „Weiterleitung" Funktion hat (Hostpoint, Infomaniak, Cloudflare Page Rules, etc.):
+
+1. Beim Anbieter von `l-me.ch` einloggen.
+2. Funktion „URL-Weiterleitung" / „Domain Forwarding" suchen.
+3. Ziel: `https://www.fahrschule-me.ch`
+4. Typ: **301 (permanent)**, mit Option „Pfad beibehalten" aktivieren falls vorhanden.
+
+**Vorteil**: kein DNS-Eintrag in Lovable nötig.  
+**Nachteil**: Funktioniert nur, wenn der Anbieter das anbietet, und manchmal ohne sauberes HTTPS.
+
+---
+
+## Was ich vorbereiten kann
+- ✅ Sobald du mir sagst „mach Weg A", brauche ich **nichts coden** — du fügst die Domain im Lovable-Dashboard hinzu, und ich begleite dich beim Setup.
+- Optional: Ich kann auch eine kleine Info-Notiz auf der Webseite anzeigen, falls jemand `l-me.ch` aufruft („Wir sind umgezogen auf fahrschule-me.ch") — aber bei Weg A nicht nötig, der Redirect ist transparent.
+
+## Frage an dich
+1. Wo ist `l-me.ch` registriert (Hostpoint / Infomaniak / Cloudflare / sonst)?
+2. Soll ich Weg A oder Weg B empfehlen?
