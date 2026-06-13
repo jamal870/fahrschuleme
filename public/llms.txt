@@ -15,6 +15,7 @@ Inhaber: Jimmy Ettanaghmalti. Adresse: Bahnhofstrasse 56, 5430 Wettingen. Telefo
 - [Motorrad](/motorrad): Motorrad-Ausbildung und Übersicht aller Kategorien.
 - [Preise](/preise): Preisübersicht Auto- und Motorrad-Fahrstunden, Abos und Kurse.
 - [Team](/team): Fahrlehrer und Instruktoren der Fahrschule me.
+- [Strassenverkehrsamt Aargau Ratgeber](/strassenverkehrsamt-aargau): Schritt-für-Schritt zum Lernfahrausweis und zur Führerprüfung in Schafisheim.
 - [Kontakt](/kontakt): Adresse, Telefon, E-Mail und Anfahrt.
 
 ## Optional
