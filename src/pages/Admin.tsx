@@ -10,6 +10,7 @@ import AdminBookings from "@/components/admin/AdminBookings";
 import AdminWaitlist from "@/components/admin/AdminWaitlist";
 import AdminTeam from "@/components/admin/AdminTeam";
 import AdminPhotoImport from "@/components/admin/AdminPhotoImport";
+import AdminPromotions from "@/components/admin/AdminPromotions";
 import BrandLogo from "@/components/BrandLogo";
 
 const Admin = () => {
@@ -91,12 +92,14 @@ const Admin = () => {
             <TabsTrigger value="bookings" className="font-heading uppercase text-xs">Buchungen</TabsTrigger>
             <TabsTrigger value="waitlist" className="font-heading uppercase text-xs">Warteliste</TabsTrigger>
             <TabsTrigger value="team" className="font-heading uppercase text-xs">Team</TabsTrigger>
+            <TabsTrigger value="promotions" className="font-heading uppercase text-xs">Aktionen</TabsTrigger>
           </TabsList>
           <TabsContent value="courses"><AdminCourseDates /></TabsContent>
           <TabsContent value="photo"><AdminPhotoImport /></TabsContent>
           <TabsContent value="bookings"><AdminBookings /></TabsContent>
           <TabsContent value="waitlist"><AdminWaitlist /></TabsContent>
           <TabsContent value="team"><AdminTeam /></TabsContent>
+          <TabsContent value="promotions"><AdminPromotions /></TabsContent>
         </Tabs>
       </main>
     </div>
