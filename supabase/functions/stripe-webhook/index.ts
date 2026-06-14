@@ -172,6 +172,9 @@ serve(async (req) => {
                   totalPrice: (booking.total_price || 0).toFixed(2),
                   bookingDate: adminBookingDate,
                   items: itemsSummary,
+                  courses: courses.map((c: any) => ({
+                    part: c.part, date: c.date, time: c.time, location: c.location, price: c.price,
+                  })),
                 },
               },
             });
