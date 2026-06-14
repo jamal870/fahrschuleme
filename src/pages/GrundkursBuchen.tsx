@@ -252,49 +252,31 @@ export default function GrundkursBuchen() {
 
         {/* Part 2 - Shown after Part 1 selected */}
         <AnimatePresence>
-          {selections[1] && (
-            <motion.div
-              ref={part2Ref}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="mt-10">
-                <CourseSection
-                  partNum={2}
-                  courses={getFilteredCourses(2)}
-                  selected={selections[2]}
-                  onSelect={(course) => selectCourse(2, course)}
-                  loading={loadingPart === 2}
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Part 2 - Always visible so customers can browse all dates */}
+        <div ref={part2Ref} className="mt-10">
+          <CourseSection
+            partNum={2}
+            courses={getFilteredCourses(2)}
+            selected={selections[2]}
+            onSelect={(course) => selectCourse(2, course)}
+            loading={loadingPart === 2}
+            requiresPrev={!selections[1]}
+          />
+        </div>
 
-        {/* Part 3 - Shown after Part 2 selected */}
-        <AnimatePresence>
-          {selections[2] && (
-            <motion.div
-              ref={part3Ref}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="mt-10">
-                <CourseSection
-                  partNum={3}
-                  courses={getFilteredCourses(3)}
-                  selected={selections[3]}
-                  onSelect={(course) => selectCourse(3, course)}
-                  loading={loadingPart === 3}
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Part 3 - Always visible so customers can browse all dates */}
+        <div ref={part3Ref} className="mt-10">
+          <CourseSection
+            partNum={3}
+            courses={getFilteredCourses(3)}
+            selected={selections[3]}
+            onSelect={(course) => selectCourse(3, course)}
+            loading={loadingPart === 3}
+            requiresPrev={!selections[2]}
+          />
+        </div>
+
+
 
         {/* Confirmation form - Shown after all 3 parts selected */}
         <AnimatePresence>
