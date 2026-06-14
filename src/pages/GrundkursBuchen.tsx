@@ -350,8 +350,11 @@ export default function GrundkursBuchen() {
                       {errors.birthDate && <p className="text-xs text-destructive mt-1">{errors.birthDate}</p>}
                     </div>
                     <div>
-                      <Label className="text-sm font-medium">FA-Nummer <span className="text-destructive">*</span></Label>
+                      <Label className="text-sm font-medium">FA-Nummer (Lernfahrausweis-Nr.) <span className="text-destructive">*</span></Label>
                       <Input value={faNumber} onChange={(e) => setFaNumber(e.target.value)} placeholder="z.B. CH-1234567890" maxLength={30} className="mt-1" />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Zu finden auf deinem Lernfahrausweis (LFA), oben rechts gelb markiert – die Nummer neben Name/Adresse (z.B. 0000.000.000 oder CH-…).
+                      </p>
                       {errors.faNumber && <p className="text-xs text-destructive mt-1">{errors.faNumber}</p>}
                     </div>
                     <div>
