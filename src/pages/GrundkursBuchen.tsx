@@ -353,9 +353,26 @@ export default function GrundkursBuchen() {
                     <div>
                       <Label className="text-sm font-medium">FA-Nummer (Lernfahrausweis-Nr.) <span className="text-destructive">*</span></Label>
                       <Input value={faNumber} onChange={(e) => setFaNumber(e.target.value)} placeholder="z.B. CH-1234567890" maxLength={30} className="mt-1" />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Zu finden auf deinem Lernfahrausweis (LFA), oben rechts gelb markiert – die Nummer neben Name/Adresse (z.B. 0000.000.000 oder CH-…).
-                      </p>
+                      <details className="mt-2 group">
+                        <summary className="text-xs text-primary cursor-pointer hover:underline list-none flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          <span>Wo finde ich die FA-Nummer?</span>
+                        </summary>
+                        <div className="mt-2 p-2 bg-muted/40 border border-border" style={{ borderRadius: "3px" }}>
+                          <p className="text-xs text-muted-foreground mb-2">
+                            Auf deinem Lernfahrausweis (LFA) oben rechts – gelb markiert im Beispiel.
+                          </p>
+                          <a href={lfaMuster.url} target="_blank" rel="noopener noreferrer">
+                            <img
+                              src={lfaMuster.url}
+                              alt="Muster Lernfahrausweis mit markierter FA-Nummer"
+                              className="w-full max-w-md border border-border"
+                              style={{ borderRadius: "3px" }}
+                              loading="lazy"
+                            />
+                          </a>
+                        </div>
+                      </details>
                       {errors.faNumber && <p className="text-xs text-destructive mt-1">{errors.faNumber}</p>}
                     </div>
                     <div>
