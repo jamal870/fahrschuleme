@@ -7,10 +7,11 @@
 - No direct public DB inserts. All bookings via `create-booking` edge function.
 - Stripe: Open in blank tab to bypass popups, use DB polling. Webhook confirms payment.
 - Unprotected admin setup scripts are permanently removed for security.
-- DNS bleibt IMMER bei Netlify. Niemals DNS/Domains über Lovable verwalten oder vorschlagen.
+- **DNS/Domains:** Registrar = Hostpoint, DNS = Netlify (nsone.net NS), Hosting = Netlify. NIE Lovable Custom Domain vorschlagen, NIE 185.158.133.1, NIE Cloudflare. Bei Problemen IMMER alle 4 Schichten (Registrar-NS, Netlify-DNS, Netlify-Site-Domains, Propagation) in EINER Antwort prüfen — nicht schrittweise.
+- **Deploy:** GitHub → Netlify ist Auto-Deploy. Lovable Publish ≠ Live-Deploy.
 
 ## Memories
-- [No DNS changes](mem://constraints/no-dns-changes) — DNS/Domain-Management strikt bei Netlify, nicht über Lovable
+- [DNS & Domain Setup](mem://infrastructure/dns-domains) — Komplette Domain-Architektur Hostpoint+Netlify, NS, Records, Fehler-Lookup, Goldene Regel
 - [Chatbot Core](mem://features/chatbot/core) — `<ChatBot />` component logic, flows, and UX behavior
 - [Lesson Booking Logic](mem://features/booking/fahrstunden-logic) — Lesson types and duration rules for cars and motorcycles
 - [MGK Sequential Logic](mem://features/booking/mgk-sequential-logic) — Chronological requirements for basic motorcycle courses
