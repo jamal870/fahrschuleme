@@ -52,9 +52,11 @@ export default function GrundkursBuchen() {
   const part3Ref = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
-  // Load part 1 on mount
+  // Load all 3 parts upfront so customers can browse M2/M3 before selecting M1
   useEffect(() => {
     loadCourseDates(1);
+    loadCourseDates(2);
+    loadCourseDates(3);
   }, []);
 
   const loadCourseDates = async (part: number) => {
