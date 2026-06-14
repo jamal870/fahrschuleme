@@ -101,8 +101,28 @@ const AdminBookingNotificationEmail = ({
           {totalPrice && <Text style={priceRow}><strong>Betrag:</strong> CHF {totalPrice}</Text>}
         </Section>
 
-        {/* Gebuchte Leistungen */}
-        {items && (
+        {/* Gebuchte Kurse (Detail) */}
+        {courses && courses.length > 0 && (
+          <Section style={card}>
+            <Heading style={cardTitle}>Gebuchte Kurse</Heading>
+            {courses.map((c, i) => (
+              <Section key={i} style={courseBlock}>
+                <Text style={courseTitle}>
+                  {bookingType === 'grundkurs' ? `MGK Teil ${c.part ?? ''}` : `Teil ${c.part ?? ''}`}
+                </Text>
+                {c.date && <Text style={detailRow}><strong>Datum:</strong> {formatCourseDate(c.date)}</Text>}
+                {c.time && <Text style={detailRow}><strong>Uhrzeit:</strong> {c.time}</Text>}
+                {c.location && <Text style={detailRow}><strong>Ort:</strong> {c.location}</Text>}
+                {c.price !== undefined && c.price !== null && c.price !== '' && (
+                  <Text style={detailRow}><strong>Preis:</strong> CHF {Number(c.price).toFixed(2)}</Text>
+                )}
+              </Section>
+            ))}
+          </Section>
+        )}
+
+        {/* Gebuchte Leistungen (Fallback / Zusammenfassung) */}
+        {items && (!courses || courses.length === 0) && (
           <Section style={card}>
             <Heading style={cardTitle}>Gebuchte Leistungen</Heading>
             <Text style={detailRow}>{items}</Text>
