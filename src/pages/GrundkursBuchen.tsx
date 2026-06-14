@@ -250,8 +250,6 @@ export default function GrundkursBuchen() {
           loading={loadingPart === 1}
         />
 
-        {/* Part 2 - Shown after Part 1 selected */}
-        <AnimatePresence>
         {/* Part 2 - Always visible so customers can browse all dates */}
         <div ref={part2Ref} className="mt-10">
           <CourseSection
