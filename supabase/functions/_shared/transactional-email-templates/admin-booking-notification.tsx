@@ -7,6 +7,14 @@ import type { TemplateEntry } from './registry.ts'
 const SITE_NAME = "Drive me Fahrschule"
 const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo-new.png"
 
+interface CourseDetail {
+  part?: number | string
+  date?: string
+  time?: string
+  location?: string
+  price?: number | string
+}
+
 interface AdminBookingNotificationProps {
   bookingId?: string
   bookingType?: string
@@ -21,6 +29,16 @@ interface AdminBookingNotificationProps {
   totalPrice?: string
   bookingDate?: string
   items?: string
+  courses?: CourseDetail[]
+}
+
+function formatCourseDate(d?: string) {
+  if (!d) return ''
+  try {
+    const dt = new Date(d)
+    if (isNaN(dt.getTime())) return d
+    return dt.toLocaleDateString('de-CH', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' })
+  } catch { return d }
 }
 
 const AdminBookingNotificationEmail = ({
@@ -37,6 +55,7 @@ const AdminBookingNotificationEmail = ({
   totalPrice,
   bookingDate,
   items,
+  courses,
 }: AdminBookingNotificationProps) => (
   <Html lang="de" dir="ltr">
     <Head />
@@ -82,8 +101,28 @@ const AdminBookingNotificationEmail = ({
           {totalPrice && <Text style={priceRow}><strong>Betrag:</strong> CHF {totalPrice}</Text>}
         </Section>
 
-        {/* Gebuchte Leistungen */}
-        {items && (
+        {/* Gebuchte Kurse (Detail) */}
+        {courses && courses.length > 0 && (
+          <Section style={card}>
+            <Heading style={cardTitle}>Gebuchte Kurse</Heading>
+            {courses.map((c, i) => (
+              <Section key={i} style={courseBlock}>
+                <Text style={courseTitle}>
+                  {bookingType === 'grundkurs' ? `MGK Teil ${c.part ?? ''}` : `Teil ${c.part ?? ''}`}
+                </Text>
+                {c.date && <Text style={detailRow}><strong>Datum:</strong> {formatCourseDate(c.date)}</Text>}
+                {c.time && <Text style={detailRow}><strong>Uhrzeit:</strong> {c.time}</Text>}
+                {c.location && <Text style={detailRow}><strong>Ort:</strong> {c.location}</Text>}
+                {c.price !== undefined && c.price !== null && c.price !== '' && (
+                  <Text style={detailRow}><strong>Preis:</strong> CHF {Number(c.price).toFixed(2)}</Text>
+                )}
+              </Section>
+            ))}
+          </Section>
+        )}
+
+        {/* Gebuchte Leistungen (Fallback / Zusammenfassung) */}
+        {items && (!courses || courses.length === 0) && (
           <Section style={card}>
             <Heading style={cardTitle}>Gebuchte Leistungen</Heading>
             <Text style={detailRow}>{items}</Text>
@@ -124,7 +163,11 @@ export const template = {
     paymentMethod: 'Direkte Banküberweisung oder Bar vor Ort',
     totalPrice: '450.00',
     bookingDate: '24. September 2024',
-    items: 'MGK Teil 1 | 27.09.2024 @ 17:00 | Wettingen, MGK Teil 2 | 28.09.2024 @ 13:00 | Wettingen',
+    items: 'MGK Teil 1, MGK Teil 2',
+    courses: [
+      { part: 1, date: '2024-09-27', time: '17:00', location: 'Wettingen', price: 225 },
+      { part: 2, date: '2024-09-28', time: '13:00', location: 'Wettingen', price: 225 },
+    ],
   },
 } satisfies TemplateEntry
 
@@ -142,6 +185,8 @@ const card = { backgroundColor: '#fafafa', borderRadius: '6px', padding: '16px 1
 const cardTitle = { fontSize: '14px', fontWeight: '700' as const, color: '#e8501a', margin: '0 0 10px', textTransform: 'uppercase' as const, letterSpacing: '0.5px' }
 const detailRow = { fontSize: '13px', color: '#3a3a3a', lineHeight: '1.6', margin: '0 0 4px' }
 const priceRow = { fontSize: '15px', color: '#1a1a1a', lineHeight: '1.6', margin: '4px 0 0', fontWeight: '600' as const }
+const courseBlock = { padding: '10px 12px', margin: '0 0 8px', backgroundColor: '#ffffff', border: '1px solid #eeeeee', borderLeft: '3px solid #e8501a', borderRadius: '4px' }
+const courseTitle = { fontSize: '13px', fontWeight: '700' as const, color: '#1a2344', margin: '0 0 6px', textTransform: 'uppercase' as const, letterSpacing: '0.3px' }
 
 const pendingPaymentBanner = { backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', padding: '12px 16px', margin: '0 0 20px' }
 const pendingPaymentText = { fontSize: '13px', color: '#856404', lineHeight: '1.5', margin: '0', fontWeight: '600' as const }

@@ -239,6 +239,7 @@ serve(async (req) => {
                 totalPrice: serverTotal.toFixed(2),
                 bookingDate: bookingDateStr,
                 items: courseSummary,
+                courses: coursesForEmail,
               },
             }),
           });
