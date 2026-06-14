@@ -185,6 +185,8 @@ const card = { backgroundColor: '#fafafa', borderRadius: '6px', padding: '16px 1
 const cardTitle = { fontSize: '14px', fontWeight: '700' as const, color: '#e8501a', margin: '0 0 10px', textTransform: 'uppercase' as const, letterSpacing: '0.5px' }
 const detailRow = { fontSize: '13px', color: '#3a3a3a', lineHeight: '1.6', margin: '0 0 4px' }
 const priceRow = { fontSize: '15px', color: '#1a1a1a', lineHeight: '1.6', margin: '4px 0 0', fontWeight: '600' as const }
+const courseBlock = { padding: '10px 12px', margin: '0 0 8px', backgroundColor: '#ffffff', border: '1px solid #eeeeee', borderLeft: '3px solid #e8501a', borderRadius: '4px' }
+const courseTitle = { fontSize: '13px', fontWeight: '700' as const, color: '#1a2344', margin: '0 0 6px', textTransform: 'uppercase' as const, letterSpacing: '0.3px' }
 
 const pendingPaymentBanner = { backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', padding: '12px 16px', margin: '0 0 20px' }
 const pendingPaymentText = { fontSize: '13px', color: '#856404', lineHeight: '1.5', margin: '0', fontWeight: '600' as const }
