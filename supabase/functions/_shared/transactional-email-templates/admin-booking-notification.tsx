@@ -55,6 +55,7 @@ const AdminBookingNotificationEmail = ({
   totalPrice,
   bookingDate,
   items,
+  courses,
 }: AdminBookingNotificationProps) => (
   <Html lang="de" dir="ltr">
     <Head />
