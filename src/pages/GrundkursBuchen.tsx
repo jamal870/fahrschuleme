@@ -426,24 +426,27 @@ function CourseSection({
   selected,
   onSelect,
   loading,
+  requiresPrev = false,
 }: {
   partNum: number;
   courses: CourseDate[];
   selected: CourseDate | null;
   onSelect: (course: CourseDate) => void;
   loading: boolean;
+  requiresPrev?: boolean;
 }) {
-  const [waitlistCourse, setWaitlistCourse] = useState<CourseDate | null>(null);
-
   return (
     <div>
       <h2 className="text-2xl font-bold font-[Outfit] text-primary mb-1 flex items-center gap-2">
-        🏍️ MGK Teil {partNum} – Datum wählen
+        🏍️ MGK Teil {partNum} – {requiresPrev ? "Übersicht" : "Datum wählen"}
         {selected && <Check className="w-5 h-5 text-accent" />}
       </h2>
       <p className="text-sm text-muted-foreground mb-6">
-        {partNum === 1 ? "Wählen Sie Ihren Wunschtermin für den ersten Kursteil." :
-         `Teil ${partNum} muss nach Teil ${partNum - 1} stattfinden.`}
+        {partNum === 1
+          ? "Wählen Sie Ihren Wunschtermin für den ersten Kursteil."
+          : requiresPrev
+            ? `Alle verfügbaren Termine für Teil ${partNum}. Bitte zuerst Teil ${partNum - 1} auswählen, um buchen zu können.`
+            : `Teil ${partNum} muss nach Teil ${partNum - 1} stattfinden.`}
       </p>
 
       {loading ? (
@@ -480,29 +483,25 @@ function CourseSection({
                   <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mt-3 bg-destructive/15 text-destructive">
                     Ausgebucht
                   </span>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    className="w-full mt-3 text-xs h-8"
-                    onClick={() => setWaitlistCourse(course)}
-                  >
-                    📝 Auf Warteliste
-                  </Button>
                 </div>
               );
             }
 
+            const disabled = requiresPrev;
             return (
               <motion.button
                 key={course.id}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => onSelect(course)}
+                whileHover={disabled ? undefined : { scale: 1.02 }}
+                whileTap={disabled ? undefined : { scale: 0.98 }}
+                disabled={disabled}
+                onClick={() => !disabled && onSelect(course)}
+                title={disabled ? `Bitte zuerst Teil ${partNum - 1} auswählen` : undefined}
                 className={`text-left bg-card rounded-xl border-2 p-4 transition-colors ${
                   isSelected
                     ? "border-primary bg-primary/5 shadow-md"
-                    : "border-border hover:border-primary/30"
+                    : disabled
+                      ? "border-border opacity-60 cursor-not-allowed"
+                      : "border-border hover:border-primary/30"
                 }`}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
@@ -531,14 +530,8 @@ function CourseSection({
           })}
         </div>
       )}
-
-      <WaitlistDialog
-        open={!!waitlistCourse}
-        onOpenChange={(o) => { if (!o) setWaitlistCourse(null); }}
-        courseDateId={waitlistCourse?.id || ""}
-        courseLabel={waitlistCourse ? `MGK Teil ${partNum} · ${waitlistCourse.date} · ${waitlistCourse.time}` : ""}
-      />
     </div>
   );
 }
+
 
