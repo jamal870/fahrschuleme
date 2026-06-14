@@ -163,7 +163,11 @@ export const template = {
     paymentMethod: 'Direkte Banküberweisung oder Bar vor Ort',
     totalPrice: '450.00',
     bookingDate: '24. September 2024',
-    items: 'MGK Teil 1 | 27.09.2024 @ 17:00 | Wettingen, MGK Teil 2 | 28.09.2024 @ 13:00 | Wettingen',
+    items: 'MGK Teil 1, MGK Teil 2',
+    courses: [
+      { part: 1, date: '2024-09-27', time: '17:00', location: 'Wettingen', price: 225 },
+      { part: 2, date: '2024-09-28', time: '13:00', location: 'Wettingen', price: 225 },
+    ],
   },
 } satisfies TemplateEntry
 
