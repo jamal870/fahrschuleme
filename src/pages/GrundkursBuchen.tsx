@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { WaitlistDialog } from "@/components/WaitlistDialog";
+
 import BrandLogo from "@/components/BrandLogo";
 import SiteHeader from "@/components/SiteHeader";
 import Seo from "@/components/Seo";
