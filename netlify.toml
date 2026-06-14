@@ -5,6 +5,32 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# 301-Redirect: alte Domain l-me.ch → neue Domain www.fahrschule-me.ch
+# (Reihenfolge wichtig: host-basierte Redirects VOR dem SPA-Fallback)
+[[redirects]]
+  from = "https://l-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.l-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://l-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.l-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+
 # SPA fallback — auch wenn wir HashRouter nutzen,
 # sorgt das dafür, dass direkte URL-Aufrufe immer index.html laden
 [[redirects]]
