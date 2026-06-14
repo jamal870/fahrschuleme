@@ -7,6 +7,14 @@ import type { TemplateEntry } from './registry.ts'
 const SITE_NAME = "Drive me Fahrschule"
 const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo-new.png"
 
+interface CourseDetail {
+  part?: number | string
+  date?: string
+  time?: string
+  location?: string
+  price?: number | string
+}
+
 interface AdminBookingNotificationProps {
   bookingId?: string
   bookingType?: string
@@ -21,6 +29,16 @@ interface AdminBookingNotificationProps {
   totalPrice?: string
   bookingDate?: string
   items?: string
+  courses?: CourseDetail[]
+}
+
+function formatCourseDate(d?: string) {
+  if (!d) return ''
+  try {
+    const dt = new Date(d)
+    if (isNaN(dt.getTime())) return d
+    return dt.toLocaleDateString('de-CH', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' })
+  } catch { return d }
 }
 
 const AdminBookingNotificationEmail = ({
