@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { WaitlistDialog } from "@/components/WaitlistDialog";
+
 import BrandLogo from "@/components/BrandLogo";
 import SiteHeader from "@/components/SiteHeader";
 import Seo from "@/components/Seo";
@@ -52,9 +52,11 @@ export default function GrundkursBuchen() {
   const part3Ref = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
-  // Load part 1 on mount
+  // Load all 3 parts upfront so customers can browse M2/M3 before selecting M1
   useEffect(() => {
     loadCourseDates(1);
+    loadCourseDates(2);
+    loadCourseDates(3);
   }, []);
 
   const loadCourseDates = async (part: number) => {
@@ -248,51 +250,31 @@ export default function GrundkursBuchen() {
           loading={loadingPart === 1}
         />
 
-        {/* Part 2 - Shown after Part 1 selected */}
-        <AnimatePresence>
-          {selections[1] && (
-            <motion.div
-              ref={part2Ref}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="mt-10">
-                <CourseSection
-                  partNum={2}
-                  courses={getFilteredCourses(2)}
-                  selected={selections[2]}
-                  onSelect={(course) => selectCourse(2, course)}
-                  loading={loadingPart === 2}
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Part 2 - Always visible so customers can browse all dates */}
+        <div ref={part2Ref} className="mt-10">
+          <CourseSection
+            partNum={2}
+            courses={getFilteredCourses(2)}
+            selected={selections[2]}
+            onSelect={(course) => selectCourse(2, course)}
+            loading={loadingPart === 2}
+            requiresPrev={!selections[1]}
+          />
+        </div>
 
-        {/* Part 3 - Shown after Part 2 selected */}
-        <AnimatePresence>
-          {selections[2] && (
-            <motion.div
-              ref={part3Ref}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="mt-10">
-                <CourseSection
-                  partNum={3}
-                  courses={getFilteredCourses(3)}
-                  selected={selections[3]}
-                  onSelect={(course) => selectCourse(3, course)}
-                  loading={loadingPart === 3}
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Part 3 - Always visible so customers can browse all dates */}
+        <div ref={part3Ref} className="mt-10">
+          <CourseSection
+            partNum={3}
+            courses={getFilteredCourses(3)}
+            selected={selections[3]}
+            onSelect={(course) => selectCourse(3, course)}
+            loading={loadingPart === 3}
+            requiresPrev={!selections[2]}
+          />
+        </div>
+
+
 
         {/* Confirmation form - Shown after all 3 parts selected */}
         <AnimatePresence>
@@ -444,24 +426,27 @@ function CourseSection({
   selected,
   onSelect,
   loading,
+  requiresPrev = false,
 }: {
   partNum: number;
   courses: CourseDate[];
   selected: CourseDate | null;
   onSelect: (course: CourseDate) => void;
   loading: boolean;
+  requiresPrev?: boolean;
 }) {
-  const [waitlistCourse, setWaitlistCourse] = useState<CourseDate | null>(null);
-
   return (
     <div>
       <h2 className="text-2xl font-bold font-[Outfit] text-primary mb-1 flex items-center gap-2">
-        🏍️ MGK Teil {partNum} – Datum wählen
+        🏍️ MGK Teil {partNum} – {requiresPrev ? "Übersicht" : "Datum wählen"}
         {selected && <Check className="w-5 h-5 text-accent" />}
       </h2>
       <p className="text-sm text-muted-foreground mb-6">
-        {partNum === 1 ? "Wählen Sie Ihren Wunschtermin für den ersten Kursteil." :
-         `Teil ${partNum} muss nach Teil ${partNum - 1} stattfinden.`}
+        {partNum === 1
+          ? "Wählen Sie Ihren Wunschtermin für den ersten Kursteil."
+          : requiresPrev
+            ? `Alle verfügbaren Termine für Teil ${partNum}. Bitte zuerst Teil ${partNum - 1} auswählen, um buchen zu können.`
+            : `Teil ${partNum} muss nach Teil ${partNum - 1} stattfinden.`}
       </p>
 
       {loading ? (
@@ -498,29 +483,25 @@ function CourseSection({
                   <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mt-3 bg-destructive/15 text-destructive">
                     Ausgebucht
                   </span>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    className="w-full mt-3 text-xs h-8"
-                    onClick={() => setWaitlistCourse(course)}
-                  >
-                    📝 Auf Warteliste
-                  </Button>
                 </div>
               );
             }
 
+            const disabled = requiresPrev;
             return (
               <motion.button
                 key={course.id}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => onSelect(course)}
+                whileHover={disabled ? undefined : { scale: 1.02 }}
+                whileTap={disabled ? undefined : { scale: 0.98 }}
+                disabled={disabled}
+                onClick={() => !disabled && onSelect(course)}
+                title={disabled ? `Bitte zuerst Teil ${partNum - 1} auswählen` : undefined}
                 className={`text-left bg-card rounded-xl border-2 p-4 transition-colors ${
                   isSelected
                     ? "border-primary bg-primary/5 shadow-md"
-                    : "border-border hover:border-primary/30"
+                    : disabled
+                      ? "border-border opacity-60 cursor-not-allowed"
+                      : "border-border hover:border-primary/30"
                 }`}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
@@ -549,14 +530,8 @@ function CourseSection({
           })}
         </div>
       )}
-
-      <WaitlistDialog
-        open={!!waitlistCourse}
-        onOpenChange={(o) => { if (!o) setWaitlistCourse(null); }}
-        courseDateId={waitlistCourse?.id || ""}
-        courseLabel={waitlistCourse ? `MGK Teil ${partNum} · ${waitlistCourse.date} · ${waitlistCourse.time}` : ""}
-      />
     </div>
   );
 }
+
 
