@@ -47,6 +47,14 @@ interface BookingItem {
   instructor: string | null;
 }
 
+interface CourseDateInfo {
+  id: string;
+  part: number;
+  date: string;
+  time: string | null;
+  location: string | null;
+}
+
 const AdminBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
