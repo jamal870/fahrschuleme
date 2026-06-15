@@ -340,8 +340,16 @@ const AdminBookings = () => {
                   <Input value={editData.phone ?? ""} onChange={(e) => setEditData({ ...editData, phone: e.target.value })} />
                 </div>
                 <div className="space-y-1 col-span-2">
-                  <Label>Adresse</Label>
+                  <Label>Strasse & Nr.</Label>
                   <Input value={editData.address ?? ""} onChange={(e) => setEditData({ ...editData, address: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>PLZ</Label>
+                  <Input value={editData.postal_code ?? ""} onChange={(e) => setEditData({ ...editData, postal_code: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>Stadt</Label>
+                  <Input value={editData.city ?? ""} onChange={(e) => setEditData({ ...editData, city: e.target.value })} />
                 </div>
                 <div className="space-y-1">
                   <Label>Geburtsdatum</Label>
