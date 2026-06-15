@@ -286,7 +286,7 @@ const AdminBookings = () => {
                 <div><span className="text-muted-foreground">Telefon:</span> {selectedBooking.phone}</div>
                 <div><span className="text-muted-foreground">Geburtsdatum:</span> {selectedBooking.birth_date}</div>
                 <div><span className="text-muted-foreground">FA-Nummer:</span> {selectedBooking.fa_number}</div>
-                <div><span className="text-muted-foreground">Adresse:</span> {selectedBooking.address}</div>
+                <div className="col-span-2"><span className="text-muted-foreground">Adresse:</span> {[selectedBooking.address, [selectedBooking.postal_code, selectedBooking.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")}</div>
                 <div><span className="text-muted-foreground">Zahlung:</span> {selectedBooking.payment_method}</div>
                 <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusColor(selectedBooking.status) as any}>{selectedBooking.status}</Badge></div>
                 <div><span className="text-muted-foreground">Betrag:</span> <strong>CHF {selectedBooking.total_price}</strong></div>
