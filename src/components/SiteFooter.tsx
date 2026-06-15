@@ -18,6 +18,15 @@ const SiteFooter = () => (
         <Link to="/agb" className="hover:text-primary">AGB</Link>
       </div>
       <div>{tenantConfig.footer.copyright}</div>
+      <div className="pt-2">
+        <Link
+          to="/admin/login"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
+          style={{ borderRadius: "3px" }}
+        >
+          Admin Login
+        </Link>
+      </div>
     </div>
   </footer>
 );
