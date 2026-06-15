@@ -108,7 +108,7 @@ export default function GrundkursBuchen() {
   };
 
   const handleSubmit = async () => {
-    const result = bookingSchema.safeParse({ firstName, lastName, email, phone, address, faNumber, birthDate, category });
+    const result = bookingSchema.safeParse({ firstName, lastName, email, phone, address, postalCode, city, faNumber, birthDate, category });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.errors.forEach((e) => { fieldErrors[e.path[0] as string] = e.message; });
