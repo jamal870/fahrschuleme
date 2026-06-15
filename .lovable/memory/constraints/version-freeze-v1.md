@@ -1,13 +1,13 @@
 ---
-name: Version Freeze v1.0.0
-description: Stable production freeze 2026-06-15. No changes without explicit approval.
+name: Version Freeze v1.1.0
+description: Stable production freeze 2026-06-15 (v1.1.0). No changes without explicit approval.
 type: constraint
 ---
-**Version 1.0.0 ist eingefroren (2026-06-15, Commit b1108e6).**
+**Version 1.1.0 ist eingefroren (2026-06-15).**
 
 Keine Code-Änderungen mehr ohne ausdrückliche Freigabe des Betreibers. Erlaubt sind nur:
-1. Sicherheits-Hotfixes (mit Patch-Bump → 1.0.x + Eintrag in VERSION.md)
-2. Inhaltsänderungen über das Admin-Panel (Preise, Kurstermine, Team, Promos)
+1. Sicherheits-Hotfixes (mit Patch-Bump → 1.1.x + Eintrag in VERSION.md)
+2. Inhaltsänderungen über das Admin-Panel (Preise, Kurstermine, Team, Promotions)
 
 Vor jeder Änderung: VERSION.md lesen, Bestätigung einholen, danach Version-Bump + Changelog-Eintrag.
 
