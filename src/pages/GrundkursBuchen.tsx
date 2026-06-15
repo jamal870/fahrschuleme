@@ -44,6 +44,8 @@ export default function GrundkursBuchen() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [city, setCity] = useState("");
   const [faNumber, setFaNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [category, setCategory] = useState("A (Motorrad)");
