@@ -1,3 +1,4 @@
+// Deploy trigger: 2026-06-15
 /**
  * ─── Tenant Configuration ────────────────────────────────────
  * 
