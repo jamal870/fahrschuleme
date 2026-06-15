@@ -345,9 +345,19 @@ export default function GrundkursBuchen() {
                       {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
                     </div>
                     <div className="sm:col-span-2">
-                      <Label className="text-sm font-medium">Adresse <span className="text-destructive">*</span></Label>
-                      <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Musterstrasse 1, 5400 Baden" className="mt-1" />
+                      <Label className="text-sm font-medium">Strasse & Nr. <span className="text-destructive">*</span></Label>
+                      <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Musterstrasse 1" className="mt-1" />
                       {errors.address && <p className="text-xs text-destructive mt-1">{errors.address}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">PLZ <span className="text-destructive">*</span></Label>
+                      <Input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="5400" className="mt-1" />
+                      {errors.postalCode && <p className="text-xs text-destructive mt-1">{errors.postalCode}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Stadt <span className="text-destructive">*</span></Label>
+                      <Input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Baden" className="mt-1" />
+                      {errors.city && <p className="text-xs text-destructive mt-1">{errors.city}</p>}
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Geburtsdatum <span className="text-destructive">*</span></Label>
