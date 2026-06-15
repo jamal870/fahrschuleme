@@ -10,6 +10,8 @@ interface Promotion {
   badge: string | null;
   original_price: number | null;
   discount_price: number | null;
+  starts_at: string | null;
+  ends_at: string | null;
 }
 
 const PromotionsSection = () => {
