@@ -119,6 +119,8 @@ const AdminBookings = () => {
         email: updates.email,
         phone: updates.phone,
         address: updates.address,
+        postal_code: updates.postal_code,
+        city: updates.city,
         birth_date: updates.birth_date,
         fa_number: updates.fa_number,
         payment_method: updates.payment_method,
