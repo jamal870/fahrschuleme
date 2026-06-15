@@ -28,6 +28,8 @@ const bookingSchema = z.object({
   email: z.string().trim().email("Ungültige E-Mail-Adresse"),
   phone: z.string().trim().min(1, "Telefonnummer ist ein Pflichtfeld"),
   address: z.string().trim().min(1, "Adresse ist ein Pflichtfeld"),
+  postalCode: z.string().trim().min(4, "PLZ ist ein Pflichtfeld").max(10),
+  city: z.string().trim().min(1, "Stadt ist ein Pflichtfeld"),
   faNumber: z.string().trim().min(1, "FA-Nummer ist ein Pflichtfeld").max(30, "FA-Nummer darf maximal 30 Zeichen haben"),
   birthDate: z.string().trim().min(1, "Geburtsdatum ist ein Pflichtfeld"),
   category: z.string().min(1, "Kategorie ist ein Pflichtfeld"),
