@@ -80,7 +80,20 @@ const AdminBookings = () => {
     setEditing(false);
     setEditData(null);
     const { data } = await supabase.from("booking_items").select("*").eq("booking_id", booking.id);
-    setBookingItems(data || []);
+    const items = (data || []) as BookingItem[];
+    setBookingItems(items);
+    const courseIds = items.map(i => i.course_date_id).filter(Boolean) as string[];
+    if (courseIds.length > 0) {
+      const { data: cd } = await supabase
+        .from("course_dates")
+        .select("id, part, date, time, location")
+        .in("id", courseIds);
+      const map: Record<string, CourseDateInfo> = {};
+      (cd || []).forEach((c: any) => { map[c.id] = c; });
+      setCourseDates(map);
+    } else {
+      setCourseDates({});
+    }
   };
 
   const startEdit = () => {
