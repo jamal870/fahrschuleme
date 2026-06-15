@@ -1,0 +1,1 @@
+GRANT SELECT ON public.promotions TO anon, authenticated; GRANT ALL ON public.promotions TO service_role;
