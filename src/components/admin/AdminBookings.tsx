@@ -60,6 +60,7 @@ const AdminBookings = () => {
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [bookingItems, setBookingItems] = useState<BookingItem[]>([]);
+  const [courseDates, setCourseDates] = useState<Record<string, CourseDateInfo>>({});
   const [editing, setEditing] = useState(false);
   const [editData, setEditData] = useState<Booking | null>(null);
   const [saving, setSaving] = useState(false);
