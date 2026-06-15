@@ -56,6 +56,7 @@ serve(async (req) => {
     const body = await req.json();
     const {
       bookingType, firstName, lastName, email, phone, address,
+      postalCode, city,
       faNumber, birthDate, paymentMethod, totalPrice,
       courseDateIds, // for grundkurs: array of course_date IDs
       fahrstundenServiceId, fahrstundenPackageId, instructor, // for fahrstunde
