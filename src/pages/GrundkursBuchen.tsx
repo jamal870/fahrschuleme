@@ -137,7 +137,7 @@ export default function GrundkursBuchen() {
       const { data: bookingResult, error: bookingError } = await supabase.functions.invoke('create-booking', {
         body: {
           bookingType: 'grundkurs',
-          firstName, lastName, email, phone, address,
+          firstName, lastName, email, phone, address, postalCode, city,
           faNumber, birthDate,
           paymentMethod,
           totalPrice: total,
