@@ -124,6 +124,22 @@ const PromotionsSection = () => {
                 </div>
               )}
 
+              {(p.starts_at || p.ends_at) && (() => {
+                const fmt = (iso: string) => new Date(iso).toLocaleDateString("de-CH", { day: "2-digit", month: "2-digit", year: "numeric" });
+                const now = new Date();
+                const notYet = p.starts_at && new Date(p.starts_at) > now;
+                let label = "";
+                if (p.starts_at && p.ends_at) label = `Gültig ${fmt(p.starts_at)} – ${fmt(p.ends_at)}`;
+                else if (p.starts_at) label = `Gültig ab ${fmt(p.starts_at)}`;
+                else if (p.ends_at) label = `Gültig bis ${fmt(p.ends_at)}`;
+                return (
+                  <div className="relative mt-3 text-xs font-body text-muted-foreground">
+                    {notYet ? <span className="font-bold text-primary">Bald verfügbar – </span> : null}
+                    {label}
+                  </div>
+                );
+              })()}
+
               {/* Hover glow */}
               <div
                 aria-hidden
