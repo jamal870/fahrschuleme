@@ -1,0 +1,1 @@
+ALTER TABLE public.bookings ADD COLUMN IF NOT EXISTS postal_code TEXT, ADD COLUMN IF NOT EXISTS city TEXT;
