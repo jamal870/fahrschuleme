@@ -18,18 +18,12 @@ const PromotionsSection = () => {
 
   useEffect(() => {
     const load = async () => {
-      const nowIso = new Date().toISOString();
       const { data } = await supabase
         .from("promotions")
         .select("id,title,description,price,badge,starts_at,ends_at,sort_order,original_price,discount_price")
         .eq("active", true)
         .order("sort_order", { ascending: true });
-      const filtered = (data || []).filter((p: any) => {
-        if (p.starts_at && p.starts_at > nowIso) return false;
-        if (p.ends_at && p.ends_at < nowIso) return false;
-        return true;
-      });
-      setItems(filtered as Promotion[]);
+      setItems((data || []) as Promotion[]);
       setLoading(false);
     };
     load();
