@@ -33,6 +33,8 @@ interface Booking {
   fa_number: string;
   birth_date: string;
   address: string;
+  postal_code: string | null;
+  city: string | null;
   payment_method: string;
 }
 
