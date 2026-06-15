@@ -33,6 +33,8 @@ interface Booking {
   fa_number: string;
   birth_date: string;
   address: string;
+  postal_code: string | null;
+  city: string | null;
   payment_method: string;
 }
 
@@ -45,11 +47,20 @@ interface BookingItem {
   instructor: string | null;
 }
 
+interface CourseDateInfo {
+  id: string;
+  part: number;
+  date: string;
+  time: string | null;
+  location: string | null;
+}
+
 const AdminBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [bookingItems, setBookingItems] = useState<BookingItem[]>([]);
+  const [courseDates, setCourseDates] = useState<Record<string, CourseDateInfo>>({});
   const [editing, setEditing] = useState(false);
   const [editData, setEditData] = useState<Booking | null>(null);
   const [saving, setSaving] = useState(false);
@@ -69,7 +80,20 @@ const AdminBookings = () => {
     setEditing(false);
     setEditData(null);
     const { data } = await supabase.from("booking_items").select("*").eq("booking_id", booking.id);
-    setBookingItems(data || []);
+    const items = (data || []) as BookingItem[];
+    setBookingItems(items);
+    const courseIds = items.map(i => i.course_date_id).filter(Boolean) as string[];
+    if (courseIds.length > 0) {
+      const { data: cd } = await supabase
+        .from("course_dates")
+        .select("id, part, date, time, location")
+        .in("id", courseIds);
+      const map: Record<string, CourseDateInfo> = {};
+      (cd || []).forEach((c: any) => { map[c.id] = c; });
+      setCourseDates(map);
+    } else {
+      setCourseDates({});
+    }
   };
 
   const startEdit = () => {
@@ -95,6 +119,8 @@ const AdminBookings = () => {
         email: updates.email,
         phone: updates.phone,
         address: updates.address,
+        postal_code: updates.postal_code,
+        city: updates.city,
         birth_date: updates.birth_date,
         fa_number: updates.fa_number,
         payment_method: updates.payment_method,
@@ -260,7 +286,7 @@ const AdminBookings = () => {
                 <div><span className="text-muted-foreground">Telefon:</span> {selectedBooking.phone}</div>
                 <div><span className="text-muted-foreground">Geburtsdatum:</span> {selectedBooking.birth_date}</div>
                 <div><span className="text-muted-foreground">FA-Nummer:</span> {selectedBooking.fa_number}</div>
-                <div><span className="text-muted-foreground">Adresse:</span> {selectedBooking.address}</div>
+                <div className="col-span-2"><span className="text-muted-foreground">Adresse:</span> {[selectedBooking.address, [selectedBooking.postal_code, selectedBooking.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")}</div>
                 <div><span className="text-muted-foreground">Zahlung:</span> {selectedBooking.payment_method}</div>
                 <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusColor(selectedBooking.status) as any}>{selectedBooking.status}</Badge></div>
                 <div><span className="text-muted-foreground">Betrag:</span> <strong>CHF {selectedBooking.total_price}</strong></div>
@@ -270,14 +296,24 @@ const AdminBookings = () => {
                 <div>
                   <p className="font-semibold mb-2">Gebuchte Leistungen:</p>
                   <ul className="space-y-1 text-xs">
-                    {bookingItems.map((item) => (
-                      <li key={item.id} className="bg-muted/50 p-2 rounded">
-                        {item.course_date_id && <span>Kurs: {item.course_date_id}</span>}
-                        {item.fahrstunden_service_id && <span>Fahrstunde: {item.fahrstunden_service_id}</span>}
-                        {item.fahrstunden_package_id && <span>Paket: {item.fahrstunden_package_id}</span>}
-                        {item.instructor && <span> · Fahrlehrer: {item.instructor}</span>}
-                      </li>
-                    ))}
+                    {bookingItems.map((item) => {
+                      const cd = item.course_date_id ? courseDates[item.course_date_id] : null;
+                      return (
+                        <li key={item.id} className="bg-muted/50 p-2 rounded">
+                          {cd && (
+                            <span>
+                              <strong>MGK Teil {cd.part}</strong> · {new Date(cd.date).toLocaleDateString("de-CH", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" })}
+                              {cd.time && <> · {cd.time}</>}
+                              {cd.location && <> · {cd.location}</>}
+                            </span>
+                          )}
+                          {item.course_date_id && !cd && <span className="text-muted-foreground">Kurs (gelöscht): {item.course_date_id}</span>}
+                          {item.fahrstunden_service_id && <span>Fahrstunde: {item.fahrstunden_service_id}</span>}
+                          {item.fahrstunden_package_id && <span>Paket: {item.fahrstunden_package_id}</span>}
+                          {item.instructor && <span> · Fahrlehrer: {item.instructor}</span>}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
@@ -304,8 +340,16 @@ const AdminBookings = () => {
                   <Input value={editData.phone ?? ""} onChange={(e) => setEditData({ ...editData, phone: e.target.value })} />
                 </div>
                 <div className="space-y-1 col-span-2">
-                  <Label>Adresse</Label>
+                  <Label>Strasse & Nr.</Label>
                   <Input value={editData.address ?? ""} onChange={(e) => setEditData({ ...editData, address: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>PLZ</Label>
+                  <Input value={editData.postal_code ?? ""} onChange={(e) => setEditData({ ...editData, postal_code: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label>Stadt</Label>
+                  <Input value={editData.city ?? ""} onChange={(e) => setEditData({ ...editData, city: e.target.value })} />
                 </div>
                 <div className="space-y-1">
                   <Label>Geburtsdatum</Label>

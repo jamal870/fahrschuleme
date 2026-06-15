@@ -78,6 +78,7 @@ export type Database = {
           address: string
           birth_date: string
           booking_type: string
+          city: string | null
           created_at: string
           email: string
           fa_number: string
@@ -86,6 +87,7 @@ export type Database = {
           last_name: string
           payment_method: string
           phone: string
+          postal_code: string | null
           status: string
           total_price: number
           updated_at: string
@@ -94,6 +96,7 @@ export type Database = {
           address: string
           birth_date: string
           booking_type: string
+          city?: string | null
           created_at?: string
           email: string
           fa_number: string
@@ -102,6 +105,7 @@ export type Database = {
           last_name: string
           payment_method: string
           phone: string
+          postal_code?: string | null
           status?: string
           total_price: number
           updated_at?: string
@@ -110,6 +114,7 @@ export type Database = {
           address?: string
           birth_date?: string
           booking_type?: string
+          city?: string | null
           created_at?: string
           email?: string
           fa_number?: string
@@ -118,6 +123,7 @@ export type Database = {
           last_name?: string
           payment_method?: string
           phone?: string
+          postal_code?: string | null
           status?: string
           total_price?: number
           updated_at?: string

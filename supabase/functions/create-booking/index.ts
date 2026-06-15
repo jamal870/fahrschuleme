@@ -56,6 +56,7 @@ serve(async (req) => {
     const body = await req.json();
     const {
       bookingType, firstName, lastName, email, phone, address,
+      postalCode, city,
       faNumber, birthDate, paymentMethod, totalPrice,
       courseDateIds, // for grundkurs: array of course_date IDs
       fahrstundenServiceId, fahrstundenPackageId, instructor, // for fahrstunde
@@ -139,6 +140,8 @@ serve(async (req) => {
           email: email.trim().toLowerCase(),
           phone: phone.trim(),
           address: address.trim(),
+          postal_code: postalCode ? String(postalCode).trim() : null,
+          city: city ? String(city).trim() : null,
           fa_number: faNumber.trim(),
           birth_date: birthDate.trim(),
           payment_method: paymentMethod,
@@ -328,6 +331,8 @@ serve(async (req) => {
           email: email.trim().toLowerCase(),
           phone: phone.trim(),
           address: address.trim(),
+          postal_code: postalCode ? String(postalCode).trim() : null,
+          city: city ? String(city).trim() : null,
           fa_number: faNumber.trim(),
           birth_date: birthDate.trim(),
           payment_method: paymentMethod,

@@ -28,6 +28,8 @@ const bookingSchema = z.object({
   email: z.string().trim().email("Ungültige E-Mail-Adresse"),
   phone: z.string().trim().min(1, "Telefonnummer ist ein Pflichtfeld"),
   address: z.string().trim().min(1, "Adresse ist ein Pflichtfeld"),
+  postalCode: z.string().trim().min(4, "PLZ ist ein Pflichtfeld").max(10),
+  city: z.string().trim().min(1, "Stadt ist ein Pflichtfeld"),
   faNumber: z.string().trim().min(1, "FA-Nummer ist ein Pflichtfeld").max(30, "FA-Nummer darf maximal 30 Zeichen haben"),
   birthDate: z.string().trim().min(1, "Geburtsdatum ist ein Pflichtfeld"),
   category: z.string().min(1, "Kategorie ist ein Pflichtfeld"),
@@ -42,6 +44,8 @@ export default function GrundkursBuchen() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [city, setCity] = useState("");
   const [faNumber, setFaNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [category, setCategory] = useState("A (Motorrad)");
@@ -104,7 +108,7 @@ export default function GrundkursBuchen() {
   };
 
   const handleSubmit = async () => {
-    const result = bookingSchema.safeParse({ firstName, lastName, email, phone, address, faNumber, birthDate, category });
+    const result = bookingSchema.safeParse({ firstName, lastName, email, phone, address, postalCode, city, faNumber, birthDate, category });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.errors.forEach((e) => { fieldErrors[e.path[0] as string] = e.message; });
@@ -133,7 +137,7 @@ export default function GrundkursBuchen() {
       const { data: bookingResult, error: bookingError } = await supabase.functions.invoke('create-booking', {
         body: {
           bookingType: 'grundkurs',
-          firstName, lastName, email, phone, address,
+          firstName, lastName, email, phone, address, postalCode, city,
           faNumber, birthDate,
           paymentMethod,
           totalPrice: total,
@@ -341,9 +345,19 @@ export default function GrundkursBuchen() {
                       {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
                     </div>
                     <div className="sm:col-span-2">
-                      <Label className="text-sm font-medium">Adresse <span className="text-destructive">*</span></Label>
-                      <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Musterstrasse 1, 5400 Baden" className="mt-1" />
+                      <Label className="text-sm font-medium">Strasse & Nr. <span className="text-destructive">*</span></Label>
+                      <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Musterstrasse 1" className="mt-1" />
                       {errors.address && <p className="text-xs text-destructive mt-1">{errors.address}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">PLZ <span className="text-destructive">*</span></Label>
+                      <Input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="5400" className="mt-1" />
+                      {errors.postalCode && <p className="text-xs text-destructive mt-1">{errors.postalCode}</p>}
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Stadt <span className="text-destructive">*</span></Label>
+                      <Input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Baden" className="mt-1" />
+                      {errors.city && <p className="text-xs text-destructive mt-1">{errors.city}</p>}
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Geburtsdatum <span className="text-destructive">*</span></Label>
