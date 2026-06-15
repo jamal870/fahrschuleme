@@ -1,0 +1,61 @@
+# Version 1.0.0 — Stable Production Release
+
+**Freeze-Datum:** 2026-06-15  
+**Commit:** `b1108e6096318e2b2aab23701cfdf319e279a411`  
+**Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+
+## Live-Umgebung
+
+| Komponente | Wert |
+|---|---|
+| Produktion (Custom Domain) | https://www.fahrschule-me.ch |
+| Lovable Preview | https://fahrschuleme.lovable.app |
+| Hosting | Netlify (Deploy via GitHub Actions) |
+| Backend | Lovable Cloud (Supabase) |
+| Supabase Project-Ref | `dspspshgnointeqxgnrw` |
+| Supabase URL | `https://dspspshgnointeqxgnrw.supabase.co` |
+
+## Erforderliche GitHub Actions Repository-Secrets
+
+> ⚠️ Müssen unter **GitHub → Settings → Secrets and variables → Actions → Repository secrets** liegen (nicht Environment secrets).
+
+| Secret | Wert |
+|---|---|
+| `VITE_SUPABASE_URL` | `https://dspspshgnointeqxgnrw.supabase.co` |
+| `VITE_SUPABASE_PROJECT_ID` | `dspspshgnointeqxgnrw` |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzcHNwc2hnbm9pbnRlcXhnbnJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjYwOTgsImV4cCI6MjA4OTg0MjA5OH0.74LOXsjm7jbY7-XncA0u_Zr7nevlX9l1OplD7eV0zjU` |
+| `NETLIFY_AUTH_TOKEN` | Persönlicher Token aus Netlify → User Settings → Applications |
+| `NETLIFY_SITE_ID` | Site-ID aus Netlify → Site Settings → General |
+
+## Stabile Architektur-Entscheidungen (nicht ändern)
+
+- **HashRouter** für iframe-Stabilität auf der Hauptdomain
+- **Tenant-Daten** ausschließlich in `src/config/tenant.ts`
+- **Buchungen** ausschließlich über `create-booking` Edge Function (keine direkten Public-DB-Inserts)
+- **Stripe** mit Blank-Tab + DB-Polling + Webhook-Bestätigung
+- **Branding:** Akzent `#e8501a`, Rajdhani (Headings) + DM Sans (Body), 3px Border-Radius
+
+## Verifizierte Funktionen
+
+- ✅ Buchung Grundkurse (Auto + Motorrad)
+- ✅ Fahrstunden-Buchung mit Stripe-Zahlung
+- ✅ Admin-Panel mit Auth + Rollen
+- ✅ E-Mail-Versand (Bestätigung, Erinnerung, Warteliste)
+- ✅ PDF-Dokumentengenerierung (Rechnungen, Bestätigungen)
+- ✅ iCal-Feed
+- ✅ Chatbot
+- ✅ Warteliste
+- ✅ 301-Redirects `l-me.ch` → `www.fahrschule-me.ch`
+
+## Rollback
+
+Diese Version kann jederzeit über **Lovable → History** wiederhergestellt werden (Eintrag vom 2026-06-15).  
+Zusätzlich empfohlen: in GitHub einen Release-Tag `v1.0.0` auf Commit `b1108e6` setzen.
+
+## Freeze-Regel
+
+Ab dieser Version: **keine Änderungen** außer:
+1. Sicherheits-Hotfixes
+2. Vom Betreiber ausdrücklich freigegebene Inhaltsänderungen (Preise, Kurstermine etc. über Admin-Panel)
+
+Jede Code-Änderung → Versions-Bump (1.0.x für Fixes, 1.x.0 für Features) + Eintrag in dieser Datei.
