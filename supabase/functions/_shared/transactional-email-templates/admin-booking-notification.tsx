@@ -5,7 +5,7 @@ import {
 import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = "Drive me Fahrschule"
-const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo-new.png"
+const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/logo-lme-light.png"
 
 interface CourseDetail {
   part?: number | string
@@ -23,6 +23,8 @@ interface AdminBookingNotificationProps {
   email?: string
   phone?: string
   address?: string
+  postalCode?: string
+  city?: string
   birthDate?: string
   faNumber?: string
   paymentMethod?: string
@@ -49,6 +51,8 @@ const AdminBookingNotificationEmail = ({
   email,
   phone,
   address,
+  postalCode,
+  city,
   birthDate,
   faNumber,
   paymentMethod,
@@ -64,7 +68,7 @@ const AdminBookingNotificationEmail = ({
       <Container style={container}>
         {/* Header with logo and orange accent bar */}
         <Section style={headerSection}>
-          <Img src={LOGO_URL} alt="Drive me Fahrschule" width="180" style={logoStyle} />
+          <Img src={LOGO_URL} alt="L me Fahrschule Wettingen" width="180" style={logoStyle} />
         </Section>
         <Section style={orangeBar} />
 
@@ -86,7 +90,7 @@ const AdminBookingNotificationEmail = ({
           {firstName && lastName && <Text style={detailRow}><strong>Name:</strong> {firstName} {lastName}</Text>}
           {email && <Text style={detailRow}><strong>E-Mail:</strong> {email}</Text>}
           {phone && <Text style={detailRow}><strong>Telefon:</strong> {phone}</Text>}
-          {address && <Text style={detailRow}><strong>Adresse:</strong> {address}</Text>}
+          {address && <Text style={detailRow}><strong>Adresse:</strong> {address}{(postalCode || city) ? `, ${[postalCode, city].filter(Boolean).join(' ')}` : ''}</Text>}
           {birthDate && <Text style={detailRow}><strong>Geburtstag:</strong> {birthDate}</Text>}
           {faNumber && <Text style={detailRow}><strong>FABER Nr.:</strong> {faNumber}</Text>}
         </Section>
