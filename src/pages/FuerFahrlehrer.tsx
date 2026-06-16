@@ -171,11 +171,11 @@ const FuerFahrlehrer = () => {
             <div className="bg-section-alt border border-border p-8" style={{ borderRadius: "3px" }}>
               <p className="text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-3">Solo</p>
               <p className="text-5xl font-heading font-bold text-foreground">
-                CHF {soloPrice}
-                <span className="text-lg font-body font-normal text-muted-foreground">/Monat</span>
+                CHF {soloPrice * 12}
+                <span className="text-lg font-body font-normal text-muted-foreground">/Jahr</span>
               </p>
               <p className="text-xs text-muted-foreground font-body mb-6 mt-1">
-                bei jährlicher Zahlung (CHF {soloPrice * 12}/Jahr)
+                entspricht CHF {soloPrice}/Monat
               </p>
               <ul className="space-y-2 mb-6">
                 {soloFeatures.map((f, i) => (
@@ -197,11 +197,11 @@ const FuerFahrlehrer = () => {
               </span>
               <p className="text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-3">Solo+</p>
               <p className="text-5xl font-heading font-bold text-foreground">
-                CHF {soloPlusPrice}
-                <span className="text-lg font-body font-normal text-muted-foreground">/Monat</span>
+                CHF {soloPlusPrice * 12}
+                <span className="text-lg font-body font-normal text-muted-foreground">/Jahr</span>
               </p>
               <p className="text-xs text-muted-foreground font-body mb-6 mt-1">
-                bei jährlicher Zahlung (CHF {soloPlusPrice * 12}/Jahr)
+                entspricht CHF {soloPlusPrice}/Monat
               </p>
               <ul className="space-y-2 mb-6">
                 {soloPlusFeatures.map((f, i) => (
