@@ -64,7 +64,7 @@ const BookingConfirmationEmail = ({
         </Text>
 
         <Text style={text}>
-          Danke für deine Bestellung!
+          {settings?.mgk_greeting_extra || 'Danke für deine Bestellung!'}
         </Text>
 
         <Hr style={divider} />
@@ -93,11 +93,7 @@ const BookingConfirmationEmail = ({
         {/* --- Treffpunkt --- */}
         <Heading style={h2}>Treffpunkt</Heading>
         <Text style={text}>
-          Für Kurse in Wettingen:{'\n'}
-          Landstrasse 99{'\n'}
-          Centerpassage{'\n'}
-          Ottos Rampe{'\n'}
-          5430 Wettingen
+          {settings?.mgk_meeting_point || 'Für Kurse in Wettingen:\nLandstrasse 99\nCenterpassage\nOttos Rampe\n5430 Wettingen'}
         </Text>
 
         <Hr style={divider} />
@@ -106,13 +102,7 @@ const BookingConfirmationEmail = ({
         <Section style={importantSection}>
           <Heading style={h2Important}>⚠️ WICHTIG</Heading>
           <Text style={importantText}>
-            Am ersten Kurstag den Personalausweis (ID, Pass) und Lernfahrausweis mitbringen!
-          </Text>
-          <Text style={importantText}>
-            Kursgebühren sind am ersten Tag zu bezahlen.
-          </Text>
-          <Text style={importantText}>
-            Zahle Bar oder mit Karte vor Ort.
+            {settings?.mgk_important_notes || 'Am ersten Kurstag den Personalausweis (ID, Pass) und Lernfahrausweis mitbringen!\nKursgebühren sind am ersten Tag zu bezahlen.\nZahle Bar oder mit Karte vor Ort.'}
           </Text>
         </Section>
 
@@ -120,7 +110,7 @@ const BookingConfirmationEmail = ({
 
         {/* --- Stornierung --- */}
         <Text style={smallText}>
-          Diese Anmeldung ist verbindlich: Umbuchungen bzw. Stornierungen sind bis 5 Tage vor Kursbeginn schriftlich an info@l-me.ch möglich, danach wird die volle Kursgebühr in Rechnung gestellt.
+          {settings?.mgk_cancellation_policy || 'Diese Anmeldung ist verbindlich: Umbuchungen bzw. Stornierungen sind bis 5 Tage vor Kursbeginn schriftlich an info@l-me.ch möglich, danach wird die volle Kursgebühr in Rechnung gestellt.'}
         </Text>
 
         <Hr style={divider} />
@@ -128,10 +118,7 @@ const BookingConfirmationEmail = ({
         {/* --- Bankverbindung --- */}
         <Heading style={h2}>Unsere Bankverbindung</Heading>
         <Text style={text}>
-          Jamal Ettanaghmalti{'\n'}
-          Bank: PostFinance{'\n'}
-          IBAN: CH5009000000167884324{'\n'}
-          BIC: POFICHBEXXX
+          {settings?.bank_info || 'Jamal Ettanaghmalti\nBank: PostFinance\nIBAN: CH5009000000167884324\nBIC: POFICHBEXXX'}
         </Text>
 
         <Hr style={divider} />
@@ -197,8 +184,7 @@ const BookingConfirmationEmail = ({
         <Hr style={divider} />
 
         <Text style={footer}>
-          Freundliche Grüsse,{'\n'}
-          Das {SITE_NAME} Team
+          {settings?.footer_signature || `Freundliche Grüsse,\nDas ${SITE_NAME} Team`}
         </Text>
       </Container>
     </Body>
