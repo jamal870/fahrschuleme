@@ -31,12 +31,15 @@ const soloFeatures = [
   "Stripe Online-Zahlung",
   "Google Kalender Sync",
   "Mobile + Desktop App",
+  "Buchhaltung inklusive",
+  "Lohnbuchhaltung inklusive",
 ];
 const soloPlusFeatures = [
   "1 Fahrlehrer",
   "Unbegrenzte Schüler",
   "Alle Solo Features",
-  "Buchhaltung komplett",
+  "Buchhaltung inklusive",
+  "Lohnbuchhaltung inklusive",
   "Ausgaben erfassen",
   "Fahrlehrer-Abrechnung PDF",
   "Steuerexport Excel",
@@ -44,17 +47,15 @@ const soloPlusFeatures = [
 ];
 
 const faqs = [
-  { q: "Was passiert nach dem 30-tägigen Test?", a: "Nach Ablauf des Trials wählst du ein Abonnement (Solo CHF 29/Monat oder Solo+ CHF 49/Monat bei jährlicher Zahlung). Deine Daten bleiben vollständig erhalten." },
+  { q: "Was passiert nach dem 30-tägigen Test?", a: "Nach Ablauf des Trials wählst du ein Abonnement (Solo CHF 449/Monat oder Solo+ CHF 690/Monat, jährliche Zahlung). Deine Daten bleiben vollständig erhalten." },
   { q: "Kann ich meine Daten exportieren?", a: "Ja, jederzeit. Unter Einstellungen → \"Meine Daten exportieren\" kannst du alle deine Daten (Schüler, Rechnungen, Termine) als Excel oder PDF herunterladen." },
   { q: "Wo werden meine Daten gespeichert?", a: "Alle Daten werden ausschliesslich auf Servern in der Schweiz gespeichert (Hostpoint AG, Rapperswil-Jona). Wir sind DSG-konform." },
   { q: "Auf welchen Geräten läuft die App?", a: "Die App ist nativ für iOS (App Store) und Android (Google Play Store) verfügbar – optimiert für Tablet und Smartphone. Zusätzlich gibt es eine Desktop-Version im Browser." },
 ];
 
 const FuerFahrlehrer = () => {
-  const [annual, setAnnual] = useState(true);
-
-  const soloPrice = annual ? 29 : 35;
-  const soloPlusPrice = annual ? 49 : 59;
+  const soloPrice = 449;
+  const soloPlusPrice = 690;
 
   return (
     <div className="min-h-screen bg-background">
@@ -117,7 +118,7 @@ const FuerFahrlehrer = () => {
           {[
             { num: "iOS & Android", lbl: "Native App – Tablet & Smartphone" },
             { num: "30 Tage", lbl: "Gratis testen" },
-            { num: "CHF 29", lbl: "Pro Monat (jährlich)" },
+            { num: "CHF 449", lbl: "Solo · Pro Monat (jährlich)" },
             { num: "100% CH", lbl: "Daten in der Schweiz" },
           ].map((s, i) => (
             <div key={i} className="py-2">
@@ -162,21 +163,10 @@ const FuerFahrlehrer = () => {
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">Einfach. Transparent.</h2>
             <p className="text-muted-foreground font-body mb-8">Weniger als eine halbe Fahrstunde pro Monat.</p>
 
-            <div className="inline-flex bg-section-alt border border-border p-1" style={{ borderRadius: "3px" }}>
-              <button
-                onClick={() => setAnnual(false)}
-                className={`px-5 py-2 text-sm font-heading font-bold uppercase tracking-wide transition-colors ${!annual ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
-                style={{ borderRadius: "3px" }}
-              >
-                Monatlich
-              </button>
-              <button
-                onClick={() => setAnnual(true)}
-                className={`px-5 py-2 text-sm font-heading font-bold uppercase tracking-wide transition-colors ${annual ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
-                style={{ borderRadius: "3px" }}
-              >
-                Jährlich · 2 Monate gratis
-              </button>
+            <div className="inline-flex bg-section-alt border border-border px-4 py-2" style={{ borderRadius: "3px" }}>
+              <span className="text-sm font-heading font-bold uppercase tracking-wide text-primary">
+                Jährliche Zahlung · inkl. Buchhaltung & Lohnbuchhaltung
+              </span>
             </div>
           </div>
 
@@ -189,7 +179,7 @@ const FuerFahrlehrer = () => {
                 <span className="text-lg font-body font-normal text-muted-foreground">/Monat</span>
               </p>
               <p className="text-xs text-muted-foreground font-body mb-6 mt-1">
-                {annual ? `bei jährlicher Zahlung (CHF ${soloPrice * 12}/Jahr)` : "monatliche Kündigung"}
+                bei jährlicher Zahlung (CHF {soloPrice * 12}/Jahr)
               </p>
               <ul className="space-y-2 mb-6">
                 {soloFeatures.map((f, i) => (
@@ -198,10 +188,6 @@ const FuerFahrlehrer = () => {
                     {f}
                   </li>
                 ))}
-                <li className="flex items-center gap-2 text-sm font-body text-muted-foreground">
-                  <Lock className="w-4 h-4 shrink-0" />
-                  Buchhaltung
-                </li>
               </ul>
               <a href="#cta" className="block text-center py-3 bg-card border border-border text-foreground font-heading font-bold uppercase text-sm tracking-wide hover:border-primary transition-colors" style={{ borderRadius: "3px" }}>
                 30 Tage gratis starten
@@ -219,7 +205,7 @@ const FuerFahrlehrer = () => {
                 <span className="text-lg font-body font-normal text-muted-foreground">/Monat</span>
               </p>
               <p className="text-xs text-muted-foreground font-body mb-6 mt-1">
-                {annual ? `bei jährlicher Zahlung (CHF ${soloPlusPrice * 12}/Jahr)` : "monatliche Kündigung"}
+                bei jährlicher Zahlung (CHF {soloPlusPrice * 12}/Jahr)
               </p>
               <ul className="space-y-2 mb-6">
                 {soloPlusFeatures.map((f, i) => (
