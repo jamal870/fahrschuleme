@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
+import { UserCircle2 } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
 
 const SiteFooter = () => (
   <footer className="border-t-2 border-primary bg-card py-6">
     <div className="max-w-6xl mx-auto px-6 text-center text-xs text-muted-foreground font-body space-y-2">
-      <div className="space-x-3">
+      <div className="flex items-center justify-center flex-wrap gap-x-3 gap-y-1">
         <Link to="/" className="hover:text-primary">Start</Link>
         <span>·</span>
         <Link to="/kurstermine" className="hover:text-primary">Kurstermine</Link>
@@ -16,17 +17,17 @@ const SiteFooter = () => (
         <Link to="/datenschutz" className="hover:text-primary">Datenschutz</Link>
         <span>·</span>
         <Link to="/agb" className="hover:text-primary">AGB</Link>
-      </div>
-      <div>{tenantConfig.footer.copyright}</div>
-      <div className="pt-2">
+        <span>·</span>
         <Link
           to="/admin/login"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
-          style={{ borderRadius: "3px" }}
+          aria-label="Admin Login"
+          title="Admin Login"
+          className="inline-flex items-center text-muted-foreground/60 hover:text-primary transition-colors"
         >
-          Admin Login
+          <UserCircle2 className="w-4 h-4" />
         </Link>
       </div>
+      <div>{tenantConfig.footer.copyright}</div>
     </div>
   </footer>
 );
