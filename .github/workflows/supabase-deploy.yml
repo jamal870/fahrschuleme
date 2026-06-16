@@ -3,8 +3,6 @@ name: Deploy to own Supabase
 on:
   push:
     branches: [main]
-    paths:
-      - 'supabase/**'
   workflow_dispatch:
 
 jobs:
