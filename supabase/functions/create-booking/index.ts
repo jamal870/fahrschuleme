@@ -335,8 +335,6 @@ serve(async (req) => {
           email: email.trim().toLowerCase(),
           phone: phone.trim(),
           address: address.trim(),
-                postalCode: postalCode ? String(postalCode).trim() : undefined,
-                city: city ? String(city).trim() : undefined,
           postal_code: postalCode ? String(postalCode).trim() : null,
           city: city ? String(city).trim() : null,
           fa_number: faNumber.trim(),
