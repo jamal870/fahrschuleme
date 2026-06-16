@@ -29,8 +29,8 @@ Deno.serve(async (req) => {
     const { imageBase64, mimeType } = await req.json();
     if (!imageBase64) return new Response(JSON.stringify({ error: "imageBase64 required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
-    const apiKey = Deno.env.get("GOOGLE_AI_API_KEY");
-    if (!apiKey) return new Response(JSON.stringify({ error: "Missing GOOGLE_AI_API_KEY" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    const apiKey = Deno.env.get("GEMINI_API_KEY") ?? Deno.env.get("GOOGLE_AI_API_KEY");
+    if (!apiKey) return new Response(JSON.stringify({ error: "Missing GEMINI_API_KEY" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     const systemPrompt = `Du bist ein Assistent, der aus einem Foto eines handschriftlichen Kursplanungs-Zettels die geplanten Motorrad-Grundkurs-Termine (MGK) extrahiert.
 Lies sorgfältig: Datum (TT.MM.JJJJ – wenn nur TT.MM angegeben, nimm das nächste passende Jahr ab heute), Tag (Montag, Dienstag...), Zeit (z.B. "13:00 – 17:00"), Teil (1, 2 oder 3), Ort (Standard "Wettingen"), Fahrlehrer (Kürzel oder Name), Plätze (Standard 5), Preis (Standard 160).
