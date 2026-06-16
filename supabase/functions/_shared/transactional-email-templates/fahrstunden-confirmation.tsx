@@ -152,8 +152,7 @@ const FahrstundenConfirmationEmail = ({
         <Hr style={divider} />
 
         <Text style={footer}>
-          Freundliche Grüsse,{'\n'}
-          Das {SITE_NAME} Team
+          {settings?.footer_signature || `Freundliche Grüsse,\nDas ${SITE_NAME} Team`}
         </Text>
       </Container>
     </Body>
