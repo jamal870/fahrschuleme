@@ -6,9 +6,6 @@ verify_jwt = true
 [functions.send-transactional-email]
 verify_jwt = true
 
-
-
-
 [functions.handle-email-unsubscribe]
 verify_jwt = false
 
@@ -34,4 +31,10 @@ verify_jwt = false
 verify_jwt = true
 
 [functions.ical-feed]
+verify_jwt = false
+
+[functions.move-booking-participant]
+verify_jwt = true
+
+[functions.sync-course-to-gcal]
 verify_jwt = false
