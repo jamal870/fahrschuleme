@@ -29,8 +29,6 @@ const soloFeatures = [
   "Stripe Online-Zahlung",
   "Google Kalender Sync",
   "Mobile + Desktop App",
-  "Buchhaltung inklusive",
-  "Lohnbuchhaltung inklusive",
 ];
 const soloPlusFeatures = [
   "1 Fahrlehrer",
