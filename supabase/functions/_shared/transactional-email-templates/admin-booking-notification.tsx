@@ -23,6 +23,8 @@ interface AdminBookingNotificationProps {
   email?: string
   phone?: string
   address?: string
+  postalCode?: string
+  city?: string
   birthDate?: string
   faNumber?: string
   paymentMethod?: string
@@ -49,6 +51,8 @@ const AdminBookingNotificationEmail = ({
   email,
   phone,
   address,
+  postalCode,
+  city,
   birthDate,
   faNumber,
   paymentMethod,
@@ -86,7 +90,7 @@ const AdminBookingNotificationEmail = ({
           {firstName && lastName && <Text style={detailRow}><strong>Name:</strong> {firstName} {lastName}</Text>}
           {email && <Text style={detailRow}><strong>E-Mail:</strong> {email}</Text>}
           {phone && <Text style={detailRow}><strong>Telefon:</strong> {phone}</Text>}
-          {address && <Text style={detailRow}><strong>Adresse:</strong> {address}</Text>}
+          {address && <Text style={detailRow}><strong>Adresse:</strong> {address}{(postalCode || city) ? `, ${[postalCode, city].filter(Boolean).join(' ')}` : ''}</Text>}
           {birthDate && <Text style={detailRow}><strong>Geburtstag:</strong> {birthDate}</Text>}
           {faNumber && <Text style={detailRow}><strong>FABER Nr.:</strong> {faNumber}</Text>}
         </Section>
