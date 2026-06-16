@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Calendar,
@@ -8,7 +7,6 @@ import {
   GraduationCap,
   Smartphone,
   Check,
-  Lock,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
