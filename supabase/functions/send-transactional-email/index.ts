@@ -118,6 +118,16 @@ Deno.serve(async (req) => {
   // Create Supabase client with service role (bypasses RLS)
   const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+  // Load admin-editable email settings and merge into template data as `settings`
+  const { data: emailSettings } = await supabase
+    .from('email_settings')
+    .select('*')
+    .eq('id', 1)
+    .maybeSingle()
+  if (emailSettings) {
+    templateData = { ...templateData, settings: emailSettings }
+  }
+
   // 2. Check suppression list (fail-closed: if we can't verify, don't send)
   const { data: suppressed, error: suppressionError } = await supabase
     .from('suppressed_emails')
@@ -301,12 +311,16 @@ Deno.serve(async (req) => {
     status: 'pending',
   })
 
+  const fromName = emailSettings?.from_name || SITE_NAME
+  const replyTo = emailSettings?.reply_to_email || undefined
+
   const { error: enqueueError } = await supabase.rpc('enqueue_email', {
     queue_name: 'transactional_emails',
     payload: {
       message_id: messageId,
       to: effectiveRecipient,
-      from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
+      from: `${fromName} <noreply@${FROM_DOMAIN}>`,
+      reply_to: replyTo,
       sender_domain: SENDER_DOMAIN,
       subject: resolvedSubject,
       html,

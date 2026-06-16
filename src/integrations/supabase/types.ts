@@ -289,6 +289,57 @@ export type Database = {
         }
         Relationships: []
       }
+      email_settings: {
+        Row: {
+          bank_info: string
+          fahrstunden_greeting_extra: string
+          fahrstunden_important_notes: string
+          fahrstunden_meeting_point: string
+          footer_signature: string
+          from_name: string
+          id: number
+          mgk_cancellation_policy: string
+          mgk_greeting_extra: string
+          mgk_important_notes: string
+          mgk_meeting_point: string
+          reminder_extra_note: string
+          reply_to_email: string
+          updated_at: string
+        }
+        Insert: {
+          bank_info?: string
+          fahrstunden_greeting_extra?: string
+          fahrstunden_important_notes?: string
+          fahrstunden_meeting_point?: string
+          footer_signature?: string
+          from_name?: string
+          id?: number
+          mgk_cancellation_policy?: string
+          mgk_greeting_extra?: string
+          mgk_important_notes?: string
+          mgk_meeting_point?: string
+          reminder_extra_note?: string
+          reply_to_email?: string
+          updated_at?: string
+        }
+        Update: {
+          bank_info?: string
+          fahrstunden_greeting_extra?: string
+          fahrstunden_important_notes?: string
+          fahrstunden_meeting_point?: string
+          footer_signature?: string
+          from_name?: string
+          id?: number
+          mgk_cancellation_policy?: string
+          mgk_greeting_extra?: string
+          mgk_important_notes?: string
+          mgk_meeting_point?: string
+          reminder_extra_note?: string
+          reply_to_email?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_unsubscribe_tokens: {
         Row: {
           created_at: string

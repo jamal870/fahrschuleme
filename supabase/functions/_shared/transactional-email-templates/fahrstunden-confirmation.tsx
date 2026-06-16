@@ -6,6 +6,14 @@ import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = "Drive me Fahrschule"
 
+interface EmailSettings {
+  footer_signature?: string
+  bank_info?: string
+  fahrstunden_greeting_extra?: string
+  fahrstunden_meeting_point?: string
+  fahrstunden_important_notes?: string
+}
+
 interface FahrstundenConfirmationProps {
   firstName?: string
   lastName?: string
@@ -22,6 +30,7 @@ interface FahrstundenConfirmationProps {
   paymentMethod?: string
   bookingId?: string
   bookingDate?: string
+  settings?: EmailSettings
 }
 
 const FahrstundenConfirmationEmail = ({
@@ -40,6 +49,7 @@ const FahrstundenConfirmationEmail = ({
   paymentMethod,
   bookingId,
   bookingDate,
+  settings,
 }: FahrstundenConfirmationProps) => (
   <Html lang="de" dir="ltr">
     <Head />
@@ -57,7 +67,7 @@ const FahrstundenConfirmationEmail = ({
         </Text>
 
         <Text style={text}>
-          Danke für deine Buchung!
+          {settings?.fahrstunden_greeting_extra || 'Danke für deine Buchung!'}
         </Text>
 
         <Hr style={divider} />
@@ -65,7 +75,7 @@ const FahrstundenConfirmationEmail = ({
         {/* --- Treffpunkt --- */}
         <Heading style={h2}>Treffpunkt</Heading>
         <Text style={text}>
-          Bahnhof Wettingen
+          {settings?.fahrstunden_meeting_point || 'Bahnhof Wettingen'}
         </Text>
 
         <Hr style={divider} />
@@ -74,7 +84,7 @@ const FahrstundenConfirmationEmail = ({
         <Section style={importantSection}>
           <Heading style={h2Important}>⚠️ WICHTIG</Heading>
           <Text style={importantText}>
-            Stornierungen oder Umbuchungen sind bis 24 Stunden vor der Fahrstunde schriftlich an info@l-me.ch möglich, danach wird der volle Betrag in Rechnung gestellt.
+            {settings?.fahrstunden_important_notes || 'Stornierungen oder Umbuchungen sind bis 24 Stunden vor der Fahrstunde schriftlich an info@l-me.ch möglich, danach wird der volle Betrag in Rechnung gestellt.'}
           </Text>
         </Section>
 
@@ -83,10 +93,7 @@ const FahrstundenConfirmationEmail = ({
         {/* --- Bankverbindung --- */}
         <Heading style={h2}>Unsere Bankverbindung</Heading>
         <Text style={text}>
-          Jamal Ettanaghmalti{'\n'}
-          Bank: PostFinance{'\n'}
-          IBAN: CH5009000000167884324{'\n'}
-          BIC: POFICHBEXXX
+          {settings?.bank_info || 'Jamal Ettanaghmalti\nBank: PostFinance\nIBAN: CH5009000000167884324\nBIC: POFICHBEXXX'}
         </Text>
 
         <Hr style={divider} />
@@ -145,8 +152,7 @@ const FahrstundenConfirmationEmail = ({
         <Hr style={divider} />
 
         <Text style={footer}>
-          Freundliche Grüsse,{'\n'}
-          Das {SITE_NAME} Team
+          {settings?.footer_signature || `Freundliche Grüsse,\nDas ${SITE_NAME} Team`}
         </Text>
       </Container>
     </Body>

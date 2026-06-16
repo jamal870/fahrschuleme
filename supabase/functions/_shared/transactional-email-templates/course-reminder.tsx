@@ -15,6 +15,10 @@ interface Participant {
   paid: boolean
 }
 
+interface EmailSettings {
+  reminder_extra_note?: string
+}
+
 interface CourseReminderProps {
   coursePart?: number
   courseDate?: string
@@ -25,6 +29,7 @@ interface CourseReminderProps {
   daysUntil?: number
   participantCount?: number
   participants?: Participant[]
+  settings?: EmailSettings
 }
 
 const CourseReminderEmail = ({
@@ -37,6 +42,7 @@ const CourseReminderEmail = ({
   daysUntil,
   participantCount,
   participants = [],
+  settings,
 }: CourseReminderProps) => (
   <Html lang="de" dir="ltr">
     <Head />
@@ -77,7 +83,7 @@ const CourseReminderEmail = ({
         </Section>
 
         <Text style={text}>
-          Die druckbare Teilnehmerliste kannst du im Admin-Portal unter „Kurstermine" herunterladen.
+          {settings?.reminder_extra_note || 'Die druckbare Teilnehmerliste kannst du im Admin-Portal unter „Kurstermine" herunterladen.'}
         </Text>
 
         <Hr style={divider} />
