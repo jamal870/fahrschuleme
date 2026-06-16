@@ -48,7 +48,7 @@ export default function GrundkursBuchen() {
   const [city, setCity] = useState("");
   const [faNumber, setFaNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [category, setCategory] = useState("A (Motorrad)");
+  const [category, setCategory] = useState("A1 bis 125ccm");
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "barzahlung" | "ueberweisung">("stripe");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
