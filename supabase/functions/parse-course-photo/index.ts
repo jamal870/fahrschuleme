@@ -1,4 +1,4 @@
-// Extract course planning data from an uploaded photo using Lovable AI (Gemini Vision)
+// Extract course planning data from an uploaded photo using Google Gemini Vision (direct API)
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -29,42 +29,43 @@ Deno.serve(async (req) => {
     const { imageBase64, mimeType } = await req.json();
     if (!imageBase64) return new Response(JSON.stringify({ error: "imageBase64 required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
-    const apiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!apiKey) return new Response(JSON.stringify({ error: "Missing LOVABLE_API_KEY" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    const apiKey = Deno.env.get("GOOGLE_AI_API_KEY");
+    if (!apiKey) return new Response(JSON.stringify({ error: "Missing GOOGLE_AI_API_KEY" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     const systemPrompt = `Du bist ein Assistent, der aus einem Foto eines handschriftlichen Kursplanungs-Zettels die geplanten Motorrad-Grundkurs-Termine (MGK) extrahiert.
 Lies sorgfältig: Datum (TT.MM.JJJJ – wenn nur TT.MM angegeben, nimm das nächste passende Jahr ab heute), Tag (Montag, Dienstag...), Zeit (z.B. "13:00 – 17:00"), Teil (1, 2 oder 3), Ort (Standard "Wettingen"), Fahrlehrer (Kürzel oder Name), Plätze (Standard 5), Preis (Standard 160).
 Gib AUSSCHLIESSLICH gültiges JSON zurück, kein Markdown, keine Erklärung:
 { "courses": [ { "date":"TT.MM.JJJJ", "day":"Montag", "time":"13:00 – 17:00", "part":1, "location":"Wettingen", "instructor":"JL", "price":160, "spots_available":5 } ] }`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    // Direct Google Gemini API (no Lovable dependency)
+    const model = "gemini-2.0-flash";
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: systemPrompt },
-          {
-            role: "user",
-            content: [
-              { type: "text", text: "Extrahiere alle erkennbaren Kurstermine aus diesem Bild." },
-              { type: "image_url", image_url: { url: `data:${mimeType || "image/jpeg"};base64,${imageBase64}` } },
-            ],
-          },
-        ],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: [{
+          role: "user",
+          parts: [
+            { text: "Extrahiere alle erkennbaren Kurstermine aus diesem Bild." },
+            { inlineData: { mimeType: mimeType || "image/jpeg", data: imageBase64 } },
+          ],
+        }],
+        generationConfig: { responseMimeType: "application/json" },
       }),
     });
 
     if (!response.ok) {
       const errText = await response.text();
-      return new Response(JSON.stringify({ error: "AI gateway error", details: errText, status: response.status }), {
-        status: response.status === 429 ? 429 : response.status === 402 ? 402 : 500,
+      return new Response(JSON.stringify({ error: "Gemini API error", details: errText, status: response.status }), {
+        status: response.status === 429 ? 429 : 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const data = await response.json();
-    const text: string = data?.choices?.[0]?.message?.content ?? "";
+    const text: string = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
     // Strip code fences if present
     const cleaned = text.replace(/```json\s*/g, "").replace(/```/g, "").trim();
     let parsed: any = null;
