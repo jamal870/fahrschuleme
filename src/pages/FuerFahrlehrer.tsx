@@ -7,6 +7,7 @@ import {
   GraduationCap,
   Smartphone,
   Check,
+  Lock,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -23,17 +24,25 @@ const features = [
 
 const soloFeatures = [
   "1 Fahrlehrer",
-  "Bis 5 Schüler",
+  "Unbegrenzte Schüler",
   "Kalender & Termine",
   "Rechnungen & PDF",
   "Stripe Online-Zahlung",
   "Google Kalender Sync",
   "Mobile + Desktop App",
 ];
+const soloExcludedFeatures = [
+  "Buchhaltung",
+  "Lohnbuchhaltung",
+];
 const soloPlusFeatures = [
   "1 Fahrlehrer",
   "Unbegrenzte Schüler",
-  "Alle Solo Features",
+  "Kalender & Termine",
+  "Rechnungen & PDF",
+  "Stripe Online-Zahlung",
+  "Google Kalender Sync",
+  "Mobile + Desktop App",
   "Buchhaltung inklusive",
   "Lohnbuchhaltung inklusive",
   "Ausgaben erfassen",
@@ -43,15 +52,15 @@ const soloPlusFeatures = [
 ];
 
 const faqs = [
-  { q: "Was passiert nach dem 30-tägigen Test?", a: "Nach Ablauf des Trials wählst du ein Abonnement (Solo CHF 449/Monat oder Solo+ CHF 690/Monat, jährliche Zahlung). Deine Daten bleiben vollständig erhalten." },
+  { q: "Was passiert nach dem 30-tägigen Test?", a: "Nach Ablauf des Trials wählst du ein Abonnement (Solo CHF 468/Jahr oder Solo+ CHF 690/Jahr, jährliche Zahlung). Deine Daten bleiben vollständig erhalten." },
   { q: "Kann ich meine Daten exportieren?", a: "Ja, jederzeit. Unter Einstellungen → \"Meine Daten exportieren\" kannst du alle deine Daten (Schüler, Rechnungen, Termine) als Excel oder PDF herunterladen." },
   { q: "Wo werden meine Daten gespeichert?", a: "Alle Daten werden ausschliesslich auf Servern in der Schweiz gespeichert (Hostpoint AG, Rapperswil-Jona). Wir sind DSG-konform." },
   { q: "Auf welchen Geräten läuft die App?", a: "Die App ist nativ für iOS (App Store) und Android (Google Play Store) verfügbar – optimiert für Tablet und Smartphone. Zusätzlich gibt es eine Desktop-Version im Browser." },
 ];
 
 const FuerFahrlehrer = () => {
-  const soloPrice = 449;
-  const soloPlusPrice = 690;
+  const soloPrice = 39;
+  const soloPlusPrice = 57.5;
 
   return (
     <div className="min-h-screen bg-background">
@@ -161,7 +170,7 @@ const FuerFahrlehrer = () => {
 
             <div className="inline-flex bg-section-alt border border-border px-4 py-2" style={{ borderRadius: "3px" }}>
               <span className="text-sm font-heading font-bold uppercase tracking-wide text-primary">
-                Jährliche Zahlung · inkl. Buchhaltung & Lohnbuchhaltung
+                Jährliche Zahlung
               </span>
             </div>
           </div>
@@ -181,6 +190,12 @@ const FuerFahrlehrer = () => {
                 {soloFeatures.map((f, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm font-body text-foreground">
                     <Check className="w-4 h-4 text-primary shrink-0" />
+                    {f}
+                  </li>
+                ))}
+                {soloExcludedFeatures.map((f, i) => (
+                  <li key={`excluded-${i}`} className="flex items-center gap-2 text-sm font-body text-muted-foreground opacity-50">
+                    <Lock className="w-4 h-4 text-muted-foreground shrink-0" />
                     {f}
                   </li>
                 ))}
