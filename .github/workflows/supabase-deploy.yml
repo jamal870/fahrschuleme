@@ -36,8 +36,8 @@ jobs:
             "20260616173345"
           )
           for mig in "${SKIP_MIGRATIONS[@]}"; do
-            echo "Marking $mig as reverted/skipped on remote..."
-            supabase migration repair --status reverted "$mig" --password "$SUPABASE_DB_PASSWORD" || true
+            echo "Marking $mig as applied (skip) on remote..."
+            supabase migration repair --status applied "$mig" --password "$SUPABASE_DB_PASSWORD" || true
           done
           supabase db push --password "$SUPABASE_DB_PASSWORD" --include-all || \
             supabase db push --password "$SUPABASE_DB_PASSWORD"
