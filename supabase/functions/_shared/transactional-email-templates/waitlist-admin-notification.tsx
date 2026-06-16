@@ -4,7 +4,7 @@ import { Body, Container, Head, Heading, Html, Img, Preview, Text, Section, Hr }
 import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = "Drive me Fahrschule"
-const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo-new.png"
+const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/logo-lme-light.png"
 
 interface Props {
   coursePart?: number
@@ -26,7 +26,7 @@ const WaitlistEmail = (p: Props) => (
     <Body style={main}>
       <Container style={container}>
         <Section style={headerSection}>
-          <Img src={LOGO_URL} alt="Drive me Fahrschule" width="180" style={logoStyle} />
+          <Img src={LOGO_URL} alt="L me Fahrschule Wettingen" width="180" style={logoStyle} />
         </Section>
         <Section style={orangeBar} />
 

@@ -5,7 +5,7 @@ import {
 import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = "Drive me Fahrschule"
-const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/drive-me-logo-new.png"
+const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/logo-lme-light.png"
 
 interface CourseDetail {
   part?: number | string
@@ -64,7 +64,7 @@ const AdminBookingNotificationEmail = ({
       <Container style={container}>
         {/* Header with logo and orange accent bar */}
         <Section style={headerSection}>
-          <Img src={LOGO_URL} alt="Drive me Fahrschule" width="180" style={logoStyle} />
+          <Img src={LOGO_URL} alt="L me Fahrschule Wettingen" width="180" style={logoStyle} />
         </Section>
         <Section style={orangeBar} />
 
