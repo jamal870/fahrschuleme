@@ -1,0 +1,6 @@
+# Diese drei Werte in Netlify → Site settings → Environment variables ersetzen.
+# (Nicht ins Repo committen — nur als Referenz hier.)
+
+VITE_SUPABASE_URL=https://<NEW_PROJECT_REF>.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<NEUER_ANON_KEY>
+VITE_SUPABASE_PROJECT_ID=<NEW_PROJECT_REF>
