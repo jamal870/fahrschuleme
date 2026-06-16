@@ -27,8 +27,20 @@ jobs:
       - name: Link to own Supabase project
         run: supabase link --project-ref "$SUPABASE_PROJECT_ID"
 
-      - name: Push database migrations
-        run: supabase db push --password "$SUPABASE_DB_PASSWORD"
+      - name: Push database migrations (ignore Lovable-Cloud-only cron migrations)
+        run: |
+          # Mark Lovable-Cloud-specific cron migrations as already applied on customer DB
+          # (they reference vault secrets + hardcoded URLs that only exist in Lovable Cloud)
+          SKIP_MIGRATIONS=(
+            "20260323141619"
+            "20260616173345"
+          )
+          for mig in "${SKIP_MIGRATIONS[@]}"; do
+            echo "Marking $mig as applied (skip) on remote..."
+            supabase migration repair --status applied "$mig" --password "$SUPABASE_DB_PASSWORD" || true
+          done
+          supabase db push --password "$SUPABASE_DB_PASSWORD" --include-all || \
+            supabase db push --password "$SUPABASE_DB_PASSWORD"
 
       - name: Deploy Edge Functions
         run: supabase functions deploy --project-ref "$SUPABASE_PROJECT_ID"
