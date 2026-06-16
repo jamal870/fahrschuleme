@@ -6,6 +6,14 @@ import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = "Drive me Fahrschule"
 
+interface EmailSettings {
+  footer_signature?: string
+  bank_info?: string
+  fahrstunden_greeting_extra?: string
+  fahrstunden_meeting_point?: string
+  fahrstunden_important_notes?: string
+}
+
 interface FahrstundenConfirmationProps {
   firstName?: string
   lastName?: string
@@ -22,6 +30,7 @@ interface FahrstundenConfirmationProps {
   paymentMethod?: string
   bookingId?: string
   bookingDate?: string
+  settings?: EmailSettings
 }
 
 const FahrstundenConfirmationEmail = ({
@@ -40,6 +49,7 @@ const FahrstundenConfirmationEmail = ({
   paymentMethod,
   bookingId,
   bookingDate,
+  settings,
 }: FahrstundenConfirmationProps) => (
   <Html lang="de" dir="ltr">
     <Head />
