@@ -11,6 +11,7 @@ import AdminWaitlist from "@/components/admin/AdminWaitlist";
 import AdminTeam from "@/components/admin/AdminTeam";
 import AdminPhotoImport from "@/components/admin/AdminPhotoImport";
 import AdminPromotions from "@/components/admin/AdminPromotions";
+import AdminEmailSettings from "@/components/admin/AdminEmailSettings";
 import BrandLogo from "@/components/BrandLogo";
 
 const Admin = () => {
