@@ -1,5 +1,55 @@
-import { sendLovableEmail } from 'npm:@lovable.dev/email-js'
 import { createClient } from 'npm:@supabase/supabase-js@2'
+
+// Send email directly via Resend API (no Lovable gateway dependency)
+async function sendViaResend(
+  resendApiKey: string,
+  payload: {
+    to: string
+    from: string
+    subject: string
+    html?: string
+    text?: string
+    unsubscribe_token?: string
+    sender_domain?: string
+  }
+): Promise<void> {
+  const headers: Record<string, string> = {}
+  // Add List-Unsubscribe headers for one-click unsubscribe if token present
+  if (payload.unsubscribe_token && payload.sender_domain) {
+    const unsubUrl = `https://${payload.sender_domain}/unsubscribe?token=${payload.unsubscribe_token}`
+    headers['List-Unsubscribe'] = `<${unsubUrl}>`
+    headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click'
+  }
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${resendApiKey}`,
+    },
+    body: JSON.stringify({
+      from: payload.from,
+      to: [payload.to],
+      subject: payload.subject,
+      html: payload.html,
+      text: payload.text,
+      headers: Object.keys(headers).length ? headers : undefined,
+    }),
+  })
+
+  if (!res.ok) {
+    const body = await res.text()
+    const err: Error & { status?: number; retryAfterSeconds?: number | null } = new Error(
+      `Resend send failed (${res.status}): ${body}`
+    )
+    err.status = res.status
+    if (res.status === 429) {
+      const ra = res.headers.get('Retry-After')
+      err.retryAfterSeconds = ra ? parseInt(ra, 10) : null
+    }
+    throw err
+  }
+}
 
 const MAX_RETRIES = 5
 const DEFAULT_BATCH_SIZE = 10
