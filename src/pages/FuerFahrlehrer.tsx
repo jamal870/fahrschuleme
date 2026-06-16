@@ -170,7 +170,7 @@ const FuerFahrlehrer = () => {
 
             <div className="inline-flex bg-section-alt border border-border px-4 py-2" style={{ borderRadius: "3px" }}>
               <span className="text-sm font-heading font-bold uppercase tracking-wide text-primary">
-                Jährliche Zahlung · inkl. Buchhaltung & Lohnbuchhaltung
+                Jährliche Zahlung
               </span>
             </div>
           </div>
@@ -190,6 +190,12 @@ const FuerFahrlehrer = () => {
                 {soloFeatures.map((f, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm font-body text-foreground">
                     <Check className="w-4 h-4 text-primary shrink-0" />
+                    {f}
+                  </li>
+                ))}
+                {soloExcludedFeatures.map((f, i) => (
+                  <li key={`excluded-${i}`} className="flex items-center gap-2 text-sm font-body text-muted-foreground opacity-50">
+                    <Lock className="w-4 h-4 text-muted-foreground shrink-0" />
                     {f}
                   </li>
                 ))}
