@@ -9,7 +9,7 @@ const corsHeaders = {
 
 const GCAL_BASE = "https://www.googleapis.com/calendar/v3";
 const CALENDAR_ID = "primary";
-const GOOGLE_CLIENT_ID = "608631487176-tn1kechi71mr1cbegngqo8qha5s6legk.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = Deno.env.get("GOOGLE_CLIENT_ID") ?? "608631487176-tn1kechi71mr1cbegngqo8qha5s6legk.apps.googleusercontent.com";
 
 function parseSwiss(d: string) {
   const m = d.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
