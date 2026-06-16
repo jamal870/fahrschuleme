@@ -6,6 +6,15 @@ import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = "Drive me Fahrschule"
 
+interface EmailSettings {
+  footer_signature?: string
+  bank_info?: string
+  mgk_greeting_extra?: string
+  mgk_meeting_point?: string
+  mgk_important_notes?: string
+  mgk_cancellation_policy?: string
+}
+
 interface BookingConfirmationProps {
   firstName?: string
   lastName?: string
@@ -20,6 +29,7 @@ interface BookingConfirmationProps {
   paymentMethod?: string
   bookingId?: string
   bookingDate?: string
+  settings?: EmailSettings
 }
 
 const BookingConfirmationEmail = ({
@@ -36,6 +46,7 @@ const BookingConfirmationEmail = ({
   paymentMethod,
   bookingId,
   bookingDate,
+  settings,
 }: BookingConfirmationProps) => (
   <Html lang="de" dir="ltr">
     <Head />
