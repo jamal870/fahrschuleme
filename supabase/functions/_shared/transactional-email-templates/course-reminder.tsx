@@ -83,7 +83,7 @@ const CourseReminderEmail = ({
         </Section>
 
         <Text style={text}>
-          Die druckbare Teilnehmerliste kannst du im Admin-Portal unter „Kurstermine" herunterladen.
+          {settings?.reminder_extra_note || 'Die druckbare Teilnehmerliste kannst du im Admin-Portal unter „Kurstermine" herunterladen.'}
         </Text>
 
         <Hr style={divider} />
