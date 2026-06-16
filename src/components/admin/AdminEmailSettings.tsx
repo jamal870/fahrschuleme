@@ -24,7 +24,7 @@ type Settings = {
 };
 
 const FIELDS: { key: keyof Settings; label: string; help?: string; type: "input" | "textarea"; rows?: number; group: string }[] = [
-  { key: "from_name", label: "Absender-Name", help: "Erscheint im Posteingang als Absender (z. B. „Drive me Fahrschule")", type: "input", group: "Absender" },
+  { key: "from_name", label: "Absender-Name", help: "Erscheint im Posteingang als Absender (z. B. Drive me Fahrschule)", type: "input", group: "Absender" },
   { key: "reply_to_email", label: "Antwort-Adresse (Reply-To)", help: "An diese Adresse antworten Kunden, wenn sie auf «Antworten» klicken", type: "input", group: "Absender" },
   { key: "footer_signature", label: "Footer / Signatur", help: "Schlusszeile aller Kunden-Mails", type: "textarea", rows: 3, group: "Absender" },
   { key: "bank_info", label: "Bankverbindung", help: "Wird in beiden Bestätigungs-Mails angezeigt", type: "textarea", rows: 5, group: "Allgemein" },
