@@ -48,7 +48,7 @@ export default function GrundkursBuchen() {
   const [city, setCity] = useState("");
   const [faNumber, setFaNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [category, setCategory] = useState("A (Motorrad)");
+  const [category, setCategory] = useState("A1 bis 125ccm");
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "barzahlung" | "ueberweisung">("stripe");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -394,9 +394,9 @@ export default function GrundkursBuchen() {
                       <Select value={category} onValueChange={setCategory}>
                         <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="A (Motorrad)">A (Motorrad)</SelectItem>
-                          <SelectItem value="A1 (Leichtmotorrad)">A1 (Leichtmotorrad)</SelectItem>
-                          <SelectItem value="A2">A2</SelectItem>
+                          <SelectItem value="A1 bis 125ccm">A1 bis 125ccm</SelectItem>
+                          <SelectItem value="A2 35 kW">A2 35 kW</SelectItem>
+                          <SelectItem value="A offen">A offen</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
