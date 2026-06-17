@@ -15,9 +15,8 @@ const NotFound = () => {
         title="Seite nicht gefunden – Fahrschule me"
         description="Diese Seite existiert nicht."
         path="/404"
-      >
-        <meta name="robots" content="noindex, nofollow" />
-      </Seo>
+        noindex
+      />
       <div className="text-center">
         <h1 className="mb-4 text-4xl font-bold">404</h1>
         <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
