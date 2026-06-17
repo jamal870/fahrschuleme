@@ -34,3 +34,7 @@ Diese Datei hält fest, **wo die App wirklich läuft**, damit keine unnötigen U
 Alte URLs von `drive-me.ch` sollen per **301** auf die neue Domain `www.fahrschule-me.ch` weiterleiten. Dafür müssen `drive-me.ch` und `www.drive-me.ch` DNS-seitig korrekt auf Netlify zeigen und dort verifiziert sein.
 
 Weitere Details: siehe [`docs/BETRIEB.md`](docs/BETRIEB.md).
+
+## Projekt-Status: eingefroren (17.06.2026)
+
+Dieses Projekt ist dokumentiert und für einen geordneten Übergang zu einem neuen Projekt vorbereitet. Übergabe, Domain-Stand und Wiederaufnahme-Anleitung: siehe [`docs/PROJEKT-ABSCHLUSS.md`](docs/PROJEKT-ABSCHLUSS.md).
