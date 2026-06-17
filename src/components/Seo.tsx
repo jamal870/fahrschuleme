@@ -6,6 +6,7 @@ interface SeoProps {
   path: string; // e.g. "/kurstermine" — appended to https://fahrschule-me.ch
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   image?: string;
+  noindex?: boolean;
 }
 
 const SITE_URL = "https://fahrschule-me.ch";
@@ -16,13 +17,15 @@ const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`;
  * Funktioniert für JS-Crawler (Google). Social-Crawler (LinkedIn, WhatsApp, FB)
  * sehen die Fallback-Tags aus index.html, da sie kein JavaScript ausführen.
  */
-const Seo = ({ title, description, path, jsonLd, image = DEFAULT_IMAGE }: SeoProps) => {
+const Seo = ({ title, description, path, jsonLd, image = DEFAULT_IMAGE, noindex }: SeoProps) => {
   const url = `${SITE_URL}${path}`;
   return (
     <Helmet>
       <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
 
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />

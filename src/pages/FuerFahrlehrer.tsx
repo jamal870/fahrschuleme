@@ -65,8 +65,8 @@ const FuerFahrlehrer = () => {
   return (
     <div className="min-h-screen bg-background">
       <Seo
-        title="fahrschule me App – Die Fahrschul-App für Schweizer Fahrlehrer"
-        description="Schüler verwalten, Termine planen, Rechnungen verschicken – in einer App, die wirklich für Schweizer Fahrlehrer gemacht ist. 30 Tage gratis testen."
+        title="Fahrschule Software & App für Schweizer Fahrlehrer | fahrschule me"
+        description="Fahrschule Software mit Buchhaltung, Kalender, Schülerverwaltung und Rechnungen. Die Fahrlehrer App für iOS & Android. 30 Tage gratis testen."
         path="/fuer-fahrlehrer"
       />
       <SiteHeader />
@@ -79,8 +79,8 @@ const FuerFahrlehrer = () => {
             Neu: 30 Tage gratis testen – keine Kreditkarte
           </div>
           <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground leading-tight mb-6">
-            Weniger Verwaltung.<br />
-            <span className="text-primary">Mehr Zeit auf der Strasse.</span>
+            Fahrschule Software<br />
+            <span className="text-primary">für Schweizer Fahrlehrer.</span>
           </h1>
           <p className="text-lg font-body text-muted-foreground max-w-2xl mx-auto mb-8">
             Schüler verwalten, Termine planen, Rechnungen verschicken – in einer App, die wirklich für Schweizer Fahrlehrer gemacht ist. Kein Excel. Kein Papier. Kein Stress.
@@ -138,7 +138,7 @@ const FuerFahrlehrer = () => {
       <section id="features" className="bg-section-alt py-16">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-12">
-            <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Was fahrschule me kann</p>
+            <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Fahrschule Software mit Buchhaltung</p>
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
               Alles was ein Fahrlehrer braucht
             </h2>

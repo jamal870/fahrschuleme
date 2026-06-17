@@ -4,6 +4,7 @@ import { Bike, Loader2, CheckCircle, XCircle, AlertTriangle } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import BrandLogo from "@/components/BrandLogo";
+import Seo from "@/components/Seo";
 
 type Status = "loading" | "valid" | "already_unsubscribed" | "invalid" | "success" | "error";
 
@@ -27,7 +28,7 @@ export default function Unsubscribe() {
         const data = await res.json();
         if (!res.ok) {
           setStatus("invalid");
-        } else if (data.valid === false && data.reason === "already_unsubscribed") {
+    } else if (data.valid === false && data.reason === "already_unsubscribed") {
           setStatus("already_unsubscribed");
         } else if (data.valid) {
           setStatus("valid");
@@ -62,6 +63,12 @@ export default function Unsubscribe() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+      <Seo
+        title="Newsletter abbestellen – Fahrschule me"
+        description="Vom Newsletter abmelden."
+        path="/unsubscribe"
+        noindex
+      />
       <nav className="absolute top-0 left-0 right-0 max-w-5xl mx-auto px-6 py-5 flex items-center">
         <Link to="/" className="flex items-center gap-2">
           <BrandLogo imgClassName="h-12 w-auto" />
