@@ -65,8 +65,8 @@ const FuerFahrlehrer = () => {
   return (
     <div className="min-h-screen bg-background">
       <Seo
-        title="fahrschule me App – Die Fahrschul-App für Schweizer Fahrlehrer"
-        description="Schüler verwalten, Termine planen, Rechnungen verschicken – in einer App, die wirklich für Schweizer Fahrlehrer gemacht ist. 30 Tage gratis testen."
+        title="Fahrschule Software & App für Schweizer Fahrlehrer | fahrschule me"
+        description="Fahrschule Software mit Buchhaltung, Kalender, Schülerverwaltung und Rechnungen. Die Fahrlehrer App für iOS & Android. 30 Tage gratis testen."
         path="/fuer-fahrlehrer"
       />
       <SiteHeader />
