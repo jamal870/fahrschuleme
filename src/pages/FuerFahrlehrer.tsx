@@ -138,7 +138,7 @@ const FuerFahrlehrer = () => {
       <section id="features" className="bg-section-alt py-16">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-12">
-            <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Was fahrschule me kann</p>
+            <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Fahrschule Software mit Buchhaltung</p>
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
               Alles was ein Fahrlehrer braucht
             </h2>
