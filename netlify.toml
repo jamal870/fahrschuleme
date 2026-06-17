@@ -5,26 +5,159 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# 301-Redirect: alte Domain l-me.ch → neue Domain www.fahrschule-me.ch
-# (Reihenfolge wichtig: host-basierte Redirects VOR dem SPA-Fallback)
+# 301-Redirects: alte Domains → neue Domain www.fahrschule-me.ch
+# Reihenfolge wichtig:
+#   1) spezifische /redesign/*-Pfade (Pfad-Mapping)
+#   2) Host-basierte Catch-Alls (alte Domains komplett umleiten)
+#   3) SPA-Fallback ganz unten
+
+# ---------- drive-me.ch /redesign/* → neue Pfade ----------
+# Startseite
+[[redirects]]
+  from = "https://drive-me.ch/redesign"
+  to = "https://www.fahrschule-me.ch/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://drive-me.ch/redesign/"
+  to = "https://www.fahrschule-me.ch/"
+  status = 301
+  force = true
+
+# Motorrad
+[[redirects]]
+  from = "https://drive-me.ch/redesign/motorrad-2/*"
+  to = "https://www.fahrschule-me.ch/motorrad"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://drive-me.ch/redesign/motorrad-2"
+  to = "https://www.fahrschule-me.ch/motorrad"
+  status = 301
+  force = true
+
+# Motorradführerschein Wettingen (SEO-Seite)
+[[redirects]]
+  from = "https://drive-me.ch/redesign/motorrad-fuhrerschein-wettingen/*"
+  to = "https://www.fahrschule-me.ch/motorrad-fuehrerschein-wettingen"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://drive-me.ch/redesign/motorrad-fuhrerschein-wettingen"
+  to = "https://www.fahrschule-me.ch/motorrad-fuehrerschein-wettingen"
+  status = 301
+  force = true
+
+# Fahrstunden
+[[redirects]]
+  from = "https://drive-me.ch/redesign/fahrstunden-2/*"
+  to = "https://www.fahrschule-me.ch/fahrstunden"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://drive-me.ch/redesign/fahrstunden-2"
+  to = "https://www.fahrschule-me.ch/fahrstunden"
+  status = 301
+  force = true
+
+# Preise
+[[redirects]]
+  from = "https://drive-me.ch/redesign/preise/*"
+  to = "https://www.fahrschule-me.ch/preise"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://drive-me.ch/redesign/preise"
+  to = "https://www.fahrschule-me.ch/preise"
+  status = 301
+  force = true
+
+# Team
+[[redirects]]
+  from = "https://drive-me.ch/redesign/team/*"
+  to = "https://www.fahrschule-me.ch/team"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://drive-me.ch/redesign/team"
+  to = "https://www.fahrschule-me.ch/team"
+  status = 301
+  force = true
+
+# Kontakt
+[[redirects]]
+  from = "https://drive-me.ch/redesign/kontakt-3/*"
+  to = "https://www.fahrschule-me.ch/kontakt"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://drive-me.ch/redesign/kontakt-3"
+  to = "https://www.fahrschule-me.ch/kontakt"
+  status = 301
+  force = true
+
+# Nothelfer (keine eigene Seite → Kontakt)
+[[redirects]]
+  from = "https://drive-me.ch/redesign/nothelfer-3/*"
+  to = "https://www.fahrschule-me.ch/kontakt"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://drive-me.ch/redesign/nothelfer-3"
+  to = "https://www.fahrschule-me.ch/kontakt"
+  status = 301
+  force = true
+
+# 301-Platzhalter-Seite (drive-me /redesign/301-2)
+[[redirects]]
+  from = "https://drive-me.ch/redesign/301-2/*"
+  to = "https://www.fahrschule-me.ch/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://drive-me.ch/redesign/301-2"
+  to = "https://www.fahrschule-me.ch/"
+  status = 301
+  force = true
+
+# ---------- Host-Catch-All: drive-me.ch komplett ----------
+[[redirects]]
+  from = "https://drive-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+[[redirects]]
+  from = "https://www.drive-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+[[redirects]]
+  from = "http://drive-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+[[redirects]]
+  from = "http://www.drive-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+
+# ---------- Alte Domain l-me.ch ----------
 [[redirects]]
   from = "https://l-me.ch/*"
   to = "https://www.fahrschule-me.ch/:splat"
   status = 301
   force = true
-
 [[redirects]]
   from = "https://www.l-me.ch/*"
   to = "https://www.fahrschule-me.ch/:splat"
   status = 301
   force = true
-
 [[redirects]]
   from = "http://l-me.ch/*"
   to = "https://www.fahrschule-me.ch/:splat"
   status = 301
   force = true
-
 [[redirects]]
   from = "http://www.l-me.ch/*"
   to = "https://www.fahrschule-me.ch/:splat"
