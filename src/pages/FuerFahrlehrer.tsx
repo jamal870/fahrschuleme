@@ -79,8 +79,8 @@ const FuerFahrlehrer = () => {
             Neu: 30 Tage gratis testen – keine Kreditkarte
           </div>
           <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground leading-tight mb-6">
-            Weniger Verwaltung.<br />
-            <span className="text-primary">Mehr Zeit auf der Strasse.</span>
+            Fahrschule Software<br />
+            <span className="text-primary">für Schweizer Fahrlehrer.</span>
           </h1>
           <p className="text-lg font-body text-muted-foreground max-w-2xl mx-auto mb-8">
             Schüler verwalten, Termine planen, Rechnungen verschicken – in einer App, die wirklich für Schweizer Fahrlehrer gemacht ist. Kein Excel. Kein Papier. Kein Stress.
