@@ -7,9 +7,11 @@
   <url><loc>https://fahrschule-me.ch/grundkurs-buchen</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://fahrschule-me.ch/fahrstunden</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://fahrschule-me.ch/motorrad</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fahrschule-me.ch/team</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://fahrschule-me.ch/strassenverkehrsamt-aargau</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fahrschule-me.ch/fuer-fahrlehrer</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fahrschule-me.ch/app</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://fahrschule-me.ch/preise</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fahrschule-me.ch/strassenverkehrsamt-aargau</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fahrschule-me.ch/team</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://fahrschule-me.ch/kontakt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://fahrschule-me.ch/impressum</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://fahrschule-me.ch/datenschutz</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>

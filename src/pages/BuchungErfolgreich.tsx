@@ -4,6 +4,7 @@ import { CheckCircle, Loader2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import BrandLogo from "@/components/BrandLogo";
+import Seo from "@/components/Seo";
 
 export default function BuchungErfolgreich() {
   const [searchParams] = useSearchParams();
@@ -44,6 +45,13 @@ export default function BuchungErfolgreich() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+      <Seo
+        title="Buchung bestätigt – Fahrschule me"
+        description="Deine Buchung wurde erfolgreich bestätigt."
+        path="/buchung-erfolgreich"
+      >
+        <meta name="robots" content="noindex, nofollow" />
+      </Seo>
       <nav className="absolute top-0 left-0 right-0 max-w-5xl mx-auto px-6 py-5 flex items-center">
         <Link to="/" className="flex items-center gap-2">
           <BrandLogo imgClassName="h-12 w-auto" />

@@ -4,6 +4,7 @@ import { Bike, Loader2, CheckCircle, XCircle, AlertTriangle } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import BrandLogo from "@/components/BrandLogo";
+import Seo from "@/components/Seo";
 
 type Status = "loading" | "valid" | "already_unsubscribed" | "invalid" | "success" | "error";
 
@@ -27,7 +28,7 @@ export default function Unsubscribe() {
         const data = await res.json();
         if (!res.ok) {
           setStatus("invalid");
-        } else if (data.valid === false && data.reason === "already_unsubscribed") {
+    } else if (data.valid === false && data.reason === "already_unsubscribed") {
           setStatus("already_unsubscribed");
         } else if (data.valid) {
           setStatus("valid");
