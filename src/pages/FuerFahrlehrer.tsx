@@ -62,6 +62,11 @@ const FuerFahrlehrer = () => {
   const soloPrice = 39;
   const soloPlusPrice = 57.5;
 
+  const scrollToId = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Seo
