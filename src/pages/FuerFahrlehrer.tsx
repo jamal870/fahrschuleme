@@ -303,15 +303,15 @@ const FuerFahrlehrer = () => {
             30 Tage gratis – keine Kreditkarte, keine Verpflichtung. Einfach registrieren und sofort starten.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               Jetzt kostenlos testen
-            </a>
+            </Link>
           </div>
           <p className="text-xs text-muted-foreground font-body">
             Direkt herunterladen:{" "}
-            <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Play Store</a>
+            <a href="https://play.google.com/store/search?q=fahrschule%20me&c=apps" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Play Store</a>
             {" · "}
-            <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Apple App Store</a>
+            <a href="https://apps.apple.com/ch/search?term=fahrschule%20me" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Apple App Store</a>
           </p>
         </div>
       </section>
