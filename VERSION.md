@@ -90,5 +90,3 @@ Jede Code-Änderung → Versions-Bump (1.0.x für Fixes, 1.x.0 für Features) + 
 **Aktionen / Promotions:**
 - `PromotionsSection.tsx`: Aktionen werden auf der Website immer angezeigt, solange `active = true` — unabhängig vom Startdatum. Rabatt greift bei Buchungen weiterhin nur im gültigen Zeitraum (Logik in `create-booking`).
 - Gültigkeitszeitraum (`starts_at` / `ends_at`) wird auf der Aktions-Karte sichtbar gemacht („Bald verfügbar – Gültig ab …" bzw. „Gültig … – …").
-
-**Freeze-Status:** v1.1.0 ist die neue stabile Produktions-Version. Gleiche Regeln wie v1.0.0 — keine Änderungen ohne ausdrückliche Freigabe.
