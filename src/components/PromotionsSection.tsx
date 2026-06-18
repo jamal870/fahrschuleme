@@ -70,11 +70,19 @@ const PromotionsSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          className={
+            items.length === 1
+              ? "grid grid-cols-1 gap-6 max-w-2xl mx-auto"
+              : items.length === 2
+              ? "grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto"
+              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          }
+        >
           {items.map((p, idx) => (
             <article
               key={p.id}
-              className="group relative bg-card p-7 flex flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-1"
+              className="group relative bg-card p-7 md:p-10 flex flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-1"
               style={{
                 borderRadius: "3px",
                 boxShadow: "0 20px 50px -20px hsl(var(--primary) / 0.5)",
