@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+
 import {
   Calendar,
   Users,
@@ -12,6 +13,7 @@ import {
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
+import { FahrlehrerTrialDialog } from "@/components/FahrlehrerTrialDialog";
 
 const features = [
   { icon: Calendar, title: "Kalender & Termine", desc: "Woche, Tag oder Liste – mit Google Kalender Sync. Schüler können Stunden direkt online anfragen." },
@@ -61,6 +63,8 @@ const faqs = [
 const FuerFahrlehrer = () => {
   const soloPrice = 39;
   const soloPlusPrice = 57.5;
+  const [trialOpen, setTrialOpen] = useState(false);
+  const openTrial = (e?: React.MouseEvent) => { e?.preventDefault(); setTrialOpen(true); };
 
   const scrollToId = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -91,9 +95,9 @@ const FuerFahrlehrer = () => {
             Schüler verwalten, Termine planen, Rechnungen verschicken – in einer App, die wirklich für Schweizer Fahrlehrer gemacht ist. Kein Excel. Kein Papier. Kein Stress.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <button onClick={openTrial} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               30 Tage gratis starten
-            </Link>
+            </button>
             <a href="#features" onClick={scrollToId("features")} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors" style={{ borderRadius: "3px" }}>
               Features ansehen
             </a>
@@ -205,9 +209,9 @@ const FuerFahrlehrer = () => {
                   </li>
                 ))}
               </ul>
-              <Link to="/kontakt" className="block text-center py-3 bg-card border border-border text-foreground font-heading font-bold uppercase text-sm tracking-wide hover:border-primary transition-colors" style={{ borderRadius: "3px" }}>
+              <button onClick={openTrial} className="block w-full text-center py-3 bg-card border border-border text-foreground font-heading font-bold uppercase text-sm tracking-wide hover:border-primary transition-colors" style={{ borderRadius: "3px" }}>
                 30 Tage gratis starten
-              </Link>
+              </button>
             </div>
 
             {/* Solo+ */}
@@ -231,9 +235,9 @@ const FuerFahrlehrer = () => {
                   </li>
                 ))}
               </ul>
-              <Link to="/kontakt" className="block text-center py-3 bg-primary text-primary-foreground font-heading font-bold uppercase text-sm tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+              <button onClick={openTrial} className="block w-full text-center py-3 bg-primary text-primary-foreground font-heading font-bold uppercase text-sm tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
                 30 Tage gratis starten
-              </Link>
+              </button>
             </div>
           </div>
 
@@ -303,9 +307,9 @@ const FuerFahrlehrer = () => {
             30 Tage gratis – keine Kreditkarte, keine Verpflichtung. Einfach registrieren und sofort starten.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <button onClick={openTrial} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               Jetzt kostenlos testen
-            </Link>
+            </button>
           </div>
           <p className="text-xs text-muted-foreground font-body">
             Direkt herunterladen:{" "}
@@ -317,6 +321,7 @@ const FuerFahrlehrer = () => {
       </section>
 
       <SiteFooter />
+      <FahrlehrerTrialDialog open={trialOpen} onOpenChange={setTrialOpen} />
     </div>
   );
 };
