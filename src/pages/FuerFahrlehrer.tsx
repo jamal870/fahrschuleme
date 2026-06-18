@@ -307,9 +307,9 @@ const FuerFahrlehrer = () => {
             30 Tage gratis – keine Kreditkarte, keine Verpflichtung. Einfach registrieren und sofort starten.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <button onClick={openTrial} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               Jetzt kostenlos testen
-            </Link>
+            </button>
           </div>
           <p className="text-xs text-muted-foreground font-body">
             Direkt herunterladen:{" "}
