@@ -235,9 +235,9 @@ const FuerFahrlehrer = () => {
                   </li>
                 ))}
               </ul>
-              <Link to="/kontakt" className="block text-center py-3 bg-primary text-primary-foreground font-heading font-bold uppercase text-sm tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+              <button onClick={openTrial} className="block w-full text-center py-3 bg-primary text-primary-foreground font-heading font-bold uppercase text-sm tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
                 30 Tage gratis starten
-              </Link>
+              </button>
             </div>
           </div>
 
