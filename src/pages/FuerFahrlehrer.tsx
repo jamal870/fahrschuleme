@@ -63,6 +63,8 @@ const faqs = [
 const FuerFahrlehrer = () => {
   const soloPrice = 39;
   const soloPlusPrice = 57.5;
+  const [trialOpen, setTrialOpen] = useState(false);
+  const openTrial = (e?: React.MouseEvent) => { e?.preventDefault(); setTrialOpen(true); };
 
   const scrollToId = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
