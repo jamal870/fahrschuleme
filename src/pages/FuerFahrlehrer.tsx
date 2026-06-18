@@ -104,14 +104,14 @@ const FuerFahrlehrer = () => {
 
           {/* Store Badges */}
           <div className="flex flex-wrap justify-center gap-3 mt-10">
-            <a href="https://play.google.com/store/search?q=fahrschule%20me&c=apps" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <a href="https://play.google.com/store/apps/details?id=com.driveme.fahrschule" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               <Smartphone className="w-5 h-5" />
               <div className="text-left">
                 <div className="text-[10px] uppercase font-body opacity-70 leading-none">Jetzt im</div>
                 <div className="text-sm font-heading font-bold uppercase leading-tight">Google Play</div>
               </div>
             </a>
-            <a href="https://apps.apple.com/ch/search?term=fahrschule%20me" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <a href="https://apps.apple.com/ch/app/fahrschule-me/id6762010003" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               <Smartphone className="w-5 h-5" />
               <div className="text-left">
                 <div className="text-[10px] uppercase font-body opacity-70 leading-none">Jetzt im</div>
@@ -309,9 +309,9 @@ const FuerFahrlehrer = () => {
           </div>
           <p className="text-xs text-muted-foreground font-body">
             Direkt herunterladen:{" "}
-            <a href="https://play.google.com/store/search?q=fahrschule%20me&c=apps" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Play Store</a>
+            <a href="https://play.google.com/store/apps/details?id=com.driveme.fahrschule" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Play Store</a>
             {" · "}
-            <a href="https://apps.apple.com/ch/search?term=fahrschule%20me" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Apple App Store</a>
+            <a href="https://apps.apple.com/ch/app/fahrschule-me/id6762010003" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Apple App Store</a>
           </p>
         </div>
       </section>
