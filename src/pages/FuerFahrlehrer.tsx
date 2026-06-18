@@ -91,9 +91,9 @@ const FuerFahrlehrer = () => {
             Schüler verwalten, Termine planen, Rechnungen verschicken – in einer App, die wirklich für Schweizer Fahrlehrer gemacht ist. Kein Excel. Kein Papier. Kein Stress.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <a href="#preise" onClick={scrollToId("preise")} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               30 Tage gratis starten
-            </a>
+            </Link>
             <a href="#features" onClick={scrollToId("features")} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors" style={{ borderRadius: "3px" }}>
               Features ansehen
             </a>
@@ -104,14 +104,14 @@ const FuerFahrlehrer = () => {
 
           {/* Store Badges */}
           <div className="flex flex-wrap justify-center gap-3 mt-10">
-            <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <a href="https://play.google.com/store/search?q=fahrschule%20me&c=apps" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               <Smartphone className="w-5 h-5" />
               <div className="text-left">
                 <div className="text-[10px] uppercase font-body opacity-70 leading-none">Jetzt im</div>
                 <div className="text-sm font-heading font-bold uppercase leading-tight">Google Play</div>
               </div>
             </a>
-            <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <a href="https://apps.apple.com/ch/search?term=fahrschule%20me" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               <Smartphone className="w-5 h-5" />
               <div className="text-left">
                 <div className="text-[10px] uppercase font-body opacity-70 leading-none">Jetzt im</div>
@@ -205,9 +205,9 @@ const FuerFahrlehrer = () => {
                   </li>
                 ))}
               </ul>
-              <a href="#cta" onClick={scrollToId("cta")} className="block text-center py-3 bg-card border border-border text-foreground font-heading font-bold uppercase text-sm tracking-wide hover:border-primary transition-colors" style={{ borderRadius: "3px" }}>
+              <Link to="/kontakt" className="block text-center py-3 bg-card border border-border text-foreground font-heading font-bold uppercase text-sm tracking-wide hover:border-primary transition-colors" style={{ borderRadius: "3px" }}>
                 30 Tage gratis starten
-              </a>
+              </Link>
             </div>
 
             {/* Solo+ */}
@@ -231,9 +231,9 @@ const FuerFahrlehrer = () => {
                   </li>
                 ))}
               </ul>
-              <a href="#cta" onClick={scrollToId("cta")} className="block text-center py-3 bg-primary text-primary-foreground font-heading font-bold uppercase text-sm tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+              <Link to="/kontakt" className="block text-center py-3 bg-primary text-primary-foreground font-heading font-bold uppercase text-sm tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
                 30 Tage gratis starten
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -303,15 +303,15 @@ const FuerFahrlehrer = () => {
             30 Tage gratis – keine Kreditkarte, keine Verpflichtung. Einfach registrieren und sofort starten.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               Jetzt kostenlos testen
-            </a>
+            </Link>
           </div>
           <p className="text-xs text-muted-foreground font-body">
             Direkt herunterladen:{" "}
-            <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Play Store</a>
+            <a href="https://play.google.com/store/search?q=fahrschule%20me&c=apps" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Play Store</a>
             {" · "}
-            <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Apple App Store</a>
+            <a href="https://apps.apple.com/ch/search?term=fahrschule%20me" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Apple App Store</a>
           </p>
         </div>
       </section>
