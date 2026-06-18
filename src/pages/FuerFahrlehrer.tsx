@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Calendar,
@@ -12,6 +13,7 @@ import {
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
+import { FahrlehrerTrialDialog } from "@/components/FahrlehrerTrialDialog";
 
 const features = [
   { icon: Calendar, title: "Kalender & Termine", desc: "Woche, Tag oder Liste – mit Google Kalender Sync. Schüler können Stunden direkt online anfragen." },
