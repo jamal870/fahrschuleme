@@ -1,7 +1,6 @@
-# Version 1.0.0 — Stable Production Release
+# Version 1.2.0 — Stable Production Release
 
-**Freeze-Datum:** 2026-06-15  
-**Commit:** `b1108e6096318e2b2aab23701cfdf319e279a411`  
+**Freeze-Datum:** 2026-06-18  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
 
 ## Live-Umgebung
