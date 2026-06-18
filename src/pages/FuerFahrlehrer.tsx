@@ -62,6 +62,11 @@ const FuerFahrlehrer = () => {
   const soloPrice = 39;
   const soloPlusPrice = 57.5;
 
+  const scrollToId = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Seo
@@ -86,10 +91,10 @@ const FuerFahrlehrer = () => {
             Schüler verwalten, Termine planen, Rechnungen verschicken – in einer App, die wirklich für Schweizer Fahrlehrer gemacht ist. Kein Excel. Kein Papier. Kein Stress.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <a href="#preise" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <a href="#preise" onClick={scrollToId("preise")} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               30 Tage gratis starten
             </a>
-            <a href="#features" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors" style={{ borderRadius: "3px" }}>
+            <a href="#features" onClick={scrollToId("features")} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors" style={{ borderRadius: "3px" }}>
               Features ansehen
             </a>
           </div>
@@ -200,7 +205,7 @@ const FuerFahrlehrer = () => {
                   </li>
                 ))}
               </ul>
-              <a href="#cta" className="block text-center py-3 bg-card border border-border text-foreground font-heading font-bold uppercase text-sm tracking-wide hover:border-primary transition-colors" style={{ borderRadius: "3px" }}>
+              <a href="#cta" onClick={scrollToId("cta")} className="block text-center py-3 bg-card border border-border text-foreground font-heading font-bold uppercase text-sm tracking-wide hover:border-primary transition-colors" style={{ borderRadius: "3px" }}>
                 30 Tage gratis starten
               </a>
             </div>
@@ -226,7 +231,7 @@ const FuerFahrlehrer = () => {
                   </li>
                 ))}
               </ul>
-              <a href="#cta" className="block text-center py-3 bg-primary text-primary-foreground font-heading font-bold uppercase text-sm tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+              <a href="#cta" onClick={scrollToId("cta")} className="block text-center py-3 bg-primary text-primary-foreground font-heading font-bold uppercase text-sm tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
                 30 Tage gratis starten
               </a>
             </div>
