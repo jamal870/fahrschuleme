@@ -95,9 +95,9 @@ const FuerFahrlehrer = () => {
             Schüler verwalten, Termine planen, Rechnungen verschicken – in einer App, die wirklich für Schweizer Fahrlehrer gemacht ist. Kein Excel. Kein Papier. Kein Stress.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
+            <button onClick={openTrial} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
               30 Tage gratis starten
-            </Link>
+            </button>
             <a href="#features" onClick={scrollToId("features")} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors" style={{ borderRadius: "3px" }}>
               Features ansehen
             </a>
