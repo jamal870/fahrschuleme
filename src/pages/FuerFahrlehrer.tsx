@@ -321,6 +321,7 @@ const FuerFahrlehrer = () => {
       </section>
 
       <SiteFooter />
+      <FahrlehrerTrialDialog open={trialOpen} onOpenChange={setTrialOpen} />
     </div>
   );
 };
