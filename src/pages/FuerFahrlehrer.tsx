@@ -205,9 +205,9 @@ const FuerFahrlehrer = () => {
                   </li>
                 ))}
               </ul>
-              <a href="#cta" onClick={scrollToId("cta")} className="block text-center py-3 bg-card border border-border text-foreground font-heading font-bold uppercase text-sm tracking-wide hover:border-primary transition-colors" style={{ borderRadius: "3px" }}>
+              <Link to="/kontakt" className="block text-center py-3 bg-card border border-border text-foreground font-heading font-bold uppercase text-sm tracking-wide hover:border-primary transition-colors" style={{ borderRadius: "3px" }}>
                 30 Tage gratis starten
-              </a>
+              </Link>
             </div>
 
             {/* Solo+ */}
