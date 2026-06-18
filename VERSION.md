@@ -63,6 +63,22 @@ Jede Code-Änderung → Versions-Bump (1.0.x für Fixes, 1.x.0 für Features) + 
 
 ## Changelog
 
+### v1.2.0 — 2026-06-18 (App-Seite, Fahrlehrer-Trial, SEO)
+
+**Neue Seiten / Features:**
+- `FuerFahrlehrer.tsx`: Sektion mit App-Store-/Play-Store-Links zur Fahrschule-me-App ergänzt.
+- `FahrlehrerTrialDialog.tsx`: Kontaktformular für „30 Tage gratis testen" (Fahrschule, Adresse, Telefon, E-Mail). Sendet Bestätigung an Interessent (mit Download-Links zur App) sowie Benachrichtigung an Admin.
+- E-Mail-Templates: `fahrlehrer-trial-confirmation.tsx` + `fahrlehrer-trial-admin.tsx` in der Registry registriert.
+- `PromotionsSection.tsx`: Aktions-Karten auf grossen Displays grösser dargestellt (1 Karte: max-w-2xl + p-7/p-10; 2 Karten: max-w-5xl).
+
+**SEO:**
+- Google Search Console: Property `sc-domain:fahrschule-me.ch` verifiziert.
+- Sitemap `https://fahrschule-me.ch/sitemap.xml` (16 URLs) eingereicht — 0 Fehler/Warnungen.
+
+**Freeze-Status:** v1.2.0 ist die neue stabile Produktions-Version. Gleiche Regeln wie v1.0.0/v1.1.0 — keine Änderungen ohne ausdrückliche Freigabe.
+
+---
+
 ### v1.1.0 — 2026-06-15 (Adresse + Aktionen)
 
 **Buchungs-Adressen:**
