@@ -85,6 +85,18 @@ serve(async (req) => {
           courses = courseData || [];
         }
 
+        // Google-Kalender pro betroffenem MGK-Kurs aktualisieren (Teilnehmerliste)
+        for (const courseId of courseIds) {
+          try {
+            await supabase.functions.invoke("sync-course-to-gcal", {
+              body: { courseDateId: courseId, action: "upsert" },
+            });
+          } catch (e) {
+            console.warn("[STRIPE-WEBHOOK] gcal sync failed", courseId, (e as Error).message);
+          }
+        }
+
+
         const total = courses.reduce((s: number, c: any) => s + (c.price || 0), 0);
 
         // Send confirmation email
