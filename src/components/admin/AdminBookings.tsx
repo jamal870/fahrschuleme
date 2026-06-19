@@ -216,6 +216,7 @@ const AdminBookings = () => {
                   <TableHead>E-Mail</TableHead>
                   <TableHead>Typ</TableHead>
                   <TableHead>Betrag</TableHead>
+                  <TableHead>Zahlung</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Details</TableHead>
                 </TableRow>
@@ -230,6 +231,21 @@ const AdminBookings = () => {
                     <TableCell className="text-sm">{b.email}</TableCell>
                     <TableCell><Badge variant="outline">{b.booking_type}</Badge></TableCell>
                     <TableCell>CHF {b.total_price}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant={b.payment_status === "paid" ? "default" : "outline"}
+                        size="sm"
+                        className={b.payment_status === "paid"
+                          ? "h-7 px-2 bg-green-600 hover:bg-green-700 text-white"
+                          : "h-7 px-2 border-amber-500 text-amber-700 hover:bg-amber-50"}
+                        onClick={() => togglePaymentStatus(b)}
+                        title={b.payment_status === "paid" ? "Klicken: zurück auf Pending" : "Klicken: als bezahlt markieren"}
+                      >
+                        {b.payment_status === "paid"
+                          ? <><BadgeCheck className="w-3.5 h-3.5 mr-1" /> Bezahlt</>
+                          : <><Clock className="w-3.5 h-3.5 mr-1" /> Pending</>}
+                      </Button>
+                    </TableCell>
                     <TableCell><Badge variant={statusColor(b.status) as any}>{b.status}</Badge></TableCell>
                     <TableCell className="text-right flex items-center justify-end gap-1">
                       <Button variant="ghost" size="icon" onClick={() => viewDetails(b)}>
