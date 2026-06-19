@@ -63,6 +63,19 @@ Jede Code-Änderung → Versions-Bump (1.0.x für Fixes, 1.x.0 für Features) + 
 
 ## Changelog
 
+### v1.4.0 — 2026-06-19 (A1-Inhaber: Nur Teil 3 buchbar – CHF 250)
+
+**Neuer Buchungsfluss für A1-Inhaber:**
+- Eigener orange-farbener CTA-Button auf Startseite + auf `GrundkursBuchen`: „Bereits im Besitz von A1? Nur Teil 3 buchen – CHF 250".
+- URL-Parameter `?a1=1` aktiviert A1-Modus: nur MGK Teil 3 sichtbar, Pauschalpreis CHF 250 direkt auf Kurskarten.
+- Pflicht-Checkbox „Ich bestätige, dass ich bereits im Besitz von A1 bin" (Selbstdeklaration, kein Upload).
+- **Serverseitiges Pricing-Enforcement** in `create-booking`: `courses.length === 1 && part === 3` → `serverTotal = 250`. Verhindert Client-Manipulation.
+- Dokumentiert in `.lovable/memory/features/booking/a1-only-teil3.md`.
+
+**Freeze-Status:** v1.4.0 ist die neue stabile Produktions-Version.
+
+---
+
 ### v1.3.0 — 2026-06-19 (Teilnehmer im Google Kalender)
 
 **Google-Kalender-Sync:**
