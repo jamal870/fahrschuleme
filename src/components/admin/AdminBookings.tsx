@@ -286,7 +286,7 @@ const AdminBookings = () => {
                 ))}
                 {bookings.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">Keine Buchungen vorhanden</TableCell>
+                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">Keine Buchungen vorhanden</TableCell>
                   </TableRow>
                 )}
               </TableBody>
