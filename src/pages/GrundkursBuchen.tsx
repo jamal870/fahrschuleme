@@ -63,12 +63,17 @@ export default function GrundkursBuchen() {
   const part3Ref = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
-  // Load all 3 parts upfront so customers can browse M2/M3 before selecting M1
+  // Load all 3 parts upfront so customers can browse M2/M3 before selecting M1.
+  // In A1-only mode load only Teil 3.
   useEffect(() => {
-    loadCourseDates(1);
-    loadCourseDates(2);
-    loadCourseDates(3);
-  }, []);
+    if (a1Only) {
+      loadCourseDates(3);
+    } else {
+      loadCourseDates(1);
+      loadCourseDates(2);
+      loadCourseDates(3);
+    }
+  }, [a1Only]);
 
   const loadCourseDates = async (part: number) => {
     setLoadingPart(part);
