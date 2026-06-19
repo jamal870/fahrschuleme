@@ -477,11 +477,28 @@ export default function GrundkursBuchen() {
                   </div>
                 </div>
 
+                {a1Only && (
+                  <div className="mt-6 p-4 border-2 border-primary/40 bg-primary/5" style={{ borderRadius: "3px" }}>
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={a1Confirmed}
+                        onChange={(e) => setA1Confirmed(e.target.checked)}
+                        className="mt-1 w-5 h-5 accent-primary"
+                      />
+                      <span className="text-sm text-foreground">
+                        Ich bestätige verbindlich, dass ich bereits im Besitz der Führerausweis-Kategorie <strong>A1</strong> bin
+                        und nur den Kursteil 3 absolvieren muss. Bei falschen Angaben kann die Buchung storniert werden.
+                      </span>
+                    </label>
+                  </div>
+                )}
+
                 {/* Submit */}
                 <div className="flex justify-end mt-8">
                   <Button
                     onClick={handleSubmit}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || (a1Only && !a1Confirmed)}
                     className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg"
                   >
                     {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
