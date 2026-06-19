@@ -116,6 +116,18 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
 
   const togglePresent = (row: AttendanceRow, present: boolean) => upsert(row, { present });
 
+  const togglePayment = async (row: AttendanceRow) => {
+    const next = row.payment_status === "paid" ? "pending" : "paid";
+    const { error } = await supabase
+      .from("bookings")
+      .update({ payment_status: next })
+      .eq("id", row.booking_id);
+    if (error) { toast.error("Fehler: " + error.message); return; }
+    setRows((rs) => rs.map((r) => r.booking_id === row.booking_id ? { ...r, payment_status: next } : r));
+    toast.success(next === "paid" ? "Als bezahlt markiert" : "Zurück auf Pending");
+  };
+
+
   const saveSig = async (dataUrl: string) => {
     if (!signFor) return;
     await upsert(signFor, { signature_data: dataUrl, present: true });
