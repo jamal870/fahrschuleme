@@ -317,6 +317,21 @@ const AdminBookings = () => {
                 <div><span className="text-muted-foreground">FA-Nummer:</span> {selectedBooking.fa_number}</div>
                 <div className="col-span-2"><span className="text-muted-foreground">Adresse:</span> {[selectedBooking.address, [selectedBooking.postal_code, selectedBooking.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")}</div>
                 <div><span className="text-muted-foreground">Zahlung:</span> {selectedBooking.payment_method}</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Zahlungsstatus:</span>
+                  <Button
+                    variant={selectedBooking.payment_status === "paid" ? "default" : "outline"}
+                    size="sm"
+                    className={selectedBooking.payment_status === "paid"
+                      ? "h-7 px-2 bg-green-600 hover:bg-green-700 text-white"
+                      : "h-7 px-2 border-amber-500 text-amber-700 hover:bg-amber-50"}
+                    onClick={() => togglePaymentStatus(selectedBooking)}
+                  >
+                    {selectedBooking.payment_status === "paid"
+                      ? <><BadgeCheck className="w-3.5 h-3.5 mr-1" /> Bezahlt</>
+                      : <><Clock className="w-3.5 h-3.5 mr-1" /> Pending</>}
+                  </Button>
+                </div>
                 <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusColor(selectedBooking.status) as any}>{selectedBooking.status}</Badge></div>
                 <div><span className="text-muted-foreground">Betrag:</span> <strong>CHF {selectedBooking.total_price}</strong></div>
               </div>
