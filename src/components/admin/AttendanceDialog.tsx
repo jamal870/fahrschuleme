@@ -8,10 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { PenLine, FileDown, RefreshCw, Check, ChevronDown, ArrowRightLeft } from "lucide-react";
+import { PenLine, FileDown, RefreshCw, Check, ChevronDown, ArrowRightLeft, Clock, BadgeCheck } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import SignaturePad from "./SignaturePad";
 import { generateParticipantList, downloadPdf, type Participant, type ParticipantFilter } from "@/lib/pdf-generator";
+import { Badge } from "@/components/ui/badge";
 import type { Tables } from "@/integrations/supabase/types";
 
 type CourseDate = Tables<"course_dates">;
@@ -25,6 +26,7 @@ interface AttendanceRow {
   birth_date: string;
   fa_number: string;
   payment_method: string;
+  payment_status: string;
   signature_id?: string;
   signature_data?: string | null;
   present: boolean;
@@ -53,7 +55,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     setLoading(true);
     const { data: items, error } = await supabase
       .from("booking_items")
-      .select("booking_id, bookings!inner(id, first_name, last_name, phone, email, birth_date, fa_number, payment_method, status)")
+      .select("booking_id, bookings!inner(id, first_name, last_name, phone, email, birth_date, fa_number, payment_method, payment_status, status)")
       .eq("course_date_id", course.id);
     if (error) { toast.error("Fehler beim Laden"); setLoading(false); return; }
 
@@ -81,6 +83,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
         phone: b.phone, email: b.email,
         birth_date: b.birth_date,
         fa_number: b.fa_number, payment_method: b.payment_method,
+        payment_status: b.payment_status || "pending",
         signature_id: s?.id, signature_data: s?.signature_data,
         present: s?.present ?? false,
       };
@@ -112,6 +115,18 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
   };
 
   const togglePresent = (row: AttendanceRow, present: boolean) => upsert(row, { present });
+
+  const togglePayment = async (row: AttendanceRow) => {
+    const next = row.payment_status === "paid" ? "pending" : "paid";
+    const { error } = await supabase
+      .from("bookings")
+      .update({ payment_status: next })
+      .eq("id", row.booking_id);
+    if (error) { toast.error("Fehler: " + error.message); return; }
+    setRows((rs) => rs.map((r) => r.booking_id === row.booking_id ? { ...r, payment_status: next } : r));
+    toast.success(next === "paid" ? "Als bezahlt markiert" : "Zurück auf Pending");
+  };
+
 
   const saveSig = async (dataUrl: string) => {
     if (!signFor) return;
@@ -167,7 +182,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       first_name: r.first_name, last_name: r.last_name,
       phone: r.phone, birth_date: r.birth_date,
       fa_number: r.fa_number, payment_method: r.payment_method,
-      paid: !(r.payment_method || "").toLowerCase().includes("bar"),
+      paid: r.payment_status === "paid",
       signature: r.signature_data,
       present: r.present,
     }));
@@ -227,6 +242,8 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                 <TableHead>Telefon</TableHead>
                 <TableHead>Geb.</TableHead>
                 <TableHead>FA-Nr.</TableHead>
+                <TableHead>Zahlung</TableHead>
+                <TableHead>Zahlung</TableHead>
                 <TableHead>Unterschrift</TableHead>
                 <TableHead className="text-right">Verschieben</TableHead>
               </TableRow>
@@ -241,6 +258,21 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                   <TableCell className="font-body">{r.phone || "–"}</TableCell>
                   <TableCell className="font-body">{r.birth_date || "–"}</TableCell>
                   <TableCell className="font-body">{r.fa_number || "–"}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant={r.payment_status === "paid" ? "default" : "outline"}
+                      size="sm"
+                      className={r.payment_status === "paid"
+                        ? "h-7 px-2 bg-green-600 hover:bg-green-700 text-white font-body"
+                        : "h-7 px-2 border-amber-500 text-amber-700 hover:bg-amber-50 font-body"}
+                      onClick={() => togglePayment(r)}
+                      title={r.payment_status === "paid" ? "Klicken: zurück auf Pending" : "Klicken: Zahlung bestätigen"}
+                    >
+                      {r.payment_status === "paid"
+                        ? <><BadgeCheck className="w-3.5 h-3.5 mr-1" /> Bezahlt</>
+                        : <><Clock className="w-3.5 h-3.5 mr-1" /> Pending</>}
+                    </Button>
+                  </TableCell>
                   <TableCell>
                     {r.signature_data ? (
                       <div className="flex items-center gap-2">

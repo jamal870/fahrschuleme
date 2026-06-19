@@ -52,7 +52,7 @@ serve(async (req) => {
       // Update booking status to confirmed
       const { error: updateError } = await supabase
         .from("bookings")
-        .update({ status: "confirmed" })
+        .update({ status: "confirmed", payment_status: "paid" })
         .eq("id", bookingId)
         .eq("status", "pending_payment");
 

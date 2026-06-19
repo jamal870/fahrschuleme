@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { RefreshCw, Eye, FileText, Receipt, AlertTriangle, CheckCircle, Pencil, Save, X } from "lucide-react";
+import { RefreshCw, Eye, FileText, Receipt, AlertTriangle, CheckCircle, Pencil, Save, X, Clock, BadgeCheck } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
@@ -36,6 +36,7 @@ interface Booking {
   postal_code: string | null;
   city: string | null;
   payment_method: string;
+  payment_status: string;
 }
 
 interface BookingItem {
@@ -181,6 +182,18 @@ const AdminBookings = () => {
     }
   };
 
+  const togglePaymentStatus = async (b: Booking) => {
+    const next = b.payment_status === "paid" ? "pending" : "paid";
+    const { error } = await supabase
+      .from("bookings")
+      .update({ payment_status: next })
+      .eq("id", b.id);
+    if (error) { toast.error("Fehler: " + error.message); return; }
+    toast.success(next === "paid" ? "Als bezahlt markiert" : "Zurück auf ausstehend");
+    setBookings((bs) => bs.map((x) => x.id === b.id ? { ...x, payment_status: next } : x));
+    if (selectedBooking?.id === b.id) setSelectedBooking({ ...selectedBooking, payment_status: next });
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -203,6 +216,7 @@ const AdminBookings = () => {
                   <TableHead>E-Mail</TableHead>
                   <TableHead>Typ</TableHead>
                   <TableHead>Betrag</TableHead>
+                  <TableHead>Zahlung</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Details</TableHead>
                 </TableRow>
@@ -217,6 +231,21 @@ const AdminBookings = () => {
                     <TableCell className="text-sm">{b.email}</TableCell>
                     <TableCell><Badge variant="outline">{b.booking_type}</Badge></TableCell>
                     <TableCell>CHF {b.total_price}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant={b.payment_status === "paid" ? "default" : "outline"}
+                        size="sm"
+                        className={b.payment_status === "paid"
+                          ? "h-7 px-2 bg-green-600 hover:bg-green-700 text-white"
+                          : "h-7 px-2 border-amber-500 text-amber-700 hover:bg-amber-50"}
+                        onClick={() => togglePaymentStatus(b)}
+                        title={b.payment_status === "paid" ? "Klicken: zurück auf Pending" : "Klicken: als bezahlt markieren"}
+                      >
+                        {b.payment_status === "paid"
+                          ? <><BadgeCheck className="w-3.5 h-3.5 mr-1" /> Bezahlt</>
+                          : <><Clock className="w-3.5 h-3.5 mr-1" /> Pending</>}
+                      </Button>
+                    </TableCell>
                     <TableCell><Badge variant={statusColor(b.status) as any}>{b.status}</Badge></TableCell>
                     <TableCell className="text-right flex items-center justify-end gap-1">
                       <Button variant="ghost" size="icon" onClick={() => viewDetails(b)}>
@@ -257,7 +286,7 @@ const AdminBookings = () => {
                 ))}
                 {bookings.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">Keine Buchungen vorhanden</TableCell>
+                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">Keine Buchungen vorhanden</TableCell>
                   </TableRow>
                 )}
               </TableBody>
@@ -288,6 +317,21 @@ const AdminBookings = () => {
                 <div><span className="text-muted-foreground">FA-Nummer:</span> {selectedBooking.fa_number}</div>
                 <div className="col-span-2"><span className="text-muted-foreground">Adresse:</span> {[selectedBooking.address, [selectedBooking.postal_code, selectedBooking.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")}</div>
                 <div><span className="text-muted-foreground">Zahlung:</span> {selectedBooking.payment_method}</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Zahlungsstatus:</span>
+                  <Button
+                    variant={selectedBooking.payment_status === "paid" ? "default" : "outline"}
+                    size="sm"
+                    className={selectedBooking.payment_status === "paid"
+                      ? "h-7 px-2 bg-green-600 hover:bg-green-700 text-white"
+                      : "h-7 px-2 border-amber-500 text-amber-700 hover:bg-amber-50"}
+                    onClick={() => togglePaymentStatus(selectedBooking)}
+                  >
+                    {selectedBooking.payment_status === "paid"
+                      ? <><BadgeCheck className="w-3.5 h-3.5 mr-1" /> Bezahlt</>
+                      : <><Clock className="w-3.5 h-3.5 mr-1" /> Pending</>}
+                  </Button>
+                </div>
                 <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusColor(selectedBooking.status) as any}>{selectedBooking.status}</Badge></div>
                 <div><span className="text-muted-foreground">Betrag:</span> <strong>CHF {selectedBooking.total_price}</strong></div>
               </div>

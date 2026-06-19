@@ -86,6 +86,7 @@ export type Database = {
           id: string
           last_name: string
           payment_method: string
+          payment_status: string
           phone: string
           postal_code: string | null
           status: string
@@ -104,6 +105,7 @@ export type Database = {
           id?: string
           last_name: string
           payment_method: string
+          payment_status?: string
           phone: string
           postal_code?: string | null
           status?: string
@@ -122,6 +124,7 @@ export type Database = {
           id?: string
           last_name?: string
           payment_method?: string
+          payment_status?: string
           phone?: string
           postal_code?: string | null
           status?: string
