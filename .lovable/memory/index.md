@@ -17,6 +17,7 @@
 - [Chatbot Core](mem://features/chatbot/core) — `<ChatBot />` component logic, flows, and UX behavior
 - [Lesson Booking Logic](mem://features/booking/fahrstunden-logic) — Lesson types and duration rules for cars and motorcycles
 - [MGK Sequential Logic](mem://features/booking/mgk-sequential-logic) — Chronological requirements for basic motorcycle courses
+- [A1-Inhaber Buchung (nur Teil 3)](mem://features/booking/a1-only-teil3) — Sonderfluss `?a1=1`, CHF 250 Pauschal, serverseitig erzwungen
 - [Inventory & Booking Status](mem://architecture/database/inventory-management) — Database constraints and spot decrement logic
 - [Admin Panel](mem://features/admin/panel) — Admin panel setup and security constraints
 - [Security & Access Control](mem://architecture/security/access-control) — RLS, edge function logic, and internal auth
