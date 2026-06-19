@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { CourseDate } from "@/data/courses";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,7 +35,12 @@ const bookingSchema = z.object({
   category: z.string().min(1, "Kategorie ist ein Pflichtfeld"),
 });
 
+const A1_TEIL3_PRICE = 250;
+
 export default function GrundkursBuchen() {
+  const [searchParams] = useSearchParams();
+  const a1Only = searchParams.get("a1") === "1";
+
   const [selections, setSelections] = useState<Record<number, CourseDate | null>>({ 1: null, 2: null, 3: null });
   const [coursesData, setCoursesData] = useState<Record<number, CourseDate[]>>({});
   const [loadingPart, setLoadingPart] = useState<number | null>(null);
@@ -50,6 +55,7 @@ export default function GrundkursBuchen() {
   const [birthDate, setBirthDate] = useState("");
   const [category, setCategory] = useState("A1 bis 125ccm");
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "barzahlung" | "ueberweisung">("stripe");
+  const [a1Confirmed, setA1Confirmed] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -57,12 +63,17 @@ export default function GrundkursBuchen() {
   const part3Ref = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
-  // Load all 3 parts upfront so customers can browse M2/M3 before selecting M1
+  // Load all 3 parts upfront so customers can browse M2/M3 before selecting M1.
+  // In A1-only mode load only Teil 3.
   useEffect(() => {
-    loadCourseDates(1);
-    loadCourseDates(2);
-    loadCourseDates(3);
-  }, []);
+    if (a1Only) {
+      loadCourseDates(3);
+    } else {
+      loadCourseDates(1);
+      loadCourseDates(2);
+      loadCourseDates(3);
+    }
+  }, [a1Only]);
 
   const loadCourseDates = async (part: number) => {
     setLoadingPart(part);
@@ -91,6 +102,14 @@ export default function GrundkursBuchen() {
     }
     setSelections(updated);
 
+    // In A1-only mode: jump straight to form after Teil 3 selection
+    if (a1Only) {
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 200);
+      return;
+    }
+
     // Auto-load and scroll to next part
     const nextPart = part + 1;
     if (nextPart <= 3) {
@@ -115,6 +134,10 @@ export default function GrundkursBuchen() {
       setErrors(fieldErrors);
       return;
     }
+    if (a1Only && !a1Confirmed) {
+      toast.error("Bitte bestätige, dass du bereits im Besitz von A1 bist.");
+      return;
+    }
     setErrors({});
     setIsSubmitting(true);
 
@@ -122,7 +145,7 @@ export default function GrundkursBuchen() {
       .filter(([, v]) => v !== null)
       .map(([part, course]) => ({ part: parseInt(part), course: course! }));
     const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
-    const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
+    const total = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, c) => sum + c.price, 0);
     const isOnline = paymentMethod === "stripe";
     const checkoutWindow = isOnline ? window.open("", "_blank") : null;
 
@@ -189,8 +212,8 @@ export default function GrundkursBuchen() {
   const selectedCourses = Object.entries(selections)
     .filter(([, v]) => v !== null)
     .map(([part, course]) => ({ part: parseInt(part), course: course! }));
-  const totalPrice = selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
-  const allPartsSelected = selections[1] && selections[2] && selections[3];
+  const totalPrice = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
+  const allPartsSelected = a1Only ? !!selections[3] : (selections[1] && selections[2] && selections[3]);
 
   // Filter courses: hide past dates, enforce chronological order, one course per day
   const getFilteredCourses = (part: number): CourseDate[] => {
@@ -231,10 +254,24 @@ export default function GrundkursBuchen() {
         {/* Title */}
         <div className="text-center mb-2">
           <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-2">
-            Motorrad-Grundkurs in Wettingen buchen
+            {a1Only ? "MGK Teil 3 für A1-Inhaber buchen" : "Motorrad-Grundkurs in Wettingen buchen"}
           </h1>
-          <p className="text-primary text-xs font-semibold uppercase tracking-wider mb-1">Motorrad Grundkursdaten / Anmeldung</p>
-          <p className="text-sm text-muted-foreground">+++Die Kursteile müssen unbedingt in der richtigen Reihenfolge absolviert werden+++</p>
+          <p className="text-primary text-xs font-semibold uppercase tracking-wider mb-1">
+            {a1Only ? "Nur Kursteil 3 – Pauschalpreis CHF 250.00" : "Motorrad Grundkursdaten / Anmeldung"}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {a1Only
+              ? "Dieser Buchungsweg ist ausschliesslich für Fahrschüler, die bereits im Besitz der Kategorie A1 sind."
+              : "+++Die Kursteile müssen unbedingt in der richtigen Reihenfolge absolviert werden+++"}
+          </p>
+          {!a1Only && (
+            <p className="text-xs text-muted-foreground mt-2">
+              Bereits im Besitz von A1?{" "}
+              <Link to="/grundkurs-buchen?a1=1" className="text-primary font-semibold hover:underline">
+                Nur Teil 3 buchen (CHF 250)
+              </Link>
+            </p>
+          )}
         </div>
 
         <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 text-center mb-8">
@@ -246,36 +283,41 @@ export default function GrundkursBuchen() {
           </p>
         </div>
 
-        {/* Part 1 - Always visible */}
-        <CourseSection
-          partNum={1}
-          courses={getFilteredCourses(1)}
-          selected={selections[1]}
-          onSelect={(course) => selectCourse(1, course)}
-          loading={loadingPart === 1}
-        />
+        {!a1Only && (
+          <>
+            {/* Part 1 - Always visible */}
+            <CourseSection
+              partNum={1}
+              courses={getFilteredCourses(1)}
+              selected={selections[1]}
+              onSelect={(course) => selectCourse(1, course)}
+              loading={loadingPart === 1}
+            />
 
-        {/* Part 2 - Always visible so customers can browse all dates */}
-        <div ref={part2Ref} className="mt-10">
-          <CourseSection
-            partNum={2}
-            courses={getFilteredCourses(2)}
-            selected={selections[2]}
-            onSelect={(course) => selectCourse(2, course)}
-            loading={loadingPart === 2}
-            requiresPrev={!selections[1]}
-          />
-        </div>
+            {/* Part 2 - Always visible so customers can browse all dates */}
+            <div ref={part2Ref} className="mt-10">
+              <CourseSection
+                partNum={2}
+                courses={getFilteredCourses(2)}
+                selected={selections[2]}
+                onSelect={(course) => selectCourse(2, course)}
+                loading={loadingPart === 2}
+                requiresPrev={!selections[1]}
+              />
+            </div>
+          </>
+        )}
 
         {/* Part 3 - Always visible so customers can browse all dates */}
-        <div ref={part3Ref} className="mt-10">
+        <div ref={part3Ref} className={a1Only ? "" : "mt-10"}>
           <CourseSection
             partNum={3}
             courses={getFilteredCourses(3)}
             selected={selections[3]}
             onSelect={(course) => selectCourse(3, course)}
             loading={loadingPart === 3}
-            requiresPrev={!selections[2]}
+            requiresPrev={!a1Only && !selections[2]}
+            priceOverride={a1Only ? A1_TEIL3_PRICE : undefined}
           />
         </div>
 
@@ -308,7 +350,7 @@ export default function GrundkursBuchen() {
                         <div className="space-y-0.5">
                           <p className="text-sm text-muted-foreground">📅 {course.date} &nbsp; 🕐 {course.time}</p>
                           <p className="text-sm text-muted-foreground">📍 {course.location}</p>
-                          <p className="font-bold text-primary">CHF {course.price.toFixed(2)}</p>
+                          <p className="font-bold text-primary">CHF {(a1Only && part === 3 ? A1_TEIL3_PRICE : course.price).toFixed(2)}</p>
                         </div>
                       </div>
                     ))}
@@ -435,11 +477,28 @@ export default function GrundkursBuchen() {
                   </div>
                 </div>
 
+                {a1Only && (
+                  <div className="mt-6 p-4 border-2 border-primary/40 bg-primary/5" style={{ borderRadius: "3px" }}>
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={a1Confirmed}
+                        onChange={(e) => setA1Confirmed(e.target.checked)}
+                        className="mt-1 w-5 h-5 accent-primary"
+                      />
+                      <span className="text-sm text-foreground">
+                        Ich bestätige verbindlich, dass ich bereits im Besitz der Führerausweis-Kategorie <strong>A1</strong> bin
+                        und nur den Kursteil 3 absolvieren muss. Bei falschen Angaben kann die Buchung storniert werden.
+                      </span>
+                    </label>
+                  </div>
+                )}
+
                 {/* Submit */}
                 <div className="flex justify-end mt-8">
                   <Button
                     onClick={handleSubmit}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || (a1Only && !a1Confirmed)}
                     className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg"
                   >
                     {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
@@ -462,6 +521,7 @@ function CourseSection({
   onSelect,
   loading,
   requiresPrev = false,
+  priceOverride,
 }: {
   partNum: number;
   courses: CourseDate[];
@@ -469,6 +529,7 @@ function CourseSection({
   onSelect: (course: CourseDate) => void;
   loading: boolean;
   requiresPrev?: boolean;
+  priceOverride?: number;
 }) {
   return (
     <div>
@@ -554,7 +615,7 @@ function CourseSection({
                     </p>
                   )}
                 </div>
-                <p className="font-bold text-primary mt-3">CHF {course.price.toFixed(2)}</p>
+                <p className="font-bold text-primary mt-3">CHF {(priceOverride ?? course.price).toFixed(2)}</p>
                 <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full mt-1 ${
                   course.spotsAvailable <= 2 ? "bg-destructive/15 text-destructive" : "bg-accent/15 text-accent"
                 }`}>

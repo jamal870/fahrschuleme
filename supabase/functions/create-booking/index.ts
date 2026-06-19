@@ -123,12 +123,18 @@ serve(async (req) => {
         });
       }
 
+      // A1-Inhaber: nur Teil 3 gebucht → Fixpreis CHF 250
+      const isA1Only = courses.length === 1 && Number(courses[0].part) === 3;
+      const A1_TEIL3_PRICE = 250;
+
       // Use server-side price (never trust client) — apply MGK/Grundkurs promo if active
       const promoPrice = (await getActivePromoPrice(supabase, "mgk")) ?? (await getActivePromoPrice(supabase, "grundkurs"));
-      const serverTotal = courses.reduce(
-        (sum: number, c: any) => sum + (promoPrice != null ? promoPrice : Number(c.price)),
-        0
-      );
+      const serverTotal = isA1Only
+        ? A1_TEIL3_PRICE
+        : courses.reduce(
+            (sum: number, c: any) => sum + (promoPrice != null ? promoPrice : Number(c.price)),
+            0
+          );
 
       // Create booking
       const { data: booking, error: bookingError } = await supabase
