@@ -12,6 +12,7 @@ import { PenLine, FileDown, RefreshCw, Check, ChevronDown, ArrowRightLeft } from
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import SignaturePad from "./SignaturePad";
 import { generateParticipantList, downloadPdf, type Participant, type ParticipantFilter } from "@/lib/pdf-generator";
+import { Badge } from "@/components/ui/badge";
 import type { Tables } from "@/integrations/supabase/types";
 
 type CourseDate = Tables<"course_dates">;
@@ -25,6 +26,7 @@ interface AttendanceRow {
   birth_date: string;
   fa_number: string;
   payment_method: string;
+  payment_status: string;
   signature_id?: string;
   signature_data?: string | null;
   present: boolean;
