@@ -145,7 +145,7 @@ export default function GrundkursBuchen() {
       .filter(([, v]) => v !== null)
       .map(([part, course]) => ({ part: parseInt(part), course: course! }));
     const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
-    const total = selectedCourses.reduce((sum, c) => sum + c.price, 0);
+    const total = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, c) => sum + c.price, 0);
     const isOnline = paymentMethod === "stripe";
     const checkoutWindow = isOnline ? window.open("", "_blank") : null;
 
