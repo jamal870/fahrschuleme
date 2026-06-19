@@ -83,6 +83,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
         phone: b.phone, email: b.email,
         birth_date: b.birth_date,
         fa_number: b.fa_number, payment_method: b.payment_method,
+        payment_status: b.payment_status || "pending",
         signature_id: s?.id, signature_data: s?.signature_data,
         present: s?.present ?? false,
       };
