@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { PenLine, FileDown, RefreshCw, Check, ChevronDown, ArrowRightLeft } from "lucide-react";
+import { PenLine, FileDown, RefreshCw, Check, ChevronDown, ArrowRightLeft, Clock, BadgeCheck } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import SignaturePad from "./SignaturePad";
 import { generateParticipantList, downloadPdf, type Participant, type ParticipantFilter } from "@/lib/pdf-generator";
