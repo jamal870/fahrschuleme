@@ -348,7 +348,7 @@ const Index = () => {
               Wähle deinen Wunschtermin und buche deinen Motorrad-Grundkurs bequem online.
             </p>
           </div>
-          <div className="text-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link
               to="/grundkurs-buchen"
               className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
@@ -356,7 +356,17 @@ const Index = () => {
             >
               Zum Buchungsformular
             </Link>
+            <Link
+              to="/grundkurs-buchen?a1=1"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-card border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary/5 transition-colors"
+              style={{ borderRadius: "3px" }}
+            >
+              Nur Teil 3 (A1-Inhaber) – CHF 250
+            </Link>
           </div>
+          <p className="text-xs text-muted-foreground text-center mt-3">
+            Du bist bereits im Besitz der Kategorie A1? Buche direkt nur den Kursteil 3 zum Pauschalpreis.
+          </p>
         </div>
       </section>
 
