@@ -170,7 +170,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       first_name: r.first_name, last_name: r.last_name,
       phone: r.phone, birth_date: r.birth_date,
       fa_number: r.fa_number, payment_method: r.payment_method,
-      paid: !(r.payment_method || "").toLowerCase().includes("bar"),
+      paid: r.payment_status === "paid",
       signature: r.signature_data,
       present: r.present,
     }));
