@@ -36,6 +36,7 @@ interface Booking {
   postal_code: string | null;
   city: string | null;
   payment_method: string;
+  payment_status: string;
 }
 
 interface BookingItem {
