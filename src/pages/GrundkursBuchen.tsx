@@ -212,8 +212,8 @@ export default function GrundkursBuchen() {
   const selectedCourses = Object.entries(selections)
     .filter(([, v]) => v !== null)
     .map(([part, course]) => ({ part: parseInt(part), course: course! }));
-  const totalPrice = selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
-  const allPartsSelected = selections[1] && selections[2] && selections[3];
+  const totalPrice = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
+  const allPartsSelected = a1Only ? !!selections[3] : (selections[1] && selections[2] && selections[3]);
 
   // Filter courses: hide past dates, enforce chronological order, one course per day
   const getFilteredCourses = (part: number): CourseDate[] => {
