@@ -254,10 +254,24 @@ export default function GrundkursBuchen() {
         {/* Title */}
         <div className="text-center mb-2">
           <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-2">
-            Motorrad-Grundkurs in Wettingen buchen
+            {a1Only ? "MGK Teil 3 für A1-Inhaber buchen" : "Motorrad-Grundkurs in Wettingen buchen"}
           </h1>
-          <p className="text-primary text-xs font-semibold uppercase tracking-wider mb-1">Motorrad Grundkursdaten / Anmeldung</p>
-          <p className="text-sm text-muted-foreground">+++Die Kursteile müssen unbedingt in der richtigen Reihenfolge absolviert werden+++</p>
+          <p className="text-primary text-xs font-semibold uppercase tracking-wider mb-1">
+            {a1Only ? "Nur Kursteil 3 – Pauschalpreis CHF 250.00" : "Motorrad Grundkursdaten / Anmeldung"}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {a1Only
+              ? "Dieser Buchungsweg ist ausschliesslich für Fahrschüler, die bereits im Besitz der Kategorie A1 sind."
+              : "+++Die Kursteile müssen unbedingt in der richtigen Reihenfolge absolviert werden+++"}
+          </p>
+          {!a1Only && (
+            <p className="text-xs text-muted-foreground mt-2">
+              Bereits im Besitz von A1?{" "}
+              <Link to="/grundkurs-buchen?a1=1" className="text-primary font-semibold hover:underline">
+                Nur Teil 3 buchen (CHF 250)
+              </Link>
+            </p>
+          )}
         </div>
 
         <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 text-center mb-8">
@@ -269,36 +283,41 @@ export default function GrundkursBuchen() {
           </p>
         </div>
 
-        {/* Part 1 - Always visible */}
-        <CourseSection
-          partNum={1}
-          courses={getFilteredCourses(1)}
-          selected={selections[1]}
-          onSelect={(course) => selectCourse(1, course)}
-          loading={loadingPart === 1}
-        />
+        {!a1Only && (
+          <>
+            {/* Part 1 - Always visible */}
+            <CourseSection
+              partNum={1}
+              courses={getFilteredCourses(1)}
+              selected={selections[1]}
+              onSelect={(course) => selectCourse(1, course)}
+              loading={loadingPart === 1}
+            />
 
-        {/* Part 2 - Always visible so customers can browse all dates */}
-        <div ref={part2Ref} className="mt-10">
-          <CourseSection
-            partNum={2}
-            courses={getFilteredCourses(2)}
-            selected={selections[2]}
-            onSelect={(course) => selectCourse(2, course)}
-            loading={loadingPart === 2}
-            requiresPrev={!selections[1]}
-          />
-        </div>
+            {/* Part 2 - Always visible so customers can browse all dates */}
+            <div ref={part2Ref} className="mt-10">
+              <CourseSection
+                partNum={2}
+                courses={getFilteredCourses(2)}
+                selected={selections[2]}
+                onSelect={(course) => selectCourse(2, course)}
+                loading={loadingPart === 2}
+                requiresPrev={!selections[1]}
+              />
+            </div>
+          </>
+        )}
 
         {/* Part 3 - Always visible so customers can browse all dates */}
-        <div ref={part3Ref} className="mt-10">
+        <div ref={part3Ref} className={a1Only ? "" : "mt-10"}>
           <CourseSection
             partNum={3}
             courses={getFilteredCourses(3)}
             selected={selections[3]}
             onSelect={(course) => selectCourse(3, course)}
             loading={loadingPart === 3}
-            requiresPrev={!selections[2]}
+            requiresPrev={!a1Only && !selections[2]}
+            priceOverride={a1Only ? A1_TEIL3_PRICE : undefined}
           />
         </div>
 
