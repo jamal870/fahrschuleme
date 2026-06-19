@@ -102,6 +102,14 @@ export default function GrundkursBuchen() {
     }
     setSelections(updated);
 
+    // In A1-only mode: jump straight to form after Teil 3 selection
+    if (a1Only) {
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 200);
+      return;
+    }
+
     // Auto-load and scroll to next part
     const nextPart = part + 1;
     if (nextPart <= 3) {
