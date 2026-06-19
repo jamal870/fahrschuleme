@@ -55,7 +55,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     setLoading(true);
     const { data: items, error } = await supabase
       .from("booking_items")
-      .select("booking_id, bookings!inner(id, first_name, last_name, phone, email, birth_date, fa_number, payment_method, status)")
+      .select("booking_id, bookings!inner(id, first_name, last_name, phone, email, birth_date, fa_number, payment_method, payment_status, status)")
       .eq("course_date_id", course.id);
     if (error) { toast.error("Fehler beim Laden"); setLoading(false); return; }
 
