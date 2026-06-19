@@ -1,6 +1,6 @@
-# Version 1.2.0 — Stable Production Release
+# Version 1.3.0 — Stable Production Release
 
-**Freeze-Datum:** 2026-06-18  
+**Freeze-Datum:** 2026-06-19  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
 
 ## Live-Umgebung
@@ -62,6 +62,18 @@ Jede Code-Änderung → Versions-Bump (1.0.x für Fixes, 1.x.0 für Features) + 
 ---
 
 ## Changelog
+
+### v1.3.0 — 2026-06-19 (Teilnehmer im Google Kalender)
+
+**Google-Kalender-Sync:**
+- `sync-course-to-gcal`: lädt jetzt alle bestätigten Teilnehmer (`booking_items` → `bookings.status = 'confirmed'`) eines Kurses und schreibt sie in die Event-Beschreibung (Nummer, Name, Telefon, E-Mail). Titel zeigt zusätzlich die Anzahl: `MGK Teil X (Instructor) – N TN`.
+- `create-booking`: triggert nach erfolgreicher Bestätigung (Bar/Überweisung) automatisch den Kalender-Sync für jeden betroffenen Kursteil.
+- `stripe-webhook`: triggert nach Zahlungs-Bestätigung automatisch den Kalender-Sync.
+- Admin kann weiterhin manuell über „Sync"-Button in `AdminCourseDates` re-synchronisieren.
+
+**Freeze-Status:** v1.3.0 ist die neue stabile Produktions-Version.
+
+---
 
 ### v1.2.0 — 2026-06-18 (App-Seite, Fahrlehrer-Trial, SEO)
 

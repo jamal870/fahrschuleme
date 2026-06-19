@@ -105,12 +105,34 @@ Deno.serve(async (req) => {
     if (!dp) throw new Error("invalid course date");
     const t = parseTime(course.time);
 
-    const summary = `MGK Teil ${course.part}${course.instructor ? ` (${course.instructor})` : ""}`;
+    // Teilnehmer (bestätigt) für diesen Kurs laden
+    const { data: items } = await supabase
+      .from("booking_items")
+      .select("booking_id, bookings!inner(first_name, last_name, phone, email, status)")
+      .eq("course_date_id", courseDateId);
+    const participants = (items || [])
+      .map((it: any) => it.bookings)
+      .filter((b: any) => b && b.status === "confirmed");
+    const tnCount = participants.length;
+
+    const participantLines = participants.length
+      ? participants
+          .map((b: any, i: number) =>
+            `  ${i + 1}. ${b.first_name} ${b.last_name} – ${b.phone || "–"}${b.email ? ` – ${b.email}` : ""}`,
+          )
+          .join("\n")
+      : "  (noch keine Teilnehmer)";
+
+    const summary = `MGK Teil ${course.part}${course.instructor ? ` (${course.instructor})` : ""} – ${tnCount} TN`;
     const description = [
       `Motorrad-Grundkurs Teil ${course.part}`,
       `Fahrlehrer: ${course.instructor || "–"}`,
-      `Plätze: ${course.spots_available}`,
+      `Teilnehmer: ${tnCount} (freie Plätze: ${course.spots_available})`,
       `Preis: CHF ${course.price}`,
+      ``,
+      `Teilnehmerliste:`,
+      participantLines,
+      ``,
       `Course-ID: ${course.id}`,
     ].join("\n");
 

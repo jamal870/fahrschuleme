@@ -261,7 +261,26 @@ serve(async (req) => {
             });
           }
         }
+
+        // Google-Kalender pro betroffenem Kurs aktualisieren (Teilnehmerliste)
+        for (const courseId of courseDateIds) {
+          try {
+            await fetch(`${supabaseUrl}/functions/v1/sync-course-to-gcal`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${serviceKey}`,
+                "apikey": serviceKey,
+              },
+              body: JSON.stringify({ courseDateId: courseId, action: "upsert" }),
+            });
+          } catch (e) {
+            console.warn("[CREATE-BOOKING] gcal sync failed", courseId, (e as Error).message);
+          }
+        }
       }
+
+
 
 
       return new Response(JSON.stringify({ bookingId: booking.id, totalPrice: serverTotal }), {
