@@ -504,6 +504,7 @@ function CourseSection({
   onSelect,
   loading,
   requiresPrev = false,
+  priceOverride,
 }: {
   partNum: number;
   courses: CourseDate[];
@@ -511,6 +512,7 @@ function CourseSection({
   onSelect: (course: CourseDate) => void;
   loading: boolean;
   requiresPrev?: boolean;
+  priceOverride?: number;
 }) {
   return (
     <div>
