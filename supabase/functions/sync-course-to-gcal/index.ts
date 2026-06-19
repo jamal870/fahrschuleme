@@ -7,9 +7,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const GCAL_BASE = "https://www.googleapis.com/calendar/v3";
+const GCAL_BASE = "https://connector-gateway.lovable.dev/google_calendar/calendar/v3";
 const CALENDAR_ID = "primary";
-const GOOGLE_CLIENT_ID = Deno.env.get("GOOGLE_CLIENT_ID") ?? "608631487176-tn1kechi71mr1cbegngqo8qha5s6legk.apps.googleusercontent.com";
 
 function parseSwiss(d: string) {
   const m = d.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
@@ -30,40 +29,18 @@ function isoLocal(y: number, mo: number, d: number, h: number, mi: number) {
   return `${y}-${p(mo)}-${p(d)}T${p(h)}:${p(mi)}:00`;
 }
 
-let cachedToken: { token: string; expiresAt: number } | null = null;
-async function getAccessToken(): Promise<string> {
-  if (cachedToken && cachedToken.expiresAt > Date.now() + 60_000) return cachedToken.token;
-  const clientSecret = Deno.env.get("GOOGLE_CLIENT_SECRET");
-  const refreshToken = Deno.env.get("GOOGLE_REFRESH_TOKEN");
-  if (!clientSecret || !refreshToken) {
-    throw new Error("GOOGLE_CLIENT_SECRET or GOOGLE_REFRESH_TOKEN not configured");
-  }
-  const res = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      client_id: GOOGLE_CLIENT_ID,
-      client_secret: clientSecret,
-      refresh_token: refreshToken,
-      grant_type: "refresh_token",
-    }),
-  });
-  const text = await res.text();
-  if (!res.ok) throw new Error(`OAuth token refresh ${res.status}: ${text}`);
-  const json = JSON.parse(text);
-  cachedToken = {
-    token: json.access_token,
-    expiresAt: Date.now() + (json.expires_in ?? 3600) * 1000,
-  };
-  return cachedToken.token;
-}
-
 async function gcall(path: string, method: string, body?: unknown) {
-  const token = await getAccessToken();
+  const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
+  const calendarApiKey = Deno.env.get("GOOGLE_CALENDAR_API_KEY");
+  if (!lovableApiKey || !calendarApiKey) {
+    throw new Error("Google Calendar connection is not configured");
+  }
+
   const res = await fetch(`${GCAL_BASE}${path}`, {
     method,
     headers: {
-      "Authorization": `Bearer ${token}`,
+      "Authorization": `Bearer ${lovableApiKey}`,
+      "X-Connection-Api-Key": calendarApiKey,
       "Content-Type": "application/json",
     },
     body: body ? JSON.stringify(body) : undefined,
