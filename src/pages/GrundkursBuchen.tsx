@@ -265,13 +265,16 @@ export default function GrundkursBuchen() {
               : "+++Die Kursteile müssen unbedingt in der richtigen Reihenfolge absolviert werden+++"}
           </p>
           {!a1Only && (
-            <p className="text-xs text-muted-foreground mt-2">
-              Bereits im Besitz von A1?{" "}
-              <Link to="/grundkurs-buchen?a1=1" className="text-primary font-semibold hover:underline">
-                Nur Teil 3 buchen (CHF 250)
+            <div className="mt-4 flex justify-center">
+              <Link
+                to="/grundkurs-buchen?a1=1"
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 rounded-md font-semibold shadow-md hover:bg-primary/90 transition-colors"
+              >
+                🏍️ Bereits im Besitz von A1? Nur Teil 3 buchen – CHF 250
               </Link>
-            </p>
+            </div>
           )}
+
         </div>
 
         <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 text-center mb-8">
