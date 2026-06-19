@@ -231,6 +231,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                 <TableHead>Geb.</TableHead>
                 <TableHead>FA-Nr.</TableHead>
                 <TableHead>Zahlung</TableHead>
+                <TableHead>Zahlung</TableHead>
                 <TableHead>Unterschrift</TableHead>
                 <TableHead className="text-right">Verschieben</TableHead>
               </TableRow>
