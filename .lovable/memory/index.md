@@ -9,7 +9,7 @@
 - Unprotected admin setup scripts are permanently removed for security.
 - **DNS/Domains:** Registrar = Hostpoint, DNS = Netlify (nsone.net NS), Hosting = Netlify. NIE Lovable Custom Domain vorschlagen, NIE 185.158.133.1, NIE Cloudflare. Bei Problemen IMMER alle 4 Schichten (Registrar-NS, Netlify-DNS, Netlify-Site-Domains, Propagation) in EINER Antwort prüfen — nicht schrittweise.
 - **Deploy:** GitHub → Netlify ist Auto-Deploy. Lovable Publish ≠ Live-Deploy.
-- **🔒 FREEZE v1.0.0 (2026-06-15, b1108e6):** Keine Code-Änderungen ohne ausdrückliche Freigabe. Siehe VERSION.md.
+- **🔒 FREEZE v1.4.0 (2026-06-19):** A1-Inhaber-Fluss live. Keine Code-Änderungen ohne ausdrückliche Freigabe. Siehe VERSION.md.
 
 ## Memories
 - [Version Freeze v1.0.0](mem://constraints/version-freeze-v1) — Stabiler Produktions-Freeze, Änderungsregeln
