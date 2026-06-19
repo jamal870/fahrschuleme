@@ -182,6 +182,18 @@ const AdminBookings = () => {
     }
   };
 
+  const togglePaymentStatus = async (b: Booking) => {
+    const next = b.payment_status === "paid" ? "pending" : "paid";
+    const { error } = await supabase
+      .from("bookings")
+      .update({ payment_status: next })
+      .eq("id", b.id);
+    if (error) { toast.error("Fehler: " + error.message); return; }
+    toast.success(next === "paid" ? "Als bezahlt markiert" : "Zurück auf ausstehend");
+    setBookings((bs) => bs.map((x) => x.id === b.id ? { ...x, payment_status: next } : x));
+    if (selectedBooking?.id === b.id) setSelectedBooking({ ...selectedBooking, payment_status: next });
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
