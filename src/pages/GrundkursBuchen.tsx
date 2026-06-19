@@ -350,7 +350,7 @@ export default function GrundkursBuchen() {
                         <div className="space-y-0.5">
                           <p className="text-sm text-muted-foreground">📅 {course.date} &nbsp; 🕐 {course.time}</p>
                           <p className="text-sm text-muted-foreground">📍 {course.location}</p>
-                          <p className="font-bold text-primary">CHF {course.price.toFixed(2)}</p>
+                          <p className="font-bold text-primary">CHF {(a1Only && part === 3 ? A1_TEIL3_PRICE : course.price).toFixed(2)}</p>
                         </div>
                       </div>
                     ))}
