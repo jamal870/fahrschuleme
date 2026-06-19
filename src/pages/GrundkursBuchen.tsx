@@ -134,6 +134,10 @@ export default function GrundkursBuchen() {
       setErrors(fieldErrors);
       return;
     }
+    if (a1Only && !a1Confirmed) {
+      toast.error("Bitte bestätige, dass du bereits im Besitz von A1 bist.");
+      return;
+    }
     setErrors({});
     setIsSubmitting(true);
 
