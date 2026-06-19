@@ -35,7 +35,12 @@ const bookingSchema = z.object({
   category: z.string().min(1, "Kategorie ist ein Pflichtfeld"),
 });
 
+const A1_TEIL3_PRICE = 250;
+
 export default function GrundkursBuchen() {
+  const [searchParams] = useSearchParams();
+  const a1Only = searchParams.get("a1") === "1";
+
   const [selections, setSelections] = useState<Record<number, CourseDate | null>>({ 1: null, 2: null, 3: null });
   const [coursesData, setCoursesData] = useState<Record<number, CourseDate[]>>({});
   const [loadingPart, setLoadingPart] = useState<number | null>(null);
@@ -50,6 +55,7 @@ export default function GrundkursBuchen() {
   const [birthDate, setBirthDate] = useState("");
   const [category, setCategory] = useState("A1 bis 125ccm");
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "barzahlung" | "ueberweisung">("stripe");
+  const [a1Confirmed, setA1Confirmed] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
