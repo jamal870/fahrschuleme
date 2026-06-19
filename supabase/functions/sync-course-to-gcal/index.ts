@@ -118,7 +118,7 @@ Deno.serve(async (req) => {
     const participantLines = participants.length
       ? participants
           .map((b: any, i: number) =>
-            `  ${i + 1}. ${b.first_name} ${b.last_name} – ${b.phone || "–"}${b.email ? ` – ${b.email}` : ""}`,
+            `  ${i + 1}. ${b.first_name} ${b.last_name} – ${b.phone || "–"}`,
           )
           .join("\n")
       : "  (noch keine Teilnehmer)";
