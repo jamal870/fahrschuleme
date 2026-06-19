@@ -247,6 +247,21 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                   <TableCell className="font-body">{r.birth_date || "–"}</TableCell>
                   <TableCell className="font-body">{r.fa_number || "–"}</TableCell>
                   <TableCell>
+                    <Button
+                      variant={r.payment_status === "paid" ? "default" : "outline"}
+                      size="sm"
+                      className={r.payment_status === "paid"
+                        ? "h-7 px-2 bg-green-600 hover:bg-green-700 text-white font-body"
+                        : "h-7 px-2 border-amber-500 text-amber-700 hover:bg-amber-50 font-body"}
+                      onClick={() => togglePayment(r)}
+                      title={r.payment_status === "paid" ? "Klicken: zurück auf Pending" : "Klicken: Zahlung bestätigen"}
+                    >
+                      {r.payment_status === "paid"
+                        ? <><BadgeCheck className="w-3.5 h-3.5 mr-1" /> Bezahlt</>
+                        : <><Clock className="w-3.5 h-3.5 mr-1" /> Pending</>}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
                     {r.signature_data ? (
                       <div className="flex items-center gap-2">
                         <img src={r.signature_data} alt="Unterschrift" className="h-10 bg-white border border-border" style={{ borderRadius: "3px" }} />
