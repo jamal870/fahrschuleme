@@ -7,6 +7,7 @@ import { Bike, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import AdminCourseDates from "@/components/admin/AdminCourseDates";
 import AdminBookings from "@/components/admin/AdminBookings";
+import AdminParticipants from "@/components/admin/AdminParticipants";
 
 import AdminTeam from "@/components/admin/AdminTeam";
 import AdminPhotoImport from "@/components/admin/AdminPhotoImport";
