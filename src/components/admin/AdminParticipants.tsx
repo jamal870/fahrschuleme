@@ -244,7 +244,7 @@ const AdminParticipants = () => {
                           </TableCell>
                         </TableRow>
                       )}
-                    </>
+                    </Fragment>
                   );
                 })}
               </TableBody>
