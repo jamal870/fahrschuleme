@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { RefreshCw, Mail, Phone, MapPin, Calendar, BadgeCheck, Clock, ChevronDown, ChevronRight, Search } from "lucide-react";
+import { RefreshCw, Mail, Phone, MapPin, Calendar, BadgeCheck, Clock, ChevronDown, ChevronRight, Search, Pencil, Save, X, Send } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 interface Booking {
   id: string;
