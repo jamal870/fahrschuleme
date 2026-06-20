@@ -398,21 +398,18 @@ export default function ChatBot() {
     }
   };
 
-  // ── Fahrstunden booking flow ──
+  // ── Fahrstunden booking flow → redirect to Fahrschul-App ──
+  const FAHRSTUNDEN_APP_URL = "https://app.l-me.ch/api/anmeldung";
   const startFahrstunde = async () => {
-    setFsStep(1); setBookingStep(0); setFsCategory(null); setFsService(null); setFsPackage(null); setFsInstructor(null); setStudentData(null);
-    const [services, packages] = await Promise.all([loadServices(), loadPackages()]);
-    setDbServices(services); setDbPackages(packages);
     addMsg({ role: "user", content: "Fahrstunden buchen" });
     addMsg({
       role: "bot",
-      content: tenantConfig.chatbot.fahrstundenIntro,
+      content: `📅 **Fahrstunden buchen**\n\nFahrstunden werden direkt über unsere Fahrschul-App gebucht – dort siehst du verfügbare Termine in Echtzeit und kannst sofort reservieren.\n\n👉 [Fahrstunde in der App buchen](${FAHRSTUNDEN_APP_URL})`,
       buttons: [
-        { label: "Einzelstunde", action: "fs_single" },
-        { label: "Paket 5 Stunden", action: "fs_pkg5" },
-        { label: "Paket 10 Stunden", action: "fs_pkg10" },
+        { label: "Zurück zum Start", action: "main_menu" },
       ],
     });
+    try { window.open(FAHRSTUNDEN_APP_URL, "_blank", "noopener,noreferrer"); } catch {}
   };
 
   const selectFsCategory = (cat: "auto" | "motorrad") => {
