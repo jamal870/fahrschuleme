@@ -117,6 +117,39 @@ const AdminParticipants = () => {
     toast.success("Buchungsbestätigung erneut gesendet an " + r.email);
   };
 
+  // Cancel/Delete state
+  const [confirmAction, setConfirmAction] = useState<null | { row: Row; mode: "cancel" | "delete" }>(null);
+  const [confirmReason, setConfirmReason] = useState("");
+  const [confirmNotify, setConfirmNotify] = useState(true);
+  const [confirmBusy, setConfirmBusy] = useState(false);
+
+  const openConfirm = (row: Row, mode: "cancel" | "delete") => {
+    setConfirmAction({ row, mode });
+    setConfirmReason("");
+    setConfirmNotify(true);
+  };
+
+  const runConfirm = async () => {
+    if (!confirmAction) return;
+    setConfirmBusy(true);
+    const { row, mode } = confirmAction;
+    const { data, error } = await supabase.functions.invoke("admin-cancel-booking", {
+      body: { bookingId: row.id, mode, reason: confirmReason || null, notify: confirmNotify },
+    });
+    setConfirmBusy(false);
+    if (error || (data as any)?.error) {
+      toast.error("Fehlgeschlagen: " + (error?.message || (data as any)?.error));
+      return;
+    }
+    toast.success(mode === "cancel"
+      ? (confirmNotify ? "Storniert · Teilnehmer per E-Mail informiert" : "Storniert")
+      : "Buchung gelöscht");
+    setConfirmAction(null);
+    await load();
+  };
+
+
+
   const load = async () => {
     setLoading(true);
     const { data: bks, error } = await supabase
