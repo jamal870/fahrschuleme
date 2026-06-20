@@ -170,7 +170,7 @@ const AdminParticipants = () => {
                 {filtered.map((r) => {
                   const isOpen = openId === r.id;
                   return (
-                    <>
+                    <Fragment key={r.id}>
                       <TableRow key={r.id} className="cursor-pointer hover:bg-muted/40" onClick={() => setOpenId(isOpen ? null : r.id)}>
                         <TableCell>
                           {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
