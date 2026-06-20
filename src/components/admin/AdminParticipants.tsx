@@ -406,6 +406,58 @@ const AdminParticipants = () => {
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={!!confirmAction} onOpenChange={(v) => !v && !confirmBusy && setConfirmAction(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-heading uppercase">
+              {confirmAction?.mode === "cancel" ? "Buchung stornieren" : "Buchung endgültig löschen"}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="font-body">
+              {confirmAction && (
+                <>
+                  Teilnehmer: <strong>{confirmAction.row.first_name} {confirmAction.row.last_name}</strong> · {confirmAction.row.email}
+                  <br />
+                  {confirmAction.mode === "cancel"
+                    ? "Die Buchung wird storniert und die Plätze werden freigegeben."
+                    : "Die Buchung wird unwiderruflich gelöscht. Plätze werden freigegeben. Es wird keine E-Mail versendet."}
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          {confirmAction?.mode === "cancel" && (
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <Label className="font-body text-xs">Grund (optional, erscheint in der E-Mail)</Label>
+                <Textarea
+                  value={confirmReason}
+                  onChange={(e) => setConfirmReason(e.target.value)}
+                  rows={3}
+                  placeholder="z.B. Auf Wunsch des Teilnehmers."
+                />
+              </div>
+              <label className="flex items-center gap-2 font-body text-sm">
+                <Checkbox checked={confirmNotify} onCheckedChange={(v) => setConfirmNotify(!!v)} />
+                Teilnehmer per E-Mail über Stornierung informieren
+              </label>
+            </div>
+          )}
+
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={confirmBusy} className="font-body">Abbrechen</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => { e.preventDefault(); runConfirm(); }}
+              disabled={confirmBusy}
+              className={confirmAction?.mode === "delete" ? "bg-destructive hover:bg-destructive/90 font-body" : "font-body"}
+            >
+              {confirmBusy
+                ? "Bitte warten..."
+                : confirmAction?.mode === "cancel" ? "Stornieren & benachrichtigen" : "Endgültig löschen"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
