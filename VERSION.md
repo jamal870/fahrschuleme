@@ -1,4 +1,4 @@
-# Version 1.5.0 — Stable Production Release
+# Version 1.5.1 — Stable Production Release
 
 **Freeze-Datum:** 2026-06-20  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
@@ -62,6 +62,18 @@ Jede Code-Änderung → Versions-Bump (1.0.x für Fixes, 1.x.0 für Features) + 
 ---
 
 ## Changelog
+
+### v1.5.1 — 2026-06-20 (Fahrstunden-Buttons same-tab)
+
+**Fahrstunden-Seite (`src/pages/Fahrstunden.tsx`):**
+- Beide „Fahrstunde buchen" / „Online buchen" Buttons öffnen `https://app.l-me.ch/api/anmeldung` jetzt im **selben Tab** (kein `target="_blank"` mehr). Damit funktioniert der Browser-Zurück-Pfeil zurück zu fahrschule-me.ch — konsistent mit der Chatbot-Logik aus v1.5.0.
+
+**Grundkurs-Seite (`src/pages/GrundkursBuchen.tsx`):**
+- Inline-Link „← Zurück zu fahrschule-me.ch" wieder entfernt (auf Wunsch).
+
+**Freeze-Status:** v1.5.1 ist die neue stabile Produktions-Version. Gleiche Freeze-Regeln wie v1.5.0.
+
+---
 
 ### v1.5.0 — 2026-06-20 (Admin Teilnehmer-Verwaltung + Chatbot Fahrstunden-Redirect)
 
