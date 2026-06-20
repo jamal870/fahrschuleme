@@ -265,18 +265,68 @@ const AdminParticipants = () => {
                       {isOpen && (
                         <TableRow key={r.id + "-d"} className="bg-muted/20">
                           <TableCell colSpan={7} className="p-4">
+                            <div className="flex justify-end gap-2 mb-3">
+                              {editId === r.id ? (
+                                <>
+                                  <Button size="sm" variant="outline" onClick={cancelEdit} className="font-body">
+                                    <X className="w-3.5 h-3.5 mr-1" /> Abbrechen
+                                  </Button>
+                                  <Button size="sm" onClick={() => saveEdit(r)} disabled={saving} className="font-body">
+                                    <Save className="w-3.5 h-3.5 mr-1" /> {saving ? "Speichern..." : "Speichern"}
+                                  </Button>
+                                </>
+                              ) : (
+                                <>
+                                  <Button size="sm" variant="outline" onClick={() => startEdit(r)} className="font-body">
+                                    <Pencil className="w-3.5 h-3.5 mr-1" /> Bearbeiten
+                                  </Button>
+                                  <Button size="sm" onClick={() => resendConfirmation(r)} disabled={resending === r.id} className="font-body">
+                                    <Send className="w-3.5 h-3.5 mr-1" /> {resending === r.id ? "Senden..." : "Bestätigung erneut senden"}
+                                  </Button>
+                                </>
+                              )}
+                            </div>
                             <div className="grid md:grid-cols-2 gap-4 text-sm font-body">
-                              <div className="space-y-1">
+                              <div className="space-y-2">
                                 <div className="font-heading uppercase text-xs text-muted-foreground mb-1">Persönlich</div>
                                 <div><strong>{r.first_name} {r.last_name}</strong></div>
                                 <div className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Geb.: {r.birth_date || "–"}</div>
                                 <div>FA-Nr.: {r.fa_number || "–"}</div>
-                                <div className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {r.email}</div>
-                                <div className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {r.phone}</div>
-                                <div className="flex items-start gap-1">
-                                  <MapPin className="w-3.5 h-3.5 mt-0.5" />
-                                  <span>{[r.address, [r.postal_code, r.city].filter(Boolean).join(" ")].filter(Boolean).join(", ") || "–"}</span>
-                                </div>
+                                {editId === r.id ? (
+                                  <>
+                                    <div className="space-y-1">
+                                      <Label className="text-xs">E-Mail</Label>
+                                      <Input value={editData.email ?? ""} onChange={(e) => setEditData({ ...editData, email: e.target.value })} />
+                                    </div>
+                                    <div className="space-y-1">
+                                      <Label className="text-xs">Telefon</Label>
+                                      <Input value={editData.phone ?? ""} onChange={(e) => setEditData({ ...editData, phone: e.target.value })} />
+                                    </div>
+                                    <div className="space-y-1">
+                                      <Label className="text-xs">Strasse & Nr.</Label>
+                                      <Input value={editData.address ?? ""} onChange={(e) => setEditData({ ...editData, address: e.target.value })} />
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2">
+                                      <div className="space-y-1">
+                                        <Label className="text-xs">PLZ</Label>
+                                        <Input value={editData.postal_code ?? ""} onChange={(e) => setEditData({ ...editData, postal_code: e.target.value })} />
+                                      </div>
+                                      <div className="space-y-1 col-span-2">
+                                        <Label className="text-xs">Ort</Label>
+                                        <Input value={editData.city ?? ""} onChange={(e) => setEditData({ ...editData, city: e.target.value })} />
+                                      </div>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {r.email}</div>
+                                    <div className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {r.phone}</div>
+                                    <div className="flex items-start gap-1">
+                                      <MapPin className="w-3.5 h-3.5 mt-0.5" />
+                                      <span>{[r.address, [r.postal_code, r.city].filter(Boolean).join(" ")].filter(Boolean).join(", ") || "–"}</span>
+                                    </div>
+                                  </>
+                                )}
                               </div>
                               <div className="space-y-1">
                                 <div className="font-heading uppercase text-xs text-muted-foreground mb-1">Zahlung</div>
