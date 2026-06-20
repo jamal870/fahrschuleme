@@ -54,6 +54,65 @@ const AdminParticipants = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "upcoming" | "past" | "unpaid">("upcoming");
   const [openId, setOpenId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editData, setEditData] = useState<Partial<Row>>({});
+  const [saving, setSaving] = useState(false);
+  const [resending, setResending] = useState<string | null>(null);
+
+  const startEdit = (r: Row) => {
+    setEditId(r.id);
+    setEditData({
+      email: r.email, phone: r.phone, address: r.address,
+      postal_code: r.postal_code, city: r.city,
+    });
+  };
+  const cancelEdit = () => { setEditId(null); setEditData({}); };
+
+  const saveEdit = async (r: Row) => {
+    setSaving(true);
+    const { error } = await supabase.from("bookings").update({
+      email: (editData.email || "").trim().toLowerCase(),
+      phone: (editData.phone || "").trim(),
+      address: (editData.address || "").trim(),
+      postal_code: editData.postal_code ? String(editData.postal_code).trim() : null,
+      city: editData.city ? String(editData.city).trim() : null,
+    }).eq("id", r.id);
+    setSaving(false);
+    if (error) { toast.error("Speichern fehlgeschlagen: " + error.message); return; }
+    setRows((rs) => rs.map((x) => x.id === r.id ? { ...x, ...editData } as Row : x));
+    cancelEdit();
+    toast.success("Daten aktualisiert");
+  };
+
+  const resendConfirmation = async (r: Row) => {
+    setResending(r.id);
+    const now = new Date();
+    const bookingDateStr = now.toLocaleDateString("de-CH", { day: "numeric", month: "long", year: "numeric" });
+    const { error } = await supabase.functions.invoke("send-transactional-email", {
+      body: {
+        templateName: "booking-confirmation",
+        recipientEmail: r.email,
+        idempotencyKey: `resend-confirm-${r.id}-${Date.now()}`,
+        templateData: {
+          firstName: r.first_name, lastName: r.last_name,
+          address: r.address, postalCode: r.postal_code, city: r.city,
+          birthDate: r.birth_date, faNumber: r.fa_number,
+          phone: r.phone, email: r.email,
+          courses: r.courses.map((c) => ({
+            part: c.part, date: c.date, time: c.time, location: c.location,
+            price: Math.round(r.total_price / Math.max(1, r.courses.length)),
+          })),
+          totalPrice: Number(r.total_price).toFixed(2),
+          paymentMethod: r.payment_method,
+          bookingId: r.id,
+          bookingDate: bookingDateStr,
+        },
+      },
+    });
+    setResending(null);
+    if (error) { toast.error("Senden fehlgeschlagen: " + error.message); return; }
+    toast.success("Buchungsbestätigung erneut gesendet an " + r.email);
+  };
 
   const load = async () => {
     setLoading(true);
