@@ -248,15 +248,6 @@ export default function GrundkursBuchen() {
       />
       <SiteHeader />
 
-      <div className="max-w-5xl mx-auto px-6 pt-4">
-        <a
-          href="https://www.fahrschule-me.ch"
-          target="_top"
-          className="inline-flex items-center gap-2 text-sm font-body text-muted-foreground hover:text-primary transition-colors"
-        >
-          <span aria-hidden>←</span> Zurück zu fahrschule-me.ch
-        </a>
-      </div>
 
       <div className="max-w-5xl mx-auto px-6 pb-20">
         {/* Title */}
