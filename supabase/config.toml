@@ -41,3 +41,5 @@ verify_jwt = false
 
 [functions.admin-add-participant]
 verify_jwt = true
+[functions.admin-cancel-booking]
+verify_jwt = true
