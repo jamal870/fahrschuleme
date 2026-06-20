@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { RefreshCw, Mail, Phone, MapPin, Calendar, BadgeCheck, Clock, ChevronDown, ChevronRight, Search } from "lucide-react";
+import { RefreshCw, Mail, Phone, MapPin, Calendar, BadgeCheck, Clock, ChevronDown, ChevronRight, Search, Pencil, Save, X, Send } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 interface Booking {
   id: string;
@@ -53,6 +54,65 @@ const AdminParticipants = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "upcoming" | "past" | "unpaid">("upcoming");
   const [openId, setOpenId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editData, setEditData] = useState<Partial<Row>>({});
+  const [saving, setSaving] = useState(false);
+  const [resending, setResending] = useState<string | null>(null);
+
+  const startEdit = (r: Row) => {
+    setEditId(r.id);
+    setEditData({
+      email: r.email, phone: r.phone, address: r.address,
+      postal_code: r.postal_code, city: r.city,
+    });
+  };
+  const cancelEdit = () => { setEditId(null); setEditData({}); };
+
+  const saveEdit = async (r: Row) => {
+    setSaving(true);
+    const { error } = await supabase.from("bookings").update({
+      email: (editData.email || "").trim().toLowerCase(),
+      phone: (editData.phone || "").trim(),
+      address: (editData.address || "").trim(),
+      postal_code: editData.postal_code ? String(editData.postal_code).trim() : null,
+      city: editData.city ? String(editData.city).trim() : null,
+    }).eq("id", r.id);
+    setSaving(false);
+    if (error) { toast.error("Speichern fehlgeschlagen: " + error.message); return; }
+    setRows((rs) => rs.map((x) => x.id === r.id ? { ...x, ...editData } as Row : x));
+    cancelEdit();
+    toast.success("Daten aktualisiert");
+  };
+
+  const resendConfirmation = async (r: Row) => {
+    setResending(r.id);
+    const now = new Date();
+    const bookingDateStr = now.toLocaleDateString("de-CH", { day: "numeric", month: "long", year: "numeric" });
+    const { error } = await supabase.functions.invoke("send-transactional-email", {
+      body: {
+        templateName: "booking-confirmation",
+        recipientEmail: r.email,
+        idempotencyKey: `resend-confirm-${r.id}-${Date.now()}`,
+        templateData: {
+          firstName: r.first_name, lastName: r.last_name,
+          address: r.address, postalCode: r.postal_code, city: r.city,
+          birthDate: r.birth_date, faNumber: r.fa_number,
+          phone: r.phone, email: r.email,
+          courses: r.courses.map((c) => ({
+            part: c.part, date: c.date, time: c.time, location: c.location,
+            price: Math.round(r.total_price / Math.max(1, r.courses.length)),
+          })),
+          totalPrice: Number(r.total_price).toFixed(2),
+          paymentMethod: r.payment_method,
+          bookingId: r.id,
+          bookingDate: bookingDateStr,
+        },
+      },
+    });
+    setResending(null);
+    if (error) { toast.error("Senden fehlgeschlagen: " + error.message); return; }
+    toast.success("Buchungsbestätigung erneut gesendet an " + r.email);
+  };
 
   const load = async () => {
     setLoading(true);
@@ -205,18 +265,68 @@ const AdminParticipants = () => {
                       {isOpen && (
                         <TableRow key={r.id + "-d"} className="bg-muted/20">
                           <TableCell colSpan={7} className="p-4">
+                            <div className="flex justify-end gap-2 mb-3">
+                              {editId === r.id ? (
+                                <>
+                                  <Button size="sm" variant="outline" onClick={cancelEdit} className="font-body">
+                                    <X className="w-3.5 h-3.5 mr-1" /> Abbrechen
+                                  </Button>
+                                  <Button size="sm" onClick={() => saveEdit(r)} disabled={saving} className="font-body">
+                                    <Save className="w-3.5 h-3.5 mr-1" /> {saving ? "Speichern..." : "Speichern"}
+                                  </Button>
+                                </>
+                              ) : (
+                                <>
+                                  <Button size="sm" variant="outline" onClick={() => startEdit(r)} className="font-body">
+                                    <Pencil className="w-3.5 h-3.5 mr-1" /> Bearbeiten
+                                  </Button>
+                                  <Button size="sm" onClick={() => resendConfirmation(r)} disabled={resending === r.id} className="font-body">
+                                    <Send className="w-3.5 h-3.5 mr-1" /> {resending === r.id ? "Senden..." : "Bestätigung erneut senden"}
+                                  </Button>
+                                </>
+                              )}
+                            </div>
                             <div className="grid md:grid-cols-2 gap-4 text-sm font-body">
-                              <div className="space-y-1">
+                              <div className="space-y-2">
                                 <div className="font-heading uppercase text-xs text-muted-foreground mb-1">Persönlich</div>
                                 <div><strong>{r.first_name} {r.last_name}</strong></div>
                                 <div className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Geb.: {r.birth_date || "–"}</div>
                                 <div>FA-Nr.: {r.fa_number || "–"}</div>
-                                <div className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {r.email}</div>
-                                <div className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {r.phone}</div>
-                                <div className="flex items-start gap-1">
-                                  <MapPin className="w-3.5 h-3.5 mt-0.5" />
-                                  <span>{[r.address, [r.postal_code, r.city].filter(Boolean).join(" ")].filter(Boolean).join(", ") || "–"}</span>
-                                </div>
+                                {editId === r.id ? (
+                                  <>
+                                    <div className="space-y-1">
+                                      <Label className="text-xs">E-Mail</Label>
+                                      <Input value={editData.email ?? ""} onChange={(e) => setEditData({ ...editData, email: e.target.value })} />
+                                    </div>
+                                    <div className="space-y-1">
+                                      <Label className="text-xs">Telefon</Label>
+                                      <Input value={editData.phone ?? ""} onChange={(e) => setEditData({ ...editData, phone: e.target.value })} />
+                                    </div>
+                                    <div className="space-y-1">
+                                      <Label className="text-xs">Strasse & Nr.</Label>
+                                      <Input value={editData.address ?? ""} onChange={(e) => setEditData({ ...editData, address: e.target.value })} />
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2">
+                                      <div className="space-y-1">
+                                        <Label className="text-xs">PLZ</Label>
+                                        <Input value={editData.postal_code ?? ""} onChange={(e) => setEditData({ ...editData, postal_code: e.target.value })} />
+                                      </div>
+                                      <div className="space-y-1 col-span-2">
+                                        <Label className="text-xs">Ort</Label>
+                                        <Input value={editData.city ?? ""} onChange={(e) => setEditData({ ...editData, city: e.target.value })} />
+                                      </div>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {r.email}</div>
+                                    <div className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {r.phone}</div>
+                                    <div className="flex items-start gap-1">
+                                      <MapPin className="w-3.5 h-3.5 mt-0.5" />
+                                      <span>{[r.address, [r.postal_code, r.city].filter(Boolean).join(" ")].filter(Boolean).join(", ") || "–"}</span>
+                                    </div>
+                                  </>
+                                )}
                               </div>
                               <div className="space-y-1">
                                 <div className="font-heading uppercase text-xs text-muted-foreground mb-1">Zahlung</div>
