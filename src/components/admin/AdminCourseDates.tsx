@@ -500,6 +500,12 @@ const AdminCourseDates = () => {
 
       <BulkCreateDialog open={bulkOpen} onClose={() => setBulkOpen(false)} onCreated={fetchCourses} />
       <AttendanceDialog course={attendanceCourse} open={!!attendanceCourse} onClose={() => setAttendanceCourse(null)} />
+      <ManualParticipantDialog
+        course={addParticipantCourse}
+        open={!!addParticipantCourse}
+        onClose={() => setAddParticipantCourse(null)}
+        onAdded={fetchCourses}
+      />
     </div>
   );
 };
