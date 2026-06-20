@@ -319,6 +319,14 @@ const AdminParticipants = () => {
                                   <Button size="sm" onClick={() => resendConfirmation(r)} disabled={resending === r.id} className="font-body">
                                     <Send className="w-3.5 h-3.5 mr-1" /> {resending === r.id ? "Senden..." : "Bestätigung erneut senden"}
                                   </Button>
+                                  {r.status !== "cancelled" && (
+                                    <Button size="sm" variant="outline" onClick={() => openConfirm(r, "cancel")} className="font-body border-amber-500 text-amber-700 hover:bg-amber-50">
+                                      <Ban className="w-3.5 h-3.5 mr-1" /> Stornieren
+                                    </Button>
+                                  )}
+                                  <Button size="sm" variant="outline" onClick={() => openConfirm(r, "delete")} className="font-body border-destructive text-destructive hover:bg-destructive/10">
+                                    <Trash2 className="w-3.5 h-3.5 mr-1" /> Löschen
+                                  </Button>
                                 </>
                               )}
                             </div>
