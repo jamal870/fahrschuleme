@@ -88,14 +88,14 @@ const Admin = () => {
       </header>
       <main className="max-w-7xl mx-auto px-6 py-8">
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="courses" className="font-heading uppercase text-xs">Kurstermine</TabsTrigger>
-            <TabsTrigger value="photo" className="font-heading uppercase text-xs">Foto-Planung</TabsTrigger>
-            <TabsTrigger value="bookings" className="font-heading uppercase text-xs">Buchungen</TabsTrigger>
-            <TabsTrigger value="participants" className="font-heading uppercase text-xs">Teilnehmer</TabsTrigger>
-            <TabsTrigger value="team" className="font-heading uppercase text-xs">Team</TabsTrigger>
-            <TabsTrigger value="promotions" className="font-heading uppercase text-xs">Aktionen</TabsTrigger>
-            <TabsTrigger value="emails" className="font-heading uppercase text-xs">E-Mails</TabsTrigger>
+          <TabsList className="bg-muted border border-border p-1 h-auto flex-wrap gap-1">
+            <TabsTrigger value="courses" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Kurstermine</TabsTrigger>
+            <TabsTrigger value="photo" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Foto-Planung</TabsTrigger>
+            <TabsTrigger value="bookings" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Buchungen</TabsTrigger>
+            <TabsTrigger value="participants" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Teilnehmer</TabsTrigger>
+            <TabsTrigger value="team" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Team</TabsTrigger>
+            <TabsTrigger value="promotions" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Aktionen</TabsTrigger>
+            <TabsTrigger value="emails" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">E-Mails</TabsTrigger>
           </TabsList>
           <TabsContent value="courses"><AdminCourseDates /></TabsContent>
           <TabsContent value="photo"><AdminPhotoImport /></TabsContent>
