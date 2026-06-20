@@ -31,10 +31,9 @@ const ManualParticipantDialog = ({ course, open, onClose, onAdded }: Props) => {
   const [form, setForm] = useState({ ...empty });
   const [busy, setBusy] = useState(false);
 
-  // initialize price when course changes
-  if (course && form.price === 0) {
-    setForm((f) => ({ ...f, price: course.price }));
-  }
+  useEffect(() => {
+    if (course) setForm((f) => ({ ...f, price: f.price || course.price }));
+  }, [course]);
 
   const reset = () => setForm({ ...empty, price: course?.price ?? 0 });
 
