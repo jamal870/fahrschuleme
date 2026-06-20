@@ -63,6 +63,16 @@ Jede Code-Änderung → Versions-Bump (1.0.x für Fixes, 1.x.0 für Features) + 
 
 ## Changelog
 
+### v1.5.2 — 2026-06-20 (Admin-Tabs Sichtbarkeit)
+
+**Admin-Panel (`src/pages/Admin.tsx`):**
+- Tab-Leiste (KURSTERMINE / FOTO-PLANUNG / BUCHUNGEN / TEILNEHMER / TEAM / AKTIONEN / E-MAILS) optisch verstärkt: grösserer Text (`text-sm font-bold`), umrandeter Container (`bg-muted border`), aktiver Tab in Primär-Orange (`#e8501a`) mit weisser Schrift, Hover-State. Auf schmalen Viewports wickeln die Tabs um (`flex-wrap`).
+- Keine Logik-/Funktionsänderung — rein visuell.
+
+**Freeze-Status:** v1.5.2 ist die neue stabile Produktions-Version. Gleiche Freeze-Regeln wie v1.5.1.
+
+---
+
 ### v1.5.1 — 2026-06-20 (Fahrstunden-Buttons same-tab)
 
 **Fahrstunden-Seite (`src/pages/Fahrstunden.tsx`):**
