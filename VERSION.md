@@ -1,4 +1,4 @@
-# Version 1.5.1 — Stable Production Release
+# Version 1.5.2 — Stable Production Release
 
 **Freeze-Datum:** 2026-06-20  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
