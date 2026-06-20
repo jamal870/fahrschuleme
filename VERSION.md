@@ -63,6 +63,31 @@ Jede Code-Änderung → Versions-Bump (1.0.x für Fixes, 1.x.0 für Features) + 
 
 ## Changelog
 
+### v1.5.0 — 2026-06-20 (Admin Teilnehmer-Verwaltung + Chatbot Fahrstunden-Redirect)
+
+**Admin – Teilnehmer-Übersicht (`AdminParticipants.tsx`):**
+- Neuer Tab „Teilnehmer" im Admin-Panel: durchsuchbare Liste mit Name, Kontakt, Buchungstyp, gebuchten Kursen, Betrag, Zahlungsstatus.
+- Filter: Alle / Anstehende Kurse / Vergangene Kurse / Offene Zahlungen.
+- Detail-Panel: vollständige Personendaten, Zahlungsdetails, Kurs-Termine.
+- **Bearbeiten:** E-Mail, Telefon, Adresse, PLZ, Ort inline editierbar.
+- **Buchungsbestätigung erneut senden** über `send-transactional-email` (Template `booking-confirmation`).
+- **Stornieren** (Status → `cancelled`, Plätze zurück, optional E-Mail an Teilnehmer mit Grund) und **Löschen** (Hard-Delete inkl. `booking_items` / `course_signatures`, Plätze zurück, keine E-Mail) via Edge Function `admin-cancel-booking` (Admin-Rolle erforderlich, Service Role intern).
+- Neues E-Mail-Template `booking-cancelled.tsx` in Registry registriert.
+
+**Admin – Manuelle Teilnehmer (`ManualParticipantDialog.tsx` + `admin-add-participant`):**
+- Admin kann Teilnehmer manuell zu Kursterminen hinzufügen (vollständige Daten wie Online-Buchung, Preis editierbar, E-Mail-Versand optional per Checkbox).
+
+**Admin – Verschieben (`AttendanceDialog.tsx`):**
+- Ziel-Termin-Dropdown zeigt nur noch zukünftige, gleich-teilige Kurse (keine vergangenen / abgelaufenen Termine mehr).
+
+**Chatbot (`ChatBot.tsx`):**
+- Fahrstunden-Flow leitet jetzt direkt zur Fahrschul-App `https://app.l-me.ch/api/anmeldung` weiter (same-tab, kein neuer Tab).
+- Interner Mehrschritt-Flow für Fahrstunden deaktiviert (Sub-Actions `fs_single` / `fs_pkg5` / `fs_pkg10` lösen ebenfalls Redirect aus).
+
+**Freeze-Status:** v1.5.0 ist die neue stabile Produktions-Version. Gleiche Freeze-Regeln wie v1.4.0.
+
+---
+
 ### v1.4.0 — 2026-06-19 (A1-Inhaber: Nur Teil 3 buchbar – CHF 250)
 
 **Neuer Buchungsfluss für A1-Inhaber:**
