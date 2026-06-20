@@ -152,7 +152,21 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       .gt("spots_available", 0)
       .order("date");
     if (error) { toast.error("Fehler beim Laden der Zielkurse"); return; }
-    setMoveTargets((data as CourseDate[]) || []);
+    // Only future dates (course.date format: "dd.mm.yyyy")
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const toIso = (d: string) => {
+      const [dd, mm, yyyy] = (d || "").split(".");
+      return yyyy && mm && dd ? new Date(`${yyyy}-${mm}-${dd}`) : null;
+    };
+    const future = ((data as CourseDate[]) || []).filter((c) => {
+      const dt = toIso(c.date);
+      return dt && dt.getTime() >= today.getTime();
+    }).sort((a, b) => {
+      const da = toIso(a.date)?.getTime() ?? 0;
+      const db = toIso(b.date)?.getTime() ?? 0;
+      return da - db;
+    });
+    setMoveTargets(future);
   };
 
   const confirmMove = async () => {
