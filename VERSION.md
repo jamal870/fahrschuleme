@@ -1,6 +1,6 @@
-# Version 1.4.0 — Stable Production Release
+# Version 1.5.0 — Stable Production Release
 
-**Freeze-Datum:** 2026-06-19  
+**Freeze-Datum:** 2026-06-20  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
 
 ## Live-Umgebung
