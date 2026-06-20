@@ -7,6 +7,7 @@ import { Bike, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import AdminCourseDates from "@/components/admin/AdminCourseDates";
 import AdminBookings from "@/components/admin/AdminBookings";
+import AdminParticipants from "@/components/admin/AdminParticipants";
 
 import AdminTeam from "@/components/admin/AdminTeam";
 import AdminPhotoImport from "@/components/admin/AdminPhotoImport";
@@ -91,7 +92,7 @@ const Admin = () => {
             <TabsTrigger value="courses" className="font-heading uppercase text-xs">Kurstermine</TabsTrigger>
             <TabsTrigger value="photo" className="font-heading uppercase text-xs">Foto-Planung</TabsTrigger>
             <TabsTrigger value="bookings" className="font-heading uppercase text-xs">Buchungen</TabsTrigger>
-            
+            <TabsTrigger value="participants" className="font-heading uppercase text-xs">Teilnehmer</TabsTrigger>
             <TabsTrigger value="team" className="font-heading uppercase text-xs">Team</TabsTrigger>
             <TabsTrigger value="promotions" className="font-heading uppercase text-xs">Aktionen</TabsTrigger>
             <TabsTrigger value="emails" className="font-heading uppercase text-xs">E-Mails</TabsTrigger>
@@ -99,6 +100,8 @@ const Admin = () => {
           <TabsContent value="courses"><AdminCourseDates /></TabsContent>
           <TabsContent value="photo"><AdminPhotoImport /></TabsContent>
           <TabsContent value="bookings"><AdminBookings /></TabsContent>
+          <TabsContent value="participants"><AdminParticipants /></TabsContent>
+          
           
           <TabsContent value="team"><AdminTeam /></TabsContent>
           <TabsContent value="promotions"><AdminPromotions /></TabsContent>
