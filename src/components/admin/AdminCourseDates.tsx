@@ -10,9 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, Users, Copy, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, FileDown, ChevronDown } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, Users, Copy, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, FileDown, ChevronDown, UserPlus } from "lucide-react";
 import { generateParticipantList, downloadPdf, type Participant } from "@/lib/pdf-generator";
 import AttendanceDialog from "./AttendanceDialog";
+import ManualParticipantDialog from "./ManualParticipantDialog";
 import type { Tables } from "@/integrations/supabase/types";
 
 type CourseDate = Tables<"course_dates"> & { instructor_number?: string | null };
@@ -56,6 +57,7 @@ const AdminCourseDates = () => {
   const [editing, setEditing] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [attendanceCourse, setAttendanceCourse] = useState<CourseDate | null>(null);
+  const [addParticipantCourse, setAddParticipantCourse] = useState<CourseDate | null>(null);
   const [calMonth, setCalMonth] = useState(() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); });
   const [showPast, setShowPast] = useState(false);
   const [partFilter, setPartFilter] = useState<string>("all");
@@ -371,6 +373,9 @@ const AdminCourseDates = () => {
                           <TableCell><span className={c.spots_available <= 1 ? "text-destructive font-semibold" : ""}>{c.spots_available}</span></TableCell>
                           <TableCell className="text-right">
                             <div className="flex gap-1 justify-end">
+                              <Button variant="ghost" size="icon" title="Teilnehmer manuell hinzufügen" onClick={() => setAddParticipantCourse(c)}>
+                                <UserPlus className="w-4 h-4" />
+                              </Button>
                               <Button variant="ghost" size="icon" title="Anwesenheit & Unterschriften" onClick={() => setAttendanceCourse(c)}>
                                 <ClipboardCheck className="w-4 h-4" />
                               </Button>
@@ -495,6 +500,12 @@ const AdminCourseDates = () => {
 
       <BulkCreateDialog open={bulkOpen} onClose={() => setBulkOpen(false)} onCreated={fetchCourses} />
       <AttendanceDialog course={attendanceCourse} open={!!attendanceCourse} onClose={() => setAttendanceCourse(null)} />
+      <ManualParticipantDialog
+        course={addParticipantCourse}
+        open={!!addParticipantCourse}
+        onClose={() => setAddParticipantCourse(null)}
+        onAdded={fetchCourses}
+      />
     </div>
   );
 };

@@ -38,3 +38,6 @@ verify_jwt = true
 
 [functions.sync-course-to-gcal]
 verify_jwt = false
+
+[functions.admin-add-participant]
+verify_jwt = true
