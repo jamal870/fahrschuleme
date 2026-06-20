@@ -373,6 +373,9 @@ const AdminCourseDates = () => {
                           <TableCell><span className={c.spots_available <= 1 ? "text-destructive font-semibold" : ""}>{c.spots_available}</span></TableCell>
                           <TableCell className="text-right">
                             <div className="flex gap-1 justify-end">
+                              <Button variant="ghost" size="icon" title="Teilnehmer manuell hinzufügen" onClick={() => setAddParticipantCourse(c)}>
+                                <UserPlus className="w-4 h-4" />
+                              </Button>
                               <Button variant="ghost" size="icon" title="Anwesenheit & Unterschriften" onClick={() => setAttendanceCourse(c)}>
                                 <ClipboardCheck className="w-4 h-4" />
                               </Button>
