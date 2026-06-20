@@ -779,14 +779,9 @@ export default function ChatBot() {
         addMsg({ role: "bot", content: faq.answer, buttons: faqFollowUp });
       }
     }
-    // ── Fahrstunden sub-actions ──
+    // ── Fahrstunden sub-actions → redirect to app ──
     else if (action === "fs_single" || action === "fs_pkg5" || action === "fs_pkg10") {
-      addMsg({ role: "user", content: action === "fs_single" ? "Einzelstunde" : action === "fs_pkg5" ? "Paket 5 Stunden" : "Paket 10 Stunden" });
-      addMsg({
-        role: "bot",
-        content: "Für welche Kategorie?",
-        categorySelector: true,
-      });
+      startFahrstunde();
     }
     else if (action === "main_menu") {
       setTimeout(() => {
