@@ -28,4 +28,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'course-moved': courseMoved,
   'fahrlehrer-trial-confirmation': fahrlehrerTrialConfirmation,
   'fahrlehrer-trial-admin': fahrlehrerTrialAdmin,
+  'booking-cancelled': bookingCancelled,
 }
