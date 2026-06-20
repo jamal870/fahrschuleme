@@ -9,7 +9,7 @@
 - Unprotected admin setup scripts are permanently removed for security.
 - **DNS/Domains:** Registrar = Hostpoint, DNS = Netlify (nsone.net NS), Hosting = Netlify. NIE Lovable Custom Domain vorschlagen, NIE 185.158.133.1, NIE Cloudflare. Bei Problemen IMMER alle 4 Schichten (Registrar-NS, Netlify-DNS, Netlify-Site-Domains, Propagation) in EINER Antwort prüfen — nicht schrittweise.
 - **Deploy:** GitHub → Netlify ist Auto-Deploy. Lovable Publish ≠ Live-Deploy.
-- **🔒 FREEZE v1.5.0 (2026-06-20):** Admin Teilnehmer-Verwaltung (Übersicht, Edit, Resend, Stornieren, Löschen, manuell hinzufügen) + Chatbot Fahrstunden = Redirect zu app.l-me.ch (same-tab). Keine Code-Änderungen ohne ausdrückliche Freigabe. Siehe VERSION.md.
+- **🔒 FREEZE v1.5.1 (2026-06-20):** Admin Teilnehmer-Verwaltung (Übersicht, Edit, Resend, Stornieren, Löschen, manuell hinzufügen) + Chatbot Fahrstunden + Fahrstunden-Seite-Buttons = alle Redirects zu app.l-me.ch im **same-tab** (Browser-Zurück funktioniert). Keine Code-Änderungen ohne ausdrückliche Freigabe. Siehe VERSION.md.
 
 ## Memories
 - [Version Freeze v1.0.0](mem://constraints/version-freeze-v1) — Stabiler Produktions-Freeze, Änderungsregeln
