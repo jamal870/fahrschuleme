@@ -43,6 +43,15 @@ const MotorradGrundkursWettingen = () => (
     ]}
     primaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine" }}
     secondaryCta={{ label: "Aktionen ansehen", to: "/angebote" }}
+    breadcrumbs={[
+      { label: "Motorrad", to: "/motorrad" },
+      { label: "MGK Wettingen" },
+    ]}
+    relatedLinks={[
+      { to: "/motorrad-fuehrerschein-wettingen", title: "Motorrad-Führerschein Wettingen", desc: "Alles zum Ablauf – von Lernfahrausweis bis Prüfung." },
+      { to: "/kurstermine", title: "Aktuelle MGK-Termine", desc: "Freie Plätze für M1, M2 und M3 – direkt online buchen." },
+      { to: "/fahrschule-baden", title: "Aus Baden anreisen?", desc: "Treffpunkt Bahnhof Baden – wir holen dich für die Fahrstunden ab." },
+    ]}
   />
 );
 
