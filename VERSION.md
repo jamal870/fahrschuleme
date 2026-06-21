@@ -1,7 +1,21 @@
-# Version 1.5.2 — Stable Production Release
+# Version 1.6.0 — Editierbare Inhalte (Admin → „Inhalte & Preise")
 
-**Freeze-Datum:** 2026-06-20  
+**Release-Datum:** 2026-06-21  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+
+## v1.6.0 – Neuerungen
+
+- Neue Tabelle `site_content` (key/value JSON) mit RLS: alle lesen, nur Admin schreibt
+- Neuer Admin-Tab **„Inhalte & Preise"** mit Sub-Tabs:
+  Kontakt & Adresse · Branding · Rechtliches · Bankverbindung ·
+  Preise Auto / Auto-Abos / Motorrad / MGK / Extras · Chatbot · Footer
+- Neuer Hook `useSiteContent()` + `SiteContentProvider` — lädt Inhalte beim App-Start,
+  Fallback auf `src/config/tenant.ts` bei DB-Fehler
+- Umgestellt auf dynamische Inhalte: `SiteFooter`, `WhatsAppFloat`, `Preise`, `Kontakt`,
+  `AGB`, `Impressum`, `Datenschutz` (Adresse, Telefon, E-Mail, Inhaber, Gerichtsstand,
+  Stand-Datum, Verzugszins, Stornofrist, Bearbeitungsgebühr)
+- Rechtlicher Fliesstext der Rechtsseiten bleibt im Code (bewusst nicht editierbar)
+
 
 ## Live-Umgebung
 
