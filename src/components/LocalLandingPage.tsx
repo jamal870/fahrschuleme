@@ -67,6 +67,7 @@ const LocalLandingPage = (p: LocalLandingProps) => {
     <div className="min-h-screen bg-background">
       <Seo title={p.seoTitle} description={p.seoDescription} path={p.path} jsonLd={jsonLd} />
       <SiteHeader />
+      {p.breadcrumbs && p.breadcrumbs.length > 0 && <Breadcrumbs items={p.breadcrumbs} />}
 
       {/* Hero */}
       <header className="bg-card border-b border-border">
