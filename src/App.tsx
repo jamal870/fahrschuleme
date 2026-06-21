@@ -23,11 +23,13 @@ import StrassenverkehrsamtAargau from "./pages/StrassenverkehrsamtAargau.tsx";
 import FuerFahrlehrer from "./pages/FuerFahrlehrer.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import WhatsAppFloat from "./components/WhatsAppFloat.tsx";
+import { SiteContentProvider } from "@/hooks/useSiteContent";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <SiteContentProvider>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -60,6 +62,7 @@ const App = () => (
         <WhatsAppFloat />
       </HashRouter>
     </TooltipProvider>
+    </SiteContentProvider>
   </QueryClientProvider>
 );
 
