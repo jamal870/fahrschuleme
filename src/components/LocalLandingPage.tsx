@@ -4,6 +4,8 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
 import GoogleReviews from "@/components/GoogleReviews";
+import Breadcrumbs, { type BreadcrumbItem } from "@/components/Breadcrumbs";
+import RelatedLinks, { type RelatedLink } from "@/components/RelatedLinks";
 import { tenantConfig } from "@/config/tenant";
 
 export interface LocalLandingProps {
@@ -22,6 +24,8 @@ export interface LocalLandingProps {
   primaryCta: { label: string; to: string };
   secondaryCta?: { label: string; to: string };
   longText: { heading: string; body: string }[];
+  breadcrumbs?: BreadcrumbItem[];
+  relatedLinks?: RelatedLink[];
 }
 
 const SITE_URL = "https://fahrschule-me.ch";
@@ -63,6 +67,7 @@ const LocalLandingPage = (p: LocalLandingProps) => {
     <div className="min-h-screen bg-background">
       <Seo title={p.seoTitle} description={p.seoDescription} path={p.path} jsonLd={jsonLd} />
       <SiteHeader />
+      {p.breadcrumbs && p.breadcrumbs.length > 0 && <Breadcrumbs items={p.breadcrumbs} />}
 
       {/* Hero */}
       <header className="bg-card border-b border-border">
@@ -144,6 +149,10 @@ const LocalLandingPage = (p: LocalLandingProps) => {
 
       {/* Google Bewertungen */}
       <GoogleReviews />
+
+      {/* Verwandte Seiten – Internal Linking */}
+      {p.relatedLinks && p.relatedLinks.length > 0 && <RelatedLinks links={p.relatedLinks} />}
+
 
       {/* Final CTA */}
       <section className="bg-foreground text-background py-16">

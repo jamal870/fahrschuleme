@@ -42,6 +42,12 @@ const FahrschuleWettingen = () => (
     ]}
     primaryCta={{ label: "Jetzt buchen", to: "/grundkurs" }}
     secondaryCta={{ label: "Preise ansehen", to: "/preise" }}
+    breadcrumbs={[{ label: "Fahrschule Wettingen" }]}
+    relatedLinks={[
+      { to: "/motorrad-grundkurs-wettingen", title: "Motorrad-Grundkurs Wettingen", desc: "Der obligatorische 12h-MGK für A1, A2 und A – direkt in Wettingen." },
+      { to: "/fahrschule-baden", title: "Fahrschule Baden", desc: "Treffpunkt direkt am Bahnhof Baden – ideal für Pendler." },
+      { to: "/preise", title: "Alle Preise im Überblick", desc: "Auto, Motorrad, MGK, Nothelfer und VKU – transparent aufgelistet." },
+    ]}
   />
 );
 

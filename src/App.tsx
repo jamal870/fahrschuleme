@@ -17,6 +17,11 @@ import MotorradFuehrerscheinWettingen from "./pages/MotorradFuehrerscheinWetting
 import MotorradGrundkursWettingen from "./pages/MotorradGrundkursWettingen.tsx";
 import FahrschuleWettingen from "./pages/FahrschuleWettingen.tsx";
 import FahrschuleBaden from "./pages/FahrschuleBaden.tsx";
+import FahrschuleNeuenhof from "./pages/FahrschuleNeuenhof.tsx";
+import FahrschuleSpreitenbach from "./pages/FahrschuleSpreitenbach.tsx";
+import MotorradFuehrerscheinBaden from "./pages/MotorradFuehrerscheinBaden.tsx";
+import NothelferkursWettingen from "./pages/NothelferkursWettingen.tsx";
+import VerkehrskundeWettingen from "./pages/VerkehrskundeWettingen.tsx";
 import Fahrstunden from "./pages/Fahrstunden.tsx";
 import Motorrad from "./pages/Motorrad.tsx";
 import Preise from "./pages/Preise.tsx";
@@ -55,6 +60,12 @@ const App = () => (
           <Route path="/motorrad-grundkurs-wettingen" element={<MotorradGrundkursWettingen />} />
           <Route path="/fahrschule-wettingen" element={<FahrschuleWettingen />} />
           <Route path="/fahrschule-baden" element={<FahrschuleBaden />} />
+          <Route path="/fahrschule-neuenhof" element={<FahrschuleNeuenhof />} />
+          <Route path="/fahrschule-spreitenbach" element={<FahrschuleSpreitenbach />} />
+          <Route path="/motorrad-fuehrerschein-baden" element={<MotorradFuehrerscheinBaden />} />
+          <Route path="/motorrad-fuhrerschein-baden" element={<MotorradFuehrerscheinBaden />} />
+          <Route path="/nothelferkurs-wettingen" element={<NothelferkursWettingen />} />
+          <Route path="/verkehrskunde-wettingen" element={<VerkehrskundeWettingen />} />
           <Route path="/fahrstunden" element={<Fahrstunden />} />
           <Route path="/motorrad" element={<Motorrad />} />
           <Route path="/preise" element={<Preise />} />
