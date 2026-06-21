@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { Search, UserPlus, X } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type CourseDate = Tables<"course_dates">;
@@ -30,12 +31,65 @@ const empty = {
 const ManualParticipantDialog = ({ course, open, onClose, onAdded }: Props) => {
   const [form, setForm] = useState({ ...empty });
   const [busy, setBusy] = useState(false);
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [pickedId, setPickedId] = useState<string | null>(null);
 
   useEffect(() => {
     if (course) setForm((f) => ({ ...f, price: f.price || course.price }));
   }, [course]);
 
-  const reset = () => setForm({ ...empty, price: course?.price ?? 0 });
+  // Debounced search over existing bookings
+  useEffect(() => {
+    const q = search.trim();
+    if (q.length < 2) { setResults([]); return; }
+    setSearching(true);
+    const t = setTimeout(async () => {
+      const { data, error } = await supabase
+        .from("bookings")
+        .select("id,first_name,last_name,email,phone,address,postal_code,city,birth_date,fa_number,created_at")
+        .or(`first_name.ilike.%${q}%,last_name.ilike.%${q}%,email.ilike.%${q}%`)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (!error && data) {
+        // de-dupe by email
+        const seen = new Set<string>();
+        const uniq = data.filter((r: any) => {
+          const k = (r.email || "").toLowerCase();
+          if (!k || seen.has(k)) return false;
+          seen.add(k); return true;
+        });
+        setResults(uniq);
+      }
+      setSearching(false);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  const pick = (r: any) => {
+    setForm((f) => ({
+      ...f,
+      firstName: r.first_name || "",
+      lastName: r.last_name || "",
+      email: r.email || "",
+      phone: r.phone || "",
+      address: r.address || "",
+      postalCode: r.postal_code || "",
+      city: r.city || "",
+      birthDate: r.birth_date || "",
+      faNumber: r.fa_number || "",
+    }));
+    setPickedId(r.id);
+    setSearch("");
+    setResults([]);
+    toast.success("Daten übernommen – bitte prüfen");
+  };
+
+  const reset = () => {
+    setForm({ ...empty, price: course?.price ?? 0 });
+    setSearch(""); setResults([]); setPickedId(null);
+  };
 
   const submit = async () => {
     if (!course) return;
