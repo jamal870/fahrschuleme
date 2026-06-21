@@ -22,6 +22,7 @@ import Kurstermine from "./pages/Kurstermine.tsx";
 import StrassenverkehrsamtAargau from "./pages/StrassenverkehrsamtAargau.tsx";
 import FuerFahrlehrer from "./pages/FuerFahrlehrer.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import WhatsAppFloat from "./components/WhatsAppFloat.tsx";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <WhatsAppFloat />
       </HashRouter>
     </TooltipProvider>
   </QueryClientProvider>
