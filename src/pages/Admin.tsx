@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Bike, LogOut } from "lucide-react";
+import { Bike, LogOut, Globe } from "lucide-react";
 import { toast } from "sonner";
 import AdminCourseDates from "@/components/admin/AdminCourseDates";
 import AdminBookings from "@/components/admin/AdminBookings";
@@ -81,9 +81,14 @@ const Admin = () => {
             <BrandLogo imgClassName="h-10 w-auto" />
             <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 font-heading font-bold" style={{ borderRadius: "3px" }}>ADMIN</span>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleLogout} className="font-body">
-            <LogOut className="w-4 h-4 mr-2" /> Abmelden
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => navigate("/")} className="font-body">
+              <Globe className="w-4 h-4 mr-2" /> Zur Webseite
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="font-body">
+              <LogOut className="w-4 h-4 mr-2" /> Abmelden
+            </Button>
+          </div>
         </div>
       </header>
       <main className="max-w-7xl mx-auto px-6 py-8">
