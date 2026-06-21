@@ -1,7 +1,17 @@
-# Version 1.6.0 — Editierbare Inhalte (Admin → „Inhalte & Preise")
+# Version 1.6.1 — SEO: Angebote-Landingpage
 
 **Release-Datum:** 2026-06-21  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+
+## v1.6.1 – Neuerungen (Phase 1 SEO)
+
+- Neue Seite `/angebote` (Alias `/aktionen`) mit eigenem `<h1>`, Meta-Description und JSON-LD `Offer`-Schema pro aktiver Aktion
+- Inhalte werden live aus Tabelle `promotions` geladen (nur `active=true`)
+- CTA "Alle Angebote ansehen" am Ende der Aktions-Sektion auf der Startseite
+- Footer-Link "Angebote" ergänzt
+- `public/sitemap.xml`: Eintrag `/angebote` hinzugefügt (priority 0.9)
+- Lokale Keywords im Fliesstext: Wettingen, Baden (Bahnhof), Neuenhof, Würenlos, Spreitenbach, Aargau, MGK, A1/A2/A
+- Bestehende Route `/motorrad-fuehrerschein-wettingen` bleibt unverändert erhalten
 
 ## v1.6.0 – Neuerungen
 
