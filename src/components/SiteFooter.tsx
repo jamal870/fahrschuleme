@@ -12,6 +12,8 @@ const SiteFooter = () => {
           <span>·</span>
           <Link to="/kurstermine" className="hover:text-primary">Kurstermine</Link>
           <span>·</span>
+          <Link to="/angebote" className="hover:text-primary">Angebote</Link>
+          <span>·</span>
           <Link to="/kontakt" className="hover:text-primary">Kontakt</Link>
           <span>·</span>
           <Link to="/impressum" className="hover:text-primary">Impressum</Link>
