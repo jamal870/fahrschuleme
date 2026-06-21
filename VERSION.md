@@ -1,9 +1,35 @@
-# Version 1.7.1 — SEO: Google Reviews & GBP
+# Version 1.7.2 — SEO: Breadcrumbs, Internal Linking & 5 neue Local Pages
 
 **Release-Datum:** 2026-06-21  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
 
+## v1.7.2 – Neuerungen (Phase 3+ SEO)
+
+- Neue Komponente `Breadcrumbs.tsx` – Brotkrumen-Navigation inkl. `BreadcrumbList`
+  JSON-LD für Google Rich Results.
+- Neue Komponente `RelatedLinks.tsx` – Querverlinkungs-Block am Ende jeder
+  Landingpage; stärkt internes Linking und Crawl-Tiefe.
+- 5 neue Local Landing Pages mit vollständigem SEO-Setup (Helmet, Service-JSON-LD,
+  FAQ-JSON-LD, Breadcrumbs, Related Links):
+  - `/fahrschule-neuenhof`
+  - `/fahrschule-spreitenbach`
+  - `/motorrad-fuehrerschein-baden` (+ Tippfehler-Alias `/motorrad-fuhrerschein-baden`)
+  - `/nothelferkurs-wettingen`
+  - `/verkehrskunde-wettingen`
+- Bestehende 3 Local Pages (Wettingen, Baden, MGK Wettingen) um Breadcrumbs +
+  RelatedLinks ergänzt.
+- `public/sitemap.xml` um die 5 neuen URLs erweitert.
+
 ## v1.7.1 – Neuerungen (Phase 3 SEO)
+
+- Neue Edge Function `get-google-reviews` – ruft Google Places API (New) serverseitig auf,
+  Key bleibt geheim, Antwort 6h gecached.
+- Neue Komponente `src/components/GoogleReviews.tsx` – zeigt Durchschnittsbewertung +
+  Top 5 Reviews, Sterne, Autor, Zeitangabe, "Auf Google bewerten"-CTA.
+- JSON-LD `AggregateRating` + `Review` Markup → Rich Snippets in Google Search.
+- Eingebunden auf Startseite (vor Footer) und automatisch auf allen Lokal-Seiten
+  via `LocalLandingPage`.
+- Neue Datei `docs/gbp-posts.md` – fertige Post-Vorlagen für Google Unternehmensprofil
 
 - Neue Edge Function `get-google-reviews` – ruft Google Places API (New) serverseitig auf,
   Key bleibt geheim, Antwort 6h gecached.
