@@ -3,6 +3,7 @@ import { MapPin, Clock, Phone, ArrowRight, CheckCircle2 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
+import GoogleReviews from "@/components/GoogleReviews";
 import { tenantConfig } from "@/config/tenant";
 
 export interface LocalLandingProps {
@@ -140,6 +141,9 @@ const LocalLandingPage = (p: LocalLandingProps) => {
           </div>
         </section>
       )}
+
+      {/* Google Bewertungen */}
+      <GoogleReviews />
 
       {/* Final CTA */}
       <section className="bg-foreground text-background py-16">
