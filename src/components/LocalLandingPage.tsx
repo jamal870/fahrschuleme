@@ -150,6 +150,10 @@ const LocalLandingPage = (p: LocalLandingProps) => {
       {/* Google Bewertungen */}
       <GoogleReviews />
 
+      {/* Verwandte Seiten – Internal Linking */}
+      {p.relatedLinks && p.relatedLinks.length > 0 && <RelatedLinks links={p.relatedLinks} />}
+
+
       {/* Final CTA */}
       <section className="bg-foreground text-background py-16">
         <div className="max-w-3xl mx-auto px-6 text-center">
