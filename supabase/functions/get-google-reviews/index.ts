@@ -22,7 +22,8 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   const apiKey = Deno.env.get("GOOGLE_PLACES_API_KEY");
-  const placeId = Deno.env.get("GOOGLE_PLACE_ID");
+  // Bereinigt versehentliche Prefixe wie "Place ID: " und Whitespace
+  const placeId = Deno.env.get("GOOGLE_PLACE_ID")?.replace(/^.*?(ChIJ[A-Za-z0-9_-]+).*$/s, "$1").trim();
 
   if (!apiKey || !placeId) {
     return new Response(
