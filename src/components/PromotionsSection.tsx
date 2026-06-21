@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Tag } from "lucide-react";
+import { Sparkles, Tag, ArrowRight } from "lucide-react";
 
 interface Promotion {
   id: string;
