@@ -14,6 +14,9 @@ import Datenschutz from "./pages/Datenschutz.tsx";
 import AGB from "./pages/AGB.tsx";
 import Team from "./pages/Team.tsx";
 import MotorradFuehrerscheinWettingen from "./pages/MotorradFuehrerscheinWettingen.tsx";
+import MotorradGrundkursWettingen from "./pages/MotorradGrundkursWettingen.tsx";
+import FahrschuleWettingen from "./pages/FahrschuleWettingen.tsx";
+import FahrschuleBaden from "./pages/FahrschuleBaden.tsx";
 import Fahrstunden from "./pages/Fahrstunden.tsx";
 import Motorrad from "./pages/Motorrad.tsx";
 import Preise from "./pages/Preise.tsx";
@@ -49,6 +52,9 @@ const App = () => (
           <Route path="/team" element={<Team />} />
           <Route path="/motorrad-fuehrerschein-wettingen" element={<MotorradFuehrerscheinWettingen />} />
           <Route path="/motorrad-fuhrerschein-wettingen" element={<MotorradFuehrerscheinWettingen />} />
+          <Route path="/motorrad-grundkurs-wettingen" element={<MotorradGrundkursWettingen />} />
+          <Route path="/fahrschule-wettingen" element={<FahrschuleWettingen />} />
+          <Route path="/fahrschule-baden" element={<FahrschuleBaden />} />
           <Route path="/fahrstunden" element={<Fahrstunden />} />
           <Route path="/motorrad" element={<Motorrad />} />
           <Route path="/preise" element={<Preise />} />

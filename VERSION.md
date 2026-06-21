@@ -1,7 +1,19 @@
-# Version 1.6.1 — SEO: Angebote-Landingpage
+# Version 1.7.0 — SEO: Lokale Leistungsseiten
 
 **Release-Datum:** 2026-06-21  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+
+## v1.7.0 – Neuerungen (Phase 2 SEO)
+
+- 3 neue lokale Leistungsseiten mit eigenem H1, Meta-Description, FAQ und JSON-LD:
+  - `/motorrad-grundkurs-wettingen` (MotorcycleSchool + FAQPage Schema)
+  - `/fahrschule-wettingen` (DrivingSchool + FAQPage Schema)
+  - `/fahrschule-baden` (DrivingSchool + FAQPage Schema, Treffpunkt Bahnhof Baden)
+- Neue wiederverwendbare Komponente `src/components/LocalLandingPage.tsx` (Hero · Treffpunkt-Bar · Benefits · Long-Form Text · FAQ · Final CTA)
+- Header: Dropdown "Standorte" + MGK-Link unter "Motorrad", Mobile-Nav ergänzt
+- Sitemap: 3 neue URLs (priority 0.9)
+- VKU/Nothelfer-Seiten bewusst ausgelassen (werden nicht selbst angeboten)
+- Bestehende Route `/motorrad-fuehrerschein-wettingen` bleibt unverändert
 
 ## v1.6.1 – Neuerungen (Phase 1 SEO)
 
