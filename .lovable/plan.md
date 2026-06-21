@@ -1,55 +1,115 @@
-# App von Lovable unabhängig machen
+# Plan: Admin-Tab „Inhalte & Preise" (v2)
 
-Lovable steckt aktuell an **drei Stellen** in deiner App. Jede muss einzeln migriert werden – und für jede brauche ich Inputs/Keys von dir, die ich nicht selbst erzeugen kann.
+Ziel: Du kannst Preise, Kontaktdaten, Öffnungszeiten, WhatsApp, Branding-Texte UND die dynamischen Werte in AGB / Impressum / Datenschutz direkt im Admin-Panel ändern — ohne Code.
 
-## 1. Lovable AI Gateway (Gemini, Vision, Chatbot)
+## Klarstellung zu AGB / Impressum / Datenschutz
 
-**Heute:** Alle AI-Calls (`AdminPhotoImport`, ChatBot, etc.) gehen an `https://ai.gateway.lovable.dev` mit `LOVABLE_API_KEY`.
+Es wird unterschieden zwischen:
 
-**Migration:**
-- Eigenen **Google AI Studio API Key** anlegen (https://aistudio.google.com/apikey)
-- In allen Edge Functions `lovable-ai`/`gateway`-Calls ersetzen durch direkte Aufrufe an `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`
-- Neuer Secret: `GOOGLE_AI_API_KEY`
+- **Dynamische Werte** (Adresse, Telefon, E-Mail, Inhaber, Öffnungszeiten, Bank, Preise, Verzugszins, Stornofristen, Stand-Datum) → **editierbar im Admin**, werden in alle drei Seiten automatisch eingesetzt.
+- **Rechtlicher Fliesstext** (Paragrafenstruktur, Haftung, Urheberrecht, DSG-Klauseln) → **bleibt im Code**, da Änderungen rechtliche Risiken bergen. Wenn du hier etwas ändern willst, machst du es weiter per Auftrag an mich.
 
-**Betroffene Edge Functions (aktuell):** alle, die Gemini nutzen (Chatbot, Photo-Import, etc.)
+So bekommst du beides: schnelle Aktualisierung der Fakten + Schutz vor versehentlichem Bruch der Rechtstexte.
 
-## 2. Lovable Cloud (= Supabase-Backend)
+## Was du danach selbst ändern kannst
 
-**Heute:** Datenbank, Auth, Edge Functions, Storage laufen auf von Lovable verwaltetem Supabase-Projekt (`dspspshgnointeqxgnrw`).
+**Kontakt & Standort** (wirkt auf: Header, Footer, Kontakt, Impressum, Datenschutz, AGB-Gerichtsstand, Chatbot, WhatsApp-Button)
+- Telefon, E-Mail, WhatsApp-Nummer
+- Adresse (Strasse, PLZ, Ort, Gerichtsstand)
+- Öffnungszeiten
+- Inhaber-Name
 
-**Migration:**
-- Eigenes Supabase-Projekt anlegen (kostenlos auf supabase.com)
-- Vollständigen Datenbank-Dump exportieren → in neues Projekt importieren (Tabellen, RLS, Funktionen, Trigger, Seeds)
-- Alle ~15+ Edge Functions neu deployen (`supabase functions deploy ...`)
-- Storage-Buckets + Files migrieren
-- Secrets neu setzen: `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, Google Calendar OAuth, etc.
-- Auth-Provider (Google OAuth) neu konfigurieren
-- `src/integrations/supabase/client.ts` mit neuer URL + anon key überschreiben
+**Branding** (wirkt auf: Header, Footer, SEO-Titel, E-Mail-Absender)
+- Name, Tagline, Logo-Text
 
-**Wichtig:** Auf Lovable Cloud sind nur **CSV-Exports** möglich, kein voller `pg_dump`. Für eine echte Migration musst du den Lovable-Support kontaktieren oder die Schemas manuell als SQL-Migrationen abziehen (liegen bereits in `supabase/migrations/`).
+**Preise** (wirkt auf: Preise-Seite UND AGB-Verweise wie Bearbeitungsgebühr, Verzugszins, Stornogebühr)
+- Auto-Lektionen & Abos
+- Motorrad-Lektionen & Grundkurs
+- Nothelfer, VKU
+- Bearbeitungsgebühr, Verzugszins-%, Stornofrist (h)
 
-## 3. Hosting & Domain
+**Bankverbindung** (wirkt auf: Buchungsbestätigung, E-Mails, ggf. Footer)
+- IBAN, Kontoinhaber, Bank
 
-**Heute:** App läuft auf `fahrschuleme.lovable.app`.
+**Seitentexte (Marketing, keine Rechtstexte)**
+- Startseite Hero
+- Sicherheits-Punkte
+- Kontakt-Seite Intro
+- Chatbot-Begrüssungen
+- Footer-Copyright
 
-**Migration:**
-- Code auf eigenes GitHub-Repo (GitHub-Sync in Lovable aktivieren → eigener Owner)
-- Hosting auf Vercel/Netlify/Cloudflare Pages
-- Eigene Domain dort verbinden
-- iFrame-Embed auf Hauptdomain auf neue URL umstellen
+**Stand-Datum der Rechtsseiten** (z.B. „Stand: Juni 2026")
+
+## Was im Code bleibt
+
+- Layout, Farben, Schriften, Logo-Bild
+- **Rechtlicher Fliesstext** in AGB / Impressum / Datenschutz (Paragrafen, Klauseln)
+- Routing, Buchungs-Logik, Stripe, E-Mail-Templates (Struktur)
+- Bilder/Assets
+
+## Technische Umsetzung
+
+```text
+DB                            Frontend
+─────────────────────────     ─────────────────────────────────
+site_content                  src/hooks/useSiteContent.ts
+  key TEXT PK                    ↓ lädt 1x beim App-Start
+  value JSONB                    ↓ React Context Provider
+  updated_at TIMESTAMPTZ      
+                              tenant.ts → bleibt als Fallback/Default
+                              
+                              AGB/Impressum/Datenschutz:
+                                → Variablen-Slots ({{adresse}}, 
+                                  {{telefon}}, {{verzugszins}}…)
+                                  werden zur Laufzeit ersetzt
+                              
+                              Admin-Tab „Inhalte & Preise"
+                                ↓ Sub-Tabs mit Formularen
+                                ↓ UPDATE site_content
+                                ↓ Cache invalidieren → Live-Update
+```
+
+**Schritte:**
+
+1. **DB-Migration** — Tabelle `site_content` (key TEXT PK, value JSONB). RLS: alle dürfen lesen, nur Admin schreiben. Seed mit aktuellen `tenant.ts`-Werten + neuen Feldern (Verzugszins, Bearbeitungsgebühr, Stornofrist, Stand-Datum).
+
+2. **Hook + Context** — `useSiteContent()` lädt alle Keys beim App-Start, cached in React Context. Fallback auf `tenant.ts` wenn DB leer / Fehler.
+
+3. **Frontend umstellen** — alle `tenantConfig.X` Aufrufe an editierbaren Stellen ersetzen durch `useSiteContent().X`. Inkl. AGB/Impressum/Datenschutz: harte Strings wie „CHF 30.–", „5%", „24 Stunden", „Bahnhofstrasse 56, 5430 Wettingen", „Jimmy Ettanaghmalti", „Mai 2026" → Variablen.
+
+4. **Admin-Tab „Inhalte & Preise"** mit Sub-Tabs:
+   - Kontakt & Adresse
+   - Öffnungszeiten
+   - Preise Auto
+   - Preise Motorrad
+   - Preise Extras (Nothelfer, VKU)
+   - Branding & Texte
+   - Bankverbindung
+   - Rechtliches (Verzugszins, Bearbeitungsgebühr, Stornofrist, Stand-Datum)
+   - Chatbot-Texte
+   
+   Pro Sektion: Formular + Speichern + „Auf Default zurücksetzen" + Vorschau-Link.
+
+5. **Cache-Invalidierung** — nach Speichern Context neu laden → Live-Vorschau sofort aktuell.
+
+6. **Version-Bump** v1.6.0 + VERSION.md + Memory-Update.
+
+## Risiken & Schutz
+
+- **Risiko:** Falsche Eingabe (leerer Preis, kaputte E-Mail). → Validierung pro Feld (Pflicht, Format) + Fallback auf `tenant.ts`.
+- **Risiko:** Tippfehler live. → Vorschau-Link öffnet betroffene Seite in neuem Tab vor dem Speichern.
+- **Risiko Rechtstexte:** Du könntest aus Versehen Rechtssätze verändern. → Bewusst NUR Variablen editierbar, Fliesstext nicht im Admin sichtbar.
+- **Sicherheit:** Schreibrechte nur `has_role(auth.uid(), 'admin')`.
+- **Backup:** `tenant.ts` bleibt im Code → Notfall: Tabelle leeren = Default zurück.
+
+## Aufwand
+Ein grösserer Arbeitsschritt: 1 Migration + Hook/Context + ~12 Dateien anfassen + neuer Admin-Tab mit ~9 Sub-Formularen. Nach Freigabe in einem Zug umsetzbar.
+
+## Nicht im Plan (separate Aufträge)
+- Bilder-Upload (Hero, Team-Fotos) → Phase 2
+- Mehrsprachigkeit DE/EN → Phase 3
+- Rechtlicher Fliesstext editierbar → bewusst weggelassen (rechtliches Risiko)
 
 ---
 
-## Was ich JETZT brauche, um zu starten
-
-Bitte sag mir, in welcher Reihenfolge wir vorgehen – und liefere mir:
-
-1. **AI zuerst (einfachster Schritt, 1-2 Std.):** Eigener Google AI Studio API Key
-2. **Cloud (groß, 1+ Tag Arbeit):** Eigenes Supabase-Projekt + dessen URL/anon/service-role-Keys + Bestätigung, dass ich alle Stripe/Resend/Google Secrets neu im neuen Projekt setze
-3. **Hosting (separat, kein Code-Change):** Entscheidung welcher Hoster + Domain
-
-## Empfehlung
-
-Schrittweise vorgehen, **Punkt 1 zuerst**. Das löst dich vom Lovable-AI-Gateway, ändert die App-Funktionalität nicht und ist in einer Session machbar. Cloud-Migration ist ein eigenes, größeres Projekt und sollte erst angegangen werden, wenn Punkt 1 läuft.
-
-**Soll ich mit Schritt 1 (eigener Google AI Key) starten?** Wenn ja, hol dir den Key und ich baue alle Gemini-Calls um.
+**Soll ich so umsetzen?**
