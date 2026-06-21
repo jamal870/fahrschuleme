@@ -4,6 +4,8 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
 import GoogleReviews from "@/components/GoogleReviews";
+import Breadcrumbs, { type BreadcrumbItem } from "@/components/Breadcrumbs";
+import RelatedLinks, { type RelatedLink } from "@/components/RelatedLinks";
 import { tenantConfig } from "@/config/tenant";
 
 export interface LocalLandingProps {
@@ -22,6 +24,8 @@ export interface LocalLandingProps {
   primaryCta: { label: string; to: string };
   secondaryCta?: { label: string; to: string };
   longText: { heading: string; body: string }[];
+  breadcrumbs?: BreadcrumbItem[];
+  relatedLinks?: RelatedLink[];
 }
 
 const SITE_URL = "https://fahrschule-me.ch";
