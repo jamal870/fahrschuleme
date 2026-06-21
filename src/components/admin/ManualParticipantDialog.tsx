@@ -138,6 +138,54 @@ const ManualParticipantDialog = ({ course, open, onClose, onAdded }: Props) => {
           )}
         </DialogHeader>
 
+        {/* Bestehende Teilnehmer suchen */}
+        <div className="space-y-2 border border-border p-3" style={{ borderRadius: "3px" }}>
+          <Label className="flex items-center gap-2 text-xs uppercase font-heading">
+            <Search className="w-3.5 h-3.5" /> Bestehende Teilnehmer suchen (optional)
+          </Label>
+          <div className="relative">
+            <Input
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPickedId(null); }}
+              placeholder="Name oder E-Mail eingeben…"
+            />
+            {pickedId && (
+              <button
+                type="button"
+                onClick={reset}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                title="Auswahl zurücksetzen"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+          {searching && <p className="text-xs text-muted-foreground">Suche…</p>}
+          {results.length > 0 && (
+            <div className="max-h-48 overflow-y-auto border border-border divide-y divide-border" style={{ borderRadius: "3px" }}>
+              {results.map((r) => (
+                <button
+                  type="button"
+                  key={r.id}
+                  onClick={() => pick(r)}
+                  className="w-full text-left px-3 py-2 hover:bg-muted text-sm font-body flex items-center justify-between"
+                >
+                  <span>
+                    <strong>{r.first_name} {r.last_name}</strong>
+                    <span className="text-muted-foreground"> · {r.email}</span>
+                  </span>
+                  <UserPlus className="w-4 h-4 text-primary" />
+                </button>
+              ))}
+            </div>
+          )}
+          {pickedId && (
+            <p className="text-xs text-primary font-body">
+              ✓ Daten übernommen – Felder bei Bedarf anpassen, dann „Teilnehmer hinzufügen“.
+            </p>
+          )}
+        </div>
+
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1"><Label>Vorname *</Label>
             <Input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
