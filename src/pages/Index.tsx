@@ -2,6 +2,7 @@ import { Phone, Mail, MapPin, Clock, Users, Bike, CreditCard } from "lucide-reac
 import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
 import PromotionsSection from "@/components/PromotionsSection";
+import GoogleReviews from "@/components/GoogleReviews";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
@@ -369,6 +370,8 @@ const Index = () => {
           </p>
         </div>
       </section>
+
+      <GoogleReviews />
 
       <SiteFooter />
 

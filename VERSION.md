@@ -1,7 +1,22 @@
-# Version 1.7.0 — SEO: Lokale Leistungsseiten
+# Version 1.7.1 — SEO: Google Reviews & GBP
 
 **Release-Datum:** 2026-06-21  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+
+## v1.7.1 – Neuerungen (Phase 3 SEO)
+
+- Neue Edge Function `get-google-reviews` – ruft Google Places API (New) serverseitig auf,
+  Key bleibt geheim, Antwort 6h gecached.
+- Neue Komponente `src/components/GoogleReviews.tsx` – zeigt Durchschnittsbewertung +
+  Top 5 Reviews, Sterne, Autor, Zeitangabe, "Auf Google bewerten"-CTA.
+- JSON-LD `AggregateRating` + `Review` Markup → Rich Snippets in Google Search.
+- Eingebunden auf Startseite (vor Footer) und automatisch auf allen Lokal-Seiten
+  via `LocalLandingPage`.
+- Neue Datei `docs/gbp-posts.md` – fertige Post-Vorlagen für Google Unternehmensprofil
+  (Sommeraktion MGK, Auto-Abo, Standort Baden Bhf, MGK-Erklärung, Allround) inkl.
+  Pflege-Tipps (Frequenz, Bewertungen, Fotos, UTM).
+- Benötigte Secrets: `GOOGLE_PLACES_API_KEY`, `GOOGLE_PLACE_ID`.
+  Ohne diese liefert die Function 500 → Komponente rendert nichts (silent fail).
 
 ## v1.7.0 – Neuerungen (Phase 2 SEO)
 
