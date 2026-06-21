@@ -52,6 +52,9 @@ const App = () => (
           <Route path="/team" element={<Team />} />
           <Route path="/motorrad-fuehrerschein-wettingen" element={<MotorradFuehrerscheinWettingen />} />
           <Route path="/motorrad-fuhrerschein-wettingen" element={<MotorradFuehrerscheinWettingen />} />
+          <Route path="/motorrad-grundkurs-wettingen" element={<MotorradGrundkursWettingen />} />
+          <Route path="/fahrschule-wettingen" element={<FahrschuleWettingen />} />
+          <Route path="/fahrschule-baden" element={<FahrschuleBaden />} />
           <Route path="/fahrstunden" element={<Fahrstunden />} />
           <Route path="/motorrad" element={<Motorrad />} />
           <Route path="/preise" element={<Preise />} />

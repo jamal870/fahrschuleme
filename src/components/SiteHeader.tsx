@@ -37,10 +37,22 @@ const SiteHeader = () => {
               Motorrad <ChevronDown className="w-3 h-3" />
             </NavLink>
             <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-              <div className="bg-card border border-border shadow-md min-w-[180px] py-2" style={{ borderRadius: "3px" }}>
+              <div className="bg-card border border-border shadow-md min-w-[220px] py-2" style={{ borderRadius: "3px" }}>
                 <Link to="/motorrad" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Übersicht</Link>
+                <Link to="/motorrad-grundkurs-wettingen" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Grundkurs Wettingen</Link>
                 <Link to="/grundkurs" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Grundkurs buchen</Link>
                 <Link to="/preise" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Preise Motorrad</Link>
+              </div>
+            </div>
+          </div>
+          <div className="relative group">
+            <NavLink to="/fahrschule-wettingen" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""} inline-flex items-center gap-1`}>
+              Standorte <ChevronDown className="w-3 h-3" />
+            </NavLink>
+            <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+              <div className="bg-card border border-border shadow-md min-w-[200px] py-2" style={{ borderRadius: "3px" }}>
+                <Link to="/fahrschule-wettingen" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Fahrschule Wettingen</Link>
+                <Link to="/fahrschule-baden" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Fahrschule Baden</Link>
               </div>
             </div>
           </div>
@@ -89,6 +101,15 @@ const SiteHeader = () => {
             </NavLink>
             <NavLink to="/motorrad" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Motorrad
+            </NavLink>
+            <NavLink to="/motorrad-grundkurs-wettingen" onClick={close} className={({ isActive }) => `py-2 pl-4 text-xs ${isActive ? "text-primary" : ""}`}>
+              · MGK Wettingen
+            </NavLink>
+            <NavLink to="/fahrschule-wettingen" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Fahrschule Wettingen
+            </NavLink>
+            <NavLink to="/fahrschule-baden" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Fahrschule Baden
             </NavLink>
             <NavLink to="/preise" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Preise
