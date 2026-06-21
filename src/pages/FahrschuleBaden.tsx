@@ -42,6 +42,12 @@ const FahrschuleBaden = () => (
     ]}
     primaryCta={{ label: "Jetzt buchen", to: "/grundkurs" }}
     secondaryCta={{ label: "Preise ansehen", to: "/preise" }}
+    breadcrumbs={[{ label: "Fahrschule Baden" }]}
+    relatedLinks={[
+      { to: "/fahrschule-wettingen", title: "Fahrschule Wettingen", desc: "Unser Hauptstandort in Wettingen – Auto und Motorrad aus einer Hand." },
+      { to: "/motorrad-grundkurs-wettingen", title: "Motorrad-Grundkurs", desc: "MGK A1/A2/A in Wettingen – nur wenige Minuten von Baden." },
+      { to: "/strassenverkehrsamt-aargau", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung, Prüfung, Lernfahrausweis – alles Wichtige zum StVA." },
+    ]}
   />
 );
 
