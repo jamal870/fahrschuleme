@@ -3,7 +3,8 @@
 ## Core
 - Light theme, primary accent #e8501a. Fonts: Rajdhani (headings), DM Sans (body). 3px border-radius.
 - Strictly use HashRouter for stable iframe embedding on main domain.
-- Never hardcode branding/pricing. All tenant data centralized in `src/config/tenant.ts`.
+- Editable site content lives in DB table `site_content` (key/value JSONB), loaded via `useSiteContent()` hook with `tenant.ts` as fallback. Admin edits in Admin-Tab „Inhalte & Preise".
+- `src/config/tenant.ts` is the DEFAULT/fallback only; runtime values come from `site_content`.
 - No direct public DB inserts. All bookings via `create-booking` edge function.
 - Stripe: Open in blank tab to bypass popups, use DB polling. Webhook confirms payment.
 - Unprotected admin setup scripts are permanently removed for security.

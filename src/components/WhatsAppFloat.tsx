@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { tenantConfig } from "@/config/tenant";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 32 32" className={className} fill="currentColor" aria-hidden="true">
@@ -9,9 +9,10 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 const WhatsAppFloat = () => {
   const { pathname } = useLocation();
+  const { content } = useSiteContent();
   if (pathname.startsWith("/admin")) return null;
 
-  const url = tenantConfig.contact.whatsappUrl;
+  const url = content.contact.whatsappUrl;
   if (!url) return null;
 
   return (

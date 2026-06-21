@@ -13,6 +13,7 @@ import AdminTeam from "@/components/admin/AdminTeam";
 import AdminPhotoImport from "@/components/admin/AdminPhotoImport";
 import AdminPromotions from "@/components/admin/AdminPromotions";
 import AdminEmailSettings from "@/components/admin/AdminEmailSettings";
+import AdminContent from "@/components/admin/AdminContent";
 import BrandLogo from "@/components/BrandLogo";
 
 const Admin = () => {
@@ -101,6 +102,7 @@ const Admin = () => {
             <TabsTrigger value="team" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Team</TabsTrigger>
             <TabsTrigger value="promotions" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Aktionen</TabsTrigger>
             <TabsTrigger value="emails" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">E-Mails</TabsTrigger>
+            <TabsTrigger value="content" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Inhalte & Preise</TabsTrigger>
           </TabsList>
           <TabsContent value="courses"><AdminCourseDates /></TabsContent>
           <TabsContent value="photo"><AdminPhotoImport /></TabsContent>
@@ -108,9 +110,12 @@ const Admin = () => {
           <TabsContent value="participants"><AdminParticipants /></TabsContent>
           
           
+          
+          
           <TabsContent value="team"><AdminTeam /></TabsContent>
           <TabsContent value="promotions"><AdminPromotions /></TabsContent>
           <TabsContent value="emails"><AdminEmailSettings /></TabsContent>
+          <TabsContent value="content"><AdminContent /></TabsContent>
         </Tabs>
       </main>
     </div>

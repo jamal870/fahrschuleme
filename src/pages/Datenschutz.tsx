@@ -1,16 +1,17 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { tenantConfig } from "@/config/tenant";
 import Seo from "@/components/Seo";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Datenschutz = () => {
+  const { content } = useSiteContent();
+  const c = content.contact;
+  const b = content.brand;
+  const l = content.legal;
+
   return (
     <div className="min-h-screen bg-background">
-      <Seo
-        title="Datenschutzerklärung – Fahrschule me Wettingen"
-        description="Datenschutzerklärung der Fahrschule me Wettingen gemäss Schweizer Datenschutzgesetz (DSG). Informationen zur Verarbeitung deiner persönlichen Daten."
-        path="/datenschutz"
-      />
+      <Seo title={`Datenschutzerklärung – ${b.name}`} description={`Datenschutzerklärung der ${b.name} gemäss Schweizer Datenschutzgesetz (DSG).`} path="/datenschutz" />
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-sm font-heading font-bold text-foreground hover:text-primary transition-colors">
@@ -20,15 +21,14 @@ const Datenschutz = () => {
       </nav>
       <main className="max-w-3xl mx-auto px-6 py-12 font-body text-foreground">
         <h1 className="text-4xl font-heading font-bold mb-2">Datenschutzerklärung</h1>
-        <p className="text-primary font-heading font-bold uppercase tracking-wide text-sm mb-8">Fahrschule me • Wettingen</p>
+        <p className="text-primary font-heading font-bold uppercase tracking-wide text-sm mb-8">{b.name}</p>
 
         <section className="space-y-2 mb-8">
           <p className="font-semibold">Verantwortliche Stelle:</p>
-          <p>Fahrschule me</p>
-          <p>Bahnhofstrasse 56, 5430 Wettingen</p>
-          <p>E-Mail: <a className="text-primary hover:underline" href={`mailto:${tenantConfig.contact.email}`}>{tenantConfig.contact.email}</a></p>
-          <p>Website: www.l-me.ch</p>
-          <p>Inhaber: Jimmy Ettanaghmalti</p>
+          <p>{b.name}</p>
+          <p>{c.address.detail}, {c.address.city}</p>
+          <p>E-Mail: <a className="text-primary hover:underline" href={`mailto:${c.email}`}>{c.email}</a></p>
+          <p>Inhaber: {l.ownerName}</p>
         </section>
 
         <p className="text-muted-foreground leading-relaxed mb-8">
@@ -78,18 +78,18 @@ const Datenschutz = () => {
             <li>Löschung deiner Daten</li>
           </ul>
           <p className="text-muted-foreground leading-relaxed mt-2">
-            Für Anfragen: <a className="text-primary hover:underline" href={`mailto:${tenantConfig.contact.email}`}>{tenantConfig.contact.email}</a>
+            Für Anfragen: <a className="text-primary hover:underline" href={`mailto:${c.email}`}>{c.email}</a>
           </p>
         </section>
 
         <section className="mb-6">
           <h2 className="text-xl font-heading font-bold mb-3">6. Rechtsgrundlage</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Schweizerisches Datenschutzgesetz (DSG). Gerichtsstand: Wettingen, Kanton Aargau.
+            Schweizerisches Datenschutzgesetz (DSG). Gerichtsstand: {l.jurisdiction}.
           </p>
         </section>
 
-        <p className="text-sm text-muted-foreground mt-8">Stand: Mai 2026</p>
+        <p className="text-sm text-muted-foreground mt-8">Stand: {l.standDate}</p>
 
         <footer className="mt-12 pt-6 border-t border-border text-sm text-muted-foreground space-x-2">
           <Link to="/impressum" className="hover:text-primary">Impressum</Link>
