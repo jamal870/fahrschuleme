@@ -43,6 +43,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <HashRouter>
+        <main>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/grundkurs" element={<GrundkursBuchen />} />
@@ -79,6 +80,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </main>
         <WhatsAppFloat />
       </HashRouter>
     </TooltipProvider>

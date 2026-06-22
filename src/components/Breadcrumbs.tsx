@@ -33,7 +33,7 @@ const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
           const isLast = i === all.length - 1;
           return (
             <li key={i} className="flex items-center gap-1.5">
-              {i > 0 && <ChevronRight className="w-3 h-3 text-muted-foreground/50" />}
+              {i > 0 && <ChevronRight className="w-3 h-3 text-muted-foreground" aria-hidden="true" />}
               {isLast || !it.to ? (
                 <span className="text-foreground font-heading font-bold" aria-current="page">
                   {it.label}
