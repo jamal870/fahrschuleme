@@ -1,7 +1,15 @@
-# Version 1.7.2 — SEO: Breadcrumbs, Internal Linking & 5 neue Local Pages
+# Version 1.7.3 — A11y: `<main>`-Landmark + Breadcrumb-Kontrast
 
-**Release-Datum:** 2026-06-21  
+**Release-Datum:** 2026-06-22  
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+
+## v1.7.3 – Accessibility-Hotfix
+
+- `src/App.tsx`: Alle Routes in genau ein `<main>`-Element verpackt (Landmark-Fix
+  für Lighthouse/axe — bisher fehlte `<main>` komplett).
+- `src/components/Breadcrumbs.tsx`: Chevron von `text-muted-foreground/50` auf
+  vollwertiges `text-muted-foreground` + `aria-hidden="true"` (Kontrast + SR sauber).
+- Keine Logik-, Daten- oder UI-Änderungen sichtbar – rein semantisch/A11y.
 
 ## v1.7.2 – Neuerungen (Phase 3+ SEO)
 
