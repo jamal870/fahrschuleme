@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X, UserCircle2 } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import { tenantConfig } from "@/config/tenant";
 
@@ -127,6 +127,16 @@ const SiteHeader = () => {
             >
               Jetzt Buchen
             </a>
+            <div className="h-px bg-border my-2" />
+            <Link
+              to="/admin/login"
+              onClick={close}
+              className="py-2 inline-flex items-center gap-2 text-xs text-muted-foreground/70 hover:text-primary"
+              aria-label="Admin Login"
+            >
+              <UserCircle2 className="w-4 h-4" />
+              Admin
+            </Link>
           </div>
         </div>
       )}
