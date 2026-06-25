@@ -1,7 +1,22 @@
-# Version 1.7.4 — Brand-Akzentfarbe: Orange → Finza-Blau
+# Version 1.7.5 — Neues Logo „L me" (türkis) + Favicon/Apple-Touch-Icon
 
 **Release-Datum:** 2026-06-25
 **Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+
+## v1.7.5 – Logo-Wechsel (Freigabe vom Betreiber 2026-06-25)
+
+- `public/logo-lme.png` ersetzt durch neues türkises „L me"-Logo (vom Betreiber hochgeladen, ~920 KB).
+- `src/config/tenant.ts`: `logo` zeigt jetzt auf lokales `/logo-lme.png` statt auf die alte Supabase-Storage-URL. Damit erscheint das neue Logo überall, wo `<BrandLogo />` verwendet wird (u.a. Header oben rechts).
+- `public/favicon.png` und neuer `public/apple-touch-icon.png` ersetzt → neues Logo erscheint in der URL-Leiste (Browser-Tab) und beim „Zum Home-Bildschirm hinzufügen" auf iOS/Android.
+- Alte `public/favicon.ico` entfernt (nicht mehr benötigt, `index.html` referenziert PNG-Favicon).
+- Keine Code-Logik, keine Komponenten, keine Backend-Änderungen. Reiner Asset-Swap + 1 Pfad-Update in `tenant.ts`.
+
+---
+
+# Version 1.7.4 — Brand-Akzentfarbe: Orange → Finza-Blau
+
+**Release-Datum:** 2026-06-25
+**Status (historisch):** durch 1.7.5 abgelöst.
 
 ## v1.7.4 – Color-Swap (Freigabe vom Betreiber 2026-06-25)
 
@@ -12,6 +27,7 @@
   werden separat im nächsten Patch nachgezogen falls gewünscht.
 
 ---
+
 
 # Version 1.7.3 — A11y: `<main>`-Landmark + Breadcrumb-Kontrast
 
