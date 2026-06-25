@@ -1,7 +1,22 @@
+# Version 1.7.4 — Brand-Akzentfarbe: Orange → Finza-Blau
+
+**Release-Datum:** 2026-06-25
+**Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+
+## v1.7.4 – Color-Swap (Freigabe vom Betreiber 2026-06-25)
+
+- `src/index.css`: Primary/Accent/Ring/Chat/Sidebar von `18 80% 50%` (Orange #e8501a)
+  auf `221 83% 53%` (Finza-Blau ≈ #2563EB) umgestellt – Light- und Dark-Mode.
+- Keine Layout-, Struktur- oder Komponenten-Änderungen. Nur Token-Werte.
+- Hinweis: `pdf-generator.ts` Kommentar erwähnt noch das alte Hex; PDF-Farben
+  werden separat im nächsten Patch nachgezogen falls gewünscht.
+
+---
+
 # Version 1.7.3 — A11y: `<main>`-Landmark + Breadcrumb-Kontrast
 
 **Release-Datum:** 2026-06-22  
-**Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+**Status (historisch):** durch 1.7.4 abgelöst.
 
 ## v1.7.3 – Accessibility-Hotfix
 
