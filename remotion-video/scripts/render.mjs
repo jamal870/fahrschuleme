@@ -26,7 +26,7 @@ await renderMedia({
   composition,
   serveUrl: bundled,
   codec: "h264",
-  outputLocation: "/tmp/video-mute.mp4",
+  outputLocation: "/mnt/documents/fahrschule-me-video.mp4",
   puppeteerInstance: browser,
   muted: true,
   concurrency: 1,

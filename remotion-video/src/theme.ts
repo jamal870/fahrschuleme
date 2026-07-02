@@ -12,10 +12,10 @@ export const dmSans = loadDMSans("normal", {
 }).fontFamily;
 
 export const COLORS = {
-  primary: "#e8501a",
-  primaryDark: "#b53a10",
+  primary: "#1DC4F2",
+  primaryDark: "#0A8FB8",
   ink: "#101418",
   paper: "#fafaf7",
-  cream: "#f3ede3",
-  accent: "#ffd9c7",
+  cream: "#eaf7fc",
+  accent: "#c7ecf7",
 };
