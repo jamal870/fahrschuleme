@@ -22,6 +22,14 @@ function parseCourseDate(dateStr: string): Date {
   return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
 }
 
+// Compute German weekday from "DD.MM.YYYY" (source of truth = the date itself)
+const WEEKDAYS_DE = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+function weekdayFromDate(dateStr: string): string {
+  const d = parseCourseDate(dateStr);
+  return WEEKDAYS_DE[d.getDay()] ?? "";
+}
+
+
 const bookingSchema = z.object({
   firstName: z.string().trim().min(1, "Vorname ist ein Pflichtfeld"),
   lastName: z.string().trim().min(1, "Nachname ist ein Pflichtfeld"),
@@ -568,7 +576,8 @@ function CourseSection({
                   key={course.id}
                   className="text-left bg-muted/40 rounded-xl border-2 border-dashed border-border p-4 opacity-90"
                 >
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{weekdayFromDate(course.date)}</p>
+
                   <p className="font-bold text-muted-foreground text-lg font-[Outfit] line-through">{course.date}</p>
                   <div className="mt-2 space-y-1">
                     <p className="text-xs text-muted-foreground flex items-center gap-1.5">
@@ -602,7 +611,7 @@ function CourseSection({
                       : "border-border hover:border-primary/30"
                 }`}
               >
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{weekdayFromDate(course.date)}</p>
                 <p className="font-bold text-foreground text-lg font-[Outfit]">{course.date}</p>
                 <div className="mt-2 space-y-1">
                   <p className="text-xs text-muted-foreground flex items-center gap-1.5">
