@@ -576,7 +576,8 @@ function CourseSection({
                   key={course.id}
                   className="text-left bg-muted/40 rounded-xl border-2 border-dashed border-border p-4 opacity-90"
                 >
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{weekdayFromDate(course.date)}</p>
+
                   <p className="font-bold text-muted-foreground text-lg font-[Outfit] line-through">{course.date}</p>
                   <div className="mt-2 space-y-1">
                     <p className="text-xs text-muted-foreground flex items-center gap-1.5">
