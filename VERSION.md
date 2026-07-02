@@ -1,7 +1,22 @@
+# Version 1.7.6 — Chatbot-Kurse chronologisch + Video-Redesign + Admin-Link im Mobile-Menü
+
+**Release-Datum:** 2026-07-02
+**Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+
+## v1.7.6 – Fixes & Redesign-Assets (Freigabe vom Betreiber 2026-07-02)
+
+- `src/components/ChatBot.tsx`: `loadCourseDates` konvertiert `dd.mm.yyyy` nach ISO, filtert vergangene Termine raus und sortiert chronologisch. Chatbot zeigt jetzt dieselben Kurse wie die Kurstermine-Seite.
+- `src/components/SiteHeader.tsx`: dezenter Admin-Link (mit `UserCircle2`-Icon) unten im Mobile-Menü, damit er nicht mehr vom Sticky-Footer verdeckt wird.
+- `remotion-video/src/theme.ts`: Brand-Farben von Orange auf Türkis (#1DC4F2) umgestellt. Neues Video `fahrschule-me-video.mp4` gerendert mit aktuellen Mobile-Screenshots im neuen Design.
+- Keine Backend-, Datenbank- oder RLS-Änderungen.
+
+---
+
 # Version 1.7.5 — Neues Logo „L me" (türkis) + Favicon/Apple-Touch-Icon
 
 **Release-Datum:** 2026-06-25
-**Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+**Status (historisch):** durch 1.7.6 abgelöst.
+
 
 ## v1.7.5 – Logo-Wechsel (Freigabe vom Betreiber 2026-06-25)
 
