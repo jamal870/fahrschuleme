@@ -121,13 +121,21 @@ export default function ChatBot() {
       .from('course_dates')
       .select('*')
       .eq('part', part)
-      .gt('spots_available', 0)
-      .order('date');
+      .gt('spots_available', 0);
     if (error || !data) return [];
-    return data.map((d: any) => ({
-      id: d.id, day: d.day, date: d.date, time: d.time, location: d.location,
-      instructor: d.instructor || undefined, price: Number(d.price), spotsAvailable: d.spots_available,
-    }));
+    const toIso = (d: string) => {
+      const [dd, mm, yyyy] = d.split('.');
+      return `${yyyy}-${mm}-${dd}`;
+    };
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return data
+      .map((d: any) => ({
+        id: d.id, day: d.day, date: d.date, time: d.time, location: d.location,
+        instructor: d.instructor || undefined, price: Number(d.price), spotsAvailable: d.spots_available,
+      }))
+      .filter((c) => new Date(toIso(c.date)) >= today)
+      .sort((a, b) => toIso(a.date).localeCompare(toIso(b.date)));
   }, []);
 
   const loadServices = useCallback(async (): Promise<FahrstundenService[]> => {
