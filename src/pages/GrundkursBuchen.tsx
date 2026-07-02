@@ -22,6 +22,14 @@ function parseCourseDate(dateStr: string): Date {
   return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
 }
 
+// Compute German weekday from "DD.MM.YYYY" (source of truth = the date itself)
+const WEEKDAYS_DE = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+function weekdayFromDate(dateStr: string): string {
+  const d = parseCourseDate(dateStr);
+  return WEEKDAYS_DE[d.getDay()] ?? "";
+}
+
+
 const bookingSchema = z.object({
   firstName: z.string().trim().min(1, "Vorname ist ein Pflichtfeld"),
   lastName: z.string().trim().min(1, "Nachname ist ein Pflichtfeld"),
