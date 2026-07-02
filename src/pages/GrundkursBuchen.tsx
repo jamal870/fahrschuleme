@@ -611,7 +611,7 @@ function CourseSection({
                       : "border-border hover:border-primary/30"
                 }`}
               >
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{course.day}</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{weekdayFromDate(course.date)}</p>
                 <p className="font-bold text-foreground text-lg font-[Outfit]">{course.date}</p>
                 <div className="mt-2 space-y-1">
                   <p className="text-xs text-muted-foreground flex items-center gap-1.5">
