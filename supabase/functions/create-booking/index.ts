@@ -140,12 +140,14 @@ serve(async (req) => {
 
       // Use server-side price (never trust client) — apply MGK/Grundkurs promo if active
       const promoPrice = (await getActivePromoPrice(supabase, "mgk")) ?? (await getActivePromoPrice(supabase, "grundkurs"));
-      const serverTotal = isA1Only
+      const baseTotal = isA1Only
         ? A1_TEIL3_PRICE
         : courses.reduce(
             (sum: number, c: any) => sum + (promoPrice != null ? promoPrice : Number(c.price)),
             0
           );
+      // 3 % Aufschlag bei Online-Zahlung (Stripe-Gebühren)
+      const serverTotal = applyOnlineFee(baseTotal, paymentMethod);
 
       // Create booking
       const { data: booking, error: bookingError } = await supabase
