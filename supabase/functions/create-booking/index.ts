@@ -46,8 +46,8 @@ async function getActivePromoPrice(supabase: any, category: string): Promise<num
 // Bar / Überweisung bleiben aufschlagsfrei.
 export const ONLINE_FEE_RATE = 0.03;
 
-function applyOnlineFee(amount: number, paymentMethod: string): number {
-  if (paymentMethod !== "stripe") return Math.round(amount * 100) / 100;
+function applyOnlineFee(amount: number, isOnline: boolean): number {
+  if (!isOnline) return Math.round(amount * 100) / 100;
   // auf 5 Rappen runden (CH-Standard)
   return Math.round(amount * (1 + ONLINE_FEE_RATE) * 20) / 20;
 }
