@@ -496,7 +496,7 @@ export default function GrundkursBuchen() {
                       })}
                     </div>
                     {paymentMethod === "stripe" ? (
-                      <p className="text-xs text-muted-foreground mt-3">Nach dem Absenden wirst du in einem neuen Tab zu Stripe weitergeleitet.</p>
+                      <p className="text-xs text-muted-foreground mt-3">Bei Online-Zahlung wird eine Bearbeitungsgebühr von 3 % erhoben. Nach dem Absenden wirst du in einem neuen Tab zu Stripe weitergeleitet.</p>
                     ) : (
                       <p className="text-xs text-muted-foreground mt-3">Deine Buchung wird sofort bestätigt. Die Zahlungsinformationen erhältst du per E-Mail.</p>
                     )}
