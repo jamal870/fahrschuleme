@@ -41,6 +41,17 @@ async function getActivePromoPrice(supabase: any, category: string): Promise<num
   return match ? Number(match.discount_price) : null;
 }
 
+// Online-Zahlung (Stripe: Karte/TWINT/Klarna) verursacht Transaktionsgebühren,
+// die pauschal mit 3 % an den Kunden weitergegeben werden.
+// Bar / Überweisung bleiben aufschlagsfrei.
+export const ONLINE_FEE_RATE = 0.03;
+
+function applyOnlineFee(amount: number, isOnline: boolean): number {
+  if (!isOnline) return Math.round(amount * 100) / 100;
+  // auf 5 Rappen runden (CH-Standard)
+  return Math.round(amount * (1 + ONLINE_FEE_RATE) * 20) / 20;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -129,12 +140,14 @@ serve(async (req) => {
 
       // Use server-side price (never trust client) — apply MGK/Grundkurs promo if active
       const promoPrice = (await getActivePromoPrice(supabase, "mgk")) ?? (await getActivePromoPrice(supabase, "grundkurs"));
-      const serverTotal = isA1Only
+      const baseTotal = isA1Only
         ? A1_TEIL3_PRICE
         : courses.reduce(
             (sum: number, c: any) => sum + (promoPrice != null ? promoPrice : Number(c.price)),
             0
           );
+      // 3 % Aufschlag bei Online-Zahlung (Stripe-Gebühren)
+      const serverTotal = applyOnlineFee(baseTotal, isOnlinePayment);
 
       // Create booking
       const { data: booking, error: bookingError } = await supabase
@@ -350,6 +363,11 @@ serve(async (req) => {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
+
+      // 3 % Aufschlag bei Online-Zahlung (Stripe-Gebühren)
+      serverPrice = applyOnlineFee(serverPrice, isOnlinePayment);
+
+
 
       const { data: booking, error: bookingError } = await supabase
         .from("bookings")

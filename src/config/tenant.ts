@@ -139,7 +139,7 @@ export const tenantConfig: TenantConfig = {
     externalBookingUrl: "https://fahrschule-me.ch/#/grundkurs-buchen",
     paymentMethods: [
       { id: "cash", label: "Barzahlung am Kurstag", desc: "Zahlung bar vor Ort am Kurstag.", icon: "💵" },
-      { id: "card", label: "Online bezahlen (Twint/Karte)", desc: "Sichere Zahlung via Stripe.", icon: "💳" },
+      { id: "card", label: "Online bezahlen (Twint/Karte)", desc: "Sichere Zahlung via Stripe (+3 % Gebühr).", icon: "💳" },
     ],
     bankDetails: {
       accountHolder: "Jamal Ettanaghmalti",

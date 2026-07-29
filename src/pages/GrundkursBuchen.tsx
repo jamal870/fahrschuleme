@@ -220,7 +220,12 @@ export default function GrundkursBuchen() {
   const selectedCourses = Object.entries(selections)
     .filter(([, v]) => v !== null)
     .map(([part, course]) => ({ part: parseInt(part), course: course! }));
-  const totalPrice = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
+  const basePrice = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
+  // 3 % Aufschlag bei Online-Zahlung (Stripe-Gebühren), auf 5 Rappen gerundet
+  const ONLINE_FEE_RATE = 0.03;
+  const isOnlinePayment = paymentMethod === "stripe";
+  const totalPrice = isOnlinePayment ? Math.round(basePrice * (1 + ONLINE_FEE_RATE) * 20) / 20 : basePrice;
+  const onlineFee = Math.round((totalPrice - basePrice) * 100) / 100;
   const allPartsSelected = a1Only ? !!selections[3] : (selections[1] && selections[2] && selections[3]);
 
   // Filter courses: hide past dates, enforce chronological order, one course per day
@@ -365,11 +370,22 @@ export default function GrundkursBuchen() {
                       </div>
                     ))}
                   </div>
-                  <div className="border-t border-border mt-4 pt-4 text-right">
+                  <div className="border-t border-border mt-4 pt-4 text-right space-y-1">
+                    {onlineFee > 0 && (
+                      <>
+                        <p className="text-sm text-muted-foreground">
+                          Zwischensumme: <span className="font-semibold text-foreground">CHF {basePrice.toFixed(2)}</span>
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Online-Zahlungsgebühr (3 %): <span className="font-semibold text-foreground">CHF {onlineFee.toFixed(2)}</span>
+                        </p>
+                      </>
+                    )}
                     <p className="text-sm text-muted-foreground">
                       Gesamtbetrag: <span className="text-2xl font-bold text-foreground">CHF {totalPrice.toFixed(2)}</span>
                     </p>
                   </div>
+
                 </div>
 
                 {/* Personal Details */}
@@ -460,9 +476,9 @@ export default function GrundkursBuchen() {
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {([
-                        { id: "stripe", label: "Online bezahlen", desc: "Karte / TWINT / Klarna via Stripe" },
-                        { id: "barzahlung", label: "Barzahlung", desc: "Vor Ort beim 1. Kurstag" },
-                        { id: "ueberweisung", label: "Überweisung", desc: "Rechnung per E-Mail" },
+                        { id: "stripe", label: "Online bezahlen", desc: "Karte / TWINT / Klarna via Stripe (+3 % Gebühr)" },
+                        { id: "barzahlung", label: "Barzahlung", desc: "Vor Ort beim 1. Kurstag – ohne Aufschlag" },
+                        { id: "ueberweisung", label: "Überweisung", desc: "Rechnung per E-Mail – ohne Aufschlag" },
                       ] as const).map((opt) => {
                         const active = paymentMethod === opt.id;
                         return (
@@ -480,7 +496,7 @@ export default function GrundkursBuchen() {
                       })}
                     </div>
                     {paymentMethod === "stripe" ? (
-                      <p className="text-xs text-muted-foreground mt-3">Nach dem Absenden wirst du in einem neuen Tab zu Stripe weitergeleitet.</p>
+                      <p className="text-xs text-muted-foreground mt-3">Bei Online-Zahlung wird eine Bearbeitungsgebühr von 3 % erhoben. Nach dem Absenden wirst du in einem neuen Tab zu Stripe weitergeleitet.</p>
                     ) : (
                       <p className="text-xs text-muted-foreground mt-3">Deine Buchung wird sofort bestätigt. Die Zahlungsinformationen erhältst du per E-Mail.</p>
                     )}
