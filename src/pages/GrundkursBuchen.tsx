@@ -220,7 +220,12 @@ export default function GrundkursBuchen() {
   const selectedCourses = Object.entries(selections)
     .filter(([, v]) => v !== null)
     .map(([part, course]) => ({ part: parseInt(part), course: course! }));
-  const totalPrice = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
+  const basePrice = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
+  // 3 % Aufschlag bei Online-Zahlung (Stripe-Gebühren), auf 5 Rappen gerundet
+  const ONLINE_FEE_RATE = 0.03;
+  const isOnlinePayment = paymentMethod === "stripe";
+  const totalPrice = isOnlinePayment ? Math.round(basePrice * (1 + ONLINE_FEE_RATE) * 20) / 20 : basePrice;
+  const onlineFee = Math.round((totalPrice - basePrice) * 100) / 100;
   const allPartsSelected = a1Only ? !!selections[3] : (selections[1] && selections[2] && selections[3]);
 
   // Filter courses: hide past dates, enforce chronological order, one course per day
