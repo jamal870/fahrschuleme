@@ -147,7 +147,7 @@ serve(async (req) => {
             0
           );
       // 3 % Aufschlag bei Online-Zahlung (Stripe-Gebühren)
-      const serverTotal = applyOnlineFee(baseTotal, paymentMethod);
+      const serverTotal = applyOnlineFee(baseTotal, isOnlinePayment);
 
       // Create booking
       const { data: booking, error: bookingError } = await supabase
@@ -365,7 +365,7 @@ serve(async (req) => {
       }
 
       // 3 % Aufschlag bei Online-Zahlung (Stripe-Gebühren)
-      serverPrice = applyOnlineFee(serverPrice, paymentMethod);
+      serverPrice = applyOnlineFee(serverPrice, isOnlinePayment);
 
 
 
