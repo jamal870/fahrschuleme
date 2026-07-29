@@ -1,6 +1,6 @@
 ---
 name: E-Mail-Versand (eigenständig via Resend)
-description: Absenderdomain notify.fahrschule-me.ch, Versand direkt über Resend-API, keine Lovable-Mailinfrastruktur
+description: Absenderdomain drive-me.ch (in Resend verifiziert), Versand direkt über Resend-API, DNS bleibt bei tajo.host.ch
 type: feature
 ---
 
@@ -11,18 +11,20 @@ Versand läuft direkt über die Resend-API (`https://api.resend.com/emails`) mit
 dem eigenen `RESEND_API_KEY` des Kunden.
 
 ## Konfiguration
-- Absenderdomain: `notify.fahrschule-me.ch` (früher `notify.drive-me.ch` — abgelöst)
+- Absenderdomain: `drive-me.ch` — die einzige in Resend verifizierte Domain.
+  Eine zweite Domain (`notify.fahrschule-me.ch`) erfordert einen kostenpflichtigen
+  Resend-Plan → wurde bewusst NICHT eingerichtet.
+- Absender: `Fahrschule me <noreply@drive-me.ch>`
 - Konstanten in `supabase/functions/send-transactional-email/index.ts`
   (`SITE_NAME`, `SENDER_DOMAIN`, `FROM_DOMAIN`)
-- Absender: `Fahrschule me <noreply@notify.fahrschule-me.ch>`
 - Versand-Worker: `supabase/functions/process-email-queue/index.ts` → `sendViaResend()`
 - Unsubscribe-Link zeigt auf `https://www.fahrschule-me.ch/#/unsubscribe?token=...`
 
 ## DNS
-Records kommen aus dem Resend-Dashboard (Domain `notify.fahrschule-me.ch`)
-und werden im **Netlify-DNS** von `fahrschule-me.ch` eingetragen
-(MX `send`, TXT SPF, TXT `resend._domainkey`).
+DNS von `drive-me.ch` bleibt bei **tajo.host.ch** — dort sind SPF/DKIM/MX für
+Resend korrekt gesetzt (Domain in Resend = VERIFIZIERT). Nichts anfassen.
 NIE Lovable-NS-Delegation (`ns*.lovable.cloud`) verwenden.
+
 
 ## Sicherheit
 `send-transactional-email` erlaubt anonymen Aufrufern nur eine Allowlist:
