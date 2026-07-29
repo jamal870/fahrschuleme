@@ -10,11 +10,13 @@
 - Unprotected admin setup scripts are permanently removed for security.
 - **DNS/Domains:** Registrar = Hostpoint, DNS = Netlify (nsone.net NS), Hosting = Netlify. NIE Lovable Custom Domain vorschlagen, NIE 185.158.133.1, NIE Cloudflare. Bei Problemen IMMER alle 4 Schichten (Registrar-NS, Netlify-DNS, Netlify-Site-Domains, Propagation) in EINER Antwort prüfen — nicht schrittweise.
 - **Deploy:** GitHub → Netlify ist Auto-Deploy. Lovable Publish ≠ Live-Deploy.
+- **E-Mail:** Versand direkt über Resend-API mit eigenem Key, Absender `notify.fahrschule-me.ch`. NIE Lovable-Mailinfrastruktur / NIE `ns*.lovable.cloud`.
 - **🔒 FREEZE v1.6.0 (2026-06-21):** Editierbare Inhalte via Admin-Tab „Inhalte & Preise" (Tabelle `site_content`, Hook `useSiteContent`, Fallback `tenant.ts`). Rechtlicher Fliesstext bleibt im Code. Keine Code-Änderungen ohne ausdrückliche Freigabe. Siehe VERSION.md.
 
 ## Memories
 - [Version Freeze v1.0.0](mem://constraints/version-freeze-v1) — Stabiler Produktions-Freeze, Änderungsregeln
 - [DNS & Domain Setup](mem://infrastructure/dns-domains) — Komplette Domain-Architektur Hostpoint+Netlify, NS, Records, Fehler-Lookup, Goldene Regel
+- [E-Mail-Versand](mem://infrastructure/email-versand) — Resend-Direktversand, Absenderdomain notify.fahrschule-me.ch, DNS & Fehlerbilder
 - [Chatbot Core](mem://features/chatbot/core) — `<ChatBot />` component logic, flows, and UX behavior
 - [Lesson Booking Logic](mem://features/booking/fahrstunden-logic) — Lesson types and duration rules for cars and motorcycles
 - [MGK Sequential Logic](mem://features/booking/mgk-sequential-logic) — Chronological requirements for basic motorcycle courses
