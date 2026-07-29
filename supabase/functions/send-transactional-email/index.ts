@@ -4,9 +4,10 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 import { TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
 
 // Configuration — eigener Versand über Resend, keine Lovable-Abhängigkeit.
+// Absenderdomain = die in Resend verifizierte Domain (DNS bei tajo.host.ch).
 const SITE_NAME = "Fahrschule me"
-const SENDER_DOMAIN = "notify.fahrschule-me.ch"
-const FROM_DOMAIN = "notify.fahrschule-me.ch"
+const SENDER_DOMAIN = "drive-me.ch"
+const FROM_DOMAIN = "drive-me.ch"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
