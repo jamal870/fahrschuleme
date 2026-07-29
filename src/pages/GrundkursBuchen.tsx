@@ -476,9 +476,9 @@ export default function GrundkursBuchen() {
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {([
-                        { id: "stripe", label: "Online bezahlen", desc: "Karte / TWINT / Klarna via Stripe" },
-                        { id: "barzahlung", label: "Barzahlung", desc: "Vor Ort beim 1. Kurstag" },
-                        { id: "ueberweisung", label: "Überweisung", desc: "Rechnung per E-Mail" },
+                        { id: "stripe", label: "Online bezahlen", desc: "Karte / TWINT / Klarna via Stripe (+3 % Gebühr)" },
+                        { id: "barzahlung", label: "Barzahlung", desc: "Vor Ort beim 1. Kurstag – ohne Aufschlag" },
+                        { id: "ueberweisung", label: "Überweisung", desc: "Rechnung per E-Mail – ohne Aufschlag" },
                       ] as const).map((opt) => {
                         const active = paymentMethod === opt.id;
                         return (
