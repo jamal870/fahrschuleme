@@ -14,9 +14,11 @@ async function sendViaResend(
   }
 ): Promise<void> {
   const headers: Record<string, string> = {}
-  // Add List-Unsubscribe headers for one-click unsubscribe if token present
-  if (payload.unsubscribe_token && payload.sender_domain) {
-    const unsubUrl = `https://${payload.sender_domain}/unsubscribe?token=${payload.unsubscribe_token}`
+  // Add List-Unsubscribe headers for one-click unsubscribe if token present.
+  // Der Link zeigt auf die öffentliche App-Seite (HashRouter), nicht auf die
+  // reine Mail-Subdomain.
+  if (payload.unsubscribe_token) {
+    const unsubUrl = `https://www.fahrschule-me.ch/#/unsubscribe?token=${payload.unsubscribe_token}`
     headers['List-Unsubscribe'] = `<${unsubUrl}>`
     headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click'
   }
