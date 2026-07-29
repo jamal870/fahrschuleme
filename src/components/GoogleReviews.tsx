@@ -73,7 +73,16 @@ const GoogleReviews = ({ heading = "Google Bewertungen" }: { heading?: string })
 
   return (
     <section className="bg-section-alt py-16">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd)
+            .replace(/</g, "\\u003c")
+            .replace(/>/g, "\\u003e")
+            .replace(/&/g, "\\u0026"),
+        }}
+      />
+
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-8">
           <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">

@@ -101,7 +101,7 @@ Deno.serve(async (req) => {
   // Resolve effective recipient: template-level `to` takes precedence over
   // the caller-provided recipientEmail. This allows notification templates
   // to always send to a fixed address (e.g., site owner from env var).
-  const effectiveRecipient = template.to || recipientEmail
+  let effectiveRecipient: string = template.to || recipientEmail
 
   if (!effectiveRecipient) {
     return new Response(
@@ -117,6 +117,75 @@ Deno.serve(async (req) => {
 
   // Create Supabase client with service role (bypasses RLS)
   const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+  // ---------------------------------------------------------------------
+  // Authorization: prevent this endpoint from being used as an open relay.
+  // Privileged callers (service role or admin users) may send any template
+  // to any recipient. Public (anon) callers are limited to a small allowlist
+  // and the recipient must be verifiable / fixed.
+  // ---------------------------------------------------------------------
+  const FIXED_ADMIN_RECIPIENT = 'info@l-me.ch'
+  const callerToken = (req.headers.get('Authorization') || '')
+    .replace(/^Bearer\s+/i, '')
+    .trim()
+
+  let privileged = callerToken !== '' && callerToken === supabaseServiceKey
+  if (!privileged && callerToken) {
+    const { data: userData } = await supabase.auth.getUser(callerToken)
+    if (userData?.user) {
+      const { data: roleRow } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userData.user.id)
+        .eq('role', 'admin')
+        .maybeSingle()
+      privileged = !!roleRow
+    }
+  }
+
+  if (!privileged) {
+    const deny = (msg: string) =>
+      new Response(JSON.stringify({ error: msg }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+
+    if (
+      templateName === 'booking-confirmation' ||
+      templateName === 'fahrstunden-confirmation'
+    ) {
+      const bookingId = templateData?.bookingId
+      if (
+        typeof bookingId !== 'string' ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(bookingId)
+      ) {
+        return deny('Not allowed')
+      }
+      const { data: bookingRow } = await supabase
+        .from('bookings')
+        .select('email')
+        .eq('id', bookingId)
+        .maybeSingle()
+      if (
+        !bookingRow?.email ||
+        bookingRow.email.toLowerCase() !== effectiveRecipient.toLowerCase()
+      ) {
+        return deny('Not allowed')
+      }
+    } else if (
+      templateName === 'fahrlehrer-trial-admin' ||
+      templateName === 'admin-booking-notification' ||
+      templateName === 'waitlist-admin-notification'
+    ) {
+      // Internal notifications: recipient is never caller-controlled
+      effectiveRecipient = template.to || FIXED_ADMIN_RECIPIENT
+    } else if (templateName === 'fahrlehrer-trial-confirmation') {
+      // Contact-form auto-reply: fixed content, only name fields are variable
+    } else {
+      return deny('Not allowed')
+    }
+  }
+
 
   // Load admin-editable email settings and merge into template data as `settings`
   const { data: emailSettings } = await supabase
