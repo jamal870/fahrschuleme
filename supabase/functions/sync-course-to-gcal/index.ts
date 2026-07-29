@@ -54,14 +54,32 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    const supabase = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
+
+    // Authorization: only internal service-role callers or admin users
+    const callerToken = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "").trim();
+    let allowed = callerToken !== "" && callerToken === serviceKey;
+    if (!allowed && callerToken) {
+      const { data: userData } = await supabase.auth.getUser(callerToken);
+      if (userData?.user) {
+        const { data: roleRow } = await supabase
+          .from("user_roles").select("role")
+          .eq("user_id", userData.user.id).eq("role", "admin").maybeSingle();
+        allowed = !!roleRow;
+      }
+    }
+    if (!allowed) {
+      return new Response(JSON.stringify({ error: "Kein Admin-Zugriff" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { courseDateId, action } = await req.json();
     if (!courseDateId || !action) throw new Error("courseDateId and action required");
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-      { auth: { persistSession: false } },
-    );
 
     const { data: course, error } = await supabase
       .from("course_dates").select("*").eq("id", courseDateId).maybeSingle();
