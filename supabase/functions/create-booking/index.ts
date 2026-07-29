@@ -364,6 +364,11 @@ serve(async (req) => {
         });
       }
 
+      // 3 % Aufschlag bei Online-Zahlung (Stripe-Gebühren)
+      serverPrice = applyOnlineFee(serverPrice, paymentMethod);
+
+
+
       const { data: booking, error: bookingError } = await supabase
         .from("bookings")
         .insert({
