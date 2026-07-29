@@ -3,10 +3,10 @@ import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
 
-// Configuration baked in at scaffold time
-const SITE_NAME = "Drive me Fahrschule"
-const SENDER_DOMAIN = "notify.drive-me.ch"
-const FROM_DOMAIN = "notify.drive-me.ch"
+// Configuration — eigener Versand über Resend, keine Lovable-Abhängigkeit.
+const SITE_NAME = "Fahrschule me"
+const SENDER_DOMAIN = "notify.fahrschule-me.ch"
+const FROM_DOMAIN = "notify.fahrschule-me.ch"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
