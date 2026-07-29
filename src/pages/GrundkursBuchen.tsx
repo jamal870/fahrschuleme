@@ -370,11 +370,22 @@ export default function GrundkursBuchen() {
                       </div>
                     ))}
                   </div>
-                  <div className="border-t border-border mt-4 pt-4 text-right">
+                  <div className="border-t border-border mt-4 pt-4 text-right space-y-1">
+                    {onlineFee > 0 && (
+                      <>
+                        <p className="text-sm text-muted-foreground">
+                          Zwischensumme: <span className="font-semibold text-foreground">CHF {basePrice.toFixed(2)}</span>
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Online-Zahlungsgebühr (3 %): <span className="font-semibold text-foreground">CHF {onlineFee.toFixed(2)}</span>
+                        </p>
+                      </>
+                    )}
                     <p className="text-sm text-muted-foreground">
                       Gesamtbetrag: <span className="text-2xl font-bold text-foreground">CHF {totalPrice.toFixed(2)}</span>
                     </p>
                   </div>
+
                 </div>
 
                 {/* Personal Details */}
