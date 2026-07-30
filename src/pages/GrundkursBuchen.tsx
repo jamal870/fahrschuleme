@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import BrandLogo from "@/components/BrandLogo";
 import SiteHeader from "@/components/SiteHeader";
 import Seo from "@/components/Seo";
-import lfaMuster from "@/assets/lernfahrausweis-muster.jpeg.asset.json";
+const LFA_MUSTER_URL = "/images/lernfahrausweis-muster.jpeg";
 
 // Parse "DD.MM.YYYY" to a comparable Date
 function parseCourseDate(dateStr: string): Date {
@@ -444,9 +444,9 @@ export default function GrundkursBuchen() {
                           <p className="text-xs text-muted-foreground mb-2">
                             Auf deinem Lernfahrausweis (LFA) oben rechts – gelb markiert im Beispiel.
                           </p>
-                          <a href={lfaMuster.url} target="_blank" rel="noopener noreferrer">
+                          <a href={LFA_MUSTER_URL} target="_blank" rel="noopener noreferrer">
                             <img
-                              src={lfaMuster.url}
+                              src={LFA_MUSTER_URL}
                               alt="Muster Lernfahrausweis mit markierter FA-Nummer"
                               className="w-full max-w-md border border-border"
                               style={{ borderRadius: "3px" }}
