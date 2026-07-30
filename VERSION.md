@@ -1,7 +1,21 @@
+# Version 1.7.7 — Hotfixes: Musterbild + E-Mail-Versand + Security
+
+**Release-Datum:** 2026-07-30
+**Status:** ✅ LIVE — Build-Trigger für Netlify-Deploy
+
+## v1.7.7 – Hotfixes (Freigabe vom Betreiber 2026-07-30)
+
+- `public/images/lernfahrausweis-muster.jpeg` hinzugefügt + Pfad in `src/pages/GrundkursBuchen.tsx` auf lokales Asset umgestellt. Musterbild für Lernfahrausweis wird wieder korrekt angezeigt.
+- `supabase/functions/send-transactional-email/index.ts`: Absenderdomain auf die in Resend verifizierte `drive-me.ch` zurückgesetzt, DNS bei tajo.host.ch unangetastet. E-Mail-Versand läuft wieder stabil über eigenen Resend-API-Key (unabhängig von Lovable).
+- Security-Fix `SUPA_public_bucket_allows_listing`: Auflist-Berechtigung für `email-assets`-Bucket entfernt.
+- Keine UI-, Datenbank- oder RLS-Änderungen.
+
+---
+
 # Version 1.7.6 — Chatbot-Kurse chronologisch + Video-Redesign + Admin-Link im Mobile-Menü
 
 **Release-Datum:** 2026-07-02
-**Status:** 🔒 EINGEFROREN — keine Änderungen ohne ausdrückliche Freigabe.
+**Status:** (historisch) — durch 1.7.7 abgelöst.
 
 ## v1.7.6 – Fixes & Redesign-Assets (Freigabe vom Betreiber 2026-07-02)
 
