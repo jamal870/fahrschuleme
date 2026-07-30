@@ -643,8 +643,8 @@ function CourseSection({
                   )}
                 </div>
                 <p className="font-bold text-primary mt-3">CHF {(priceOverride ?? course.price).toFixed(2)}</p>
-                <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full mt-1 ${
-                  course.spotsAvailable <= 2 ? "bg-destructive/15 text-destructive" : "bg-accent/15 text-accent"
+                <span className={`inline-block text-[10px] font-semibold px-2.5 py-1 rounded-full mt-1.5 ${
+                  course.spotsAvailable <= 2 ? "bg-destructive text-destructive-foreground" : "bg-success text-success-foreground"
                 }`}>
                   {course.spotsAvailable} {course.spotsAvailable === 1 ? "Platz" : "Plätze"} frei
                 </span>
