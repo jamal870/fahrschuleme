@@ -1,3 +1,19 @@
+# Version 1.7.8 — UI: Freie Plätze besser sichtbar
+
+**Release-Datum:** 2026-07-30
+**Status:** ✅ BEREIT — Warte auf Netlify-Deploy
+
+## v1.7.8 – UI-Verbesserung (Freigabe vom Betreiber 2026-07-30)
+
+- `src/index.css`: Neue semantische Tokens `--success` / `--success-foreground` hinzugefügt (kräftiges Grün).
+- `tailwind.config.ts`: `success`-Farbgruppe registriert.
+- `src/pages/GrundkursBuchen.tsx`: Badge für freie Plätze auf volle Füllfarbe umgestellt:
+  - `> 2 Plätze`: `bg-success text-success-foreground` (grün, weiße Schrift)
+  - `≤ 2 Plätze`: `bg-destructive text-destructive-foreground` (rot, weiße Schrift)
+- Keine Backend-, Datenbank- oder RLS-Änderungen.
+
+---
+
 # Version 1.7.7 — Hotfixes: Musterbild + E-Mail-Versand + Security
 
 **Release-Datum:** 2026-07-30
