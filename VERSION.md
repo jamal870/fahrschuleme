@@ -1,7 +1,13 @@
-# Version 1.7.8 — UI: Freie Plätze besser sichtbar
+# Version 1.7.9 — Deploy-Trigger: GitHub/Netlify
 
 **Release-Datum:** 2026-07-30
-**Status:** ✅ BEREIT — Warte auf Netlify-Deploy
+**Status:** 🚀 DEPLOY LÄUFT — Commit wird zu GitHub gepusht, Netlify-Build folgt automatisch
+
+## v1.7.9 – Deploy-Trigger (Freigabe vom Betreiber 2026-07-30)
+
+- Nur Versions-Bump, um einen neuen Commit auszulösen.
+- GitHub-App-Berechtigung wurde auf „All repositories" korrigiert → Auto-Push funktioniert wieder.
+- Enthält alle Änderungen aus v1.7.8.
 
 ## v1.7.8 – UI-Verbesserung (Freigabe vom Betreiber 2026-07-30)
 
