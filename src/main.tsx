@@ -2,6 +2,14 @@ import { createRoot } from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import "./index.css";
 
+// Legacy-Weiterleitung: alte HashRouter-Links (/#/preise) auf echte Pfade (/preise).
+// Muss vor dem Rendern laufen, damit BrowserRouter direkt die richtige Route sieht.
+if (window.location.hash.startsWith("#/")) {
+  const legacyPath = window.location.hash.slice(1);
+  window.location.replace(legacyPath);
+}
+
+
 const rootElement = document.getElementById("root");
 
 if (!rootElement) {
