@@ -44,17 +44,20 @@ docker exec "$DB_CONTAINER" pg_dump -U postgres -d postgres \
 echo "   $STACK_DIR/backups/pre-import_$STAMP.sql.gz"
 
 echo "== 3/4 Import =="
-if [ "$MODE" = sql ]; then
-  docker cp "$WORK/dump.sql" "$DB_CONTAINER:/tmp/dump.sql"
-  docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres \
-    -v ON_ERROR_STOP=0 -f /tmp/dump.sql 2>&1 | tail -30
-else
-  docker cp "$WORK/dump.custom" "$DB_CONTAINER:/tmp/dump.custom"
-  docker exec -i "$DB_CONTAINER" pg_restore -U postgres -d postgres \
-    --no-owner --no-privileges --clean --if-exists \
-    /tmp/dump.custom 2>&1 | tail -40 || true
+if [ "$MODE" = custom ]; then
+  # Der Cloud-Export stammt von pg_dump 17, der lokale Container hat nur
+  # pg_restore 15 -> Archivformat 1.16 nicht lesbar. Deshalb mit einem
+  # pg17-Client-Image in reines SQL umwandeln und danach normal einspielen.
+  echo "   Custom-Dump wird mit pg_restore 17 in SQL umgewandelt ..."
+  docker run --rm -v "$WORK:/w" postgres:17-alpine \
+    pg_restore --no-owner --no-privileges -f /w/dump.sql /w/dump.custom
+  MODE=sql
+  echo "   $(wc -l < "$WORK/dump.sql") Zeilen SQL erzeugt"
 fi
 
+docker cp "$WORK/dump.sql" "$DB_CONTAINER:/tmp/dump.sql"
+docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres \
+  -v ON_ERROR_STOP=0 -f /tmp/dump.sql 2>&1 | tail -40 || true
 
 echo "== 4/4 Rechte setzen und Kontrolle =="
 docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres <<'SQL'
