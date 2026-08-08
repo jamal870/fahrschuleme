@@ -12,6 +12,10 @@ services:
       - --providers.docker.constraints=Label(`traefik.constraint-label-stack`,`appwrite`)
       - --entrypoints.appwrite_web.address=:80
       - --entrypoints.appwrite_websecure.address=:443
+      - --certificatesresolvers.le.acme.email=${_APP_SYSTEM_SECURITY_EMAIL_ADDRESS}
+      - --certificatesresolvers.le.acme.storage=/storage/acme/acme.json
+      - --certificatesresolvers.le.acme.httpchallenge=true
+      - --certificatesresolvers.le.acme.httpchallenge.entrypoint=appwrite_web
     ports:
       - "80:80"
       - "443:443"
@@ -19,6 +23,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - appwrite-config:/storage/config:ro
       - appwrite-certificates:/storage/certificates:ro
+      - traefik-acme:/storage/acme
+
     depends_on:
       - appwrite
     networks:
