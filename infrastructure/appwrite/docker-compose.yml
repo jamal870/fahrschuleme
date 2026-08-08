@@ -1,14 +1,48 @@
 
 services:
+  traefik:
+    image: traefik:2.11
+    container_name: appwrite-traefik
+    restart: unless-stopped
+    command:
+      - --providers.file.directory=/storage/config
+      - --providers.file.watch=true
+      - --providers.docker=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`,`appwrite`)
+      - --entrypoints.appwrite_web.address=:80
+      - --entrypoints.appwrite_websecure.address=:443
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - appwrite-config:/storage/config:ro
+      - appwrite-certificates:/storage/certificates:ro
+    depends_on:
+      - appwrite
+    networks:
+      - gateway
+      - appwrite
+
   appwrite:
     image: appwrite/appwrite:1.5.7
     container_name: appwrite
     restart: unless-stopped
     networks:
       - appwrite
-    ports:
-      - "80:80"
-      - "443:443"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.constraint-label-stack=appwrite"
+      - "traefik.docker.network=appwrite"
+      - "traefik.http.services.appwrite_api.loadbalancer.server.port=80"
+      - "traefik.http.routers.appwrite_api_http.entrypoints=appwrite_web"
+      - "traefik.http.routers.appwrite_api_http.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.appwrite_api_http.service=appwrite_api"
+      - "traefik.http.routers.appwrite_api_https.entrypoints=appwrite_websecure"
+      - "traefik.http.routers.appwrite_api_https.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.appwrite_api_https.service=appwrite_api"
+      - "traefik.http.routers.appwrite_api_https.tls=true"
     volumes:
       - appwrite-uploads:/storage/uploads
       - appwrite-cache:/storage/cache
@@ -521,6 +555,8 @@ services:
       --requirepass ${_APP_REDIS_PASS}
 
 networks:
+  gateway:
+    driver: bridge
   appwrite:
     driver: bridge
 
