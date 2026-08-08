@@ -238,7 +238,9 @@ services:
 
   studio:
     <<: *restart
-    image: supabase/studio:2025.01.28-sha-7fa5102
+    # Fallback-Tag; bei Problemen mit Docker Hub ersetzen durch ein verfügbares
+    # supabase/studio-Tag, z. B. supabase/studio:2025.07.21
+    image: supabase/studio:2025.07.21
     container_name: supabase-studio
     depends_on:
       meta: { condition: service_started }
