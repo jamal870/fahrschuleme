@@ -1,0 +1,268 @@
+# Self-hosted Supabase für fahrschule-me.ch
+# Ziel-Host: Hostinger VPS (Ubuntu 24.04), Reverse Proxy: Traefik (bereits vorhanden)
+# Öffentliche Endpunkte:
+#   https://db.fahrschule-me.ch      -> Kong (REST, Auth, Storage, Realtime, Functions)
+#   https://studio.fahrschule-me.ch  -> Supabase Studio (Basic-Auth geschützt)
+#
+# Start:  cd /opt/supabase && docker compose up -d
+# Logs:   docker compose logs -f <service>
+
+name: supabase
+
+x-restart: &restart
+  restart: unless-stopped
+
+services:
+  # ---------------------------------------------------------------- Datenbank
+  db:
+    <<: *restart
+    image: supabase/postgres:15.8.1.020
+    container_name: supabase-db
+    command:
+      - postgres
+      - -c
+      - config_file=/etc/postgresql/postgresql.conf
+      - -c
+      - log_min_messages=fatal
+    environment:
+      POSTGRES_HOST: /var/run/postgresql
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXP: ${JWT_EXPIRY}
+    volumes:
+      - ./volumes/db/data:/var/lib/postgresql/data
+      - ./volumes/db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ------------------------------------------------------- API Gateway (Kong)
+  kong:
+    <<: *restart
+    image: kong:2.8.1
+    container_name: supabase-kong
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
+      KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
+      KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
+    volumes:
+      - ./volumes/api/kong.yml:/home/kong/kong.yml:ro
+    networks: [default, web]
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: web
+      traefik.http.routers.supabase-api.rule: Host(`${API_HOST}`)
+      traefik.http.routers.supabase-api.entrypoints: websecure
+      traefik.http.routers.supabase-api.tls.certresolver: letsencrypt
+      traefik.http.services.supabase-api.loadbalancer.server.port: "8000"
+
+  # ---------------------------------------------------------------- Auth
+  auth:
+    <<: *restart
+    image: supabase/gotrue:v2.170.0
+    container_name: supabase-auth
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: ${SUPABASE_PUBLIC_URL}
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      GOTRUE_SITE_URL: ${SITE_URL}
+      GOTRUE_URI_ALLOW_LIST: ${ADDITIONAL_REDIRECT_URLS}
+      GOTRUE_DISABLE_SIGNUP: ${DISABLE_SIGNUP}
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: ${JWT_EXPIRY}
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_MAILER_AUTOCONFIRM: "false"
+      GOTRUE_SMTP_HOST: ${SMTP_HOST}
+      GOTRUE_SMTP_PORT: ${SMTP_PORT}
+      GOTRUE_SMTP_USER: ${SMTP_USER}
+      GOTRUE_SMTP_PASS: ${SMTP_PASS}
+      GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_ADMIN_EMAIL}
+      GOTRUE_SMTP_SENDER_NAME: ${SMTP_SENDER_NAME}
+      GOTRUE_MAILER_URLPATHS_CONFIRMATION: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_RECOVERY: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /auth/v1/verify
+      GOTRUE_MAILER_URLPATHS_INVITE: /auth/v1/verify
+      GOTRUE_EXTERNAL_GOOGLE_ENABLED: ${GOOGLE_AUTH_ENABLED}
+      GOTRUE_EXTERNAL_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOTRUE_EXTERNAL_GOOGLE_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOTRUE_EXTERNAL_GOOGLE_REDIRECT_URI: ${SUPABASE_PUBLIC_URL}/auth/v1/callback
+      GOTRUE_PASSWORD_HIBP_ENABLED: "true"
+
+  # ---------------------------------------------------------------- REST API
+  rest:
+    <<: *restart
+    image: postgrest/postgrest:v12.2.8
+    container_name: supabase-rest
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS}
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
+      PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
+    command: ["postgrest"]
+
+  # ---------------------------------------------------------------- Realtime
+  realtime:
+    <<: *restart
+    image: supabase/realtime:v2.34.31
+    container_name: realtime-dev.supabase-realtime
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      PORT: 4000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: supabase_admin
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      DB_AFTER_CONNECT_QUERY: "SET search_path TO _realtime"
+      DB_ENC_KEY: supabaserealtime
+      API_JWT_SECRET: ${JWT_SECRET}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      ERL_AFLAGS: -proto_dist inet_tcp
+      DNS_NODES: "''"
+      RLIMIT_NOFILE: "10000"
+      APP_NAME: realtime
+      SEED_SELF_HOST: "true"
+      RUN_JANITOR: "true"
+
+  # ---------------------------------------------------------------- Storage
+  storage:
+    <<: *restart
+    image: supabase/storage-api:v1.19.3
+    container_name: supabase-storage
+    depends_on:
+      db: { condition: service_healthy }
+      imgproxy: { condition: service_started }
+    environment:
+      ANON_KEY: ${ANON_KEY}
+      SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      POSTGREST_URL: http://rest:3000
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgres://supabase_storage_admin:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      FILE_SIZE_LIMIT: 52428800
+      STORAGE_BACKEND: file
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      TENANT_ID: stub
+      REGION: stub
+      GLOBAL_S3_BUCKET: stub
+      ENABLE_IMAGE_TRANSFORMATION: "true"
+      IMGPROXY_URL: http://imgproxy:5001
+    volumes:
+      - ./volumes/storage:/var/lib/storage
+
+  imgproxy:
+    <<: *restart
+    image: darthsim/imgproxy:v3.8.0
+    container_name: supabase-imgproxy
+    environment:
+      IMGPROXY_BIND: ":5001"
+      IMGPROXY_LOCAL_FILESYSTEM_ROOT: /
+      IMGPROXY_USE_ETAG: "true"
+      IMGPROXY_ENABLE_WEBP_DETECTION: "true"
+    volumes:
+      - ./volumes/storage:/var/lib/storage:ro
+
+  # ---------------------------------------------------------------- Edge Functions
+  functions:
+    <<: *restart
+    image: supabase/edge-runtime:v1.67.4
+    container_name: supabase-edge-functions
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      SUPABASE_URL: http://kong:8000
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      SUPABASE_DB_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      # --- App-Secrets (aus .env, siehe .env.example) ---
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      RESEND_WEBHOOK_SECRET: ${RESEND_WEBHOOK_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY}
+      GOOGLE_PLACE_ID: ${GOOGLE_PLACE_ID}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REFRESH_TOKEN: ${GOOGLE_REFRESH_TOKEN}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      LOVABLE_API_KEY: ${LOVABLE_API_KEY}
+    command:
+      - start
+      - --main-service
+      - /home/deno/functions/main
+    volumes:
+      - ./volumes/functions:/home/deno/functions:ro
+
+  # ---------------------------------------------------------------- Meta + Studio
+  meta:
+    <<: *restart
+    image: supabase/postgres-meta:v0.86.1
+    container_name: supabase-meta
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: db
+      PG_META_DB_PORT: 5432
+      PG_META_DB_NAME: ${POSTGRES_DB}
+      PG_META_DB_USER: supabase_admin
+      PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+  studio:
+    <<: *restart
+    image: supabase/studio:2025.01.28-sha-7fa5102
+    container_name: supabase-studio
+    depends_on:
+      meta: { condition: service_started }
+    environment:
+      STUDIO_PG_META_URL: http://meta:8080
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DEFAULT_ORGANIZATION_NAME: ${STUDIO_DEFAULT_ORGANIZATION}
+      DEFAULT_PROJECT_NAME: ${STUDIO_DEFAULT_PROJECT}
+      SUPABASE_URL: http://kong:8000
+      SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      AUTH_JWT_SECRET: ${JWT_SECRET}
+      NEXT_PUBLIC_ENABLE_LOGS: "false"
+    networks: [default, web]
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: web
+      traefik.http.routers.supabase-studio.rule: Host(`${STUDIO_HOST}`)
+      traefik.http.routers.supabase-studio.entrypoints: websecure
+      traefik.http.routers.supabase-studio.tls.certresolver: letsencrypt
+      traefik.http.routers.supabase-studio.middlewares: supabase-studio-auth
+      traefik.http.services.supabase-studio.loadbalancer.server.port: "3000"
+      # Basic-Auth: Hash erzeugen mit  htpasswd -nbB admin '<passwort>'
+      traefik.http.middlewares.supabase-studio-auth.basicauth.users: ${STUDIO_BASIC_AUTH}
+
+networks:
+  web:
+    external: true
