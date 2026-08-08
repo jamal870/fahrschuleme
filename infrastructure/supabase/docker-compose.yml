@@ -35,7 +35,10 @@ services:
       JWT_EXP: ${JWT_EXPIRY}
     volumes:
       - ./volumes/db/data:/var/lib/postgresql/data
-      - ./volumes/db/init:/docker-entrypoint-initdb.d
+      # WICHTIG: Einzeldateien mounten – ein ganzes Verzeichnis würde die
+      # mitgelieferten Init-Skripte des supabase/postgres-Images überdecken.
+      - ./volumes/db/init/01-roles.sql:/docker-entrypoint-initdb.d/99-roles.sql:ro
+      - ./volumes/db/init/02-realtime.sql:/docker-entrypoint-initdb.d/99-realtime.sql:ro
       # Ziel für WAL-Archivierung (Point-in-Time-Recovery, siehe deploy.md §9)
       - ./volumes/db/wal_archive:/var/lib/postgresql/wal_archive
     healthcheck:
