@@ -65,16 +65,31 @@ curl -s https://db.fahrschule-me.ch/rest/v1/ -H "apikey: $ANON_KEY" | head
 
 ## 2. Daten aus Lovable Cloud übernehmen
 
-Der Verbindungs-String der Quelle steht im Projekt als `SUPABASE_DB_URL`.
+Auf Lovable Cloud ist das Datenbank-Passwort bewusst nicht zugänglich, ein
+direkter `pg_dump` von aussen ist deshalb nicht möglich. Der offizielle Weg:
+
+1. In Lovable: **Cloud → Advanced settings → Export data** — Export erzeugen
+   und herunterladen.
+2. Datei auf den VPS kopieren:
 
 ```bash
-export SOURCE_DB_URL='postgresql://postgres:...@...supabase.co:5432/postgres'
-bash /opt/fahrschule-me/infrastructure/supabase/scripts/migrate-from-cloud.sh
+scp ~/Downloads/export.sql.gz root@186.240.156.89:/root/
 ```
 
-Das Skript liest die Quelle **nur** — die Live-Umgebung bleibt unberührt.
+3. Auf dem VPS einspielen:
+
+```bash
+bash /opt/fahrschule-me/infrastructure/supabase/scripts/import-dump.sh /root/export.sql.gz
+```
+
+Das Skript legt vorher automatisch eine Sicherheitskopie des aktuellen Stands
+unter `/opt/supabase/backups/pre-import_<stamp>.sql.gz` an und löscht nichts.
 Am Ende werden Zeilenzahlen pro Tabelle und die Anzahl `auth.users` ausgegeben;
 diese mit dem Cloud-Backend vergleichen.
+
+Alternative (falls ein direkter Verbindungs-String vorliegt, z. B. bei einem
+eigenen Supabase-Projekt): `scripts/migrate-from-cloud.sh` mit `SOURCE_DB_URL`.
+
 
 ---
 
