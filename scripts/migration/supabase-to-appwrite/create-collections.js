@@ -26,6 +26,29 @@ const db = new Databases(client);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+async function appwriteGet(path) {
+  const response = await fetch(`${endpoint}${path}`, {
+    headers: {
+      "X-Appwrite-Project": project,
+      "X-Appwrite-Key": apiKey,
+    },
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Appwrite GET ${path}: HTTP ${response.status} ${body}`);
+  }
+
+  return response.json();
+}
+
+async function getAttributeStates(colId) {
+  const result = await appwriteGet(
+    `/databases/${encodeURIComponent(DB_ID)}/collections/${encodeURIComponent(colId)}/attributes?queries[]=${encodeURIComponent('limit(100)')}`,
+  );
+  return new Map((result.attributes || []).map((attribute) => [attribute.key, attribute.status]));
+}
+
 /** Schema-Definition: Supabase -> Appwrite */
 const collections = [
   {
@@ -240,7 +263,7 @@ async function createAttribute(colId, [type, key, size, required]) {
 }
 
 async function run() {
-  const pendingIndexes = [];
+  const wantedIndexes = [];
 
   for (const col of collections) {
     try {
@@ -262,52 +285,48 @@ async function run() {
       await sleep(250);
     }
 
-    // Indexe sofort versuchen. Noch verarbeitete Attribute werden am Ende
-    // gesammelt erneut geprüft, damit kein einzelner Index minutenlang blockiert.
     if (col.indexes?.length) {
       for (const [key, type, attrs] of col.indexes) {
-        try {
-          await db.createIndex(DB_ID, col.id, key, type, attrs);
-          console.log(`   ✔ Index ${col.id}.${key}`);
-        } catch (e) {
-          if (e.code === 409) console.log(`   • Index existiert: ${col.id}.${key}`);
-          else {
-            pendingIndexes.push({ colId: col.id, key, type, attrs });
-            console.log(`   ↻ Index ${col.id}.${key} wird später erneut versucht`);
-          }
-        }
-        await sleep(250);
+        wantedIndexes.push({ colId: col.id, key, type, attrs });
       }
     }
   }
 
-  // Appwrite erstellt Attribute asynchron. Alle noch offenen Indexe werden
-  // parallel über höchstens 60 Sekunden nachgezogen.
-  if (pendingIndexes.length) {
-    console.log(`\nWarte auf ${pendingIndexes.length} noch nicht bereite Indexe ...`);
-    const deadline = Date.now() + 60000;
-    let remaining = pendingIndexes;
+  // Nicht blind warten: den echten Status der benötigten Attribute abfragen.
+  // So werden dauerhafte Worker-/Attributfehler sofort sichtbar.
+  if (wantedIndexes.length) {
+    console.log(`\nPrüfe und erstelle ${wantedIndexes.length} Indexe ...`);
+    const statesByCollection = new Map();
 
-    while (remaining.length && Date.now() < deadline) {
-      await sleep(3000);
-      const next = [];
-
-      await Promise.all(
-        remaining.map(async ({ colId, key, type, attrs }) => {
-          try {
-            await db.createIndex(DB_ID, colId, key, type, attrs);
-            console.log(`   ✔ Index ${colId}.${key}`);
-          } catch (e) {
-            if (e.code === 409) console.log(`   • Index existiert: ${colId}.${key}`);
-            else next.push({ colId, key, type, attrs });
-          }
-        }),
-      );
-      remaining = next;
+    for (const { colId } of wantedIndexes) {
+      if (!statesByCollection.has(colId)) {
+        statesByCollection.set(colId, await getAttributeStates(colId));
+      }
     }
 
-    for (const { colId, key } of remaining) {
-      console.error(`   ✖ Index ${colId}.${key} noch nicht bereit – Skript später erneut starten`);
+    for (const { colId, key, type, attrs } of wantedIndexes) {
+      const states = statesByCollection.get(colId);
+      const blocked = attrs
+        .map((attribute) => ({ attribute, status: states?.get(attribute) || "missing" }))
+        .filter(({ status }) => status !== "available");
+
+      if (blocked.length) {
+        console.error(
+          `   ✖ Index ${colId}.${key} blockiert: ${blocked.map(({ attribute, status }) => `${attribute}=${status}`).join(", ")}`,
+        );
+        continue;
+      }
+
+      try {
+        await db.createIndex(DB_ID, colId, key, type, attrs);
+        console.log(`   ✔ Index ${colId}.${key} erstellt`);
+      } catch (e) {
+        if (e.code === 409) {
+          console.log(`   • Index existiert: ${colId}.${key}`);
+        } else {
+          console.error(`   ✖ Index ${colId}.${key}: [${e.code || "ohne Code"}] ${e.message}`);
+        }
+      }
     }
   }
 
