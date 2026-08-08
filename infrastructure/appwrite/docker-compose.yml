@@ -579,3 +579,5 @@ volumes:
   appwrite-influxdb:
   mariadb-data:
   redis-data:
+  traefik-acme:
+
