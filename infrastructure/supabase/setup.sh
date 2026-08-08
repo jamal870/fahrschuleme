@@ -48,8 +48,8 @@ done
 # Systemrollen-Passwörter setzen (idempotent, unabhängig von initdb)
 echo "Systemrollen-Passwörter setzen ..."
 # .env NICHT sourcen (Werte koennen Leerzeichen enthalten) - gezielt auslesen
-PG_PW="$(grep -E '^POSTGRES_PASSWORD=' "$STACK_DIR/.env" | head -1 | cut -d= -f2-)"
-PG_DB="$(grep -E '^POSTGRES_DB=' "$STACK_DIR/.env" | head -1 | cut -d= -f2-)"
+PG_PW="$(grep -E '^POSTGRES_PASSWORD=' "$STACK_DIR/.env" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")"
+PG_DB="$(grep -E '^POSTGRES_DB=' "$STACK_DIR/.env" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")"
 PG_DB="${PG_DB:-postgres}"
 docker compose exec -T -e POSTGRES_PASSWORD="$PG_PW" db \
   psql -U supabase_admin -d "$PG_DB" -v ON_ERROR_STOP=1 \
