@@ -1,3 +1,45 @@
+# Version 1.8.0 — SEO-Fix: BrowserRouter statt HashRouter
+
+**Release-Datum:** 2026-08-08
+**Status:** ✅ Umgesetzt & geprüft (Freigabe vom Betreiber 2026-08-08)
+
+## v1.8.0 – Indexierungs-Fix (Google Search Console)
+
+**Problem:** Google meldete „Alternative Seite mit richtigem kanonischen Tag" —
+alle Unterseiten wurden nicht indexiert. Ursache: `HashRouter`. Serverseitig
+lieferte jede URL dieselbe `index.html`, die ohne Hash die Startseite rendert.
+Für Google waren damit alle 25 Sitemap-URLs Duplikate der Startseite.
+
+**Vorprüfung:** Keine aktive iFrame-Einbettung mehr vorhanden
+(`X-Frame-Options: SAMEORIGIN` blockiert Fremd-Einbettung ohnehin; der einzige
+iFrame im Projekt ist die Google-Maps-Karte auf der Kontaktseite). Der
+historische HashRouter-Grund entfällt damit.
+
+**Änderungen:**
+- `src/App.tsx`: `HashRouter` → `BrowserRouter`.
+- `index.html`: obsoletes Hash-Deep-Link-Fallback-Skript entfernt
+  (verursachte mit BrowserRouter eine Redirect-Schleife).
+- `src/main.tsx`: Legacy-Weiterleitung ergänzt — alte Lesezeichen `/#/preise`
+  landen automatisch auf `/preise`.
+- Alle internen `#/`-Links auf echte Pfade umgestellt: `SiteHeader.tsx`,
+  `Index.tsx`, `NotFound.tsx`, `Kurstermine.tsx`, `Angebote.tsx`,
+  `GrundkursBuchen.tsx`, `admin/AdminContent.tsx`, `config/tenant.ts`.
+- Kanonische Basis-URL überall auf `https://www.fahrschule-me.ch` vereinheitlicht
+  (`Seo.tsx`, `Breadcrumbs.tsx`, `LocalLandingPage.tsx`, `Kurstermine.tsx`,
+  `Angebote.tsx`, `index.html`, `public/sitemap.xml`) — kein 301-Umweg mehr.
+- Edge Functions angepasst und deployed:
+  `create-course-payment` (Stripe success/cancel URL),
+  `process-email-queue` (List-Unsubscribe-URL).
+
+**Geprüft:** `/preise`, `/fahrschule-baden`, `/motorrad-grundkurs-wettingen`
+laden direkt mit korrektem Titel und selbstreferenzierendem Canonical.
+`/#/preise` leitet sauber auf `/preise` um.
+
+**Nach dem Deploy:** In der Search Console Sitemap neu einreichen und einzelne
+URLs per „URL-Prüfung → Indexierung beantragen" anstoßen.
+
+Keine Datenbank-, RLS- oder Preis-Änderungen.
+
 # Version 1.7.9 — Deploy-Trigger: GitHub/Netlify
 
 **Release-Datum:** 2026-07-30
