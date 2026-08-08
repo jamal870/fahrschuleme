@@ -20,7 +20,7 @@ interface Promotion {
   category: string | null;
 }
 
-const SITE_URL = "https://fahrschule-me.ch";
+const SITE_URL = "https://www.fahrschule-me.ch";
 
 const Angebote = () => {
   const [items, setItems] = useState<Promotion[]>([]);

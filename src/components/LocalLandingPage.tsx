@@ -28,7 +28,7 @@ export interface LocalLandingProps {
   relatedLinks?: RelatedLink[];
 }
 
-const SITE_URL = "https://fahrschule-me.ch";
+const SITE_URL = "https://www.fahrschule-me.ch";
 
 const LocalLandingPage = (p: LocalLandingProps) => {
   const jsonLd: Record<string, unknown>[] = [

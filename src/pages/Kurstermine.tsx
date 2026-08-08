@@ -18,7 +18,7 @@ interface CourseRow {
   price: number;
 }
 
-const SITE_URL = "https://fahrschule-me.ch";
+const SITE_URL = "https://www.fahrschule-me.ch";
 
 const toIsoDate = (d: string) => {
   const [dd, mm, yyyy] = d.split(".");

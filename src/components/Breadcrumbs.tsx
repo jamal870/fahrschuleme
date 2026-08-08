@@ -7,7 +7,7 @@ export interface BreadcrumbItem {
   to?: string; // wenn leer → aktuelle Seite
 }
 
-const SITE_URL = "https://fahrschule-me.ch";
+const SITE_URL = "https://www.fahrschule-me.ch";
 
 const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
   const all: BreadcrumbItem[] = [{ label: "Start", to: "/" }, ...items];
