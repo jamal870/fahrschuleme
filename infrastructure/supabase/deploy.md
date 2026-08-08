@@ -168,10 +168,86 @@ Offsite-Kopie: `OFFSITE_REMOTE` in `.env` auf ein rclone-Remote setzen
 (z. B. Hostinger Object Storage oder Google Drive) — dann sichert der
 Cron-Job automatisch zusätzlich extern.
 
-**Monitoring-Minimum:** `docker compose ps` per Uptime-Check auf
-`https://db.fahrschule-me.ch/auth/v1/health`.
+---
+
+## 9. Point-in-Time-Recovery (optional, empfohlen)
+
+Der Cron-Dump aus Schritt 8 stellt den Stand von 03:00 Uhr wieder her — bei
+einem Ausfall um 17:00 Uhr gingen also bis zu 14 Stunden Buchungen verloren.
+Mit WAL-Archivierung ist eine Wiederherstellung auf die Sekunde genau möglich.
+
+```bash
+docker exec -i supabase-db psql -U postgres -d postgres <<'SQL'
+ALTER SYSTEM SET wal_level = 'replica';
+ALTER SYSTEM SET archive_mode = 'on';
+ALTER SYSTEM SET archive_command = 'test ! -f /var/lib/postgresql/wal_archive/%f && cp %p /var/lib/postgresql/wal_archive/%f';
+ALTER SYSTEM SET archive_timeout = '300s';
+SQL
+mkdir -p /opt/supabase/volumes/db/wal_archive
+cd /opt/supabase && docker compose restart db
+```
+
+Dazu in `docker-compose.yml` beim Service `db` das Volume ergänzen:
+`- ./volumes/db/wal_archive:/var/lib/postgresql/wal_archive`
+
+Wöchentlich ein Basis-Backup (`pg_basebackup`) plus die WAL-Dateien seit
+dem letzten Basis-Backup ergeben den PITR-Satz. Aufbewahrung im
+`backup.sh`-Retention-Fenster mitführen.
+
+**Ehrlich eingeordnet:** Für dieses Buchungsvolumen reicht der tägliche Dump
+in aller Regel. PITR lohnt sich, sobald an einem Tag mehrere Kursbuchungen
+mit Zahlung eingehen — dann ist ein Datenverlust nicht nur ärgerlich,
+sondern buchhalterisch relevant.
 
 ---
+
+## 10. Monitoring
+
+Was tatsächlich überwacht werden muss:
+
+| Prüfung | Wie |
+|---|---|
+| API erreichbar | Uptime-Check auf `https://db.fahrschule-me.ch/auth/v1/health` (z. B. UptimeRobot, 5 Min.) |
+| Container laufen | `docker compose ps` per Cron, Alarm bei Status ≠ running |
+| Speicherplatz | `df -h /` — Alarm ab 80 % |
+| Backup erfolgreich | Alarm, wenn `/opt/supabase/backups` heute keine neue Datei hat |
+| SSL-Ablauf | Traefik erneuert automatisch; Uptime-Check meldet Zertifikatsfehler |
+
+Minimal-Variante ohne Zusatzsoftware:
+
+```bash
+cat > /opt/supabase/scripts/healthcheck.sh <<'SH'
+#!/usr/bin/env bash
+set -uo pipefail
+FAIL=""
+curl -fsS -m 10 https://db.fahrschule-me.ch/auth/v1/health >/dev/null || FAIL+="API nicht erreichbar\n"
+[ "$(docker compose -f /opt/supabase/docker-compose.yml ps --status running -q | wc -l)" -ge 9 ] || FAIL+="Container fehlen\n"
+[ "$(df --output=pcent / | tail -1 | tr -dc 0-9)" -lt 80 ] || FAIL+="Speicher > 80%\n"
+[ -n "$(find /opt/supabase/backups -name 'db_*.sql.gz' -mtime -1)" ] || FAIL+="Kein Backup in 24h\n"
+[ -z "$FAIL" ] || echo -e "$FAIL" | mail -s "[fahrschule-me] VPS-Warnung" info@drive-me.ch
+SH
+chmod +x /opt/supabase/scripts/healthcheck.sh
+(crontab -l 2>/dev/null; echo '*/15 * * * * /opt/supabase/scripts/healthcheck.sh') | crontab -
+```
+
+---
+
+## Bekannte Einschränkungen gegenüber der Managed-Version
+
+| Thema | Managed | Self-hosted |
+|---|---|---|
+| Edge Functions | stabil | edge-runtime ist offiziell noch Beta — funktioniert, aber Updates genau lesen |
+| PITR | eingebaut | manuell (Schritt 9) |
+| Auth-Einstellungen | Dashboard | Umgebungsvariablen in `.env`, Neustart nötig |
+| Storage-Dateien | inklusive | separater Transfer (Schritt 6) |
+| Updates / CVEs | automatisch | eigenverantwortlich, 2–3x pro Jahr einplanen |
+| Support | Supabase | keiner |
+
+Das ist der Preis für volle Datenhoheit — bewusst so gewählt und mit den
+Schritten 8–10 auf ein handhabbares Mass gebracht.
+
+---
+
 
 ## Checkliste Go-Live
 
