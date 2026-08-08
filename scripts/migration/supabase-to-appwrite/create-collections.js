@@ -239,25 +239,9 @@ async function createAttribute(colId, [type, key, size, required]) {
   }
 }
 
-/** Wartet, bis alle genannten Attribute den Status "available" haben. */
-async function waitForAttributes(colId, keys, timeoutMs = 240000) {
-  const start = Date.now();
-  while (Date.now() - start < timeoutMs) {
-    try {
-      const list = await db.listAttributes(DB_ID, colId);
-      const byKey = new Map(list.attributes.map((a) => [a.key, a.status]));
-      if (keys.every((k) => byKey.get(k) === "available")) return true;
-      if (keys.some((k) => byKey.get(k) === "failed")) return false;
-    } catch {
-      /* retry */
-    }
-    await sleep(1500);
-  }
-  return false;
-}
-
-
 async function run() {
+  const pendingIndexes = [];
+
   for (const col of collections) {
     try {
       await db.createCollection(DB_ID, col.id, col.name, col.permissions, false, true);
@@ -278,25 +262,55 @@ async function run() {
       await sleep(250);
     }
 
-    // Indexe erst anlegen, wenn alle benötigten Attribute "available" sind
+    // Indexe sofort versuchen. Noch verarbeitete Attribute werden am Ende
+    // gesammelt erneut geprüft, damit kein einzelner Index minutenlang blockiert.
     if (col.indexes?.length) {
       for (const [key, type, attrs] of col.indexes) {
-        const ready = await waitForAttributes(col.id, attrs);
-        if (!ready) {
-          console.error(`   ✖ Index ${col.id}.${key}: Attribute nicht bereit (Timeout)`);
-          continue;
-        }
         try {
           await db.createIndex(DB_ID, col.id, key, type, attrs);
           console.log(`   ✔ Index ${col.id}.${key}`);
         } catch (e) {
           if (e.code === 409) console.log(`   • Index existiert: ${col.id}.${key}`);
-          else console.error(`   ✖ Index ${col.id}.${key}: ${e.message}`);
+          else {
+            pendingIndexes.push({ colId: col.id, key, type, attrs });
+            console.log(`   ↻ Index ${col.id}.${key} wird später erneut versucht`);
+          }
         }
         await sleep(250);
       }
     }
   }
+
+  // Appwrite erstellt Attribute asynchron. Alle noch offenen Indexe werden
+  // parallel über höchstens 60 Sekunden nachgezogen.
+  if (pendingIndexes.length) {
+    console.log(`\nWarte auf ${pendingIndexes.length} noch nicht bereite Indexe ...`);
+    const deadline = Date.now() + 60000;
+    let remaining = pendingIndexes;
+
+    while (remaining.length && Date.now() < deadline) {
+      await sleep(3000);
+      const next = [];
+
+      await Promise.all(
+        remaining.map(async ({ colId, key, type, attrs }) => {
+          try {
+            await db.createIndex(DB_ID, colId, key, type, attrs);
+            console.log(`   ✔ Index ${colId}.${key}`);
+          } catch (e) {
+            if (e.code === 409) console.log(`   • Index existiert: ${colId}.${key}`);
+            else next.push({ colId, key, type, attrs });
+          }
+        }),
+      );
+      remaining = next;
+    }
+
+    for (const { colId, key } of remaining) {
+      console.error(`   ✖ Index ${colId}.${key} noch nicht bereit – Skript später erneut starten`);
+    }
+  }
+
   console.log("\nFertig. Alle Collections angelegt.");
 }
 
