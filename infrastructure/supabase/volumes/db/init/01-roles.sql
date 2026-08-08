@@ -1,11 +1,11 @@
 -- Setzt die Passwörter der Supabase-Systemrollen auf POSTGRES_PASSWORD.
--- Idempotent + fehlertolerant: nur vorhandene Rollen werden angefasst,
--- fehlende Rollen werden angelegt. Kann jederzeit erneut ausgeführt werden.
+-- Idempotent + fehlertolerant; kann jederzeit erneut ausgeführt werden.
 \set pgpass `echo "$POSTGRES_PASSWORD"`
+SELECT set_config('supabase.setup_pw', :'pgpass', false);
 
 DO $$
 DECLARE
-  pw text := :'pgpass';
+  pw text := current_setting('supabase.setup_pw');
   r  text;
 BEGIN
   FOREACH r IN ARRAY ARRAY[
