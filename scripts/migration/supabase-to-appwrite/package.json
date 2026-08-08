@@ -1,0 +1,14 @@
+{
+  "name": "supabase-to-appwrite-migration",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "collections": "node create-collections.js",
+    "export": "node export-supabase-data.js",
+    "import": "node import-to-appwrite.js"
+  },
+  "dependencies": {
+    "node-appwrite": "^13.0.0",
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}
