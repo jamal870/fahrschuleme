@@ -22,12 +22,19 @@ WORK=/tmp/supabase-import
 mkdir -p "$WORK"
 
 echo "== 1/4 Dump vorbereiten =="
+MODE=sql
 case "$DUMP" in
-  *.gz)  gunzip -c "$DUMP" > "$WORK/dump.sql" ;;
-  *.sql) cp "$DUMP" "$WORK/dump.sql" ;;
-  *)     echo "Unbekanntes Format – nur .sql oder .sql.gz"; exit 1 ;;
+  *.gz)              gunzip -c "$DUMP" > "$WORK/dump.sql" ;;
+  *.sql)             cp "$DUMP" "$WORK/dump.sql" ;;
+  *.backup|*.dump|*.custom)
+                     MODE=custom; cp "$DUMP" "$WORK/dump.custom" ;;
+  *)                 echo "Unbekanntes Format – .sql, .sql.gz, .backup oder .dump"; exit 1 ;;
 esac
-echo "   $(wc -l < "$WORK/dump.sql") Zeilen"
+if [ "$MODE" = sql ]; then
+  echo "   $(wc -l < "$WORK/dump.sql") Zeilen"
+else
+  echo "   Custom-Format ($(du -h "$WORK/dump.custom" | cut -f1)) – wird mit pg_restore eingespielt"
+fi
 
 echo "== 2/4 Sicherheitskopie des aktuellen Stands =="
 mkdir -p "$STACK_DIR/backups"
@@ -37,9 +44,17 @@ docker exec "$DB_CONTAINER" pg_dump -U postgres -d postgres \
 echo "   $STACK_DIR/backups/pre-import_$STAMP.sql.gz"
 
 echo "== 3/4 Import =="
-docker cp "$WORK/dump.sql" "$DB_CONTAINER:/tmp/dump.sql"
-docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres \
-  -v ON_ERROR_STOP=0 -f /tmp/dump.sql 2>&1 | tail -30
+if [ "$MODE" = sql ]; then
+  docker cp "$WORK/dump.sql" "$DB_CONTAINER:/tmp/dump.sql"
+  docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres \
+    -v ON_ERROR_STOP=0 -f /tmp/dump.sql 2>&1 | tail -30
+else
+  docker cp "$WORK/dump.custom" "$DB_CONTAINER:/tmp/dump.custom"
+  docker exec -i "$DB_CONTAINER" pg_restore -U postgres -d postgres \
+    --no-owner --no-privileges --clean --if-exists \
+    /tmp/dump.custom 2>&1 | tail -40 || true
+fi
+
 
 echo "== 4/4 Rechte setzen und Kontrolle =="
 docker exec -i "$DB_CONTAINER" psql -U postgres -d postgres <<'SQL'
