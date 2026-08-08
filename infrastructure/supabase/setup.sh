@@ -41,17 +41,20 @@ docker compose pull
 docker compose up -d db
 echo "Warte auf Datenbank ..."
 for i in $(seq 1 60); do
-  docker compose exec -T db pg_isready -U postgres -h localhost >/dev/null 2>&1 && break
+  docker compose exec -T db pg_isready -U supabase_admin -h localhost >/dev/null 2>&1 && break
   sleep 2
 done
 
 # Systemrollen-Passwörter setzen (idempotent, unabhängig von initdb)
 echo "Systemrollen-Passwörter setzen ..."
-set -a; . "$STACK_DIR/.env"; set +a
-docker compose exec -T -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" db \
-  psql -U postgres -d "${POSTGRES_DB:-postgres}" -v ON_ERROR_STOP=1 \
+# .env NICHT sourcen (Werte koennen Leerzeichen enthalten) - gezielt auslesen
+PG_PW="$(grep -E '^POSTGRES_PASSWORD=' "$STACK_DIR/.env" | head -1 | cut -d= -f2-)"
+PG_DB="$(grep -E '^POSTGRES_DB=' "$STACK_DIR/.env" | head -1 | cut -d= -f2-)"
+PG_DB="${PG_DB:-postgres}"
+docker compose exec -T -e POSTGRES_PASSWORD="$PG_PW" db \
+  psql -U supabase_admin -d "$PG_DB" -v ON_ERROR_STOP=1 \
   -f /docker-entrypoint-initdb.d/99-roles.sql
-docker compose exec -T db psql -U postgres -d "${POSTGRES_DB:-postgres}" \
+docker compose exec -T db psql -U supabase_admin -d "$PG_DB" \
   -f /docker-entrypoint-initdb.d/99-realtime.sql || true
 
 docker compose up -d
