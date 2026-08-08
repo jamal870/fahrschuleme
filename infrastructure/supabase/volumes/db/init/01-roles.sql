@@ -18,6 +18,7 @@ BEGIN
     'supabase_functions_admin',
     'supabase_storage_admin',
     'supabase_admin',
+    'postgres',
     'supabase_read_only_user',
     'dashboard_user'
   ] LOOP
@@ -52,6 +53,7 @@ ALTER SCHEMA auth OWNER TO supabase_auth_admin;
 ALTER SCHEMA storage OWNER TO supabase_storage_admin;
 
 ALTER ROLE supabase_admin WITH SUPERUSER CREATEROLE CREATEDB REPLICATION BYPASSRLS;
+ALTER ROLE postgres WITH LOGIN SUPERUSER CREATEROLE CREATEDB REPLICATION BYPASSRLS;
 ALTER ROLE supabase_auth_admin WITH LOGIN CREATEROLE;
 ALTER ROLE supabase_storage_admin WITH LOGIN CREATEROLE;
 
