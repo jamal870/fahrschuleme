@@ -27,3 +27,18 @@ BEGIN
   END LOOP;
 END
 $$;
+
+-- Auth und Storage führen beim ersten Start eigene Migrationen aus. Dafür
+-- benötigen ihre Admin-Rollen CREATE auf der Datenbank sowie CREATE/USAGE im
+-- public-Schema (u. a. für schema_migrations und das storage-Schema).
+DO $$
+DECLARE
+  db_name text := current_database();
+  r       text;
+BEGIN
+  FOREACH r IN ARRAY ARRAY['supabase_auth_admin', 'supabase_storage_admin'] LOOP
+    EXECUTE format('GRANT CONNECT, CREATE, TEMPORARY ON DATABASE %I TO %I', db_name, r);
+    EXECUTE format('GRANT USAGE, CREATE ON SCHEMA public TO %I', r);
+  END LOOP;
+END
+$$;
