@@ -1,3 +1,13 @@
+# Version 1.8.1 — robots.txt Sitemap-URL auf www
+
+**Release-Datum:** 2026-08-08
+
+- `public/robots.txt`: `Sitemap:`-Direktive auf `https://www.fahrschule-me.ch/sitemap.xml`
+  umgestellt (vorher ohne `www` → unnötiger 301).
+- Sitemap in der Google Search Console neu eingereicht.
+
+---
+
 # Version 1.8.0 — SEO-Fix: BrowserRouter statt HashRouter
 
 **Release-Datum:** 2026-08-08
