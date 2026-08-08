@@ -19,4 +19,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://fahrschule-me.ch/sitemap.xml
+Sitemap: https://www.fahrschule-me.ch/sitemap.xml
