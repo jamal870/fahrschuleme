@@ -13,7 +13,7 @@ command -v docker >/dev/null || { echo "Docker fehlt"; exit 1; }
 docker network inspect web >/dev/null 2>&1 || docker network create web
 
 echo "== 2/6 Verzeichnisse anlegen =="
-mkdir -p "$STACK_DIR"/{volumes/db/data,volumes/db/init,volumes/storage,volumes/functions,backups,scripts}
+mkdir -p "$STACK_DIR"/{volumes/db/data,volumes/db/init,volumes/db/wal_archive,volumes/storage,volumes/functions,backups,scripts}
 
 echo "== 3/6 Dateien kopieren =="
 cp -r "$REPO_DIR/docker-compose.yml" "$STACK_DIR/"
