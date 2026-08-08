@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
       console.error("google_api_error", res.status, txt);
       // Stale-Fallback: lieber alte Bewertungen als gar keine
       if (cached) return json(cached.payload);
-      return json({ error: "google_api_error", status: res.status, detail: txt }, 502, 0);
+      return json({ rating: null, total: 0, mapsUrl: null, reviews: [], unavailable: true }, 200, 300);
     }
 
     const data: PlaceResponse = await res.json();
@@ -103,6 +103,6 @@ Deno.serve(async (req) => {
   } catch (e) {
     console.error("fetch_failed", e);
     if (cached) return json(cached.payload);
-    return json({ error: "fetch_failed", detail: e instanceof Error ? e.message : String(e) }, 500, 0);
+    return json({ rating: null, total: 0, mapsUrl: null, reviews: [], unavailable: true }, 200, 300);
   }
 });
