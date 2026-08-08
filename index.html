@@ -70,31 +70,10 @@
 
   <body>
     <div id="root"></div>
-    <script>
-      // Deep-Link Fallback: Wenn ein Pfad ohne #-Hash aufgerufen wird
-      // (z.B. /admin/login statt /#/admin/login), in die HashRouter-URL
-      // umschreiben, damit alle Seiten direkt erreichbar sind.
-      (function () {
-        try {
-          var p = window.location.pathname;
-          var s = window.location.search || "";
-          var h = window.location.hash || "";
-          var knownPrefixes = [
-            "/grundkurs", "/grundkurs-buchen", "/buchung-erfolgreich",
-            "/unsubscribe", "/admin", "/fahrstunden", "/motorrad",
-            "/preise", "/kontakt", "/impressum", "/datenschutz", "/agb",
-            "/team", "/kurstermine", "/strassenverkehrsamt-aargau"
-          ];
-          var isKnown = knownPrefixes.some(function (k) {
-            return p === k || p.indexOf(k + "/") === 0;
-          });
-          if (isKnown && !h) {
-            var target = "/#" + p + s;
-            window.history.replaceState(null, "", target);
-          }
-        } catch (_e) { /* noop */ }
-      })();
-    </script>
+    <!-- Hinweis: Der frühere Hash-Deep-Link-Fallback wurde entfernt.
+         Die App nutzt jetzt BrowserRouter; echte Pfade werden vom
+         SPA-Fallback des Hostings direkt bedient. -->
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
