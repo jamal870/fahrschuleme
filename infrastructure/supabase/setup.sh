@@ -18,6 +18,7 @@ mkdir -p "$STACK_DIR"/{volumes/db/data,volumes/db/init,volumes/db/wal_archive,vo
 echo "== 3/6 Dateien kopieren =="
 cp -r "$REPO_DIR/docker-compose.yml" "$STACK_DIR/"
 cp -r "$REPO_DIR/volumes/api" "$STACK_DIR/volumes/"
+cp -r "$REPO_DIR/volumes/db/init/." "$STACK_DIR/volumes/db/init/"
 cp -r "$REPO_DIR/scripts/." "$STACK_DIR/scripts/"
 chmod +x "$STACK_DIR"/scripts/*.sh
 [ -f "$STACK_DIR/.env" ] || cp "$REPO_DIR/.env.example" "$STACK_DIR/.env"
