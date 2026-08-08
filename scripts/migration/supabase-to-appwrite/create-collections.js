@@ -239,6 +239,24 @@ async function createAttribute(colId, [type, key, size, required]) {
   }
 }
 
+/** Wartet, bis alle genannten Attribute den Status "available" haben. */
+async function waitForAttributes(colId, keys, timeoutMs = 60000) {
+  const start = Date.now();
+  while (Date.now() - start < timeoutMs) {
+    try {
+      const list = await db.listAttributes(DB_ID, colId);
+      const byKey = new Map(list.attributes.map((a) => [a.key, a.status]));
+      if (keys.every((k) => byKey.get(k) === "available")) return true;
+      if (keys.some((k) => byKey.get(k) === "failed")) return false;
+    } catch {
+      /* retry */
+    }
+    await sleep(1500);
+  }
+  return false;
+}
+
+
 async function run() {
   for (const col of collections) {
     try {
