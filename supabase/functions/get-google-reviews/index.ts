@@ -1,6 +1,9 @@
 // Google Places API (New) - fetch reviews for the configured place.
-// Key bleibt serverseitig. Antwort wird 6h gecached via Cache-Control.
+// Key bleibt serverseitig. Ergebnis wird 24h in der DB gecacht, damit das
+// Google-Tageskontingent (100 Requests/Tag) nicht überschritten wird.
+// Bei Quota-/API-Fehlern wird der letzte gespeicherte Stand ausgeliefert.
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 interface PlaceReview {
   rating: number;
@@ -18,6 +21,24 @@ interface PlaceResponse {
   googleMapsUri?: string;
 }
 
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+
+const admin = createClient(
+  Deno.env.get("SUPABASE_URL") ?? "",
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+  { auth: { persistSession: false } },
+);
+
+const json = (body: unknown, status = 200, maxAge = 21600) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json",
+      "Cache-Control": `public, max-age=${maxAge}, s-maxage=${maxAge}`,
+    },
+  });
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -26,12 +47,22 @@ Deno.serve(async (req) => {
   const placeId = Deno.env.get("GOOGLE_PLACE_ID")?.replace(/^.*?(ChIJ[A-Za-z0-9_-]+).*$/s, "$1").trim();
 
   if (!apiKey || !placeId) {
-    return new Response(
-      JSON.stringify({ error: "missing_config", detail: "GOOGLE_PLACES_API_KEY oder GOOGLE_PLACE_ID nicht gesetzt." }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
+    return json({ error: "missing_config", detail: "GOOGLE_PLACES_API_KEY oder GOOGLE_PLACE_ID nicht gesetzt." }, 500, 0);
   }
 
+  // 1) Cache lesen
+  const { data: cached } = await admin
+    .from("google_reviews_cache")
+    .select("payload, fetched_at")
+    .eq("id", placeId)
+    .maybeSingle();
+
+  const cacheAge = cached?.fetched_at ? Date.now() - new Date(cached.fetched_at).getTime() : Infinity;
+  if (cached && cacheAge < CACHE_TTL_MS) {
+    return json(cached.payload);
+  }
+
+  // 2) Frisch laden
   try {
     const url = `https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}?languageCode=de`;
     const res = await fetch(url, {
@@ -40,13 +71,15 @@ Deno.serve(async (req) => {
         "X-Goog-FieldMask": "rating,userRatingCount,reviews,googleMapsUri",
       },
     });
+
     if (!res.ok) {
       const txt = await res.text();
-      return new Response(
-        JSON.stringify({ error: "google_api_error", status: res.status, detail: txt }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
+      console.error("google_api_error", res.status, txt);
+      // Stale-Fallback: lieber alte Bewertungen als gar keine
+      if (cached) return json(cached.payload);
+      return json({ error: "google_api_error", status: res.status, detail: txt }, 502, 0);
     }
+
     const data: PlaceResponse = await res.json();
     const payload = {
       rating: data.rating ?? null,
@@ -61,18 +94,15 @@ Deno.serve(async (req) => {
         publishedAt: r.publishTime ?? null,
       })),
     };
-    return new Response(JSON.stringify(payload), {
-      status: 200,
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=21600, s-maxage=21600",
-      },
-    });
+
+    await admin
+      .from("google_reviews_cache")
+      .upsert({ id: placeId, payload, fetched_at: new Date().toISOString() });
+
+    return json(payload);
   } catch (e) {
-    return new Response(
-      JSON.stringify({ error: "fetch_failed", detail: e instanceof Error ? e.message : String(e) }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
+    console.error("fetch_failed", e);
+    if (cached) return json(cached.payload);
+    return json({ error: "fetch_failed", detail: e instanceof Error ? e.message : String(e) }, 500, 0);
   }
 });
