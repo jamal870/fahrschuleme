@@ -14,10 +14,10 @@
     <meta property="og:site_name" content="Fahrschule me" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_CH" />
-    <meta property="og:url" content="https://fahrschule-me.ch/" />
+    <meta property="og:url" content="https://www.fahrschule-me.ch/" />
     <meta property="og:title" content="Fahrschule me – Auto- & Motorradfahrschule Wettingen" />
     <meta property="og:description" content="Autoprüfung und Motorrad-Grundkurs sicher bestehen mit Fahrschule me in Wettingen. Erfahrene Instruktoren, kleine Gruppen, flexible Termine." />
-    <meta property="og:image" content="https://fahrschule-me.ch/og-image.jpg" />
+    <meta property="og:image" content="https://www.fahrschule-me.ch/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Fahrschule me – Auto & Motorrad Wettingen" />
@@ -26,7 +26,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Fahrschule me – Auto- & Motorradfahrschule Wettingen" />
     <meta name="twitter:description" content="Autoprüfung und Motorrad-Grundkurs sicher bestehen mit Fahrschule me in Wettingen." />
-    <meta name="twitter:image" content="https://fahrschule-me.ch/og-image.jpg" />
+    <meta name="twitter:image" content="https://www.fahrschule-me.ch/og-image.jpg" />
 
     <!-- Sitewide LocalBusiness / DrivingSchool schema -->
     <script type="application/ld+json">
@@ -34,8 +34,8 @@
       "@context": "https://schema.org",
       "@type": "DrivingSchool",
       "name": "Fahrschule me",
-      "url": "https://fahrschule-me.ch/",
-      "image": "https://fahrschule-me.ch/og-image.jpg",
+      "url": "https://www.fahrschule-me.ch/",
+      "image": "https://www.fahrschule-me.ch/og-image.jpg",
       "telephone": "+41767790383",
       "email": "info@l-me.ch",
       "priceRange": "CHF 95–200",
@@ -63,38 +63,17 @@
         "ratingValue": "4.9",
         "reviewCount": "171"
       },
-      "sameAs": ["https://fahrschule-me.ch/"]
+      "sameAs": ["https://www.fahrschule-me.ch/"]
     }
     </script>
 </head>
 
   <body>
     <div id="root"></div>
-    <script>
-      // Deep-Link Fallback: Wenn ein Pfad ohne #-Hash aufgerufen wird
-      // (z.B. /admin/login statt /#/admin/login), in die HashRouter-URL
-      // umschreiben, damit alle Seiten direkt erreichbar sind.
-      (function () {
-        try {
-          var p = window.location.pathname;
-          var s = window.location.search || "";
-          var h = window.location.hash || "";
-          var knownPrefixes = [
-            "/grundkurs", "/grundkurs-buchen", "/buchung-erfolgreich",
-            "/unsubscribe", "/admin", "/fahrstunden", "/motorrad",
-            "/preise", "/kontakt", "/impressum", "/datenschutz", "/agb",
-            "/team", "/kurstermine", "/strassenverkehrsamt-aargau"
-          ];
-          var isKnown = knownPrefixes.some(function (k) {
-            return p === k || p.indexOf(k + "/") === 0;
-          });
-          if (isKnown && !h) {
-            var target = "/#" + p + s;
-            window.history.replaceState(null, "", target);
-          }
-        } catch (_e) { /* noop */ }
-      })();
-    </script>
+    <!-- Hinweis: Der frühere Hash-Deep-Link-Fallback wurde entfernt.
+         Die App nutzt jetzt BrowserRouter; echte Pfade werden vom
+         SPA-Fallback des Hostings direkt bedient. -->
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

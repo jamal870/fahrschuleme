@@ -136,7 +136,7 @@ export const tenantConfig: TenantConfig = {
   ],
 
   booking: {
-    externalBookingUrl: "https://fahrschule-me.ch/#/grundkurs-buchen",
+    externalBookingUrl: "https://www.fahrschule-me.ch/grundkurs-buchen",
     paymentMethods: [
       { id: "cash", label: "Barzahlung am Kurstag", desc: "Zahlung bar vor Ort am Kurstag.", icon: "💵" },
       { id: "card", label: "Online bezahlen (Twint/Karte)", desc: "Sichere Zahlung via Stripe (+3 % Gebühr).", icon: "💳" },
