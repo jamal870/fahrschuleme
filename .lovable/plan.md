@@ -1,115 +1,107 @@
-# Plan: Admin-Tab „Inhalte & Preise" (v2)
+# Migrationsplan: Supabase → Appwrite auf Hostinger VPS
 
-Ziel: Du kannst Preise, Kontaktdaten, Öffnungszeiten, WhatsApp, Branding-Texte UND die dynamischen Werte in AGB / Impressum / Datenschutz direkt im Admin-Panel ändern — ohne Code.
+## Ziel
+Das Live-Backend `fahrschule-me-prod` von Supabase auf eine selbst gehostete Appwrite-Instanz auf einem Hostinger VPS umziehen. Frontend (Netlify) bleibt bestehen und spricht danach Appwrite an.
 
-## Klarstellung zu AGB / Impressum / Datenschutz
+## Ausgangslage (Supabase)
+- **Datenbank:** PostgreSQL mit Tabellen für Buchungen, Kurstermine, Team, Promotionen, E-Mail-Einstellungen, Warteliste, Unterschriften etc.
+- **Auth:** Supabase Auth mit Admin-Rollen (`user_roles`, `has_role()`).
+- **RLS:** Feingranulare Zugriffsrichtlinien auf allen Benutzer-Tabellen.
+- **Edge Functions:** ~15 Deno-Functions (Buchungen, Zahlungen, E-Mail-Versand, Kalender-Sync, Waitlist, Admin-Aktionen).
+- **Storage:** Öffentlicher Bucket `email-assets`.
+- **Cron/Queue:** PGMQ-E-Mail-Warteschlange mit `process-email-queue` und Datenbank-Triggern.
+- **Secrets:** Stripe, Resend, Google APIs, Supabase-interne Keys.
 
-Es wird unterschieden zwischen:
+## Migrations-Schritte
 
-- **Dynamische Werte** (Adresse, Telefon, E-Mail, Inhaber, Öffnungszeiten, Bank, Preise, Verzugszins, Stornofristen, Stand-Datum) → **editierbar im Admin**, werden in alle drei Seiten automatisch eingesetzt.
-- **Rechtlicher Fliesstext** (Paragrafenstruktur, Haftung, Urheberrecht, DSG-Klauseln) → **bleibt im Code**, da Änderungen rechtliche Risiken bergen. Wenn du hier etwas ändern willst, machst du es weiter per Auftrag an mich.
+### Phase 1 – Infrastruktur & Setup
+1. Hostinger VPS bestellen (Empfehlung: mindestens 4 GB RAM, 2 vCPU, 80 GB SSD).
+2. Domain/Subdomain festlegen, z. B. `api.fahrschule-me.ch`.
+3. DNS-Einträge bei Hostinger/Tajo setzen:
+   - A-Record `api.fahrschule-me.ch` → VPS-IP
+   - CAA/SSL wie benötigt
+4. VPS härten: Firewall (Ports 80/443/22), Docker + Docker Compose installieren, Reverse Proxy (Traefik oder Nginx) mit Let's Encrypt.
+5. Appwrite via offiziellem Docker-Compose deployen.
+6. Appwrite-Projekt `fahrschule-me-prod` anlegen.
 
-So bekommst du beides: schnelle Aktualisierung der Fakten + Schutz vor versehentlichem Bruch der Rechtstexte.
+### Phase 2 – Datenbank-Migration
+1. Schema aus Supabase exportieren (`pg_dump --schema-only`).
+2. Tabellen in Appwrite-Datenbank anlegen:
+   - Collections statt Tabellen
+   - Attribute statt Spalten
+   - Beziehungen (Document-Referenzen) statt Foreign Keys
+   - Indizes für häufige Abfragen
+3. Enum `app_role` als String-Attribut mit Validierung abbilden.
+4. Daten exportieren (`pg_dump --data-only` als JSON/CSV) und in Appwrite importieren.
+5. Migrationsskripte schreiben für komplexe Beziehungen (Buchungen → Buchungs-Items → Kurstermine).
 
-## Was du danach selbst ändern kannst
+### Phase 3 – Auth & Rollen
+1. Appwrite Auth aktivieren (E-Mail/Passwort).
+2. Bestehende Supabase-Auth-Benutzer exportieren und in Appwrite importieren (Passwort-Hashes können nicht übernommen werden → Passwort-Reset erforderlich).
+3. `user_roles`-Collection anlegen.
+4. Appwrite-Funktion oder Middleware für Rollen-Check bauen (Ersatz für `has_role()`).
 
-**Kontakt & Standort** (wirkt auf: Header, Footer, Kontakt, Impressum, Datenschutz, AGB-Gerichtsstand, Chatbot, WhatsApp-Button)
-- Telefon, E-Mail, WhatsApp-Nummer
-- Adresse (Strasse, PLZ, Ort, Gerichtsstand)
-- Öffnungszeiten
-- Inhaber-Name
+### Phase 4 – Functions (Edge Functions → Appwrite Functions)
+Bestehende Deno-Functions in Appwrite Functions (Node.js oder Python) umschreiben:
+- `create-booking`
+- `create-course-payment`
+- `stripe-webhook`
+- `send-transactional-email`
+- `process-email-queue`
+- `send-course-reminders`
+- `sync-course-to-gcal`
+- `ical-feed`
+- `get-google-reviews`
+- `add-to-waitlist`
+- Admin-Functions (`admin-cancel-booking`, `admin-add-participant`, `move-booking-participant`, `parse-course-photo`)
 
-**Branding** (wirkt auf: Header, Footer, SEO-Titel, E-Mail-Absender)
-- Name, Tagline, Logo-Text
+Anpassungen:
+- Supabase-Client durch Appwrite-SDK ersetzen.
+- Secrets in Appwrite-Function-Variablen hinterlegen.
+- Cron-Jobs über Appwrite-Cron oder externen Scheduler (z. B. `ofelia`) abbilden.
 
-**Preise** (wirkt auf: Preise-Seite UND AGB-Verweise wie Bearbeitungsgebühr, Verzugszins, Stornogebühr)
-- Auto-Lektionen & Abos
-- Motorrad-Lektionen & Grundkurs
-- Nothelfer, VKU
-- Bearbeitungsgebühr, Verzugszins-%, Stornofrist (h)
+### Phase 5 – Storage
+1. Appwrite Storage Bucket `email-assets` anlegen.
+2. Dateien aus Supabase Storage exportieren und in Appwrite Storage importieren.
+3. Öffentliche Lese-Rechte konfigurieren.
 
-**Bankverbindung** (wirkt auf: Buchungsbestätigung, E-Mails, ggf. Footer)
-- IBAN, Kontoinhaber, Bank
+### Phase 6 – Frontend-Anpassungen
+1. Supabase-Client in `src/integrations/supabase/client.ts` durch Appwrite-SDK ersetzen oder parallelfähig machen.
+2. Auth-Login (`AdminLogin.tsx`) auf Appwrite Auth umstellen.
+3. Datenbankabfragen (`supabase.from(...)`) durch Appwrite-Database-Queries ersetzen.
+4. Storage-URLs anpassen.
+5. Edge-Function-Aufrufe (`supabase.functions.invoke`) durch HTTP-Calls auf Appwrite Functions ersetzen.
 
-**Seitentexte (Marketing, keine Rechtstexte)**
-- Startseite Hero
-- Sicherheits-Punkte
-- Kontakt-Seite Intro
-- Chatbot-Begrüssungen
-- Footer-Copyright
+### Phase 7 – Testing & Cutover
+1. Parallele Testumgebung auf Appwrite aufbauen.
+2. Smoke-Tests durchführen:
+   - Kursübersicht laden
+   - Buchung inkl. Stripe-Zahlung
+   - Bestätigungs-Mail
+   - Admin-Login und Buchungsverwaltung
+   - Kalender-Sync
+3. DNS-Cutover planen (TTL vorher senken).
+4. Wartungsfenster definieren, Daten final synchronisieren, DNS auf Appwrite umstellen.
+5. Supabase-Projekt nach erfolgreichem Cutover pausieren/löschen.
 
-**Stand-Datum der Rechtsseiten** (z.B. „Stand: Juni 2026")
+## Geschätzter Aufwand
+| Phase | Geschätzter Aufwand |
+|-------|---------------------|
+| 1 – Infrastruktur | 1–2 Tage |
+| 2 – Datenbank-Migration | 2–3 Tage |
+| 3 – Auth & Rollen | 1 Tag |
+| 4 – Functions | 4–6 Tage |
+| 5 – Storage | 0,5 Tage |
+| 6 – Frontend | 2–3 Tage |
+| 7 – Testing & Cutover | 2–3 Tage |
+| **Gesamt** | **~12–18 Tage** |
 
-## Was im Code bleibt
+## Risiken & Empfehlungen
+- **Passwort-Reset:** Bestehende Admin-Benutzer müssen Passwort neu setzen.
+- **Echtzeit:** Appwrite Realtime ersetzt Supabase-Subscriptions, falls genutzt.
+- **E-Mail-Queue:** PGMQ gibt es bei Appwrite nicht → eigene Queue in Appwrite-Datenbank oder externer Worker.
+- **Rollback:** Supabase-Projekt erst löschen, nachdem Appwrite 1–2 Wochen stabil läuft.
+- **Kosten:** Hostinger VPS + Domain + Backups vs. Supabase Pro-Plan genau gegenrechnen.
 
-- Layout, Farben, Schriften, Logo-Bild
-- **Rechtlicher Fliesstext** in AGB / Impressum / Datenschutz (Paragrafen, Klauseln)
-- Routing, Buchungs-Logik, Stripe, E-Mail-Templates (Struktur)
-- Bilder/Assets
-
-## Technische Umsetzung
-
-```text
-DB                            Frontend
-─────────────────────────     ─────────────────────────────────
-site_content                  src/hooks/useSiteContent.ts
-  key TEXT PK                    ↓ lädt 1x beim App-Start
-  value JSONB                    ↓ React Context Provider
-  updated_at TIMESTAMPTZ      
-                              tenant.ts → bleibt als Fallback/Default
-                              
-                              AGB/Impressum/Datenschutz:
-                                → Variablen-Slots ({{adresse}}, 
-                                  {{telefon}}, {{verzugszins}}…)
-                                  werden zur Laufzeit ersetzt
-                              
-                              Admin-Tab „Inhalte & Preise"
-                                ↓ Sub-Tabs mit Formularen
-                                ↓ UPDATE site_content
-                                ↓ Cache invalidieren → Live-Update
-```
-
-**Schritte:**
-
-1. **DB-Migration** — Tabelle `site_content` (key TEXT PK, value JSONB). RLS: alle dürfen lesen, nur Admin schreiben. Seed mit aktuellen `tenant.ts`-Werten + neuen Feldern (Verzugszins, Bearbeitungsgebühr, Stornofrist, Stand-Datum).
-
-2. **Hook + Context** — `useSiteContent()` lädt alle Keys beim App-Start, cached in React Context. Fallback auf `tenant.ts` wenn DB leer / Fehler.
-
-3. **Frontend umstellen** — alle `tenantConfig.X` Aufrufe an editierbaren Stellen ersetzen durch `useSiteContent().X`. Inkl. AGB/Impressum/Datenschutz: harte Strings wie „CHF 30.–", „5%", „24 Stunden", „Bahnhofstrasse 56, 5430 Wettingen", „Jimmy Ettanaghmalti", „Mai 2026" → Variablen.
-
-4. **Admin-Tab „Inhalte & Preise"** mit Sub-Tabs:
-   - Kontakt & Adresse
-   - Öffnungszeiten
-   - Preise Auto
-   - Preise Motorrad
-   - Preise Extras (Nothelfer, VKU)
-   - Branding & Texte
-   - Bankverbindung
-   - Rechtliches (Verzugszins, Bearbeitungsgebühr, Stornofrist, Stand-Datum)
-   - Chatbot-Texte
-   
-   Pro Sektion: Formular + Speichern + „Auf Default zurücksetzen" + Vorschau-Link.
-
-5. **Cache-Invalidierung** — nach Speichern Context neu laden → Live-Vorschau sofort aktuell.
-
-6. **Version-Bump** v1.6.0 + VERSION.md + Memory-Update.
-
-## Risiken & Schutz
-
-- **Risiko:** Falsche Eingabe (leerer Preis, kaputte E-Mail). → Validierung pro Feld (Pflicht, Format) + Fallback auf `tenant.ts`.
-- **Risiko:** Tippfehler live. → Vorschau-Link öffnet betroffene Seite in neuem Tab vor dem Speichern.
-- **Risiko Rechtstexte:** Du könntest aus Versehen Rechtssätze verändern. → Bewusst NUR Variablen editierbar, Fliesstext nicht im Admin sichtbar.
-- **Sicherheit:** Schreibrechte nur `has_role(auth.uid(), 'admin')`.
-- **Backup:** `tenant.ts` bleibt im Code → Notfall: Tabelle leeren = Default zurück.
-
-## Aufwand
-Ein grösserer Arbeitsschritt: 1 Migration + Hook/Context + ~12 Dateien anfassen + neuer Admin-Tab mit ~9 Sub-Formularen. Nach Freigabe in einem Zug umsetzbar.
-
-## Nicht im Plan (separate Aufträge)
-- Bilder-Upload (Hero, Team-Fotos) → Phase 2
-- Mehrsprachigkeit DE/EN → Phase 3
-- Rechtlicher Fliesstext editierbar → bewusst weggelassen (rechtliches Risiko)
-
----
-
-**Soll ich so umsetzen?**
+## Nächster Schritt
+Soll ich mit Phase 1 beginnen (Hostinger VPS bestellen und Appwrite installieren), oder willst du zuerst einen detaillierteren Plan für eine einzelne Phase?
