@@ -257,6 +257,7 @@ services:
 
   appwrite-worker-databases:
     image: appwrite/appwrite:1.5.7
+    entrypoint: worker-databases
     container_name: appwrite-worker-databases
     restart: unless-stopped
     networks:
@@ -273,7 +274,6 @@ services:
       - _APP_DB_SCHEMA=appwrite
       - _APP_DB_USER=${_APP_DB_USER}
       - _APP_DB_PASS=${_APP_DB_PASS}
-    command: worker-databases
     depends_on:
       - mariadb
       - redis
