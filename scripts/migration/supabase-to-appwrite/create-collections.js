@@ -240,7 +240,7 @@ async function createAttribute(colId, [type, key, size, required]) {
 }
 
 /** Wartet, bis alle genannten Attribute den Status "available" haben. */
-async function waitForAttributes(colId, keys, timeoutMs = 60000) {
+async function waitForAttributes(colId, keys, timeoutMs = 240000) {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     try {
