@@ -2,7 +2,7 @@
 
 ## Core
 - Light theme, primary accent #e8501a. Fonts: Rajdhani (headings), DM Sans (body). 3px border-radius.
-- Strictly use HashRouter for stable iframe embedding on main domain.
+- Routing: BrowserRouter (echte Pfade). HashRouter ist ab v1.8.0 verboten — verursachte Google-Indexierungsfehler. Keine iFrame-Einbettung aktiv.
 - Editable site content lives in DB table `site_content` (key/value JSONB), loaded via `useSiteContent()` hook with `tenant.ts` as fallback. Admin edits in Admin-Tab „Inhalte & Preise".
 - `src/config/tenant.ts` is the DEFAULT/fallback only; runtime values come from `site_content`.
 - No direct public DB inserts. All bookings via `create-booking` edge function.
@@ -29,4 +29,4 @@
 - [Stripe Payment Implementation](mem://integration/stripe/technical-implementation) — Stripe polling, popup handling, and webhook logic
 - [White-Label Configuration](mem://architecture/white-label/tenant-configuration) — Centralized tenant config file structure
 - [Document Generation](mem://features/admin/document-generation) — PDF generation for invoices and confirmations
-- [HashRouter for iFrame](mem://architecture/routing/iframe-compatibility) — Routing requirements for iframe embedding
+- [Routing](mem://architecture/routing/browserrouter) — BrowserRouter, Canonicals auf www, Legacy-Hash-Redirect
