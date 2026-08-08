@@ -3,13 +3,13 @@ import { Helmet } from "react-helmet-async";
 interface SeoProps {
   title: string;
   description: string;
-  path: string; // e.g. "/kurstermine" — appended to https://fahrschule-me.ch
+  path: string; // e.g. "/kurstermine" — appended to https://www.fahrschule-me.ch
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   image?: string;
   noindex?: boolean;
 }
 
-const SITE_URL = "https://fahrschule-me.ch";
+const SITE_URL = "https://www.fahrschule-me.ch";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 /**
