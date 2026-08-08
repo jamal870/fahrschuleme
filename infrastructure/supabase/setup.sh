@@ -58,7 +58,8 @@ docker compose exec -T db psql -U supabase_admin -d "$PG_DB" \
   -f /docker-entrypoint-initdb.d/99-realtime.sql || true
 
 docker compose up -d
-sleep 15
+docker compose restart auth storage
+sleep 20
 docker compose ps
 
 echo
