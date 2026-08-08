@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   appwrite:
@@ -441,9 +440,10 @@ services:
       - mariadb
       - redis
 
-  appwrite-scheduler:
+  appwrite-scheduler-functions:
     image: appwrite/appwrite:1.5.7
-    container_name: appwrite-scheduler
+    container_name: appwrite-scheduler-functions
+    entrypoint: schedule-functions
     restart: unless-stopped
     networks:
       - appwrite
@@ -461,7 +461,31 @@ services:
       - _APP_DB_SCHEMA=appwrite
       - _APP_DB_USER=${_APP_DB_USER}
       - _APP_DB_PASS=${_APP_DB_PASS}
-    command: scheduler
+    depends_on:
+      - mariadb
+      - redis
+
+  appwrite-scheduler-messages:
+    image: appwrite/appwrite:1.5.7
+    container_name: appwrite-scheduler-messages
+    entrypoint: schedule-messages
+    restart: unless-stopped
+    networks:
+      - appwrite
+    volumes:
+      - appwrite-certificates:/storage/certificates:ro
+    environment:
+      - _APP_ENV=production
+      - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
+      - _APP_REDIS_HOST=redis
+      - _APP_REDIS_PORT=6379
+      - _APP_REDIS_USER=${_APP_REDIS_USER}
+      - _APP_REDIS_PASS=${_APP_REDIS_PASS}
+      - _APP_DB_HOST=mariadb
+      - _APP_DB_PORT=3306
+      - _APP_DB_SCHEMA=appwrite
+      - _APP_DB_USER=${_APP_DB_USER}
+      - _APP_DB_PASS=${_APP_DB_PASS}
     depends_on:
       - mariadb
       - redis
