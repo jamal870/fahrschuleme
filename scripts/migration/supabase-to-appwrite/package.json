@@ -5,7 +5,8 @@
   "scripts": {
     "collections": "node create-collections.js",
     "export": "node export-supabase-data.js",
-    "import": "node import-to-appwrite.js"
+    "import": "node import-to-appwrite.js",
+    "finish": "node finish-setup.js"
   },
   "dependencies": {
     "node-appwrite": "^13.0.0",

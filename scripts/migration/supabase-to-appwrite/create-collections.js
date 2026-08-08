@@ -335,7 +335,13 @@ async function run() {
   console.log("\nFertig. Alle Collections angelegt.");
 }
 
-run().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+export { collections };
+
+// Nur ausführen, wenn direkt gestartet (nicht beim Import durch finish-setup.js).
+if (process.argv[1] && process.argv[1].endsWith("create-collections.js")) {
+  run().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
+
