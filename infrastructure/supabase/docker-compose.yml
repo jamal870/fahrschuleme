@@ -286,6 +286,11 @@ services:
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
       AUTH_JWT_SECRET: ${JWT_SECRET}
       NEXT_PUBLIC_ENABLE_LOGS: "false"
+    # Der eingebaute Healthcheck des Studio-Images schlaegt in dieser
+    # Konstellation fehl; Traefik filtert "unhealthy" Container heraus und
+    # verwirft dadurch den Studio-Router (kein Zertifikat, 404).
+    healthcheck:
+      disable: true
     networks: [default, web]
     labels:
       traefik.enable: "true"
