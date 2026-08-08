@@ -87,7 +87,6 @@ services:
     depends_on:
       - mariadb
       - redis
-      - influxdb
 
   appwrite-realtime:
     image: appwrite/appwrite:1.5.7
@@ -416,7 +415,6 @@ services:
     depends_on:
       - mariadb
       - redis
-      - influxdb
 
   appwrite-worker-usage-dump:
     image: appwrite/appwrite:1.5.7
@@ -442,7 +440,6 @@ services:
     depends_on:
       - mariadb
       - redis
-      - influxdb
 
   appwrite-scheduler:
     image: appwrite/appwrite:1.5.7
@@ -499,15 +496,6 @@ services:
       redis-server
       --requirepass ${_APP_REDIS_PASS}
 
-  influxdb:
-    image: appwrite/influxdb:1.5
-    container_name: appwrite-influxdb
-    restart: unless-stopped
-    networks:
-      - appwrite
-    volumes:
-      - influxdb-data:/var/lib/influxdb
-
 networks:
   appwrite:
     driver: bridge
@@ -522,4 +510,3 @@ volumes:
   appwrite-influxdb:
   mariadb-data:
   redis-data:
-  influxdb-data:
