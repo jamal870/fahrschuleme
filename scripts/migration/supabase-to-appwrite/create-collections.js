@@ -195,16 +195,17 @@ const collections = [
     attributes: [
       ["string", "fromName", 128, false],
       ["email", "replyToEmail", null, false],
-      ["string", "footerSignature", 5000, false],
-      ["string", "bankInfo", 5000, false],
-      ["string", "mgkGreetingExtra", 5000, false],
-      ["string", "mgkMeetingPoint", 2000, false],
-      ["string", "mgkImportantNotes", 5000, false],
-      ["string", "mgkCancellationPolicy", 5000, false],
-      ["string", "fahrstundenGreetingExtra", 5000, false],
-      ["string", "fahrstundenMeetingPoint", 2000, false],
-      ["string", "fahrstundenImportantNotes", 5000, false],
-      ["string", "reminderExtraNote", 5000, false],
+      // > 16383 => wird von Appwrite als TEXT gespeichert (kein Row-Size-Limit)
+      ["string", "footerSignature", 20000, false],
+      ["string", "bankInfo", 20000, false],
+      ["string", "mgkGreetingExtra", 20000, false],
+      ["string", "mgkMeetingPoint", 20000, false],
+      ["string", "mgkImportantNotes", 20000, false],
+      ["string", "mgkCancellationPolicy", 20000, false],
+      ["string", "fahrstundenGreetingExtra", 20000, false],
+      ["string", "fahrstundenMeetingPoint", 20000, false],
+      ["string", "fahrstundenImportantNotes", 20000, false],
+      ["string", "reminderExtraNote", 20000, false],
     ],
   },
   {
@@ -238,6 +239,24 @@ async function createAttribute(colId, [type, key, size, required]) {
   }
 }
 
+/** Wartet, bis alle genannten Attribute den Status "available" haben. */
+async function waitForAttributes(colId, keys, timeoutMs = 60000) {
+  const start = Date.now();
+  while (Date.now() - start < timeoutMs) {
+    try {
+      const list = await db.listAttributes(DB_ID, colId);
+      const byKey = new Map(list.attributes.map((a) => [a.key, a.status]));
+      if (keys.every((k) => byKey.get(k) === "available")) return true;
+      if (keys.some((k) => byKey.get(k) === "failed")) return false;
+    } catch {
+      /* retry */
+    }
+    await sleep(1500);
+  }
+  return false;
+}
+
+
 async function run() {
   for (const col of collections) {
     try {
@@ -259,10 +278,14 @@ async function run() {
       await sleep(250);
     }
 
-    // Indexe erst nach Attribut-Verfügbarkeit
+    // Indexe erst anlegen, wenn alle benötigten Attribute "available" sind
     if (col.indexes?.length) {
-      await sleep(2000);
       for (const [key, type, attrs] of col.indexes) {
+        const ready = await waitForAttributes(col.id, attrs);
+        if (!ready) {
+          console.error(`   ✖ Index ${col.id}.${key}: Attribute nicht bereit (Timeout)`);
+          continue;
+        }
         try {
           await db.createIndex(DB_ID, col.id, key, type, attrs);
           console.log(`   ✔ Index ${col.id}.${key}`);
