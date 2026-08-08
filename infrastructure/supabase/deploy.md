@@ -258,4 +258,8 @@ Schritten 8–10 auf ein handhabbares Mass gebracht.
 - [ ] Alle Functions antworten
 - [ ] Stripe-Testzahlung durchgelaufen, Buchung angelegt, E-Mail versendet
 - [ ] Backup-Cron aktiv, ein Restore auf einer Testkopie geprüft
+- [ ] Healthcheck-Cron aktiv, Testalarm empfangen
+- [ ] Storage-Dateien übertragen und im Frontend sichtbar
+- [ ] Google-OAuth-Redirect-URI ergänzt, Login getestet
+- [ ] Cloud-Backend als Fallback noch aktiv (mind. 4 Wochen)
 - [ ] Netlify umgeschaltet, Live-Buchung getestet
