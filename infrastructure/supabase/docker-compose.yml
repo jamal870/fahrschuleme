@@ -36,6 +36,8 @@ services:
     volumes:
       - ./volumes/db/data:/var/lib/postgresql/data
       - ./volumes/db/init:/docker-entrypoint-initdb.d
+      # Ziel für WAL-Archivierung (Point-in-Time-Recovery, siehe deploy.md §9)
+      - ./volumes/db/wal_archive:/var/lib/postgresql/wal_archive
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres", "-h", "localhost"]
       interval: 10s
