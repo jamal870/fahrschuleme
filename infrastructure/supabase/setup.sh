@@ -22,6 +22,9 @@ chmod 600 "$STACK_DIR/volumes/traefik/acme.json"
 if [ -f "$STACK_DIR/.env" ]; then
   SBA="$(grep -E '^STUDIO_BASIC_AUTH=' "$STACK_DIR/.env" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")"
   if [ -n "$SBA" ] && [ "${SBA#*CHANGE_ME}" = "$SBA" ]; then
+    # In .env sind $-Zeichen ggf. als $$ escaped (Compose-Substitution);
+    # die htpasswd-Datei braucht einfache $.
+    SBA="$(printf '%s' "$SBA" | sed -e 's/\$\$/$/g')"
     printf '%s\n' "$SBA" > "$STACK_DIR/volumes/traefik/studio.htpasswd"
     chmod 600 "$STACK_DIR/volumes/traefik/studio.htpasswd"
   fi
