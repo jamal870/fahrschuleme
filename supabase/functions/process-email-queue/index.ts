@@ -18,7 +18,7 @@ async function sendViaResend(
   // Der Link zeigt auf die öffentliche App-Seite (HashRouter), nicht auf die
   // reine Mail-Subdomain.
   if (payload.unsubscribe_token) {
-    const unsubUrl = `https://www.fahrschule-me.ch/#/unsubscribe?token=${payload.unsubscribe_token}`
+    const unsubUrl = `https://www.fahrschule-me.ch/unsubscribe?token=${payload.unsubscribe_token}`
     headers['List-Unsubscribe'] = `<${unsubUrl}>`
     headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click'
   }

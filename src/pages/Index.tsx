@@ -159,7 +159,7 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {tenantConfig.categories.map((cat, i) => (
-              <a key={i} href="#/grundkurs" className="bg-card border border-border p-5 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer block" style={{ borderRadius: "3px" }}>
+              <a key={i} href="/grundkurs" className="bg-card border border-border p-5 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer block" style={{ borderRadius: "3px" }}>
                 <h3 className="font-heading font-bold text-foreground text-lg mb-1">{cat.title}</h3>
                 <p className="text-primary text-xs font-heading font-bold mb-2">{cat.age}</p>
                 <p className="text-xs text-muted-foreground font-body">{cat.desc}</p>
@@ -178,7 +178,7 @@ const Index = () => {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[1, 2, 3].map((part) => (
-              <a key={part} href="#/grundkurs" className="bg-card border border-border p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer block" style={{ borderRadius: "3px" }}>
+              <a key={part} href="/grundkurs" className="bg-card border border-border p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer block" style={{ borderRadius: "3px" }}>
                 <img src={grundkursImages[part - 1]} alt={`Grundkurs ${part}`} className="w-32 h-32 mx-auto mb-3 object-contain" loading="lazy" />
                 <div className="w-10 h-10 mx-auto mb-3 bg-primary/10 text-primary font-heading font-bold text-base flex items-center justify-center" style={{ borderRadius: "3px" }}>
                   {part}

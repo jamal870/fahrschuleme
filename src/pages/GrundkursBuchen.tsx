@@ -181,7 +181,7 @@ export default function GrundkursBuchen() {
       if (!isOnline) {
         toast.success("Buchung erfolgreich! Du erhältst die Bestätigung per E-Mail mit Zahlungsinformationen.");
         // Redirect to success page
-        window.location.hash = `#/buchung-erfolgreich?booking_id=${bookingResult.bookingId}`;
+        window.location.assign(`/buchung-erfolgreich?booking_id=${bookingResult.bookingId}`);
         return;
       }
 

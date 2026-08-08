@@ -46,7 +46,7 @@ const Angebote = () => {
           "@type": "Offer",
           name: p.title,
           description: p.description || undefined,
-          url: `${SITE_URL}/#/angebote`,
+          url: `${SITE_URL}/angebote`,
           priceCurrency: "CHF",
           price: p.discount_price ?? undefined,
           priceValidUntil: p.ends_at ? p.ends_at.slice(0, 10) : undefined,
