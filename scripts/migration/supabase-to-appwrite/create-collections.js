@@ -44,7 +44,9 @@ async function appwriteGet(path) {
 
 async function getAttributeStates(colId) {
   const result = await appwriteGet(
-    `/databases/${encodeURIComponent(DB_ID)}/collections/${encodeURIComponent(colId)}/attributes?queries[]=${encodeURIComponent('limit(100)')}`,
+    // Appwrite 1.5.7 unterstützt den neueren queries[]-Parameter an diesem
+    // Endpoint noch nicht. Alle Collections liegen unter dem Standardlimit.
+    `/databases/${encodeURIComponent(DB_ID)}/collections/${encodeURIComponent(colId)}/attributes`,
   );
   return new Map((result.attributes || []).map((attribute) => [attribute.key, attribute.status]));
 }
