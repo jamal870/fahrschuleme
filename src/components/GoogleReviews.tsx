@@ -19,6 +19,20 @@ interface ReviewsPayload {
   reviews: Review[];
 }
 
+const REVIEWS_CACHE_KEY = "google-reviews-cache-v1";
+const REVIEWS_CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
+
+const readCachedReviews = (): ReviewsPayload | null => {
+  try {
+    const cached = window.localStorage.getItem(REVIEWS_CACHE_KEY);
+    if (!cached) return null;
+    const parsed = JSON.parse(cached) as { savedAt?: number; data?: ReviewsPayload };
+    return parsed.savedAt && parsed.data && Date.now() - parsed.savedAt < REVIEWS_CACHE_MAX_AGE ? parsed.data : null;
+  } catch {
+    return null;
+  }
+};
+
 const Stars = ({ value }: { value: number }) => (
   <div className="flex gap-0.5" aria-label={`${value} von 5 Sternen`}>
     {[1, 2, 3, 4, 5].map((i) => (
@@ -36,12 +50,28 @@ const GoogleReviews = ({ heading = "Google Bewertungen" }: { heading?: string })
 
   useEffect(() => {
     let cancelled = false;
+    const cached = readCachedReviews();
+    if (cached) {
+      setData(cached);
+      return () => {
+        cancelled = true;
+      };
+    }
+
     supabase.functions
       .invoke("get-google-reviews")
       .then(({ data: d, error: e }) => {
         if (cancelled) return;
         if (e) setError(e.message);
-        else setData(d as ReviewsPayload);
+        else {
+          const reviews = d as ReviewsPayload;
+          setData(reviews);
+          try {
+            window.localStorage.setItem(REVIEWS_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), data: reviews }));
+          } catch {
+            // Bewertungen funktionieren auch ohne lokalen Cache.
+          }
+        }
       })
       .catch((e) => !cancelled && setError(String(e)));
     return () => {
