@@ -38,6 +38,22 @@ bash "$REPO_DIR/scripts/deploy-functions.sh"
 echo "== 6/6 Stack starten =="
 cd "$STACK_DIR"
 docker compose pull
+docker compose up -d db
+echo "Warte auf Datenbank ..."
+for i in $(seq 1 60); do
+  docker compose exec -T db pg_isready -U postgres -h localhost >/dev/null 2>&1 && break
+  sleep 2
+done
+
+# Systemrollen-Passwörter setzen (idempotent, unabhängig von initdb)
+echo "Systemrollen-Passwörter setzen ..."
+set -a; . "$STACK_DIR/.env"; set +a
+docker compose exec -T -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" db \
+  psql -U postgres -d "${POSTGRES_DB:-postgres}" -v ON_ERROR_STOP=1 \
+  -f /docker-entrypoint-initdb.d/99-roles.sql
+docker compose exec -T db psql -U postgres -d "${POSTGRES_DB:-postgres}" \
+  -f /docker-entrypoint-initdb.d/99-realtime.sql || true
+
 docker compose up -d
 sleep 15
 docker compose ps
