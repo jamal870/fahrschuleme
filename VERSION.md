@@ -1,3 +1,16 @@
+# Version 1.8.2 — Self-Hosting-Stack (Infrastruktur)
+
+**Release-Datum:** 2026-08-08
+
+- Neu: `infrastructure/supabase/` — kompletter self-hosted Supabase-Stack
+  (Docker Compose, Kong-Gateway, Traefik/SSL, Studio mit Basic-Auth).
+- Skripte: Schlüssel-Generator, Function-Deploy, Cloud-Migration, Backup/Restore.
+- Runbook: `infrastructure/supabase/deploy.md` inkl. Go-Live-Checkliste.
+- **Kein Anwendungscode geändert.** Das Umschalten erfolgt allein über die
+  Netlify-Variablen `VITE_SUPABASE_URL` und `VITE_SUPABASE_PUBLISHABLE_KEY`.
+
+---
+
 # Version 1.8.1 — robots.txt Sitemap-URL auf www
 
 **Release-Datum:** 2026-08-08
