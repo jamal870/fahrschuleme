@@ -17,6 +17,16 @@ mkdir -p "$STACK_DIR"/{volumes/db/data,volumes/db/init,volumes/db/wal_archive,vo
 touch "$STACK_DIR/volumes/traefik/acme.json"
 chmod 600 "$STACK_DIR/volumes/traefik/acme.json"
 
+# Basic-Auth-Datei fuer Studio aus .env erzeugen (Hash enthaelt $-Zeichen,
+# die Docker Compose in Labels als Variablen interpretieren wuerde).
+if [ -f "$STACK_DIR/.env" ]; then
+  SBA="$(grep -E '^STUDIO_BASIC_AUTH=' "$STACK_DIR/.env" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")"
+  if [ -n "$SBA" ] && [ "${SBA#*CHANGE_ME}" = "$SBA" ]; then
+    printf '%s\n' "$SBA" > "$STACK_DIR/volumes/traefik/studio.htpasswd"
+    chmod 600 "$STACK_DIR/volumes/traefik/studio.htpasswd"
+  fi
+fi
+
 echo "== 3/6 Dateien kopieren =="
 cp -r "$REPO_DIR/docker-compose.yml" "$STACK_DIR/"
 cp -r "$REPO_DIR/volumes/api" "$STACK_DIR/volumes/"
