@@ -260,10 +260,14 @@ async function run() {
       await sleep(250);
     }
 
-    // Indexe erst nach Attribut-Verfügbarkeit
+    // Indexe erst anlegen, wenn alle benötigten Attribute "available" sind
     if (col.indexes?.length) {
-      await sleep(2000);
       for (const [key, type, attrs] of col.indexes) {
+        const ready = await waitForAttributes(col.id, attrs);
+        if (!ready) {
+          console.error(`   ✖ Index ${col.id}.${key}: Attribute nicht bereit (Timeout)`);
+          continue;
+        }
         try {
           await db.createIndex(DB_ID, col.id, key, type, attrs);
           console.log(`   ✔ Index ${col.id}.${key}`);
