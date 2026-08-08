@@ -2,6 +2,7 @@ _format_version: "2.1"
 _transform: true
 
 consumers:
+  - username: DASHBOARD
   - username: anon
     keyauth_credentials:
       - key: $SUPABASE_ANON_KEY
