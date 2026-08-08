@@ -18,7 +18,7 @@ Besucher → Netlify (www.fahrschule-me.ch)
 ## 0. Voraussetzungen
 
 - VPS mit Docker + Compose (bereits vorhanden vom Appwrite-Versuch)
-- Traefik läuft im Docker-Netzwerk `web` mit certresolver `letsencrypt`
+- Traefik wird durch `setup.sh` aktuell und passend zum Stack gestartet
 - DNS bei tajo.host.ch, zwei neue A-Records auf die VPS-IP:
   - `db.fahrschule-me.ch`
   - `studio.fahrschule-me.ch`
@@ -41,6 +41,12 @@ Der erste Lauf erzeugt Schlüssel und bricht ab. Die ausgegebenen Werte
 (`JWT_SECRET`, `ANON_KEY`, `SERVICE_ROLE_KEY`, `SECRET_KEY_BASE`,
 `POSTGRES_PASSWORD`) in `/opt/supabase/.env` eintragen, ebenso alle
 App-Secrets (Stripe, Resend, Google). Studio-Passwort:
+
+Für Let's Encrypt zusätzlich eine erreichbare E-Mail-Adresse setzen:
+
+```bash
+ACME_EMAIL=info@fahrschule-me.ch
+```
 
 ```bash
 htpasswd -nbB admin 'DEIN_PASSWORT' | sed 's/\$/\$\$/g'   # → STUDIO_BASIC_AUTH

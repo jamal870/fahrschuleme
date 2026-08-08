@@ -13,7 +13,9 @@ command -v docker >/dev/null || { echo "Docker fehlt"; exit 1; }
 docker network inspect web >/dev/null 2>&1 || docker network create web
 
 echo "== 2/6 Verzeichnisse anlegen =="
-mkdir -p "$STACK_DIR"/{volumes/db/data,volumes/db/init,volumes/db/wal_archive,volumes/storage,volumes/functions,backups,scripts}
+mkdir -p "$STACK_DIR"/{volumes/db/data,volumes/db/init,volumes/db/wal_archive,volumes/storage,volumes/functions,volumes/traefik,backups,scripts}
+touch "$STACK_DIR/volumes/traefik/acme.json"
+chmod 600 "$STACK_DIR/volumes/traefik/acme.json"
 
 echo "== 3/6 Dateien kopieren =="
 cp -r "$REPO_DIR/docker-compose.yml" "$STACK_DIR/"
@@ -38,6 +40,10 @@ bash "$REPO_DIR/scripts/deploy-functions.sh"
 echo "== 6/6 Stack starten =="
 cd "$STACK_DIR"
 docker compose pull
+# Der frühere Appwrite-Proxy nutzt Docker API 1.24, filtert Supabase-Labels
+# heraus und belegt Port 80/443. Nur diesen Proxy entfernen; keine Volumes.
+docker rm -f appwrite-traefik traefik >/dev/null 2>&1 || true
+docker compose up -d traefik
 docker compose up -d db
 echo "Warte auf Datenbank ..."
 for i in $(seq 1 60); do
