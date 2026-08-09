@@ -863,12 +863,20 @@ export default function ChatBot() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setOpen(true)}
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground shadow-xl font-heading font-bold text-sm uppercase tracking-wide animate-pulse-orange"
-            style={{ borderRadius: "3px" }}
+            className="fixed bottom-6 right-6 z-50 rounded-full p-[2px] shadow-xl"
+            style={{ background: "linear-gradient(100deg, hsl(280 85% 60%), hsl(210 100% 60%), hsl(180 90% 55%))" }}
+            aria-label="ASK AI öffnen"
           >
-            <MessageCircle className="w-5 h-5" />
-            ASK AI
+            <span className="flex items-center gap-2 rounded-full bg-[hsl(0_0%_10%)] px-6 py-3 font-heading font-bold text-base tracking-wide text-white">
+              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true">
+                <path d="M12 2c.6 3.6 2.4 6 6 7.2-3.6.8-5.4 2.6-6 5.8-.6-3.2-2.4-5-6-5.8 3.6-1.2 5.4-3.6 6-7.2Z" />
+                <path d="M18.5 14c.3 1.9 1.3 3.1 3.2 3.8-1.9.4-2.9 1.4-3.2 3.1-.3-1.7-1.3-2.7-3.2-3.1 1.9-.7 2.9-1.9 3.2-3.8Z" opacity=".85" />
+                <path d="M5.5 15c.25 1.5 1 2.4 2.5 3-1.5.35-2.25 1.1-2.5 2.5-.25-1.4-1-2.15-2.5-2.5 1.5-.6 2.25-1.5 2.5-3Z" opacity=".7" />
+              </svg>
+              Ask AI
+            </span>
           </motion.button>
+
         )}
       </AnimatePresence>
 
