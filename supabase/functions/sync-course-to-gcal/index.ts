@@ -146,7 +146,7 @@ Deno.serve(async (req) => {
 
     if (action === "delete") {
       if (course?.gcal_event_id) {
-        try { await gcall(`/calendars/${CALENDAR_ID}/events/${course.gcal_event_id}`, "DELETE"); }
+        try { await gcall(`/calendars/${encodeURIComponent(CALENDAR_ID)}/events/${course.gcal_event_id}`, "DELETE"); }
         catch (e) { console.warn("delete gcal event failed:", (e as Error).message); }
       }
       return new Response(JSON.stringify({ ok: true }), {
@@ -202,14 +202,14 @@ Deno.serve(async (req) => {
     let eventId = course.gcal_event_id as string | null;
     if (eventId) {
       try {
-        await gcall(`/calendars/${CALENDAR_ID}/events/${eventId}`, "PUT", eventBody);
+        await gcall(`/calendars/${encodeURIComponent(CALENDAR_ID)}/events/${eventId}`, "PUT", eventBody);
       } catch (e) {
         console.warn("PUT failed, creating new:", (e as Error).message);
-        const created = await gcall(`/calendars/${CALENDAR_ID}/events`, "POST", eventBody);
+        const created = await gcall(`/calendars/${encodeURIComponent(CALENDAR_ID)}/events`, "POST", eventBody);
         eventId = created.id;
       }
     } else {
-      const created = await gcall(`/calendars/${CALENDAR_ID}/events`, "POST", eventBody);
+      const created = await gcall(`/calendars/${encodeURIComponent(CALENDAR_ID)}/events`, "POST", eventBody);
       eventId = created.id;
     }
 
