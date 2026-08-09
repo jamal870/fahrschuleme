@@ -65,36 +65,36 @@ async function getAccessToken() {
   const normalizePem = (v: string) =>
     v.trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
   const decodeKey = (v: string): Uint8Array => {
-    let cleaned = v.trim().replace(/^["']|["']$/g, "");
-    try {
-      if (cleaned.includes("%")) cleaned = decodeURIComponent(cleaned);
-    } catch { /* kein URL-kodierter Wert */ }
-    cleaned = cleaned.replace(/\\n/g, "\n").replace(/\\r/g, "");
-
-    // Komplettes Service-Account-JSON direkt in der Variable.
-    if (cleaned.startsWith("{")) {
-      const json = JSON.parse(cleaned);
-      if (json.private_key) return pemToDer(normalizePem(String(json.private_key)));
-    }
-
-    // Fall 1: bereits ein PEM.
-    if (cleaned.includes("PRIVATE KEY")) return pemToDer(normalizePem(cleaned));
-
-    // Fall 2: Base64 (kann PEM, JSON oder direkt DER enthalten).
-    const decodedBytes = b64ToBytes(cleaned);
-    const decoded = new TextDecoder().decode(decodedBytes);
-    const t = decoded.trim();
-    if (t.startsWith("{")) {
+    // Bis zu 3 Runden: Wert kann PEM, JSON, Base64 oder doppelt kodiertes Base64 sein.
+    let cur = v;
+    for (let i = 0; i < 3; i++) {
+      let cleaned = cur.trim()
+        .replace(/^["']|["']$/g, "")
+        .replace(/^<|>$/g, "")   // versehentliche Platzhalter-Klammern
+        .trim();
       try {
-        const j = JSON.parse(t);
-        if (j.private_key) return pemToDer(normalizePem(String(j.private_key)));
-      } catch { /* ignore */ }
-    }
-    if (decoded.includes("PRIVATE KEY")) return pemToDer(normalizePem(decoded));
+        if (/%[0-9A-Fa-f]{2}/.test(cleaned)) cleaned = decodeURIComponent(cleaned);
+      } catch { /* kein URL-kodierter Wert */ }
+      cleaned = cleaned.replace(/\\n/g, "\n").replace(/\\r/g, "");
 
-    // Base64 kann direkt den binären PKCS#8-DER-Schlüssel enthalten.
-    return decodedBytes;
+      if (cleaned.startsWith("{")) {
+        try {
+          const json = JSON.parse(cleaned);
+          if (json.private_key) { cur = String(json.private_key); continue; }
+        } catch { /* ignore */ }
+      }
+      if (cleaned.includes("PRIVATE KEY")) return pemToDer(normalizePem(cleaned));
+
+      const bytes = b64ToBytes(cleaned);
+      if (bytes[0] === 0x30) return bytes; // gültiges DER (PKCS#8 SEQUENCE)
+      const decoded = new TextDecoder().decode(bytes);
+      // Sieht wieder nach Text/Base64/JSON/PEM aus -> nächste Runde
+      if (/^[\s{A-Za-z0-9+/=_-]+$/.test(decoded.slice(0, 200))) { cur = decoded; continue; }
+      return bytes;
+    }
+    throw new Error("Format des Private Keys nicht erkannt");
   };
+
   const rawKey = rawB64 || Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "";
   let privateKeyDer: Uint8Array;
   try {
