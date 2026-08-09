@@ -201,7 +201,37 @@ Deno.serve(async (req) => {
     }
 
     const { courseDateId, action } = await req.json();
+
+    if (action === "debug-key") {
+      const b64 = Deno.env.get("GOOGLE_SA_PRIVATE_KEY_B64") || "";
+      const plain = Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "";
+      const info = (v: string) => ({
+        length: v.length,
+        head: v.slice(0, 20).replace(/[^\x20-\x7E]/g, "?"),
+        tail: v.slice(-20).replace(/[^\x20-\x7E]/g, "?"),
+        hasPem: v.includes("PRIVATE KEY"),
+        hasBackslashN: v.includes("\\n"),
+        hasNewline: v.includes("\n"),
+      });
+      let decodedHead = "";
+      try {
+        const bytes = b64ToBytes(b64 || plain);
+        decodedHead = new TextDecoder().decode(bytes.slice(0, 40)).replace(/[^\x20-\x7E]/g, "?")
+          + " | hex:" + Array.from(bytes.slice(0, 6)).map((b) => b.toString(16).padStart(2, "0")).join(" ")
+          + " | bytes:" + bytes.length;
+      } catch (e) {
+        decodedHead = "decode error: " + (e instanceof Error ? e.message : String(e));
+      }
+      return new Response(JSON.stringify({
+        GOOGLE_SA_PRIVATE_KEY_B64: info(b64),
+        GOOGLE_SA_PRIVATE_KEY: info(plain),
+        clientEmailSet: !!Deno.env.get("GOOGLE_SA_CLIENT_EMAIL"),
+        decodedHead,
+      }, null, 2), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     if (!courseDateId || !action) throw new Error("courseDateId and action required");
+
 
 
     const { data: course, error } = await supabase
