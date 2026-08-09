@@ -194,6 +194,28 @@ const AdminBookings = () => {
     if (selectedBooking?.id === b.id) setSelectedBooking({ ...selectedBooking, payment_status: next });
   };
 
+  const [deleteTarget, setDeleteTarget] = useState<Booking | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    const { data, error } = await supabase.functions.invoke("admin-cancel-booking", {
+      body: { bookingId: deleteTarget.id, mode: "delete", notify: false },
+    });
+    setDeleting(false);
+    if (error || (data as any)?.error) {
+      toast.error("Löschen fehlgeschlagen: " + (error?.message || (data as any)?.error));
+      return;
+    }
+    toast.success("Buchung inkl. Zahlungseintrag gelöscht");
+    if (selectedBooking?.id === deleteTarget.id) setSelectedBooking(null);
+    setDeleteTarget(null);
+    fetchBookings();
+  };
+
+
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
