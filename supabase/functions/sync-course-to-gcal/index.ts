@@ -56,7 +56,13 @@ async function getAccessToken() {
   const rawB64 = Deno.env.get("GOOGLE_SA_PRIVATE_KEY_B64");
   const normalizePem = (v: string) =>
     v.trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
-  const decodeKey = (v: string) => {
+  const decodeBase64 = (value: string) => {
+    const binary = atob(value);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  };
+  const decodeKey = (v: string): Uint8Array => {
     let cleaned = v.trim().replace(/^["']|["']$/g, "");
     try {
       if (cleaned.includes("%")) cleaned = decodeURIComponent(cleaned);
@@ -67,12 +73,12 @@ async function getAccessToken() {
     if (cleaned.trim().startsWith("{")) {
       try {
         const json = JSON.parse(cleaned);
-        if (json.private_key) return normalizePem(String(json.private_key));
+        if (json.private_key) return pemToDer(normalizePem(String(json.private_key)));
       } catch { /* danach als PEM/Base64 behandeln */ }
     }
 
     // Fall 1: bereits ein PEM.
-    if (cleaned.includes("PRIVATE KEY")) return normalizePem(cleaned);
+    if (cleaned.includes("PRIVATE KEY")) return pemToDer(normalizePem(cleaned));
 
     // Fall 2: Base64. Beim Kopieren eingefügte Trennzeichen/Leerzeichen werden entfernt.
     let s = cleaned
@@ -81,35 +87,31 @@ async function getAccessToken() {
       .replace(/_/g, "/")
       .replace(/=+$/, "");
     if (s.length % 4) s += "=".repeat(4 - (s.length % 4));
-    let decoded: string;
+    let decodedBytes: Uint8Array;
     try {
-      decoded = atob(s);
+      decodedBytes = decodeBase64(s);
     } catch {
       throw new Error(`GOOGLE_SA_PRIVATE_KEY_B64 ist kein gültiges Base64 (Länge ${s.length})`);
     }
+    const decoded = new TextDecoder().decode(decodedBytes);
     // Fall 3: base64 enthält das komplette Service-Account-JSON
     const t = decoded.trim();
     if (t.startsWith("{")) {
       try {
         const j = JSON.parse(t);
-        if (j.private_key) return normalizePem(String(j.private_key));
+        if (j.private_key) return pemToDer(normalizePem(String(j.private_key)));
       } catch { /* ignore */ }
     }
-    if (decoded.includes("PRIVATE KEY")) return normalizePem(decoded);
+    if (decoded.includes("PRIVATE KEY")) return pemToDer(normalizePem(decoded));
 
-    // Manche Exporte enthalten nur den Base64-kodierten PKCS#8-DER-Block.
-    // Diesen wieder in einen gültigen PEM-Container verpacken.
-    const lines = s.replace(/=+$/, "").match(/.{1,64}/g)?.join("\n") || "";
-    return `-----BEGIN PRIVATE KEY-----\n${lines}\n-----END PRIVATE KEY-----`;
+    // Base64 kann direkt den binären PKCS#8-DER-Schlüssel enthalten.
+    return decodedBytes;
   };
-  const privateKey = rawB64
+  const privateKeyDer = rawB64
     ? decodeKey(rawB64)
-    : normalizePem(Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "");
-  if (!clientEmail || !privateKey) {
+    : decodeKey(Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "");
+  if (!clientEmail || privateKeyDer.length === 0) {
     throw new Error("Google Calendar Service Account ist nicht konfiguriert (GOOGLE_SA_CLIENT_EMAIL / GOOGLE_SA_PRIVATE_KEY_B64)");
-  }
-  if (!privateKey.includes("PRIVATE KEY")) {
-    throw new Error("Private Key enthält keinen PEM-Block – bitte GOOGLE_SA_PRIVATE_KEY_B64 neu erzeugen");
   }
 
 
@@ -126,7 +128,7 @@ async function getAccessToken() {
   }));
   const key = await crypto.subtle.importKey(
     "pkcs8",
-    pemToDer(privateKey),
+    privateKeyDer,
     { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
     false,
     ["sign"],
