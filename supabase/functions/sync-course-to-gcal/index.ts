@@ -52,10 +52,15 @@ async function getAccessToken() {
   if (cachedToken && cachedToken.exp > Date.now() / 1000 + 60) return cachedToken.token;
 
   const clientEmail = Deno.env.get("GOOGLE_SA_CLIENT_EMAIL");
-  const privateKey = (Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "").replace(/\\n/g, "\n");
+  // Bevorzugt: base64-kodierter Key (keine Zeilenumbrüche/Kommas -> keine .env-Parsingfehler)
+  const rawB64 = Deno.env.get("GOOGLE_SA_PRIVATE_KEY_B64");
+  const privateKey = rawB64
+    ? atob(rawB64.replace(/\s+/g, ""))
+    : (Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "").replace(/\\n/g, "\n");
   if (!clientEmail || !privateKey) {
-    throw new Error("Google Calendar Service Account ist nicht konfiguriert (GOOGLE_SA_CLIENT_EMAIL / GOOGLE_SA_PRIVATE_KEY)");
+    throw new Error("Google Calendar Service Account ist nicht konfiguriert (GOOGLE_SA_CLIENT_EMAIL / GOOGLE_SA_PRIVATE_KEY_B64)");
   }
+
 
   const now = Math.floor(Date.now() / 1000);
   const header = b64url(JSON.stringify({ alg: "RS256", typ: "JWT" }));
