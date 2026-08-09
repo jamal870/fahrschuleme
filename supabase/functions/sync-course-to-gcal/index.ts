@@ -230,6 +230,78 @@ Deno.serve(async (req) => {
       }, null, 2), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
+    if (action === "cleanup-duplicates") {
+      // Alle von der Funktion erzeugten Termine einsammeln (Beschreibung enthält "Course-ID:")
+      const events: any[] = [];
+      let pageToken: string | undefined;
+      do {
+        const qs = new URLSearchParams({
+          maxResults: "2500",
+          singleEvents: "true",
+          q: "Course-ID:",
+        });
+        if (pageToken) qs.set("pageToken", pageToken);
+        const page = await gcall(
+          `/calendars/${encodeURIComponent(CALENDAR_ID)}/events?${qs.toString()}`,
+          "GET",
+        );
+        events.push(...(page?.items ?? []));
+        pageToken = page?.nextPageToken;
+      } while (pageToken);
+
+      // Nach Course-ID gruppieren
+      const groups = new Map<string, any[]>();
+      for (const ev of events) {
+        const m = String(ev.description || "").match(/Course-ID:\s*(\S+)/);
+        if (!m) continue;
+        const list = groups.get(m[1]) ?? [];
+        list.push(ev);
+        groups.set(m[1], list);
+      }
+
+      const { data: courses } = await supabase.from("course_dates").select("id, gcal_event_id");
+      const byId = new Map((courses || []).map((c: any) => [c.id, c.gcal_event_id]));
+
+      const report: Record<string, { kept: string; deleted: number; errors: string[] }> = {};
+      for (const [cid, list] of groups) {
+        const known = byId.get(cid);
+        // bevorzugt den in der DB hinterlegten Termin behalten, sonst den ältesten
+        list.sort((a, b) => String(a.created || "").localeCompare(String(b.created || "")));
+        const keep = list.find((e) => e.id === known) ?? list[0];
+        const errors: string[] = [];
+        let deleted = 0;
+        for (const ev of list) {
+          if (ev.id === keep.id) continue;
+          try {
+            await gcall(`/calendars/${encodeURIComponent(CALENDAR_ID)}/events/${ev.id}`, "DELETE");
+            deleted++;
+          } catch (e) {
+            errors.push((e as Error).message);
+          }
+          await new Promise((r) => setTimeout(r, 250));
+        }
+        if (byId.has(cid) && known !== keep.id) {
+          await fetch(
+            `${supabaseUrl}/rest/v1/course_dates?id=eq.${encodeURIComponent(cid)}`,
+            {
+              method: "PATCH",
+              headers: {
+                "apikey": serviceKey,
+                "Authorization": `Bearer ${serviceKey}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ gcal_event_id: keep.id }),
+            },
+          );
+        }
+        report[cid] = { kept: keep.id, deleted, errors };
+      }
+
+      return new Response(JSON.stringify({ ok: true, courses: Object.keys(report).length, report }, null, 2), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (!courseDateId || !action) throw new Error("courseDateId and action required");
 
 
