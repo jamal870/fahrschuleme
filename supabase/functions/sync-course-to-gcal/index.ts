@@ -38,13 +38,21 @@ function b64url(data: Uint8Array | string) {
   return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-function pemToDer(pem: string) {
-  const body = pem.replace(/-----[A-Z ]+-----/g, "").replace(/\s+/g, "");
-  const bin = atob(body);
+function b64ToBytes(b64: string) {
+  let s = b64.replace(/[^A-Za-z0-9+/_=-]/g, "").replace(/-/g, "+").replace(/_/g, "/").replace(/=+$/, "");
+  if (s.length % 4 === 1) s = s.slice(0, -1);
+  if (s.length % 4) s += "=".repeat(4 - (s.length % 4));
+  const bin = atob(s);
   const out = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
   return out;
 }
+
+function pemToDer(pem: string) {
+  const body = pem.replace(/-----[^-]+-----/g, "");
+  return b64ToBytes(body);
+}
+
 
 let cachedToken: { token: string; exp: number } | null = null;
 
@@ -56,12 +64,6 @@ async function getAccessToken() {
   const rawB64 = Deno.env.get("GOOGLE_SA_PRIVATE_KEY_B64");
   const normalizePem = (v: string) =>
     v.trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
-  const decodeBase64 = (value: string) => {
-    const binary = atob(value);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    return bytes;
-  };
   const decodeKey = (v: string): Uint8Array => {
     let cleaned = v.trim().replace(/^["']|["']$/g, "");
     try {
@@ -70,31 +72,17 @@ async function getAccessToken() {
     cleaned = cleaned.replace(/\\n/g, "\n").replace(/\\r/g, "");
 
     // Komplettes Service-Account-JSON direkt in der Variable.
-    if (cleaned.trim().startsWith("{")) {
-      try {
-        const json = JSON.parse(cleaned);
-        if (json.private_key) return pemToDer(normalizePem(String(json.private_key)));
-      } catch { /* danach als PEM/Base64 behandeln */ }
+    if (cleaned.startsWith("{")) {
+      const json = JSON.parse(cleaned);
+      if (json.private_key) return pemToDer(normalizePem(String(json.private_key)));
     }
 
     // Fall 1: bereits ein PEM.
     if (cleaned.includes("PRIVATE KEY")) return pemToDer(normalizePem(cleaned));
 
-    // Fall 2: Base64. Beim Kopieren eingefügte Trennzeichen/Leerzeichen werden entfernt.
-    let s = cleaned
-      .replace(/[^A-Za-z0-9+/_=-]/g, "")
-      .replace(/-/g, "+")
-      .replace(/_/g, "/")
-      .replace(/=+$/, "");
-    if (s.length % 4) s += "=".repeat(4 - (s.length % 4));
-    let decodedBytes: Uint8Array;
-    try {
-      decodedBytes = decodeBase64(s);
-    } catch {
-      throw new Error(`GOOGLE_SA_PRIVATE_KEY_B64 ist kein gültiges Base64 (Länge ${s.length})`);
-    }
+    // Fall 2: Base64 (kann PEM, JSON oder direkt DER enthalten).
+    const decodedBytes = b64ToBytes(cleaned);
     const decoded = new TextDecoder().decode(decodedBytes);
-    // Fall 3: base64 enthält das komplette Service-Account-JSON
     const t = decoded.trim();
     if (t.startsWith("{")) {
       try {
@@ -107,12 +95,20 @@ async function getAccessToken() {
     // Base64 kann direkt den binären PKCS#8-DER-Schlüssel enthalten.
     return decodedBytes;
   };
-  const privateKeyDer = rawB64
-    ? decodeKey(rawB64)
-    : decodeKey(Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "");
+  const rawKey = rawB64 || Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "";
+  let privateKeyDer: Uint8Array;
+  try {
+    privateKeyDer = decodeKey(rawKey);
+  } catch (e) {
+    const head = rawKey.trim().slice(0, 12).replace(/[^\x20-\x7E]/g, "?");
+    throw new Error(
+      `Private Key konnte nicht gelesen werden (Länge ${rawKey.length}, Anfang "${head}"): ${e instanceof Error ? e.message : String(e)}`,
+    );
+  }
   if (!clientEmail || privateKeyDer.length === 0) {
     throw new Error("Google Calendar Service Account ist nicht konfiguriert (GOOGLE_SA_CLIENT_EMAIL / GOOGLE_SA_PRIVATE_KEY_B64)");
   }
+
 
 
 
@@ -126,13 +122,21 @@ async function getAccessToken() {
     iat: now,
     exp: now + 3600,
   }));
-  const key = await crypto.subtle.importKey(
-    "pkcs8",
-    privateKeyDer,
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
+  let key: CryptoKey;
+  try {
+    key = await crypto.subtle.importKey(
+      "pkcs8",
+      privateKeyDer,
+      { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+      false,
+      ["sign"],
+    );
+  } catch (e) {
+    throw new Error(
+      `PKCS#8-Import fehlgeschlagen (${privateKeyDer.length} Bytes): ${e instanceof Error ? e.message : String(e)}`,
+    );
+  }
+
   const sig = new Uint8Array(await crypto.subtle.sign(
     "RSASSA-PKCS1-v1_5", key, new TextEncoder().encode(`${header}.${claim}`),
   ));
