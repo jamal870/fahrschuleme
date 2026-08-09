@@ -164,17 +164,12 @@
   status = 301
   force = true
 
-# ---------- Apex fahrschule-me.ch → www.fahrschule-me.ch ----------
-[[redirects]]
-  from = "https://fahrschule-me.ch/*"
-  to = "https://www.fahrschule-me.ch/:splat"
-  status = 301
-  force = true
-[[redirects]]
-  from = "http://fahrschule-me.ch/*"
-  to = "https://www.fahrschule-me.ch/:splat"
-  status = 301
-  force = true
+# ---------- Apex ↔ www ----------
+# KEINE eigene Apex→www-Regel!
+# Netlify leitet automatisch auf die als "Primary domain" gesetzte Variante um.
+# Eine zusätzliche Regel hier erzeugt eine Redirect-Schleife (Assets laden nicht).
+# Gewünschte Variante ausschliesslich in Netlify → Domain management → Primary domain setzen.
+
 
 # SPA fallback — auch wenn wir HashRouter nutzen,
 # sorgt das dafür, dass direkte URL-Aufrufe immer index.html laden
