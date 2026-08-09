@@ -24,11 +24,52 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build
+      # Netlify is the source of truth for backend config.
+      # Values set in Netlify -> Site configuration -> Environment variables are
+      # pulled here; GitHub secrets/vars are only used as a fallback.
+      - name: Resolve backend env from Netlify
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
-          VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          FALLBACK_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
+          FALLBACK_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          set -euo pipefail
+
+          SUPA_URL=""
+          SUPA_KEY=""
+
+          if [ -n "${NETLIFY_AUTH_TOKEN:-}" ] && [ -n "${NETLIFY_SITE_ID:-}" ]; then
+            echo "Fetching environment variables from Netlify..."
+            HTTP=$(curl -sS -o /tmp/netlify-env.json -w '%{http_code}' \
+              -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+              "https://api.netlify.com/api/v1/accounts/-/env?site_id=$NETLIFY_SITE_ID&context=production" || echo "000")
+            if [ "$HTTP" = "200" ]; then
+              SUPA_URL=$(jq -r '[.[] | select(.key=="VITE_SUPABASE_URL") | .values[] | select(.context=="production" or .context=="all") | .value] | first // ""' /tmp/netlify-env.json)
+              SUPA_KEY=$(jq -r '[.[] | select(.key=="VITE_SUPABASE_PUBLISHABLE_KEY") | .values[] | select(.context=="production" or .context=="all") | .value] | first // ""' /tmp/netlify-env.json)
+            else
+              echo "::warning::Netlify env API returned HTTP $HTTP - falling back to GitHub secrets/vars."
+            fi
+          else
+            echo "::warning::NETLIFY_AUTH_TOKEN or NETLIFY_SITE_ID missing - falling back to GitHub secrets/vars."
+          fi
+
+          [ -z "$SUPA_URL" ] && SUPA_URL="${FALLBACK_URL:-}"
+          [ -z "$SUPA_KEY" ] && SUPA_KEY="${FALLBACK_KEY:-}"
+
+          if [ -z "$SUPA_URL" ] || [ -z "$SUPA_KEY" ]; then
+            echo "::error::VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY are not configured in Netlify nor in GitHub secrets/vars."
+            exit 1
+          fi
+
+          echo "Using backend URL: $SUPA_URL"
+          echo "::add-mask::$SUPA_KEY"
+          {
+            echo "VITE_SUPABASE_URL=$SUPA_URL"
+            echo "VITE_SUPABASE_PUBLISHABLE_KEY=$SUPA_KEY"
+          } >> "$GITHUB_ENV"
+
+      - name: Build
         run: bun run build
 
       - name: Deploy to Netlify
