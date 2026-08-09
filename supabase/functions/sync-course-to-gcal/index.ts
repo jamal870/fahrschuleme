@@ -54,26 +54,41 @@ async function getAccessToken() {
   const clientEmail = Deno.env.get("GOOGLE_SA_CLIENT_EMAIL");
   // Bevorzugt: base64-kodierter Key (keine Zeilenumbrüche/Kommas -> keine .env-Parsingfehler)
   const rawB64 = Deno.env.get("GOOGLE_SA_PRIVATE_KEY_B64");
-  const decodeB64 = (v: string) => {
-    // Toleranz: Anführungszeichen, Whitespace/Zeilenumbrüche, base64url, fehlendes Padding
-    let s = v.trim().replace(/^["']|["']$/g, "").replace(/\s+/g, "");
-    s = s.replace(/-/g, "+").replace(/_/g, "/");
+  const normalizePem = (v: string) =>
+    v.trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
+  const decodeKey = (v: string) => {
+    const cleaned = v.trim().replace(/^["']|["']$/g, "");
+    // Fall 1: bereits ein PEM (evtl. mit \n-Escapes)
+    if (cleaned.includes("PRIVATE KEY")) return normalizePem(cleaned);
+    // Fall 2: base64
+    let s = cleaned.replace(/\s+/g, "").replace(/-/g, "+").replace(/_/g, "/");
     if (s.length % 4) s += "=".repeat(4 - (s.length % 4));
+    let decoded: string;
     try {
-      return atob(s);
+      decoded = atob(s);
     } catch {
       throw new Error(`GOOGLE_SA_PRIVATE_KEY_B64 ist kein gültiges Base64 (Länge ${s.length})`);
     }
+    // Fall 3: base64 enthält das komplette Service-Account-JSON
+    const t = decoded.trim();
+    if (t.startsWith("{")) {
+      try {
+        const j = JSON.parse(t);
+        if (j.private_key) return normalizePem(String(j.private_key));
+      } catch { /* ignore */ }
+    }
+    return normalizePem(decoded);
   };
   const privateKey = rawB64
-    ? decodeB64(rawB64)
-    : (Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "").replace(/\\n/g, "\n");
+    ? decodeKey(rawB64)
+    : normalizePem(Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "");
   if (!clientEmail || !privateKey) {
     throw new Error("Google Calendar Service Account ist nicht konfiguriert (GOOGLE_SA_CLIENT_EMAIL / GOOGLE_SA_PRIVATE_KEY_B64)");
   }
   if (!privateKey.includes("PRIVATE KEY")) {
-    throw new Error("Dekodierter Private Key enthält keinen PEM-Block – bitte GOOGLE_SA_PRIVATE_KEY_B64 neu erzeugen");
+    throw new Error("Private Key enthält keinen PEM-Block – bitte GOOGLE_SA_PRIVATE_KEY_B64 neu erzeugen");
   }
+
 
 
 
