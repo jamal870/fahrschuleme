@@ -164,6 +164,18 @@
   status = 301
   force = true
 
+# ---------- Apex fahrschule-me.ch → www.fahrschule-me.ch ----------
+[[redirects]]
+  from = "https://fahrschule-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+[[redirects]]
+  from = "http://fahrschule-me.ch/*"
+  to = "https://www.fahrschule-me.ch/:splat"
+  status = 301
+  force = true
+
 # SPA fallback — auch wenn wir HashRouter nutzen,
 # sorgt das dafür, dass direkte URL-Aufrufe immer index.html laden
 [[redirects]]
