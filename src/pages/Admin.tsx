@@ -34,14 +34,32 @@ const Admin = () => {
         .eq("role", "admin")
         .maybeSingle();
 
+      let admin = !!roleData;
+      let failed = false;
+
       if (roleError) {
+        // Fallback: SECURITY-DEFINER-Funktion (funktioniert auch ohne Tabellen-Leserecht)
+        const { data: rpcData, error: rpcError } = await supabase.rpc("has_role", {
+          _user_id: session.user.id,
+          _role: "admin",
+        });
+        if (rpcError) {
+          failed = true;
+          console.error("Rollenprüfung fehlgeschlagen:", roleError.message, rpcError.message);
+        } else {
+          admin = rpcData === true;
+        }
+      }
+
+      if (failed) {
         setAccessError("Rollenprüfung fehlgeschlagen. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.");
-      } else if (!roleData) {
+      } else if (!admin) {
         setAccessError("Kein Admin-Zugriff. Ihr Konto besitzt nicht die erforderliche Admin-Rolle für den Bereich „Kurstermine“ und die Verwaltung.");
       } else {
         setIsAdmin(true);
       }
       setLoading(false);
+
     };
     checkAuth();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
