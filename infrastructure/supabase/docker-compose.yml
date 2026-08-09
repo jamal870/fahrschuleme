@@ -80,12 +80,18 @@ services:
     <<: *restart
     image: kong:2.8.1
     container_name: supabase-kong
+    # Platzhalter werden zeichengenau ersetzt (kein eval -> keine Shell-Expansion
+    # von Sonderzeichen in Keys/Passwörtern). Ergebnis liegt in /tmp (schreibbar).
     entrypoint: >-
-      bash -c 'eval "echo \"$$(cat /home/kong/kong.template.yml)\"" > /home/kong/kong.yml
-      && /docker-entrypoint.sh kong docker-start'
+      bash -c 'sed -e "s|[$$]SUPABASE_ANON_KEY|$$SUPABASE_ANON_KEY|g"
+      -e "s|[$$]SUPABASE_SERVICE_KEY|$$SUPABASE_SERVICE_KEY|g"
+      -e "s|[$$]DASHBOARD_USERNAME|$$DASHBOARD_USERNAME|g"
+      -e "s|[$$]DASHBOARD_PASSWORD|$$DASHBOARD_PASSWORD|g"
+      /home/kong/kong.template.yml > /tmp/kong.yml
+      && exec /docker-entrypoint.sh kong docker-start'
     environment:
       KONG_DATABASE: "off"
-      KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
+      KONG_DECLARATIVE_CONFIG: /tmp/kong.yml
       KONG_DNS_ORDER: LAST,A,CNAME
       KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
       KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
