@@ -309,17 +309,27 @@ Deno.serve(async (req) => {
 
     let saved: boolean | string = false;
     if (eventId && eventId !== course.gcal_event_id) {
-      const { data: upd, error: updErr } = await supabase
-        .from("course_dates")
-        .update({ gcal_event_id: eventId })
-        .eq("id", course.id)
-        .select("id, gcal_event_id");
-      if (updErr) saved = `error: ${updErr.message}${updErr.hint ? ` (${updErr.hint})` : ""}`;
-      else if (!upd || upd.length === 0) saved = "no rows updated (RLS/Grants?)";
-      else saved = true;
+      // Direkter REST-PATCH, damit Status/Body des Servers sichtbar sind
+      const patchRes = await fetch(
+        `${supabaseUrl}/rest/v1/course_dates?id=eq.${encodeURIComponent(course.id)}`,
+        {
+          method: "PATCH",
+          headers: {
+            "apikey": serviceKey,
+            "Authorization": `Bearer ${serviceKey}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=representation",
+          },
+          body: JSON.stringify({ gcal_event_id: eventId }),
+        },
+      );
+      const patchBody = await patchRes.text();
+      if (patchRes.ok && patchBody && patchBody !== "[]") saved = true;
+      else saved = `patch ${patchRes.status}: ${patchBody.slice(0, 300)}`;
     } else {
       saved = "unchanged";
     }
+
 
     return new Response(JSON.stringify({ ok: true, eventId, saved }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
