@@ -1,5 +1,6 @@
-// Pushes a course_date entry to Jamal's Google Calendar via the Lovable connector gateway.
+// Pushes a course_date entry to the Google Calendar via a Google Service Account (JWT, no Lovable gateway).
 // Body: { courseDateId: string, action: "upsert" | "delete" }
+// Required secrets: GOOGLE_SA_CLIENT_EMAIL, GOOGLE_SA_PRIVATE_KEY, GOOGLE_CALENDAR_ID
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
@@ -7,8 +8,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const GCAL_BASE = "https://connector-gateway.lovable.dev/google_calendar/calendar/v3";
-const CALENDAR_ID = "primary";
+const GCAL_BASE = "https://www.googleapis.com/calendar/v3";
+const CALENDAR_ID = Deno.env.get("GOOGLE_CALENDAR_ID") || "primary";
+
 
 function parseSwiss(d: string) {
   const m = d.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
