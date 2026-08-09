@@ -38,13 +38,21 @@ function b64url(data: Uint8Array | string) {
   return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-function pemToDer(pem: string) {
-  const body = pem.replace(/-----[A-Z ]+-----/g, "").replace(/\s+/g, "");
-  const bin = atob(body);
+function b64ToBytes(b64: string) {
+  let s = b64.replace(/[^A-Za-z0-9+/_=-]/g, "").replace(/-/g, "+").replace(/_/g, "/").replace(/=+$/, "");
+  if (s.length % 4 === 1) s = s.slice(0, -1);
+  if (s.length % 4) s += "=".repeat(4 - (s.length % 4));
+  const bin = atob(s);
   const out = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
   return out;
 }
+
+function pemToDer(pem: string) {
+  const body = pem.replace(/-----[^-]+-----/g, "");
+  return b64ToBytes(body);
+}
+
 
 let cachedToken: { token: string; exp: number } | null = null;
 
