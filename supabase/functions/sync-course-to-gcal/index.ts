@@ -307,11 +307,21 @@ Deno.serve(async (req) => {
       eventId = created.id;
     }
 
+    let saved: boolean | string = false;
     if (eventId && eventId !== course.gcal_event_id) {
-      await supabase.from("course_dates").update({ gcal_event_id: eventId }).eq("id", course.id);
+      const { data: upd, error: updErr } = await supabase
+        .from("course_dates")
+        .update({ gcal_event_id: eventId })
+        .eq("id", course.id)
+        .select("id, gcal_event_id");
+      if (updErr) saved = `error: ${updErr.message}${updErr.hint ? ` (${updErr.hint})` : ""}`;
+      else if (!upd || upd.length === 0) saved = "no rows updated (RLS/Grants?)";
+      else saved = true;
+    } else {
+      saved = "unchanged";
     }
 
-    return new Response(JSON.stringify({ ok: true, eventId }), {
+    return new Response(JSON.stringify({ ok: true, eventId, saved }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
