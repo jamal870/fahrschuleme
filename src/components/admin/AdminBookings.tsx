@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { RefreshCw, Eye, FileText, Receipt, AlertTriangle, CheckCircle, Pencil, Save, X, Clock, BadgeCheck } from "lucide-react";
+import { RefreshCw, Eye, FileText, Receipt, AlertTriangle, CheckCircle, Pencil, Save, X, Clock, BadgeCheck, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
@@ -194,6 +194,28 @@ const AdminBookings = () => {
     if (selectedBooking?.id === b.id) setSelectedBooking({ ...selectedBooking, payment_status: next });
   };
 
+  const [deleteTarget, setDeleteTarget] = useState<Booking | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    const { data, error } = await supabase.functions.invoke("admin-cancel-booking", {
+      body: { bookingId: deleteTarget.id, mode: "delete", notify: false },
+    });
+    setDeleting(false);
+    if (error || (data as any)?.error) {
+      toast.error("Löschen fehlgeschlagen: " + (error?.message || (data as any)?.error));
+      return;
+    }
+    toast.success("Buchung inkl. Zahlungseintrag gelöscht");
+    if (selectedBooking?.id === deleteTarget.id) setSelectedBooking(null);
+    setDeleteTarget(null);
+    fetchBookings();
+  };
+
+
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -281,6 +303,15 @@ const AdminBookings = () => {
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive hover:bg-destructive/10"
+                        title="Buchung endgültig löschen"
+                        onClick={() => setDeleteTarget(b)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -437,7 +468,30 @@ const AdminBookings = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!deleteTarget} onOpenChange={() => !deleting && setDeleteTarget(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Buchung löschen?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            {deleteTarget && (
+              <>
+                Buchung von <strong>{deleteTarget.first_name} {deleteTarget.last_name}</strong> (CHF {deleteTarget.total_price})
+                wird endgültig gelöscht – inklusive Zahlungseintrag, Kursplätzen und Unterschriften. Das kann nicht rückgängig gemacht werden.
+              </>
+            )}
+          </p>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>Abbrechen</Button>
+            <Button className="bg-destructive hover:bg-destructive/90" onClick={confirmDelete} disabled={deleting}>
+              <Trash2 className="w-4 h-4 mr-1" /> {deleting ? "Löschen..." : "Endgültig löschen"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 };
 
