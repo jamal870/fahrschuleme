@@ -57,11 +57,29 @@ async function getAccessToken() {
   const normalizePem = (v: string) =>
     v.trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
   const decodeKey = (v: string) => {
-    const cleaned = v.trim().replace(/^["']|["']$/g, "");
-    // Fall 1: bereits ein PEM (evtl. mit \n-Escapes)
+    let cleaned = v.trim().replace(/^["']|["']$/g, "");
+    try {
+      if (cleaned.includes("%")) cleaned = decodeURIComponent(cleaned);
+    } catch { /* kein URL-kodierter Wert */ }
+    cleaned = cleaned.replace(/\\n/g, "\n").replace(/\\r/g, "");
+
+    // Komplettes Service-Account-JSON direkt in der Variable.
+    if (cleaned.trim().startsWith("{")) {
+      try {
+        const json = JSON.parse(cleaned);
+        if (json.private_key) return normalizePem(String(json.private_key));
+      } catch { /* danach als PEM/Base64 behandeln */ }
+    }
+
+    // Fall 1: bereits ein PEM.
     if (cleaned.includes("PRIVATE KEY")) return normalizePem(cleaned);
-    // Fall 2: base64
-    let s = cleaned.replace(/\s+/g, "").replace(/-/g, "+").replace(/_/g, "/");
+
+    // Fall 2: Base64. Beim Kopieren eingefügte Trennzeichen/Leerzeichen werden entfernt.
+    let s = cleaned
+      .replace(/[^A-Za-z0-9+/_=-]/g, "")
+      .replace(/-/g, "+")
+      .replace(/_/g, "/")
+      .replace(/=+$/, "");
     if (s.length % 4) s += "=".repeat(4 - (s.length % 4));
     let decoded: string;
     try {
@@ -77,7 +95,12 @@ async function getAccessToken() {
         if (j.private_key) return normalizePem(String(j.private_key));
       } catch { /* ignore */ }
     }
-    return normalizePem(decoded);
+    if (decoded.includes("PRIVATE KEY")) return normalizePem(decoded);
+
+    // Manche Exporte enthalten nur den Base64-kodierten PKCS#8-DER-Block.
+    // Diesen wieder in einen gültigen PEM-Container verpacken.
+    const lines = s.replace(/=+$/, "").match(/.{1,64}/g)?.join("\n") || "";
+    return `-----BEGIN PRIVATE KEY-----\n${lines}\n-----END PRIVATE KEY-----`;
   };
   const privateKey = rawB64
     ? decodeKey(rawB64)
