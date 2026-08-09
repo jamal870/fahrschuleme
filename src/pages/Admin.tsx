@@ -15,6 +15,7 @@ import AdminPromotions from "@/components/admin/AdminPromotions";
 import AdminEmailSettings from "@/components/admin/AdminEmailSettings";
 import AdminContent from "@/components/admin/AdminContent";
 import BrandLogo from "@/components/BrandLogo";
+import ChangePasswordDialog from "@/components/admin/ChangePasswordDialog";
 
 const Admin = () => {
   const [loading, setLoading] = useState(true);
