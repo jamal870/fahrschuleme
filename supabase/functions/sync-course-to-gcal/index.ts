@@ -54,12 +54,27 @@ async function getAccessToken() {
   const clientEmail = Deno.env.get("GOOGLE_SA_CLIENT_EMAIL");
   // Bevorzugt: base64-kodierter Key (keine Zeilenumbrüche/Kommas -> keine .env-Parsingfehler)
   const rawB64 = Deno.env.get("GOOGLE_SA_PRIVATE_KEY_B64");
+  const decodeB64 = (v: string) => {
+    // Toleranz: Anführungszeichen, Whitespace/Zeilenumbrüche, base64url, fehlendes Padding
+    let s = v.trim().replace(/^["']|["']$/g, "").replace(/\s+/g, "");
+    s = s.replace(/-/g, "+").replace(/_/g, "/");
+    if (s.length % 4) s += "=".repeat(4 - (s.length % 4));
+    try {
+      return atob(s);
+    } catch {
+      throw new Error(`GOOGLE_SA_PRIVATE_KEY_B64 ist kein gültiges Base64 (Länge ${s.length})`);
+    }
+  };
   const privateKey = rawB64
-    ? atob(rawB64.replace(/\s+/g, ""))
+    ? decodeB64(rawB64)
     : (Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "").replace(/\\n/g, "\n");
   if (!clientEmail || !privateKey) {
     throw new Error("Google Calendar Service Account ist nicht konfiguriert (GOOGLE_SA_CLIENT_EMAIL / GOOGLE_SA_PRIVATE_KEY_B64)");
   }
+  if (!privateKey.includes("PRIVATE KEY")) {
+    throw new Error("Dekodierter Private Key enthält keinen PEM-Block – bitte GOOGLE_SA_PRIVATE_KEY_B64 neu erzeugen");
+  }
+
 
 
   const now = Math.floor(Date.now() / 1000);
