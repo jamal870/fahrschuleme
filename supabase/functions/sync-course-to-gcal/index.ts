@@ -147,7 +147,7 @@ Deno.serve(async (req) => {
 
     const { data: course, error } = await supabase
       .from("course_dates").select("*").eq("id", courseDateId).maybeSingle();
-    if (error) throw error;
+    if (error) throw new Error(`DB course_dates: ${error.message}${error.hint ? ` (${error.hint})` : ""}`);
 
     if (action === "delete") {
       if (course?.gcal_event_id) {
@@ -226,7 +226,9 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
+    const msg = e instanceof Error
+      ? e.message
+      : (typeof e === "object" && e !== null ? JSON.stringify(e) : String(e));
     console.error("[sync-course-to-gcal]", msg);
     return new Response(JSON.stringify({ error: msg }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
