@@ -31,18 +31,74 @@ function isoLocal(y: number, mo: number, d: number, h: number, mi: number) {
   return `${y}-${p(mo)}-${p(d)}T${p(h)}:${p(mi)}:00`;
 }
 
-async function gcall(path: string, method: string, body?: unknown) {
-  const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
-  const calendarApiKey = Deno.env.get("GOOGLE_CALENDAR_API_KEY");
-  if (!lovableApiKey || !calendarApiKey) {
-    throw new Error("Google Calendar connection is not configured");
+function b64url(data: Uint8Array | string) {
+  const bytes = typeof data === "string" ? new TextEncoder().encode(data) : data;
+  let bin = "";
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function pemToDer(pem: string) {
+  const body = pem.replace(/-----[A-Z ]+-----/g, "").replace(/\s+/g, "");
+  const bin = atob(body);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+let cachedToken: { token: string; exp: number } | null = null;
+
+async function getAccessToken() {
+  if (cachedToken && cachedToken.exp > Date.now() / 1000 + 60) return cachedToken.token;
+
+  const clientEmail = Deno.env.get("GOOGLE_SA_CLIENT_EMAIL");
+  const privateKey = (Deno.env.get("GOOGLE_SA_PRIVATE_KEY") || "").replace(/\\n/g, "\n");
+  if (!clientEmail || !privateKey) {
+    throw new Error("Google Calendar Service Account ist nicht konfiguriert (GOOGLE_SA_CLIENT_EMAIL / GOOGLE_SA_PRIVATE_KEY)");
   }
 
+  const now = Math.floor(Date.now() / 1000);
+  const header = b64url(JSON.stringify({ alg: "RS256", typ: "JWT" }));
+  const claim = b64url(JSON.stringify({
+    iss: clientEmail,
+    scope: "https://www.googleapis.com/auth/calendar",
+    aud: "https://oauth2.googleapis.com/token",
+    iat: now,
+    exp: now + 3600,
+  }));
+  const key = await crypto.subtle.importKey(
+    "pkcs8",
+    pemToDer(privateKey),
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const sig = new Uint8Array(await crypto.subtle.sign(
+    "RSASSA-PKCS1-v1_5", key, new TextEncoder().encode(`${header}.${claim}`),
+  ));
+  const jwt = `${header}.${claim}.${b64url(sig)}`;
+
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      assertion: jwt,
+    }),
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(`Google token ${res.status}: ${text}`);
+  const json = JSON.parse(text);
+  cachedToken = { token: json.access_token, exp: now + (json.expires_in ?? 3600) };
+  return cachedToken.token;
+}
+
+async function gcall(path: string, method: string, body?: unknown) {
+  const token = await getAccessToken();
   const res = await fetch(`${GCAL_BASE}${path}`, {
     method,
     headers: {
-      "Authorization": `Bearer ${lovableApiKey}`,
-      "X-Connection-Api-Key": calendarApiKey,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: body ? JSON.stringify(body) : undefined,
@@ -51,6 +107,7 @@ async function gcall(path: string, method: string, body?: unknown) {
   if (!res.ok) throw new Error(`GCal ${res.status}: ${text}`);
   return text ? JSON.parse(text) : null;
 }
+
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
