@@ -15,6 +15,7 @@ import AdminPromotions from "@/components/admin/AdminPromotions";
 import AdminEmailSettings from "@/components/admin/AdminEmailSettings";
 import AdminContent from "@/components/admin/AdminContent";
 import BrandLogo from "@/components/BrandLogo";
+import ChangePasswordDialog from "@/components/admin/ChangePasswordDialog";
 
 const Admin = () => {
   const [loading, setLoading] = useState(true);
@@ -104,6 +105,7 @@ const Admin = () => {
             <Button variant="outline" size="sm" onClick={() => navigate("/")} className="font-body">
               <Globe className="w-4 h-4 mr-2" /> Zur Webseite
             </Button>
+            <ChangePasswordDialog />
             <Button variant="ghost" size="sm" onClick={handleLogout} className="font-body">
               <LogOut className="w-4 h-4 mr-2" /> Abmelden
             </Button>
