@@ -122,13 +122,21 @@ async function getAccessToken() {
     iat: now,
     exp: now + 3600,
   }));
-  const key = await crypto.subtle.importKey(
-    "pkcs8",
-    privateKeyDer,
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
+  let key: CryptoKey;
+  try {
+    key = await crypto.subtle.importKey(
+      "pkcs8",
+      privateKeyDer,
+      { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+      false,
+      ["sign"],
+    );
+  } catch (e) {
+    throw new Error(
+      `PKCS#8-Import fehlgeschlagen (${privateKeyDer.length} Bytes): ${e instanceof Error ? e.message : String(e)}`,
+    );
+  }
+
   const sig = new Uint8Array(await crypto.subtle.sign(
     "RSASSA-PKCS1-v1_5", key, new TextEncoder().encode(`${header}.${claim}`),
   ));
