@@ -890,10 +890,10 @@ export default function ChatBot() {
               <div className="flex items-center gap-3">
                 <div>
                   <h3 className="font-heading font-bold text-sm text-foreground flex items-baseline gap-0.5">
-                    <span>FAHRSCHULE</span>
-                    <span className="text-primary" style={{ fontFamily: "'Kaushan Script', cursive", fontSize: "16px", textTransform: "none" }}>me</span>
+                    <span>ASK</span>
+                    <span className="text-primary" style={{ fontFamily: "'Kaushan Script', cursive", fontSize: "16px", textTransform: "none" }}>AI</span>
                   </h3>
-                  <p className="text-xs text-muted-foreground font-body">Grundkurse & Fahrstunden</p>
+                  <p className="text-xs text-muted-foreground font-body">Dein Fahrschul-Assistent</p>
                 </div>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 rounded hover:bg-muted transition-colors">
