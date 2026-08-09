@@ -105,6 +105,7 @@ const Admin = () => {
             <Button variant="outline" size="sm" onClick={() => navigate("/")} className="font-body">
               <Globe className="w-4 h-4 mr-2" /> Zur Webseite
             </Button>
+            <ChangePasswordDialog />
             <Button variant="ghost" size="sm" onClick={handleLogout} className="font-body">
               <LogOut className="w-4 h-4 mr-2" /> Abmelden
             </Button>
