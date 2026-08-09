@@ -468,7 +468,30 @@ const AdminBookings = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!deleteTarget} onOpenChange={() => !deleting && setDeleteTarget(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Buchung löschen?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            {deleteTarget && (
+              <>
+                Buchung von <strong>{deleteTarget.first_name} {deleteTarget.last_name}</strong> (CHF {deleteTarget.total_price})
+                wird endgültig gelöscht – inklusive Zahlungseintrag, Kursplätzen und Unterschriften. Das kann nicht rückgängig gemacht werden.
+              </>
+            )}
+          </p>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>Abbrechen</Button>
+            <Button className="bg-destructive hover:bg-destructive/90" onClick={confirmDelete} disabled={deleting}>
+              <Trash2 className="w-4 h-4 mr-1" /> {deleting ? "Löschen..." : "Endgültig löschen"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 };
 
