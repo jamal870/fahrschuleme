@@ -360,23 +360,32 @@ Deno.serve(async (req) => {
     if (!dp) throw new Error("invalid course date");
     const t = parseTime(course.time);
 
-    // Teilnehmer (bestätigt) für diesen Kurs laden
+    // Teilnehmer für diesen Kurs laden (alle ausser storniert)
     const { data: items } = await supabase
       .from("booking_items")
-      .select("booking_id, bookings!inner(first_name, last_name, phone, email, status)")
+      .select("booking_id, bookings!inner(first_name, last_name, phone, email, status, payment_status)")
       .eq("course_date_id", courseDateId);
+    const CANCELLED = ["cancelled", "canceled", "storniert", "refunded", "deleted"];
     const participants = (items || [])
       .map((it: any) => it.bookings)
-      .filter((b: any) => b && b.status === "confirmed");
+      .filter((b: any) => b && !CANCELLED.includes(String(b.status || "").toLowerCase()));
     const tnCount = participants.length;
+
+    const statusLabel = (b: any) => {
+      const s = String(b.status || "").toLowerCase();
+      if (s === "confirmed") return "";
+      if (s === "pending_payment") return " ⚠︎ Zahlung offen";
+      return ` (${b.status})`;
+    };
 
     const participantLines = participants.length
       ? participants
           .map((b: any, i: number) =>
-            `  ${i + 1}. ${b.first_name} ${b.last_name} – ${b.phone || "–"}`,
+            `  ${i + 1}. ${b.first_name} ${b.last_name} – ${b.phone || "–"}${statusLabel(b)}`,
           )
           .join("\n")
       : "  (noch keine Teilnehmer)";
+
 
     const summary = `MGK Teil ${course.part}${course.instructor ? ` (${course.instructor})` : ""} – ${tnCount} TN`;
     const description = [
