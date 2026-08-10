@@ -157,20 +157,55 @@ async function getAccessToken() {
   return cachedToken.token;
 }
 
+class GCalError extends Error {
+  status: number;
+  reason: string;
+  constructor(status: number, body: string) {
+    super(`GCal ${status}: ${body}`);
+    this.status = status;
+    let reason = "";
+    try { reason = JSON.parse(body)?.error?.errors?.[0]?.reason ?? ""; } catch { /* ignore */ }
+    this.reason = reason;
+  }
+  get isRateLimit() {
+    return this.status === 429 ||
+      (this.status === 403 && ["rateLimitExceeded", "userRateLimitExceeded", "quotaExceeded"].includes(this.reason));
+  }
+  get isMissing() {
+    return this.status === 404 || this.status === 410;
+  }
+}
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 async function gcall(path: string, method: string, body?: unknown) {
   const token = await getAccessToken();
-  const res = await fetch(`${GCAL_BASE}${path}`, {
-    method,
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const text = await res.text();
-  if (!res.ok) throw new Error(`GCal ${res.status}: ${text}`);
-  return text ? JSON.parse(text) : null;
+  let lastErr: GCalError | null = null;
+
+  // Google drosselt Kalender-Schreibzugriffe aggressiv -> Retry mit Backoff.
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const res = await fetch(`${GCAL_BASE}${path}`, {
+      method,
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const text = await res.text();
+    if (res.ok) return text ? JSON.parse(text) : null;
+
+    const err = new GCalError(res.status, text);
+    lastErr = err;
+    if (!err.isRateLimit && res.status < 500) throw err;
+
+    const wait = 800 * Math.pow(2, attempt) + Math.floor(Math.random() * 300);
+    console.warn(`GCal ${res.status} (${err.reason || "server"}), Retry in ${wait}ms`);
+    await sleep(wait);
+  }
+  throw lastErr!;
 }
+
 
 
 Deno.serve(async (req) => {
