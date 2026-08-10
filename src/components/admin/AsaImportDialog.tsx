@@ -37,6 +37,17 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
   const [applying, setApplying] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
+  // Liest die Fehlermeldung aus der Function-Antwort (invoke liefert sonst nur "non-2xx")
+  const readError = async (error: any, data: any) => {
+    const ctx = error?.context;
+    if (ctx?.status === 404) return "Function 'import-asa-courses' ist auf dem Server nicht deployed.";
+    try {
+      const body = ctx && typeof ctx.json === "function" ? await ctx.json() : null;
+      if (body?.error) return body.error;
+    } catch { /* ignore */ }
+    return (data as any)?.error || error?.message || "Unbekannter Fehler";
+  };
+
   const loadPreview = async () => {
     setLoading(true);
     const { data, error } = await supabase.functions.invoke("import-asa-courses", {
@@ -44,9 +55,10 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
     });
     setLoading(false);
     if (error || (data as any)?.error) {
-      toast.error("Abruf fehlgeschlagen: " + (error?.message || (data as any)?.error));
+      toast.error("Abruf fehlgeschlagen: " + (await readError(error, data)));
       return;
     }
+
     const list = ((data as any).items || []) as AsaItem[];
     setItems(list);
     setSelected(new Set(list.filter((i) => i.action !== "unchanged").map((i) => i.id)));
