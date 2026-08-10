@@ -246,6 +246,9 @@ const AdminCourseDates = () => {
           <Button variant="outline" size="sm" onClick={fetchCourses} className="font-body">
             <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
           </Button>
+          <Button variant="outline" size="sm" onClick={() => setAsaOpen(true)} className="font-body">
+            <Download className="w-4 h-4 mr-1" /> Aus asa importieren
+          </Button>
           <Button variant="outline" size="sm" onClick={async () => {
             const today = new Date(); today.setHours(0,0,0,0);
             const future = courses.filter((c) => { const d = parseDate(c.date); return d && d.getTime() >= today.getTime(); });
