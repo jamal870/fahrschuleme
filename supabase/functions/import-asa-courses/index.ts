@@ -26,8 +26,13 @@ interface AsaCourse {
 function stripHtml(html: string) {
   let t = html.replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, "");
   t = t.replace(/<[^>]+>/g, " ");
-  t = t.replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&#8211;/g, "–")
+  // numerische HTML-Entities zuerst (asa liefert u.a. &#160; direkt im Text)
+  t = t.replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+       .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)));
+  t = t.replace(/&nbsp;/g, " ").replace(/&amp;/g, "&")
        .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  t = t.replace(/\u00a0/g, " ");
+
   return t.replace(/\s+/g, " ").trim();
 }
 
