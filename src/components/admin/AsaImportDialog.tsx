@@ -28,6 +28,11 @@ interface Props {
   onImported: () => void;
 }
 
+const toIso = (swiss: string) => {
+  const m = swiss.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  return m ? `${m[3]}-${m[2]}-${m[1]}` : "";
+};
+
 const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
   const [section, setSection] = useState<"pgs" | "vku">("pgs");
   const [price, setPrice] = useState(160);
@@ -36,6 +41,19 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
   const [loading, setLoading] = useState(false);
   const [applying, setApplying] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+
+  const inRange = (i: AsaItem) => {
+    const iso = toIso(i.date);
+    if (!iso) return true;
+    if (dateFrom && iso < dateFrom) return false;
+    if (dateTo && iso > dateTo) return false;
+    return true;
+  };
+  const visibleItems = items.filter(inRange);
+  const visibleSelected = visibleItems.filter((i) => selected.has(i.id)).map((i) => i.id);
+
 
   // Liest die Fehlermeldung aus der Function-Antwort (invoke liefert sonst nur "non-2xx")
   const readError = async (error: any, data: any) => {
