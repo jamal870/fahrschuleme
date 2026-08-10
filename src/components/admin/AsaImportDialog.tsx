@@ -167,10 +167,46 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
           </Button>
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+          <div className="space-y-1">
+            <Label>Datum von</Label>
+            <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label>Datum bis</Label>
+            <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => { setDateFrom(""); setDateTo(""); }}
+              disabled={!dateFrom && !dateTo}
+            >
+              Filter zurücksetzen
+            </Button>
+            {loaded && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setSelected(new Set(visibleItems.filter((i) => i.action !== "unchanged").map((i) => i.id)))
+                }
+              >
+                Alle im Zeitraum
+              </Button>
+            )}
+          </div>
+        </div>
+
         {loaded && (
           <div className="space-y-2">
-            {items.length === 0 && <p className="text-sm text-muted-foreground">Keine Einträge.</p>}
-            {items.map((i) => (
+            {visibleItems.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                {items.length === 0 ? "Keine Einträge." : "Keine Termine im gewählten Zeitraum."}
+              </p>
+            )}
+            {visibleItems.map((i) => (
               <div key={i.id} className="flex items-start gap-3 rounded border p-2 text-sm">
                 <Checkbox
                   checked={selected.has(i.id)}
@@ -198,11 +234,12 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
 
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={onClose} disabled={applying}>Abbrechen</Button>
-          <Button onClick={apply} disabled={applying || !loaded || selected.size === 0}>
+          <Button onClick={apply} disabled={applying || !loaded || visibleSelected.length === 0}>
             <Download className="w-4 h-4 mr-1" />
-            {applying ? "Importiere..." : `${selected.size} übernehmen`}
+            {applying ? "Importiere..." : `${visibleSelected.length} übernehmen`}
           </Button>
         </DialogFooter>
+
       </DialogContent>
     </Dialog>
   );
