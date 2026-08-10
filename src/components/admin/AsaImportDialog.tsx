@@ -28,6 +28,11 @@ interface Props {
   onImported: () => void;
 }
 
+const toIso = (swiss: string) => {
+  const m = swiss.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  return m ? `${m[3]}-${m[2]}-${m[1]}` : "";
+};
+
 const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
   const [section, setSection] = useState<"pgs" | "vku">("pgs");
   const [price, setPrice] = useState(160);
@@ -36,6 +41,19 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
   const [loading, setLoading] = useState(false);
   const [applying, setApplying] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+
+  const inRange = (i: AsaItem) => {
+    const iso = toIso(i.date);
+    if (!iso) return true;
+    if (dateFrom && iso < dateFrom) return false;
+    if (dateTo && iso > dateTo) return false;
+    return true;
+  };
+  const visibleItems = items.filter(inRange);
+  const visibleSelected = visibleItems.filter((i) => selected.has(i.id)).map((i) => i.id);
+
 
   // Liest die Fehlermeldung aus der Function-Antwort (invoke liefert sonst nur "non-2xx")
   const readError = async (error: any, data: any) => {
@@ -75,7 +93,7 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
   };
 
   const apply = async () => {
-    const ids = Array.from(selected);
+    const ids = visibleSelected;
     if (ids.length === 0) { toast.info("Nichts ausgewählt"); return; }
     setApplying(true);
     const { data, error } = await supabase.functions.invoke("import-asa-courses", {
@@ -149,10 +167,46 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
           </Button>
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+          <div className="space-y-1">
+            <Label>Datum von</Label>
+            <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label>Datum bis</Label>
+            <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => { setDateFrom(""); setDateTo(""); }}
+              disabled={!dateFrom && !dateTo}
+            >
+              Filter zurücksetzen
+            </Button>
+            {loaded && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setSelected(new Set(visibleItems.filter((i) => i.action !== "unchanged").map((i) => i.id)))
+                }
+              >
+                Alle im Zeitraum
+              </Button>
+            )}
+          </div>
+        </div>
+
         {loaded && (
           <div className="space-y-2">
-            {items.length === 0 && <p className="text-sm text-muted-foreground">Keine Einträge.</p>}
-            {items.map((i) => (
+            {visibleItems.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                {items.length === 0 ? "Keine Einträge." : "Keine Termine im gewählten Zeitraum."}
+              </p>
+            )}
+            {visibleItems.map((i) => (
               <div key={i.id} className="flex items-start gap-3 rounded border p-2 text-sm">
                 <Checkbox
                   checked={selected.has(i.id)}
@@ -180,11 +234,12 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
 
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={onClose} disabled={applying}>Abbrechen</Button>
-          <Button onClick={apply} disabled={applying || !loaded || selected.size === 0}>
+          <Button onClick={apply} disabled={applying || !loaded || visibleSelected.length === 0}>
             <Download className="w-4 h-4 mr-1" />
-            {applying ? "Importiere..." : `${selected.size} übernehmen`}
+            {applying ? "Importiere..." : `${visibleSelected.length} übernehmen`}
           </Button>
         </DialogFooter>
+
       </DialogContent>
     </Dialog>
   );
