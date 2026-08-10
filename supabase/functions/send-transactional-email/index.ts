@@ -426,6 +426,29 @@ Deno.serve(async (req) => {
 
   console.log('Transactional email enqueued', { templateName, effectiveRecipient })
 
+  // Dispatcher direkt anstossen. Auf self-hosted Stacks sind pg_cron/pg_net/Vault
+  // nicht zwingend eingerichtet – ohne diesen Aufruf bliebe die Mail in der Queue.
+  try {
+    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    if (serviceKey) {
+      const dispatch = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/process-email-queue`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Lovable-Context': 'cron',
+          Authorization: `Bearer ${serviceKey}`,
+        },
+        body: '{}',
+      })
+      if (!dispatch.ok) {
+        console.error('Dispatcher-Aufruf fehlgeschlagen', dispatch.status, (await dispatch.text()).slice(0, 300))
+      }
+    }
+  } catch (e) {
+    console.error('Dispatcher-Aufruf fehlgeschlagen', e)
+  }
+
+
   return new Response(
     JSON.stringify({ success: true, queued: true }),
     {
