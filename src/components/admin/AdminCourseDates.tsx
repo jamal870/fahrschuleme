@@ -10,10 +10,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, Users, Copy, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, FileDown, ChevronDown, UserPlus } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, Users, Copy, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, FileDown, ChevronDown, UserPlus, Download } from "lucide-react";
 import { generateParticipantList, downloadPdf, type Participant } from "@/lib/pdf-generator";
 import AttendanceDialog from "./AttendanceDialog";
 import ManualParticipantDialog from "./ManualParticipantDialog";
+import AsaImportDialog from "./AsaImportDialog";
 import type { Tables } from "@/integrations/supabase/types";
 
 type CourseDate = Tables<"course_dates"> & { instructor_number?: string | null };
@@ -56,6 +57,7 @@ const AdminCourseDates = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
+  const [asaOpen, setAsaOpen] = useState(false);
   const [attendanceCourse, setAttendanceCourse] = useState<CourseDate | null>(null);
   const [addParticipantCourse, setAddParticipantCourse] = useState<CourseDate | null>(null);
   const [calMonth, setCalMonth] = useState(() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); });
@@ -245,6 +247,9 @@ const AdminCourseDates = () => {
         <div className="flex gap-2 flex-wrap">
           <Button variant="outline" size="sm" onClick={fetchCourses} className="font-body">
             <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setAsaOpen(true)} className="font-body">
+            <Download className="w-4 h-4 mr-1" /> Aus asa importieren
           </Button>
           <Button variant="outline" size="sm" onClick={async () => {
             const today = new Date(); today.setHours(0,0,0,0);
@@ -498,6 +503,7 @@ const AdminCourseDates = () => {
         </TabsContent>
       </Tabs>
 
+      <AsaImportDialog open={asaOpen} onClose={() => setAsaOpen(false)} onImported={fetchCourses} />
       <BulkCreateDialog open={bulkOpen} onClose={() => setBulkOpen(false)} onCreated={fetchCourses} />
       <AttendanceDialog course={attendanceCourse} open={!!attendanceCourse} onClose={() => setAttendanceCourse(null)} />
       <ManualParticipantDialog
