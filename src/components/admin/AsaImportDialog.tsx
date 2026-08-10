@@ -93,7 +93,7 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
   };
 
   const apply = async () => {
-    const ids = Array.from(selected);
+    const ids = visibleSelected;
     if (ids.length === 0) { toast.info("Nichts ausgewählt"); return; }
     setApplying(true);
     const { data, error } = await supabase.functions.invoke("import-asa-courses", {
