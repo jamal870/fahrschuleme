@@ -90,11 +90,26 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
     const r = data as any;
     toast.success(`${r.created} neu, ${r.updated} aktualisiert`);
     if (r.errors?.length) toast.warning(r.errors.join(" | "));
+
+    // Importierte Termine direkt in den Google Kalender schreiben
+    let gcalOk = 0, gcalFail = 0;
+    for (const id of ids) {
+      try {
+        const { error: gErr } = await supabase.functions.invoke("sync-course-to-gcal", {
+          body: { courseDateId: id, action: "upsert" },
+        });
+        gErr ? gcalFail++ : gcalOk++;
+      } catch { gcalFail++; }
+    }
+    if (gcalOk) toast.success(`${gcalOk} Termine in Google Kalender übertragen`);
+    if (gcalFail) toast.warning(`${gcalFail} Termine konnten nicht in den Kalender geschrieben werden`);
+
     onImported();
     onClose();
     setLoaded(false);
     setItems([]);
   };
+
 
   const badge = (a: AsaItem["action"]) =>
     a === "new" ? <Badge>neu</Badge>
