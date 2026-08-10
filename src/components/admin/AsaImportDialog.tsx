@@ -83,8 +83,9 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
     });
     setApplying(false);
     if (error || (data as any)?.error) {
-      toast.error("Import fehlgeschlagen: " + (error?.message || (data as any)?.error));
+      toast.error("Import fehlgeschlagen: " + (await readError(error, data)));
       return;
+
     }
     const r = data as any;
     toast.success(`${r.created} neu, ${r.updated} aktualisiert`);
