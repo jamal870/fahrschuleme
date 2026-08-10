@@ -414,6 +414,7 @@ Deno.serve(async (req) => {
       }
     } else {
 
+
       const created = await gcall(`/calendars/${encodeURIComponent(CALENDAR_ID)}/events`, "POST", eventBody);
       eventId = created.id;
     }
