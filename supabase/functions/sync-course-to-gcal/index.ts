@@ -405,11 +405,15 @@ Deno.serve(async (req) => {
       try {
         await gcall(`/calendars/${encodeURIComponent(CALENDAR_ID)}/events/${eventId}`, "PUT", eventBody);
       } catch (e) {
-        console.warn("PUT failed, creating new:", (e as Error).message);
+        // Nur wenn das Event wirklich nicht mehr existiert, neu anlegen.
+        // Bei Rate-Limit/Serverfehlern NICHT neu anlegen -> sonst Duplikate im Kalender.
+        if (e instanceof GCalError && !e.isMissing) throw e;
+        console.warn("Event nicht mehr vorhanden, lege neu an:", (e as Error).message);
         const created = await gcall(`/calendars/${encodeURIComponent(CALENDAR_ID)}/events`, "POST", eventBody);
         eventId = created.id;
       }
     } else {
+
       const created = await gcall(`/calendars/${encodeURIComponent(CALENDAR_ID)}/events`, "POST", eventBody);
       eventId = created.id;
     }
