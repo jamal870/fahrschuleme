@@ -50,12 +50,25 @@ const ASSISTANT_LABELS: Record<string, string> = {
   admin: "Admin-Assistent",
 };
 
+const DEFAULT_PROVIDERS: ProviderRow[] = [
+  { provider: "lovable", enabled: true, has_key: false, masked_key: null },
+  { provider: "openai", enabled: false, has_key: false, masked_key: null },
+  { provider: "gemini", enabled: false, has_key: false, masked_key: null },
+  { provider: "anthropic", enabled: false, has_key: false, masked_key: null },
+];
+
+const DEFAULT_ASSISTANTS: AssistantRow[] = [
+  { assistant: "chatbot", provider: "lovable", model: "google/gemini-3.6-flash" },
+  { assistant: "admin", provider: "lovable", model: "google/gemini-3.6-flash" },
+];
+
 export default function AdminAiSettings() {
   const [loading, setLoading] = useState(true);
   const [providers, setProviders] = useState<ProviderRow[]>([]);
   const [assistants, setAssistants] = useState<AssistantRow[]>([]);
   const [keyInputs, setKeyInputs] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
+  const [backendOk, setBackendOk] = useState(true);
 
   const call = async (payload: Record<string, unknown>) => {
     const { data, error } = await supabase.functions.invoke("ai-settings", { body: payload });
