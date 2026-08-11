@@ -1077,13 +1077,15 @@ export default function ChatBot() {
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Schreib eine Nachricht..."
+                  placeholder={aiThinking ? "Ask AI denkt nach..." : "Frag mich alles – z.B. Preise, Termine..."}
+                  disabled={aiThinking}
                   className="flex-1 bg-muted border-0 text-[13px] h-11 font-body"
                   style={{ borderRadius: "22px" }}
                 />
-                <Button type="submit" size="icon" className="h-11 w-11 shrink-0 bg-primary hover:bg-primary/90" style={{ borderRadius: "22px" }}>
-                  <Send className="w-4 h-4" />
+                <Button type="submit" size="icon" disabled={aiThinking} className="h-11 w-11 shrink-0 bg-primary hover:bg-primary/90" style={{ borderRadius: "22px" }}>
+                  {aiThinking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </Button>
+
               </form>
             </div>
           </motion.div>
