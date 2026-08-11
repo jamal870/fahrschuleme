@@ -289,7 +289,24 @@ const AdminCourseDates = () => {
           }} className="font-body">
             <CalendarPlus className="w-4 h-4 mr-1" /> Google Sync
           </Button>
+          <Button variant="outline" size="sm" onClick={async () => {
+            toast.info("Bereinige doppelte Kalendereinträge...");
+            try {
+              const { data, error } = await supabase.functions.invoke("sync-course-to-gcal", { body: { action: "cleanup-duplicates" } });
+              if (error) throw error;
+              if (!data?.ok) throw new Error(data?.error || "Unbekannte Antwort der Kalender-Funktion");
+              const deleted = data?.deleted ?? data?.totalDeleted ?? 0;
+              toast.success(`Bereinigung fertig – ${deleted} doppelte Termine gelöscht`);
+              fetchCourses();
+            } catch (e) {
+              const detail = await functionErrorMessage(e);
+              toast.error(`Bereinigung fehlgeschlagen: ${detail}`, { duration: 10000 });
+            }
+          }} className="font-body">
+            <RefreshCw className="w-4 h-4 mr-1" /> Duplikate bereinigen
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setBulkOpen(true)} className="font-body">
+
             <CalendarPlus className="w-4 h-4 mr-1" /> Mehrere anlegen
           </Button>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
