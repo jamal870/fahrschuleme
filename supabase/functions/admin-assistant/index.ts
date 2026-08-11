@@ -313,8 +313,9 @@ async function runTool(name: string, args: Record<string, any>) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  const apiKey = Deno.env.get("LOVABLE_API_KEY");
-  if (!apiKey) return json({ error: "missing_config" }, 500);
+  const aiConfig = await resolveAiConfig(admin as never, "admin");
+  if ("error" in aiConfig) return json({ error: aiConfig.error }, 500);
+
 
   // --- Admin-Auth ---
   const token = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
@@ -370,15 +371,15 @@ REGELN:
 
   try {
     for (let i = 0; i < 6; i++) {
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const res = await fetch(aiConfig.url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Lovable-API-Key": apiKey,
-          "X-Lovable-AIG-SDK": "fetch",
+          ...aiConfig.headers,
         },
-        body: JSON.stringify({ model: "google/gemini-3.6-flash", messages, tools }),
+        body: JSON.stringify({ model: aiConfig.model, messages, tools }),
       });
+
 
       if (res.status === 429) return json({ error: "rate_limited", message: "Zu viele Anfragen. Bitte kurz warten." }, 429);
       if (res.status === 402) return json({ error: "credits", message: "KI-Guthaben aufgebraucht." }, 402);
