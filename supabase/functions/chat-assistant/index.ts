@@ -181,15 +181,15 @@ ${(body.context ?? "").slice(0, 8000)}`;
 
   try {
     for (let i = 0; i < 4; i++) {
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const res = await fetch(aiConfig.url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Lovable-API-Key": apiKey,
-          "X-Lovable-AIG-SDK": "fetch",
+          ...aiConfig.headers,
         },
-        body: JSON.stringify({ model: "google/gemini-3.6-flash", messages, tools }),
+        body: JSON.stringify({ model: aiConfig.model, messages, tools }),
       });
+
 
       if (res.status === 429) return json({ error: "rate_limited", message: "Zu viele Anfragen. Bitte kurz warten." }, 429);
       if (res.status === 402) return json({ error: "credits", message: "KI-Guthaben aufgebraucht." }, 402);
