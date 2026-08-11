@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_assistant_config: {
+        Row: {
+          assistant: string
+          model: string
+          provider: string
+          updated_at: string
+        }
+        Insert: {
+          assistant: string
+          model?: string
+          provider?: string
+          updated_at?: string
+        }
+        Update: {
+          assistant?: string
+          model?: string
+          provider?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_providers: {
+        Row: {
+          api_key: string | null
+          enabled: boolean
+          provider: string
+          updated_at: string
+        }
+        Insert: {
+          api_key?: string | null
+          enabled?: boolean
+          provider: string
+          updated_at?: string
+        }
+        Update: {
+          api_key?: string | null
+          enabled?: boolean
+          provider?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       booking_items: {
         Row: {
           booking_id: string
