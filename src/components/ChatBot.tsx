@@ -79,6 +79,7 @@ export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [aiThinking, setAiThinking] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [autoOpened, setAutoOpened] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
