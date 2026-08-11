@@ -1,13 +1,14 @@
 ---
-name: Version Freeze v1.9.0
-description: Stable production freeze 2026-08-11 (v1.9.0, self-hosted VPS backend). No changes without explicit approval.
+name: Version Freeze v1.9.1
+description: Stable production freeze 2026-08-11 (v1.9.1, self-hosted VPS backend). No changes without explicit approval.
 type: constraint
 ---
-**Version 1.9.0 ist eingefroren (2026-08-11).**
+**Version 1.9.1 ist eingefroren (2026-08-11).**
 
-Stand: KI-Assistenten (ASK AI öffentlich + Admin-Assistent), BYOK-Keyverwaltung
-(`ai_providers`, `ai_assistant_config`, Edge Function `ai-settings`), ASA-Import,
-Google-Kalender-Sync per Service Account, Auto-Deploy der Edge Functions auf den VPS.
+Stand: KI-Assistenten (ASK AI öffentlich + Admin-Assistent) mit automatischem
+Anbieter-Fallback, BYOK-Keyverwaltung (`ai_providers`, `ai_assistant_config`,
+Edge Function `ai-settings`), ASA-Import, Google-Kalender-Sync per Service Account,
+Auto-Deploy der Edge Functions auf den VPS.
 Backend läuft self-hosted auf dem Hostinger-VPS, Frontend auf Netlify.
 
 Keine Code-Änderungen mehr ohne ausdrückliche Freigabe des Betreibers. Erlaubt sind nur:
