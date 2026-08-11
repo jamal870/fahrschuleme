@@ -131,31 +131,3 @@ export async function resolveAiConfig(
 
   return buildConfig(provider, model, apiKey);
 }
-
-
-  if (provider === "openai") {
-    return {
-      provider,
-      model: model || DEFAULT_MODELS.openai,
-      url: "https://api.openai.com/v1/chat/completions",
-      headers: { Authorization: `Bearer ${apiKey}` },
-    };
-  }
-
-  if (provider === "gemini") {
-    return {
-      provider,
-      model: model || DEFAULT_MODELS.gemini,
-      url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
-      headers: { Authorization: `Bearer ${apiKey}` },
-    };
-  }
-
-  // anthropic (OpenAI-kompatibler Endpunkt)
-  return {
-    provider,
-    model: model || DEFAULT_MODELS.anthropic,
-    url: "https://api.anthropic.com/v1/chat/completions",
-    headers: { Authorization: `Bearer ${apiKey}` },
-  };
-}
