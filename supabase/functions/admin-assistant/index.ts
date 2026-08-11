@@ -429,6 +429,7 @@ REGELN:
     return json({ reply: "Das dauert gerade zu lange – bitte formuliere die Anfrage etwas einfacher.", actions });
   } catch (e) {
     console.error("admin-assistant failed", e);
-    return json({ error: "internal_error" }, 500);
+    return json({ error: `KI-Fehler: ${e instanceof Error ? e.message : String(e)}` }, 500);
   }
-});
+}
+
