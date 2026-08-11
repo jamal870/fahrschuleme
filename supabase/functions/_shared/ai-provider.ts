@@ -131,3 +131,43 @@ export async function resolveAiConfig(
 
   return buildConfig(provider, model, apiKey);
 }
+
+// Ersatz-Anbieter, falls der primäre Anbieter mit 429 (Limit) oder 402 (Guthaben) antwortet.
+export async function alternativeConfigs(
+  admin: Client,
+  exclude: string,
+): Promise<AiCallConfig[]> {
+  const out: AiCallConfig[] = [];
+  const seen = new Set<string>([exclude]);
+
+  const lovableKey = Deno.env.get("LOVABLE_API_KEY");
+  if (lovableKey && !seen.has("lovable")) {
+    seen.add("lovable");
+    out.push({
+      provider: "lovable",
+      model: DEFAULT_MODELS.lovable,
+      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
+      headers: { "Lovable-API-Key": lovableKey, "X-Lovable-AIG-SDK": "fetch" },
+    });
+  }
+
+  for (const provider of ["openai", "gemini", "anthropic"]) {
+    if (seen.has(provider)) continue;
+    let apiKey: string | null = null;
+    try {
+      const { data } = await admin
+        .from("ai_providers")
+        .select("api_key, enabled")
+        .eq("provider", provider)
+        .maybeSingle();
+      if (data?.enabled && data?.api_key) apiKey = data.api_key;
+    } catch (_) { /* ignore */ }
+    if (!apiKey) apiKey = envKey(provider);
+    if (!apiKey) continue;
+    seen.add(provider);
+    out.push(buildConfig(provider, DEFAULT_MODELS[provider], apiKey));
+  }
+
+  return out;
+}
+

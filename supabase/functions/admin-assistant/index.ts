@@ -2,6 +2,7 @@
 // Nur für eingeloggte Admins. Kann Aktionen und Kurstermine lesen, anlegen,
 // ändern und löschen sowie Buchungs-Statistiken liefern.
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { resolveAiConfig, alternativeConfigs, type AiCallConfig } from "../_shared/ai-provider.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -326,7 +327,7 @@ async function handle(req: Request) {
     return json({ error: "Server-Konfiguration unvollständig (SUPABASE_URL / SERVICE_ROLE_KEY / ANON_KEY fehlen)." }, 500);
   }
 
-  const aiConfig = await resolveAiConfig(admin as never, "admin");
+  let aiConfig = await resolveAiConfig(admin as never, "admin");
   if ("error" in aiConfig) return json({ error: aiConfig.error }, 500);
 
 
@@ -382,6 +383,7 @@ REGELN:
 
   const messages: Record<string, unknown>[] = [{ role: "system", content: system }, ...history];
   const actions: string[] = [];
+  let alternates: AiCallConfig[] | null = null;
 
   try {
     for (let i = 0; i < 6; i++) {
@@ -395,8 +397,20 @@ REGELN:
       });
 
 
-      if (res.status === 429) return json({ error: "rate_limited", message: "Zu viele Anfragen. Bitte kurz warten." }, 429);
-      if (res.status === 402) return json({ error: "credits", message: "KI-Guthaben aufgebraucht." }, 402);
+      if (res.status === 429 || res.status === 402) {
+        // Limit/Guthaben erschöpft: automatisch auf einen anderen konfigurierten Anbieter wechseln.
+        if (alternates === null) alternates = await alternativeConfigs(admin as never, aiConfig.provider);
+        const next = alternates.shift();
+        if (next) {
+          console.log("switching ai provider", aiConfig.provider, "->", next.provider, res.status);
+          aiConfig = next;
+          i--;
+          continue;
+        }
+        return res.status === 429
+          ? json({ error: "rate_limited", message: `Das KI-Kontingent von „${aiConfig.provider}" ist erschöpft. Bitte im Admin unter „KI-Keys" einen anderen Anbieter aktivieren.` }, 429)
+          : json({ error: "credits", message: `KI-Guthaben von „${aiConfig.provider}" aufgebraucht. Bitte im Admin unter „KI-Keys" einen anderen Anbieter aktivieren.` }, 402);
+      }
       if (!res.ok) {
         const detail = await res.text();
         console.error("gateway error", res.status, detail);
