@@ -320,15 +320,40 @@ export default function AdminAiSettings() {
                   </datalist>
                 </div>
               </div>
-              <Button onClick={() => saveAssistant(a)} disabled={busy === a.assistant}>
-                {busy === a.assistant ? (
-                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4 mr-1" />
-                )}
-                Speichern
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button onClick={() => saveAssistant(a)} disabled={busy === a.assistant}>
+                  {busy === a.assistant ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4 mr-1" />
+                  )}
+                  Speichern
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => testProvider(a.provider, a.model, `assistant-${a.assistant}`)}
+                  disabled={busy === `test-assistant-${a.assistant}`}
+                >
+                  {busy === `test-assistant-${a.assistant}` ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : (
+                    <Zap className="h-4 w-4 mr-1" />
+                  )}
+                  Diese Kombination testen
+                </Button>
+              </div>
+              {testResults[`assistant-${a.assistant}`] && (
+                <p
+                  className={`text-xs ${
+                    testResults[`assistant-${a.assistant}`]!.ok ? "text-primary" : "text-destructive"
+                  }`}
+                >
+                  {testResults[`assistant-${a.assistant}`]!.ok ? "✓ " : "✗ "}
+                  {testResults[`assistant-${a.assistant}`]!.message}
+                </p>
+              )}
             </div>
+
           ))}
           <p className="text-xs text-muted-foreground">
             Ist ein gewählter Anbieter nicht aktiv oder fehlt der Key, nutzt der Assistent
