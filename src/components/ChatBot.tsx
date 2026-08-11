@@ -116,6 +116,8 @@ export default function ChatBot() {
   const [aiThinking, setAiThinking] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [autoOpened, setAutoOpened] = useState(false);
+  const [aiQuestionCount, setAiQuestionCount] = useState(0);
+  const AI_QUESTION_LIMIT = 5;
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Grundkurs booking state
