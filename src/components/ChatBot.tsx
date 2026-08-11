@@ -80,7 +80,7 @@ function buildAiContext(): string {
     items.map((i) => `- ${i.name}: CHF ${i.price}${i.note ? ` (${i.note})` : ""}`).join("\n");
 
   return [
-    `Fahrschule: ${t.brand.name} – ${t.tagline ?? t.brand.tagline}`,
+    `Fahrschule: ${t.brand.name} – ${t.brand.tagline}`,
     `Standort: ${t.contact.address.detail}, ${t.contact.address.city}`,
     `Telefon: ${t.contact.phone} | E-Mail: ${t.contact.email} | WhatsApp: ${t.contact.whatsappUrl}`,
     `Öffnungszeiten: ${t.contact.openingHours}`,
