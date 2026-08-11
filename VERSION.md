@@ -1,3 +1,23 @@
+# Version 1.9.1 — Hotfix: KI-Assistenten (Anbieter-Fallback)
+
+**Release-Datum:** 2026-08-11
+
+- **Fehlender Import behoben:** `supabase/functions/admin-assistant/index.ts` rief
+  `resolveAiConfig` ohne Import auf → Serverfehler 500 im Tab „KI-Assistent".
+- **Automatischer Anbieter-Wechsel:** `alternativeConfigs()` in
+  `supabase/functions/_shared/ai-provider.ts`; bei HTTP 429 (Limit) oder 402
+  (Guthaben) wechseln Chat- und Admin-Assistent selbstständig auf den nächsten
+  konfigurierten Anbieter (Lovable → OpenAI → Gemini → Anthropic).
+- **Klartext statt Standardfehler:** Ist kein Anbieter mehr übrig, nennt die Meldung
+  den erschöpften Anbieter und verweist auf den Tab „KI-Keys".
+- `src/components/ChatBot.tsx` zeigt die Server-Meldung statt pauschal
+  „Da ist gerade etwas schiefgelaufen".
+
+**Ursache im Livebetrieb:** Der aktive KI-Anbieter antwortete mit 429 (Kontingent
+erschöpft) — deshalb schlug jede Chat-Antwort fehl.
+
+---
+
 # Version 1.9.0 — KI-Assistenten, BYOK-Keys & Auto-Deploy
 
 **Release-Datum:** 2026-08-11
