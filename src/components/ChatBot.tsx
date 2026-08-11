@@ -1058,8 +1058,18 @@ export default function ChatBot() {
                     </motion.div>
                   ))}
                 </AnimatePresence>
+                {aiThinking && (
+                  <div className="flex justify-start">
+                    <div className="bg-card border border-border shadow-sm rounded-lg rounded-bl-sm px-4 py-3 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  </div>
+                )}
               </div>
             </ScrollArea>
+
 
             {/* Input */}
             <div className="px-5 py-4 border-t border-border bg-card shrink-0">
