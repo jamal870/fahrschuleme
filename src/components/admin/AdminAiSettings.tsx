@@ -50,12 +50,25 @@ const ASSISTANT_LABELS: Record<string, string> = {
   admin: "Admin-Assistent",
 };
 
+const DEFAULT_PROVIDERS: ProviderRow[] = [
+  { provider: "lovable", enabled: true, has_key: false, masked_key: null },
+  { provider: "openai", enabled: false, has_key: false, masked_key: null },
+  { provider: "gemini", enabled: false, has_key: false, masked_key: null },
+  { provider: "anthropic", enabled: false, has_key: false, masked_key: null },
+];
+
+const DEFAULT_ASSISTANTS: AssistantRow[] = [
+  { assistant: "chatbot", provider: "lovable", model: "google/gemini-3.6-flash" },
+  { assistant: "admin", provider: "lovable", model: "google/gemini-3.6-flash" },
+];
+
 export default function AdminAiSettings() {
   const [loading, setLoading] = useState(true);
   const [providers, setProviders] = useState<ProviderRow[]>([]);
   const [assistants, setAssistants] = useState<AssistantRow[]>([]);
   const [keyInputs, setKeyInputs] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
+  const [backendOk, setBackendOk] = useState(true);
 
   const call = async (payload: Record<string, unknown>) => {
     const { data, error } = await supabase.functions.invoke("ai-settings", { body: payload });
@@ -68,9 +81,15 @@ export default function AdminAiSettings() {
     setLoading(true);
     try {
       const data = await call({ action: "list" });
-      setProviders(data.providers ?? []);
-      setAssistants(data.assistants ?? []);
+      const provs: ProviderRow[] = data.providers ?? [];
+      const asss: AssistantRow[] = data.assistants ?? [];
+      setProviders(provs.length ? provs : DEFAULT_PROVIDERS);
+      setAssistants(asss.length ? asss : DEFAULT_ASSISTANTS);
+      setBackendOk(true);
     } catch (e) {
+      setProviders(DEFAULT_PROVIDERS);
+      setAssistants(DEFAULT_ASSISTANTS);
+      setBackendOk(false);
       toast.error("KI-Einstellungen konnten nicht geladen werden", {
         description: e instanceof Error ? e.message : undefined,
       });
@@ -78,6 +97,7 @@ export default function AdminAiSettings() {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     load();
@@ -144,6 +164,13 @@ export default function AdminAiSettings() {
 
   return (
     <div className="space-y-6">
+      {!backendOk && (
+        <div className="rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm">
+          Die Funktion <code>ai-settings</code> ist auf dem Live-Server noch nicht installiert.
+          Änderungen können erst gespeichert werden, wenn sie deployed ist. Unten siehst du die
+          Standardwerte.
+        </div>
+      )}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-heading uppercase">
