@@ -31,13 +31,26 @@ jobs:
 
             APP_DIR="${{ secrets.VPS_APP_PATH }}"
             SUPA_DIR="${{ secrets.VPS_SUPABASE_PATH }}"
-            [ -n "$APP_DIR" ] || { echo "VPS_APP_PATH secret is missing"; exit 1; }
-            [ -n "$SUPA_DIR" ] || SUPA_DIR="$APP_DIR"
+            # Fallback: gaengige Pfade automatisch erkennen, falls kein Secret gesetzt ist
+            if [ -z "$APP_DIR" ]; then
+              for p in /opt/fahrschuleme /opt/supabase /root/fahrschuleme /opt/app; do
+                if [ -d "$p/.git" ]; then APP_DIR="$p"; break; fi
+              done
+            fi
+            [ -n "$APP_DIR" ] || { echo "VPS_APP_PATH secret fehlt und kein Repo-Pfad gefunden"; exit 1; }
+            if [ -z "$SUPA_DIR" ]; then
+              if [ -f "/opt/supabase/docker-compose.yml" ]; then SUPA_DIR="/opt/supabase"; else SUPA_DIR="$APP_DIR"; fi
+            fi
 
             echo "==> Pull latest code in $APP_DIR"
             cd "$APP_DIR"
             git fetch --all --prune
             git reset --hard origin/main
+
+            echo "==> Functions in den Stack kopieren"
+            if [ -f "$APP_DIR/infrastructure/supabase/scripts/deploy-functions.sh" ]; then
+              STACK_DIR="$SUPA_DIR" bash "$APP_DIR/infrastructure/supabase/scripts/deploy-functions.sh"
+            fi
 
             echo "==> Restart edge functions container in $SUPA_DIR"
             cd "$SUPA_DIR"
