@@ -15,6 +15,7 @@ import AdminPromotions from "@/components/admin/AdminPromotions";
 import AdminEmailSettings from "@/components/admin/AdminEmailSettings";
 import AdminContent from "@/components/admin/AdminContent";
 import AdminAssistant from "@/components/admin/AdminAssistant";
+import AdminAiSettings from "@/components/admin/AdminAiSettings";
 
 import BrandLogo from "@/components/BrandLogo";
 import ChangePasswordDialog from "@/components/admin/ChangePasswordDialog";
@@ -126,6 +127,7 @@ const Admin = () => {
             <TabsTrigger value="emails" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">E-Mails</TabsTrigger>
             <TabsTrigger value="content" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Inhalte & Preise</TabsTrigger>
             <TabsTrigger value="assistant" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Assistent</TabsTrigger>
+            <TabsTrigger value="ai-settings" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Keys</TabsTrigger>
           </TabsList>
 
           <TabsContent value="courses"><AdminCourseDates /></TabsContent>
@@ -141,6 +143,7 @@ const Admin = () => {
           <TabsContent value="emails"><AdminEmailSettings /></TabsContent>
           <TabsContent value="content"><AdminContent /></TabsContent>
           <TabsContent value="assistant"><AdminAssistant /></TabsContent>
+          <TabsContent value="ai-settings"><AdminAiSettings /></TabsContent>
 
         </Tabs>
       </main>

@@ -50,3 +50,6 @@ verify_jwt = false
 [functions.admin-assistant]
 verify_jwt = true
 
+
+[functions.ai-settings]
+verify_jwt = true

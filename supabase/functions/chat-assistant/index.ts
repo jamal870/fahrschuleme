@@ -3,6 +3,7 @@
 // und kann bestehende Chat-Flows (Buchung, Kontakt, FAQ) auslösen.
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { resolveAiConfig } from "../_shared/ai-provider.ts";
 
 const admin = createClient(
   Deno.env.get("SUPABASE_URL") ?? "",
@@ -140,8 +141,9 @@ async function runTool(name: string, args: Record<string, unknown>) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
-  const apiKey = Deno.env.get("LOVABLE_API_KEY");
-  if (!apiKey) return json({ error: "missing_config" }, 500);
+  const aiConfig = await resolveAiConfig(admin as never, "chatbot");
+  if ("error" in aiConfig) return json({ error: aiConfig.error }, 500);
+
 
   let body: { messages?: { role: string; content: string }[]; context?: string };
   try {
@@ -180,15 +182,15 @@ ${(body.context ?? "").slice(0, 8000)}`;
 
   try {
     for (let i = 0; i < 4; i++) {
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const res = await fetch(aiConfig.url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Lovable-API-Key": apiKey,
-          "X-Lovable-AIG-SDK": "fetch",
+          ...aiConfig.headers,
         },
-        body: JSON.stringify({ model: "google/gemini-3.6-flash", messages, tools }),
+        body: JSON.stringify({ model: aiConfig.model, messages, tools }),
       });
+
 
       if (res.status === 429) return json({ error: "rate_limited", message: "Zu viele Anfragen. Bitte kurz warten." }, 429);
       if (res.status === 402) return json({ error: "credits", message: "KI-Guthaben aufgebraucht." }, 402);
