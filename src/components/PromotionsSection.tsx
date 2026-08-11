@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Tag, ArrowRight } from "lucide-react";
+import { Sparkles, Tag, ArrowRight, ExternalLink } from "lucide-react";
+
+const FAHRSTUNDEN_APP_URL = "https://app.l-me.ch/api/anmeldung";
 
 interface Promotion {
   id: string;
@@ -11,6 +13,7 @@ interface Promotion {
   badge: string | null;
   original_price: number | null;
   discount_price: number | null;
+  category: string | null;
   starts_at: string | null;
   ends_at: string | null;
 }
@@ -23,7 +26,7 @@ const PromotionsSection = () => {
     const load = async () => {
       const { data } = await supabase
         .from("promotions")
-        .select("id,title,description,price,badge,starts_at,ends_at,sort_order,original_price,discount_price")
+        .select("id,title,description,price,badge,category,starts_at,ends_at,sort_order,original_price,discount_price")
         .eq("active", true)
         .order("sort_order", { ascending: true });
       setItems((data || []) as Promotion[]);
@@ -148,6 +151,18 @@ const PromotionsSection = () => {
                   </div>
                 );
               })()}
+
+              {(p.category === "fahrstunden_auto" || p.category === "fahrstunden_motorrad") && (
+                <a
+                  href={FAHRSTUNDEN_APP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative mt-5 inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
+                  style={{ borderRadius: "3px" }}
+                >
+                  Jetzt buchen <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
 
               {/* Hover glow */}
               <div
