@@ -908,13 +908,21 @@ export default function ChatBot() {
           buttons: mainMenu,
         });
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("chat-assistant error", e);
+      const serverMsg =
+        (typeof e?.context?.body === "string" ? (() => { try { return JSON.parse(e.context.body)?.message; } catch { return null; } })() : null) ||
+        e?.message;
       addMsg({
         role: "bot",
-        content: "Da ist gerade etwas schiefgelaufen. Wähle bitte ein Thema oder ruf uns an: **" + tenantConfig.contact.phone + "**",
+        content:
+          (serverMsg && typeof serverMsg === "string" && serverMsg.length < 300 && !/non-2xx/i.test(serverMsg)
+            ? serverMsg + "\n\n"
+            : "Da ist gerade etwas schiefgelaufen. ") +
+          "Wähle bitte ein Thema oder ruf uns an: **" + tenantConfig.contact.phone + "**",
         buttons: mainMenu,
       });
+
     } finally {
       setAiThinking(false);
     }
