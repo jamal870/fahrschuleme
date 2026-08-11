@@ -1,3 +1,45 @@
+# Version 1.9.0 — KI-Assistenten, BYOK-Keys & Auto-Deploy
+
+**Release-Datum:** 2026-08-11
+**Status:** ✅ Umgesetzt, geprüft & eingefroren (Freigabe vom Betreiber 2026-08-11)
+
+## Neu
+
+- **ASK AI Chatbot (öffentlich)** — `chat-assistant` Edge Function mit Tool-Calling
+  auf Live-Daten (Kurstermine, Preise, Aktionen). Frage-Limit: 5 Fragen pro Sitzung,
+  ausgenommen laufende Buchungen (`bookingStep > 0` / `fsStep > 0`).
+- **KI-Assistent im Admin** — `admin-assistant` Edge Function + Tab „KI-Assistent"
+  (`src/components/admin/AdminAssistant.tsx`): Aktionen anlegen, Kurse planen, Abfragen.
+- **BYOK (Bring Your Own Key)** — Tab „KI-Keys" (`src/components/admin/AdminAiSettings.tsx`)
+  mit Tabellen `ai_providers` / `ai_assistant_config`, Edge Function `ai-settings`
+  (Actions: `list`, `save_provider`, `save_assistant`) und Inline-Verbindungstest
+  pro Anbieter/Assistent.
+- **Provider-Fallbacks** — `supabase/functions/_shared/ai-provider.ts` nutzt
+  `LOVABLE_API_KEY`, sonst `OPENAI_API_KEY`, `GEMINI_API_KEY`, `GOOGLE_AI_API_KEY`
+  oder `ANTHROPIC_API_KEY`. Standardmodell: `google/gemini-3.6-flash`.
+- **Fehlerklartext** — globale try/catch-Hüllen in `admin-assistant`, `chat-assistant`
+  und `ai-settings`; fehlende KI-Tabellen werden im UI wörtlich gemeldet statt „non-2xx".
+- **Auto-Deploy** — `.github/workflows/deploy-vps-functions.yml` deployt Edge Functions
+  per SSH auf den VPS (Secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `VPS_APP_PATH`).
+  Alter Cloud-Supabase-Deploy-Workflow entfernt.
+
+## Weitere Änderungen seit 1.8.2
+
+- ASA-Import (`import-asa-courses` + `AsaImportDialog.tsx`) inkl. Datumsfilter von/bis.
+- Google-Kalender-Sync über Service Account, Duplikat-Bereinigung im Admin.
+- Fahrstunden-Aktionen mit Glow-Highlight, externe Anmeldung via `app.l-me.ch/api/anmeldung`.
+- Passwort-Änderung im Admin (`ChangePasswordDialog.tsx`), Teilnehmer-Löschung räumt
+  zugehörige Datensätze mit auf.
+- Self-hosted Supabase auf Hostinger-VPS als produktives Backend.
+
+## Betriebshinweis
+
+Neue Edge Functions und Migrationen müssen auf dem VPS eingespielt sein
+(`git pull` + Function-Restart, Migrationen für `ai_providers` / `ai_assistant_config`),
+sonst meldet der Tab „KI-Keys" fehlende Tabellen.
+
+---
+
 # Version 1.8.2 — Self-Hosting-Stack (Infrastruktur)
 
 **Release-Datum:** 2026-08-08
