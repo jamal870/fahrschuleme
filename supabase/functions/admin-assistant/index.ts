@@ -2,6 +2,7 @@
 // Nur für eingeloggte Admins. Kann Aktionen und Kurstermine lesen, anlegen,
 // ändern und löschen sowie Buchungs-Statistiken liefern.
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { resolveAiConfig, alternativeConfigs, type AiCallConfig } from "../_shared/ai-provider.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -382,6 +383,7 @@ REGELN:
 
   const messages: Record<string, unknown>[] = [{ role: "system", content: system }, ...history];
   const actions: string[] = [];
+  let alternates: AiCallConfig[] | null = null;
 
   try {
     for (let i = 0; i < 6; i++) {
