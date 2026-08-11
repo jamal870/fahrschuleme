@@ -69,6 +69,9 @@ export default function AdminAiSettings() {
   const [keyInputs, setKeyInputs] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
   const [backendOk, setBackendOk] = useState(true);
+  const [testResults, setTestResults] = useState<
+    Record<string, { ok: boolean; message: string; at: number } | undefined>
+  >({});
 
   const call = async (payload: Record<string, unknown>) => {
     const { data, error } = await supabase.functions.invoke("ai-settings", { body: payload });
@@ -119,20 +122,35 @@ export default function AdminAiSettings() {
     }
   };
 
-  const testProvider = async (provider: string, model?: string) => {
-    setBusy(`test-${provider}`);
+  const testProvider = async (provider: string, model?: string, resultKey?: string) => {
+    const key = resultKey ?? provider;
+    setBusy(`test-${key}`);
+    setTestResults((s) => ({ ...s, [key]: undefined as never }));
     try {
       const res = await call({ action: "test", provider, model });
-      if (res.ok) toast.success(`Verbindung ok (${res.provider} / ${res.model})`);
-      else toast.error(`Fehler ${res.status}`, { description: String(res.detail ?? "").slice(0, 200) });
+      if (res.ok) {
+        setTestResults((s) => ({
+          ...s,
+          [key]: { ok: true, message: `Verbindung ok (${res.provider} / ${res.model})`, at: Date.now() },
+        }));
+        toast.success(`Verbindung ok (${res.provider} / ${res.model})`);
+      } else {
+        const detail = String(res.detail ?? "").slice(0, 200);
+        setTestResults((s) => ({
+          ...s,
+          [key]: { ok: false, message: `Fehler ${res.status}: ${detail || "unbekannt"}`, at: Date.now() },
+        }));
+        toast.error(`Fehler ${res.status}`, { description: detail });
+      }
     } catch (e) {
-      toast.error("Test fehlgeschlagen", {
-        description: e instanceof Error ? e.message : undefined,
-      });
+      const msg = e instanceof Error ? e.message : "Unbekannter Fehler";
+      setTestResults((s) => ({ ...s, [key]: { ok: false, message: msg, at: Date.now() } }));
+      toast.error("Test fehlgeschlagen", { description: msg });
     } finally {
       setBusy(null);
     }
   };
+
 
   const saveAssistant = async (row: AssistantRow) => {
     setBusy(row.assistant);
@@ -229,19 +247,32 @@ export default function AdminAiSettings() {
                 </>
               )}
 
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => testProvider(p.provider)}
-                disabled={busy === `test-${p.provider}`}
-              >
-                {busy === `test-${p.provider}` ? (
-                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                ) : (
-                  <Zap className="h-4 w-4 mr-1" />
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => testProvider(p.provider)}
+                  disabled={busy === `test-${p.provider}`}
+                >
+                  {busy === `test-${p.provider}` ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : (
+                    <Zap className="h-4 w-4 mr-1" />
+                  )}
+                  Verbindung testen
+                </Button>
+                {testResults[p.provider] && (
+                  <span
+                    className={`text-xs ${
+                      testResults[p.provider]!.ok ? "text-primary" : "text-destructive"
+                    }`}
+                  >
+                    {testResults[p.provider]!.ok ? "✓ " : "✗ "}
+                    {testResults[p.provider]!.message}
+                  </span>
                 )}
-                Verbindung testen
-              </Button>
+              </div>
+
             </div>
           ))}
         </CardContent>
@@ -302,15 +333,40 @@ export default function AdminAiSettings() {
                   </datalist>
                 </div>
               </div>
-              <Button onClick={() => saveAssistant(a)} disabled={busy === a.assistant}>
-                {busy === a.assistant ? (
-                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4 mr-1" />
-                )}
-                Speichern
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button onClick={() => saveAssistant(a)} disabled={busy === a.assistant}>
+                  {busy === a.assistant ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4 mr-1" />
+                  )}
+                  Speichern
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => testProvider(a.provider, a.model, `assistant-${a.assistant}`)}
+                  disabled={busy === `test-assistant-${a.assistant}`}
+                >
+                  {busy === `test-assistant-${a.assistant}` ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : (
+                    <Zap className="h-4 w-4 mr-1" />
+                  )}
+                  Diese Kombination testen
+                </Button>
+              </div>
+              {testResults[`assistant-${a.assistant}`] && (
+                <p
+                  className={`text-xs ${
+                    testResults[`assistant-${a.assistant}`]!.ok ? "text-primary" : "text-destructive"
+                  }`}
+                >
+                  {testResults[`assistant-${a.assistant}`]!.ok ? "✓ " : "✗ "}
+                  {testResults[`assistant-${a.assistant}`]!.message}
+                </p>
+              )}
             </div>
+
           ))}
           <p className="text-xs text-muted-foreground">
             Ist ein gewählter Anbieter nicht aktiv oder fehlt der Key, nutzt der Assistent
