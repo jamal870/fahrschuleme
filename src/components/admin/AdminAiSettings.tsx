@@ -247,19 +247,32 @@ export default function AdminAiSettings() {
                 </>
               )}
 
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => testProvider(p.provider)}
-                disabled={busy === `test-${p.provider}`}
-              >
-                {busy === `test-${p.provider}` ? (
-                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                ) : (
-                  <Zap className="h-4 w-4 mr-1" />
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => testProvider(p.provider)}
+                  disabled={busy === `test-${p.provider}`}
+                >
+                  {busy === `test-${p.provider}` ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : (
+                    <Zap className="h-4 w-4 mr-1" />
+                  )}
+                  Verbindung testen
+                </Button>
+                {testResults[p.provider] && (
+                  <span
+                    className={`text-xs ${
+                      testResults[p.provider]!.ok ? "text-primary" : "text-destructive"
+                    }`}
+                  >
+                    {testResults[p.provider]!.ok ? "✓ " : "✗ "}
+                    {testResults[p.provider]!.message}
+                  </span>
                 )}
-                Verbindung testen
-              </Button>
+              </div>
+
             </div>
           ))}
         </CardContent>
