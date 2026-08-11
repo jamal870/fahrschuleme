@@ -230,6 +230,7 @@ Deno.serve(async (req) => {
       }
     }
     if (!allowed) {
+      console.warn("[sync-course-to-gcal] Zugriff abgelehnt: weder Service-Role noch Admin");
       return new Response(JSON.stringify({ error: "Kein Admin-Zugriff" }), {
         status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -452,7 +453,14 @@ Deno.serve(async (req) => {
     }
 
 
-    return new Response(JSON.stringify({ ok: true, eventId, saved }), {
+    console.log("[sync-course-to-gcal] erfolgreich", {
+      courseDateId: course.id,
+      eventId,
+      saved,
+      participants: tnCount,
+      calendarConfigured: CALENDAR_ID !== "primary",
+    });
+    return new Response(JSON.stringify({ ok: true, eventId, saved, participants: tnCount }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {

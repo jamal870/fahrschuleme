@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { FunctionsHttpError } from "@supabase/supabase-js";
 import { Download, RefreshCw } from "lucide-react";
 
 interface AsaItem {
@@ -111,16 +112,29 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
 
     // Importierte Termine direkt in den Google Kalender schreiben
     let gcalOk = 0, gcalFail = 0;
+    const gcalErrors = new Set<string>();
     for (const id of ids) {
       try {
-        const { error: gErr } = await supabase.functions.invoke("sync-course-to-gcal", {
+        const { data: gData, error: gErr } = await supabase.functions.invoke("sync-course-to-gcal", {
           body: { courseDateId: id, action: "upsert" },
         });
-        gErr ? gcalFail++ : gcalOk++;
-      } catch { gcalFail++; }
+        if (gErr) throw gErr;
+        if (!(gData as any)?.ok) throw new Error((gData as any)?.error || "Unbekannte Kalender-Antwort");
+        gcalOk++;
+      } catch (error) {
+        gcalFail++;
+        if (error instanceof FunctionsHttpError) {
+          try {
+            const payload = await error.context.clone().json();
+            gcalErrors.add(String(payload?.error || error.message));
+          } catch { gcalErrors.add(error.message); }
+        } else {
+          gcalErrors.add(error instanceof Error ? error.message : String(error));
+        }
+      }
     }
     if (gcalOk) toast.success(`${gcalOk} Termine in Google Kalender übertragen`);
-    if (gcalFail) toast.warning(`${gcalFail} Termine konnten nicht in den Kalender geschrieben werden`);
+    if (gcalFail) toast.warning(`${gcalFail} Kalender-Fehler: ${Array.from(gcalErrors).slice(0, 2).join(" | ")}`, { duration: 10000 });
 
     onImported();
     onClose();

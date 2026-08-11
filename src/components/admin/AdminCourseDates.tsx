@@ -16,6 +16,7 @@ import AttendanceDialog from "./AttendanceDialog";
 import ManualParticipantDialog from "./ManualParticipantDialog";
 import AsaImportDialog from "./AsaImportDialog";
 import type { Tables } from "@/integrations/supabase/types";
+import { FunctionsHttpError } from "@supabase/supabase-js";
 
 type CourseDate = Tables<"course_dates"> & { instructor_number?: string | null };
 
@@ -48,6 +49,18 @@ function fmtDate(d: Date): string {
 }
 function dayName(d: Date): string {
   return ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"][d.getDay()];
+}
+
+async function functionErrorMessage(error: unknown): Promise<string> {
+  if (error instanceof FunctionsHttpError) {
+    try {
+      const payload = await error.context.clone().json();
+      if (payload?.error) return String(payload.error);
+    } catch {
+      try { return await error.context.clone().text(); } catch { /* ignore */ }
+    }
+  }
+  return error instanceof Error ? error.message : String(error);
 }
 
 const AdminCourseDates = () => {
@@ -83,8 +96,9 @@ const AdminCourseDates = () => {
       });
       if (error) throw error;
     } catch (e: any) {
-      console.warn("[gcal sync]", e?.message || e);
-      toast.warning("Google-Kalender-Sync fehlgeschlagen (Termin gespeichert)");
+      const detail = await functionErrorMessage(e);
+      console.warn("[gcal sync]", detail);
+      toast.warning(`Google-Kalender-Sync fehlgeschlagen: ${detail}`);
     }
   };
 
@@ -257,14 +271,21 @@ const AdminCourseDates = () => {
             if (future.length === 0) { toast.info("Keine zukünftigen Termine zum Synchronisieren"); return; }
             toast.info(`Sync läuft für ${future.length} Termine...`);
             let ok = 0, fail = 0;
+            const errors = new Set<string>();
             for (const c of future) {
               try {
-                const { error } = await supabase.functions.invoke("sync-course-to-gcal", { body: { courseDateId: c.id, action: "upsert" } });
+                const { data, error } = await supabase.functions.invoke("sync-course-to-gcal", { body: { courseDateId: c.id, action: "upsert" } });
                 if (error) throw error; ok++;
-              } catch (e) { console.warn(e); fail++; }
+                if (!data?.ok) throw new Error(data?.error || "Unbekannte Antwort der Kalender-Funktion");
+              } catch (e) {
+                const detail = await functionErrorMessage(e);
+                console.warn("[gcal sync]", c.id, detail);
+                errors.add(detail);
+                fail++;
+              }
             }
             if (fail === 0) toast.success(`${ok} Termine in Google Kalender synchronisiert`);
-            else toast.warning(`${ok} ok, ${fail} fehlgeschlagen`);
+            else toast.warning(`${ok} ok, ${fail} fehlgeschlagen: ${Array.from(errors).slice(0, 2).join(" | ")}`, { duration: 10000 });
           }} className="font-body">
             <CalendarPlus className="w-4 h-4 mr-1" /> Google Sync
           </Button>
