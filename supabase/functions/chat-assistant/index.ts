@@ -139,10 +139,20 @@ async function runTool(name: string, args: Record<string, unknown>) {
 }
 
 Deno.serve(async (req) => {
+  try {
+    return await handle(req);
+  } catch (e) {
+    console.error("chat-assistant fatal", e);
+    return json({ error: `Serverfehler: ${e instanceof Error ? e.message : String(e)}` }, 500);
+  }
+});
+
+async function handle(req: Request) {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   const aiConfig = await resolveAiConfig(admin as never, "chatbot");
   if ("error" in aiConfig) return json({ error: aiConfig.error }, 500);
+
 
 
   let body: { messages?: { role: string; content: string }[]; context?: string };
@@ -240,6 +250,6 @@ ${(body.context ?? "").slice(0, 8000)}`;
     return json({ reply: "Das dauert gerade etwas zu lange – frag mich bitte nochmals oder wähle ein Thema.", flow });
   } catch (e) {
     console.error("chat-assistant failed", e);
-    return json({ error: "internal_error" }, 500);
+    return json({ error: `KI-Fehler: ${e instanceof Error ? e.message : String(e)}` }, 500);
   }
-});
+}

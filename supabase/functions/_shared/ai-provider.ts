@@ -23,6 +23,57 @@ type Client = {
   };
 };
 
+const ENV_KEYS: Record<string, string[]> = {
+  openai: ["OPENAI_API_KEY"],
+  gemini: ["GEMINI_API_KEY", "GOOGLE_AI_API_KEY"],
+  anthropic: ["ANTHROPIC_API_KEY"],
+};
+
+function envKey(provider: string): string | null {
+  for (const name of ENV_KEYS[provider] ?? []) {
+    const v = Deno.env.get(name);
+    if (v) return v;
+  }
+  return null;
+}
+
+// Wenn kein Anbieter konfiguriert ist: erster verfügbarer Env-Key gewinnt.
+function envFallback(): AiCallConfig | { error: string } {
+  for (const provider of ["openai", "gemini", "anthropic"]) {
+    const key = envKey(provider);
+    if (key) return buildConfig(provider, DEFAULT_MODELS[provider], key);
+  }
+  return {
+    error:
+      "Kein KI-Anbieter konfiguriert. Bitte im Admin unter „KI-Keys“ einen Anbieter aktivieren und den API-Key speichern (oder LOVABLE_API_KEY / OPENAI_API_KEY / GEMINI_API_KEY auf dem Server setzen).",
+  };
+}
+
+function buildConfig(provider: string, model: string, apiKey: string): AiCallConfig {
+  if (provider === "openai") {
+    return {
+      provider,
+      model: model || DEFAULT_MODELS.openai,
+      url: "https://api.openai.com/v1/chat/completions",
+      headers: { Authorization: `Bearer ${apiKey}` },
+    };
+  }
+  if (provider === "gemini") {
+    return {
+      provider,
+      model: model || DEFAULT_MODELS.gemini,
+      url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      headers: { Authorization: `Bearer ${apiKey}` },
+    };
+  }
+  return {
+    provider,
+    model: model || DEFAULT_MODELS.anthropic,
+    url: "https://api.anthropic.com/v1/chat/completions",
+    headers: { Authorization: `Bearer ${apiKey}` },
+  };
+}
+
 export async function resolveAiConfig(
   admin: Client,
   assistant: "chatbot" | "admin",
@@ -38,11 +89,11 @@ export async function resolveAiConfig(
       .maybeSingle();
     if (data?.provider) provider = data.provider;
     if (data?.model) model = data.model;
-  } catch (_) { /* Fallback auf Lovable AI */ }
+  } catch (_) { /* Fallback unten */ }
 
   if (provider === "lovable") {
     const key = Deno.env.get("LOVABLE_API_KEY");
-    if (!key) return { error: "missing_config" };
+    if (!key) return envFallback();
     return {
       provider,
       model: model || DEFAULT_MODELS.lovable,
@@ -63,41 +114,20 @@ export async function resolveAiConfig(
     enabled = !!data?.enabled;
   } catch (_) { /* ignore */ }
 
-  if (!apiKey || !enabled) {
-    // Fallback: Lovable AI, damit der Assistent nie komplett ausfällt
+  if (!apiKey || !enabled) apiKey = envKey(provider);
+
+  if (!apiKey) {
     const key = Deno.env.get("LOVABLE_API_KEY");
-    if (!key) return { error: "missing_provider_key" };
-    return {
-      provider: "lovable",
-      model: DEFAULT_MODELS.lovable,
-      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
-      headers: { "Lovable-API-Key": key, "X-Lovable-AIG-SDK": "fetch" },
-    };
+    if (key) {
+      return {
+        provider: "lovable",
+        model: DEFAULT_MODELS.lovable,
+        url: "https://ai.gateway.lovable.dev/v1/chat/completions",
+        headers: { "Lovable-API-Key": key, "X-Lovable-AIG-SDK": "fetch" },
+      };
+    }
+    return envFallback();
   }
 
-  if (provider === "openai") {
-    return {
-      provider,
-      model: model || DEFAULT_MODELS.openai,
-      url: "https://api.openai.com/v1/chat/completions",
-      headers: { Authorization: `Bearer ${apiKey}` },
-    };
-  }
-
-  if (provider === "gemini") {
-    return {
-      provider,
-      model: model || DEFAULT_MODELS.gemini,
-      url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
-      headers: { Authorization: `Bearer ${apiKey}` },
-    };
-  }
-
-  // anthropic (OpenAI-kompatibler Endpunkt)
-  return {
-    provider,
-    model: model || DEFAULT_MODELS.anthropic,
-    url: "https://api.anthropic.com/v1/chat/completions",
-    headers: { Authorization: `Bearer ${apiKey}` },
-  };
+  return buildConfig(provider, model, apiKey);
 }
