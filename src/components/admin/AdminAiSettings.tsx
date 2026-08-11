@@ -68,9 +68,15 @@ export default function AdminAiSettings() {
     setLoading(true);
     try {
       const data = await call({ action: "list" });
-      setProviders(data.providers ?? []);
-      setAssistants(data.assistants ?? []);
+      const provs: ProviderRow[] = data.providers ?? [];
+      const asss: AssistantRow[] = data.assistants ?? [];
+      setProviders(provs.length ? provs : DEFAULT_PROVIDERS);
+      setAssistants(asss.length ? asss : DEFAULT_ASSISTANTS);
+      setBackendOk(true);
     } catch (e) {
+      setProviders(DEFAULT_PROVIDERS);
+      setAssistants(DEFAULT_ASSISTANTS);
+      setBackendOk(false);
       toast.error("KI-Einstellungen konnten nicht geladen werden", {
         description: e instanceof Error ? e.message : undefined,
       });
@@ -78,6 +84,7 @@ export default function AdminAiSettings() {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     load();
