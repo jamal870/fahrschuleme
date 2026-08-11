@@ -119,20 +119,35 @@ export default function AdminAiSettings() {
     }
   };
 
-  const testProvider = async (provider: string, model?: string) => {
-    setBusy(`test-${provider}`);
+  const testProvider = async (provider: string, model?: string, resultKey?: string) => {
+    const key = resultKey ?? provider;
+    setBusy(`test-${key}`);
+    setTestResults((s) => ({ ...s, [key]: undefined as never }));
     try {
       const res = await call({ action: "test", provider, model });
-      if (res.ok) toast.success(`Verbindung ok (${res.provider} / ${res.model})`);
-      else toast.error(`Fehler ${res.status}`, { description: String(res.detail ?? "").slice(0, 200) });
+      if (res.ok) {
+        setTestResults((s) => ({
+          ...s,
+          [key]: { ok: true, message: `Verbindung ok (${res.provider} / ${res.model})`, at: Date.now() },
+        }));
+        toast.success(`Verbindung ok (${res.provider} / ${res.model})`);
+      } else {
+        const detail = String(res.detail ?? "").slice(0, 200);
+        setTestResults((s) => ({
+          ...s,
+          [key]: { ok: false, message: `Fehler ${res.status}: ${detail || "unbekannt"}`, at: Date.now() },
+        }));
+        toast.error(`Fehler ${res.status}`, { description: detail });
+      }
     } catch (e) {
-      toast.error("Test fehlgeschlagen", {
-        description: e instanceof Error ? e.message : undefined,
-      });
+      const msg = e instanceof Error ? e.message : "Unbekannter Fehler";
+      setTestResults((s) => ({ ...s, [key]: { ok: false, message: msg, at: Date.now() } }));
+      toast.error("Test fehlgeschlagen", { description: msg });
     } finally {
       setBusy(null);
     }
   };
+
 
   const saveAssistant = async (row: AssistantRow) => {
     setBusy(row.assistant);
