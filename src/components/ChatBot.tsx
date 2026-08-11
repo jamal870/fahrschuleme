@@ -858,6 +858,21 @@ export default function ChatBot() {
     setInput("");
     addMsg({ role: "user", content: text });
 
+    const nextCount = aiQuestionCount + 1;
+    setAiQuestionCount(nextCount);
+
+    if (aiQuestionCount >= AI_QUESTION_LIMIT) {
+      addMsg({
+        role: "bot",
+        content: `Du hast das kostenlose KI-Fragenlimit von **${AI_QUESTION_LIMIT} Fragen** erreicht.\n\nFür weitere Fragen erreichst du uns direkt:\n\n📞 **${tenantConfig.contact.phone}**\n📧 **${tenantConfig.contact.email}**\n💬 [WhatsApp](${tenantConfig.contact.whatsappUrl})`,
+        buttons: [
+          { label: "📞 Anrufen", action: "call_direct" },
+          { label: "Zurück zum Menü", action: "main_menu" },
+        ],
+      });
+      return;
+    }
+
     const history = [
       ...messages
         .filter((m) => m.content && !m.studentForm && !m.paymentStep)
