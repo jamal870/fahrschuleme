@@ -333,7 +333,9 @@ Deno.serve(async (req) => {
         report[cid] = { kept: keep.id, deleted, errors };
       }
 
-      return new Response(JSON.stringify({ ok: true, courses: Object.keys(report).length, report }, null, 2), {
+      const totalDeleted = Object.values(report).reduce((s, r) => s + r.deleted, 0);
+      return new Response(JSON.stringify({ ok: true, courses: Object.keys(report).length, deleted: totalDeleted, report }, null, 2), {
+
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
