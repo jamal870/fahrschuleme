@@ -164,6 +164,13 @@ export default function AdminAiSettings() {
 
   return (
     <div className="space-y-6">
+      {!backendOk && (
+        <div className="rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm">
+          Die Funktion <code>ai-settings</code> ist auf dem Live-Server noch nicht installiert.
+          Änderungen können erst gespeichert werden, wenn sie deployed ist. Unten siehst du die
+          Standardwerte.
+        </div>
+      )}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-heading uppercase">
