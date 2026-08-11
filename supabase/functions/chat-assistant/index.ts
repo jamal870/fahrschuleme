@@ -140,8 +140,9 @@ async function runTool(name: string, args: Record<string, unknown>) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
-  const apiKey = Deno.env.get("LOVABLE_API_KEY");
-  if (!apiKey) return json({ error: "missing_config" }, 500);
+  const aiConfig = await resolveAiConfig(admin as never, "chatbot");
+  if ("error" in aiConfig) return json({ error: aiConfig.error }, 500);
+
 
   let body: { messages?: { role: string; content: string }[]; context?: string };
   try {
