@@ -73,7 +73,41 @@ const mainMenu: QuickButton[] = [
   { label: "❓ FAQ", action: "show_faq" },
 ];
 
+// Statisches Fahrschul-Wissen für den KI-Assistenten (Preise, Kontakt, FAQ)
+function buildAiContext(): string {
+  const t = tenantConfig;
+  const list = (items: { name: string; price: string; note?: string }[]) =>
+    items.map((i) => `- ${i.name}: CHF ${i.price}${i.note ? ` (${i.note})` : ""}`).join("\n");
+
+  return [
+    `Fahrschule: ${t.brand.name} – ${t.tagline ?? t.brand.tagline}`,
+    `Standort: ${t.contact.address.detail}, ${t.contact.address.city}`,
+    `Telefon: ${t.contact.phone} | E-Mail: ${t.contact.email} | WhatsApp: ${t.contact.whatsappUrl}`,
+    `Öffnungszeiten: ${t.contact.openingHours}`,
+    "",
+    "Kategorien:",
+    t.categories.map((c) => `- ${c.title} (${c.age}): ${c.desc}`).join("\n"),
+    "",
+    "Preise Auto:",
+    list(t.pricing.auto),
+    "Auto-Abos:",
+    list(t.pricing.autoAbos),
+    "Preise Motorrad:",
+    list(t.pricing.motorrad),
+    "Motorrad Grundkurs:",
+    list(t.pricing.motorradGrundkurs),
+    "Extras:",
+    t.pricing.extras.map((e) => `- ${e.name}: CHF ${e.price}${e.note ? ` (${e.note})` : ""}`).join("\n"),
+    "",
+    "Zahlung: " + t.booking.paymentMethods.map((p) => `${p.label} – ${p.desc}`).join(" | "),
+    "",
+    "FAQ:",
+    faqData.map((f) => `F: ${f.question}\nA: ${f.answer}`).join("\n"),
+  ].join("\n");
+}
+
 // ─── Main Component ──────────────────────────────────────────
+
 
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
