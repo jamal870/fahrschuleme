@@ -39,11 +39,17 @@ const PROVIDER_HINTS: Record<string, string> = {
 };
 
 const MODEL_SUGGESTIONS: Record<string, string[]> = {
-  lovable: ["google/gemini-3.6-flash", "google/gemini-2.5-pro", "openai/gpt-5-mini"],
+  lovable: [
+    "google/gemini-3.6-flash",
+    "google/gemini-3.5-flash",
+    "google/gemini-2.5-pro",
+    "openai/gpt-5.4-mini",
+  ],
   openai: ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini"],
   gemini: ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.5-pro"],
   anthropic: ["claude-sonnet-4-20250514", "claude-3-5-haiku-20241022"],
 };
+
 
 const ASSISTANT_LABELS: Record<string, string> = {
   chatbot: "Website-Chatbot (Ask AI)",

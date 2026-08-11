@@ -30,6 +30,11 @@ const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: fa
 const PROVIDERS = ["lovable", "openai", "gemini", "anthropic"];
 const ASSISTANTS = ["chatbot", "admin"];
 
+const friendly = (msg: string) =>
+  /relation .* does not exist|could not find the table|schema cache/i.test(msg)
+    ? "Die KI-Tabellen (ai_providers / ai_assistant_config) fehlen in der Datenbank. Bitte die Migration 20260811012618 auf dem Server einspielen."
+    : msg;
+
 const mask = (key: string | null) =>
   !key ? null : key.length <= 8 ? "••••" : `${key.slice(0, 4)}••••${key.slice(-4)}`;
 
@@ -75,8 +80,8 @@ Deno.serve(async (req) => {
         admin.from("ai_providers").select("provider, api_key, enabled, updated_at"),
         admin.from("ai_assistant_config").select("assistant, provider, model, updated_at"),
       ]);
-      if (providersError) return json({ error: providersError.message }, 400);
-      if (configsError) return json({ error: configsError.message }, 400);
+      if (providersError) return json({ error: friendly(providersError.message) }, 400);
+      if (configsError) return json({ error: friendly(configsError.message) }, 400);
       return json({
         providers: (providers ?? []).map((p) => ({
           provider: p.provider,
@@ -101,7 +106,7 @@ Deno.serve(async (req) => {
       }
 
       const { error } = await admin.from("ai_providers").upsert(patch, { onConflict: "provider" });
-      if (error) return json({ error: error.message }, 400);
+      if (error) return json({ error: friendly(error.message) }, 400);
       return json({ ok: true });
     }
 
@@ -116,7 +121,7 @@ Deno.serve(async (req) => {
       const { error } = await admin
         .from("ai_assistant_config")
         .upsert({ assistant, provider, model }, { onConflict: "assistant" });
-      if (error) return json({ error: error.message }, 400);
+      if (error) return json({ error: friendly(error.message) }, 400);
       return json({ ok: true });
     }
 
