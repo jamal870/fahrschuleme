@@ -3,6 +3,7 @@
 // und kann bestehende Chat-Flows (Buchung, Kontakt, FAQ) auslösen.
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { resolveAiConfig } from "../_shared/ai-provider.ts";
 
 const admin = createClient(
   Deno.env.get("SUPABASE_URL") ?? "",
