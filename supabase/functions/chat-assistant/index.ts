@@ -139,10 +139,20 @@ async function runTool(name: string, args: Record<string, unknown>) {
 }
 
 Deno.serve(async (req) => {
+  try {
+    return await handle(req);
+  } catch (e) {
+    console.error("chat-assistant fatal", e);
+    return json({ error: `Serverfehler: ${e instanceof Error ? e.message : String(e)}` }, 500);
+  }
+});
+
+async function handle(req: Request) {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   const aiConfig = await resolveAiConfig(admin as never, "chatbot");
   if ("error" in aiConfig) return json({ error: aiConfig.error }, 500);
+
 
 
   let body: { messages?: { role: string; content: string }[]; context?: string };
