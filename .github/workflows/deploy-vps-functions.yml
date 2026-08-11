@@ -47,6 +47,11 @@ jobs:
             git fetch --all --prune
             git reset --hard origin/main
 
+            echo "==> Functions in den Stack kopieren"
+            if [ -f "$APP_DIR/infrastructure/supabase/scripts/deploy-functions.sh" ]; then
+              STACK_DIR="$SUPA_DIR" bash "$APP_DIR/infrastructure/supabase/scripts/deploy-functions.sh"
+            fi
+
             echo "==> Restart edge functions container in $SUPA_DIR"
             cd "$SUPA_DIR"
             docker compose up -d --force-recreate functions
