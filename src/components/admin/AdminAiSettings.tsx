@@ -69,6 +69,9 @@ export default function AdminAiSettings() {
   const [keyInputs, setKeyInputs] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
   const [backendOk, setBackendOk] = useState(true);
+  const [testResults, setTestResults] = useState<
+    Record<string, { ok: boolean; message: string; at: number } | undefined>
+  >({});
 
   const call = async (payload: Record<string, unknown>) => {
     const { data, error } = await supabase.functions.invoke("ai-settings", { body: payload });
