@@ -311,10 +311,24 @@ async function runTool(name: string, args: Record<string, any>) {
 }
 
 Deno.serve(async (req) => {
+  try {
+    return await handle(req);
+  } catch (e) {
+    console.error("admin-assistant fatal", e);
+    return json({ error: `Serverfehler: ${e instanceof Error ? e.message : String(e)}` }, 500);
+  }
+});
+
+async function handle(req: Request) {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  if (!supabaseUrl || !serviceKey || !anonKey) {
+    return json({ error: "Server-Konfiguration unvollständig (SUPABASE_URL / SERVICE_ROLE_KEY / ANON_KEY fehlen)." }, 500);
+  }
 
   const aiConfig = await resolveAiConfig(admin as never, "admin");
   if ("error" in aiConfig) return json({ error: aiConfig.error }, 500);
+
 
 
   // --- Admin-Auth ---
