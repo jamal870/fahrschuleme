@@ -44,7 +44,12 @@ const FahrstundenPromotions = () => {
   const fmt = (iso: string) => new Date(iso).toLocaleDateString("de-CH", { day: "2-digit", month: "2-digit", year: "numeric" });
 
   return (
-    <section className="relative overflow-hidden py-14 bg-primary text-primary-foreground">
+    <section
+      className="relative overflow-hidden py-14 bg-primary text-primary-foreground"
+      style={{
+        boxShadow: "inset 0 0 100px -30px hsl(var(--primary-foreground) / 0.15), 0 0 60px -20px hsl(var(--primary) / 0.45)",
+      }}
+    >
       <div
         aria-hidden
         className="absolute inset-0 opacity-10"
@@ -53,10 +58,16 @@ const FahrstundenPromotions = () => {
           backgroundSize: "24px 24px",
         }}
       />
+      {/* Top glow line */}
+      <div
+        aria-hidden
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary-foreground) / 0.8), transparent)" }}
+      />
       <div className="relative max-w-6xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-2 bg-primary-foreground/20 px-3 py-1.5 mb-3 border border-primary-foreground/40" style={{ borderRadius: "3px" }}>
+            <div className="inline-flex items-center gap-2 bg-primary-foreground/20 px-3 py-1.5 mb-3 border border-primary-foreground/40 animate-pulse" style={{ borderRadius: "3px" }}>
               <Sparkles className="w-3.5 h-3.5" />
               <span className="text-xs font-heading font-bold uppercase tracking-widest">Aktuelle Fahrstunden-Aktionen</span>
             </div>

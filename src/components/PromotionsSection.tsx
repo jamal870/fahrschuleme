@@ -38,7 +38,13 @@ const PromotionsSection = () => {
   if (loading || items.length === 0) return null;
 
   return (
-    <section id="aktionen" className="relative overflow-hidden py-20 bg-foreground">
+    <section
+      id="aktionen"
+      className="relative overflow-hidden py-20 bg-foreground"
+      style={{
+        boxShadow: "inset 0 0 100px -30px hsl(var(--primary) / 0.25), 0 0 60px -20px hsl(var(--primary) / 0.35)",
+      }}
+    >
       {/* Background decorations */}
       <div
         aria-hidden
@@ -51,18 +57,24 @@ const PromotionsSection = () => {
       />
       <div
         aria-hidden
-        className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-3xl opacity-30"
+        className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-3xl opacity-40"
         style={{ background: "hsl(var(--primary))" }}
       />
       <div
         aria-hidden
-        className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-20"
+        className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-30"
         style={{ background: "hsl(var(--primary))" }}
+      />
+      {/* Top glow line */}
+      <div
+        aria-hidden
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.8), transparent)" }}
       />
 
       <div className="relative max-w-6xl mx-auto px-6">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-1.5 mb-4 border border-primary/40" style={{ borderRadius: "3px" }}>
+          <div className="inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-1.5 mb-4 border border-primary/40 animate-pulse" style={{ borderRadius: "3px" }}>
             <Sparkles className="w-3.5 h-3.5" />
             <span className="text-xs font-heading font-bold uppercase tracking-widest">Limitierte Aktionen</span>
           </div>
