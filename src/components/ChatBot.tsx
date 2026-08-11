@@ -73,12 +73,47 @@ const mainMenu: QuickButton[] = [
   { label: "❓ FAQ", action: "show_faq" },
 ];
 
+// Statisches Fahrschul-Wissen für den KI-Assistenten (Preise, Kontakt, FAQ)
+function buildAiContext(): string {
+  const t = tenantConfig;
+  const list = (items: { name: string; price: string; note?: string }[]) =>
+    items.map((i) => `- ${i.name}: CHF ${i.price}${i.note ? ` (${i.note})` : ""}`).join("\n");
+
+  return [
+    `Fahrschule: ${t.brand.name} – ${t.brand.tagline}`,
+    `Standort: ${t.contact.address.detail}, ${t.contact.address.city}`,
+    `Telefon: ${t.contact.phone} | E-Mail: ${t.contact.email} | WhatsApp: ${t.contact.whatsappUrl}`,
+    `Öffnungszeiten: ${t.contact.openingHours}`,
+    "",
+    "Kategorien:",
+    t.categories.map((c) => `- ${c.title} (${c.age}): ${c.desc}`).join("\n"),
+    "",
+    "Preise Auto:",
+    list(t.pricing.auto),
+    "Auto-Abos:",
+    list(t.pricing.autoAbos),
+    "Preise Motorrad:",
+    list(t.pricing.motorrad),
+    "Motorrad Grundkurs:",
+    list(t.pricing.motorradGrundkurs),
+    "Extras:",
+    t.pricing.extras.map((e) => `- ${e.name}: CHF ${e.price}${e.note ? ` (${e.note})` : ""}`).join("\n"),
+    "",
+    "Zahlung: " + t.booking.paymentMethods.map((p) => `${p.label} – ${p.desc}`).join(" | "),
+    "",
+    "FAQ:",
+    faqData.map((f) => `F: ${f.question}\nA: ${f.answer}`).join("\n"),
+  ].join("\n");
+}
+
 // ─── Main Component ──────────────────────────────────────────
+
 
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [aiThinking, setAiThinking] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [autoOpened, setAutoOpened] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -815,37 +850,53 @@ export default function ChatBot() {
   ];
 
   // ── Text input ──
-  const handleSend = () => {
+  const handleSend = async () => {
     const text = input.trim();
-    if (!text) return;
+    if (!text || aiThinking) return;
     setInput("");
     addMsg({ role: "user", content: text });
-    const lower = text.toLowerCase();
-    setTimeout(() => {
-      if (lower.includes("fahrstunde") || lower.includes("fahrlektion") || lower.includes("lektion")) {
-        startFahrstunde(); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("grundkurs") || lower.includes("kurs") || lower.includes("buchen") || lower.includes("termin")) {
-        startBooking(); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("faq") || lower.includes("frage") || lower.includes("hilfe")) {
-        handleAction("show_faq"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("kontakt") || lower.includes("telefon") || lower.includes("rückruf")) {
-        handleAction("contact"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("preis") || lower.includes("kosten") || lower.includes("chf")) {
-        handleAction("show_prices"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("kategorie") || lower.includes("a1") || lower.includes("a2")) {
-        handleAction("show_categories"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("email") || lower.includes("mail")) {
-        handleAction("email_contact"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("whatsapp")) {
-        handleAction("whatsapp"); setMessages((prev) => prev.slice(0, -1));
-      } else {
+
+    const history = [
+      ...messages
+        .filter((m) => m.content && !m.studentForm && !m.paymentStep)
+        .slice(-10)
+        .map((m) => ({ role: m.role === "user" ? "user" : "assistant", content: m.content })),
+      { role: "user", content: text },
+    ];
+
+    setAiThinking(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("chat-assistant", {
+        body: { messages: history, context: buildAiContext() },
+      });
+
+      if (error) throw error;
+
+      if (data?.reply) {
+        addMsg({ role: "bot", content: data.reply, buttons: data.flow ? undefined : mainMenu });
+      }
+      if (data?.flow) {
+        if (data.flow === "start_booking") startBooking();
+        else if (data.flow === "start_fahrstunde") startFahrstunde();
+        else handleAction(data.flow);
+      }
+      if (!data?.reply && !data?.flow) {
         addMsg({
           role: "bot",
           content: "Entschuldigung, das habe ich nicht ganz verstanden. Kann ich dir mit einem dieser Themen helfen?",
           buttons: mainMenu,
         });
       }
-    }, 500);
+    } catch (e) {
+      console.error("chat-assistant error", e);
+      addMsg({
+        role: "bot",
+        content: "Da ist gerade etwas schiefgelaufen. Wähle bitte ein Thema oder ruf uns an: **" + tenantConfig.contact.phone + "**",
+        buttons: mainMenu,
+      });
+    } finally {
+      setAiThinking(false);
+    }
   };
 
   const activeStep = bookingStep > 0 ? bookingStep : (fsStep > 0 ? fsStep : 0);
@@ -1007,8 +1058,18 @@ export default function ChatBot() {
                     </motion.div>
                   ))}
                 </AnimatePresence>
+                {aiThinking && (
+                  <div className="flex justify-start">
+                    <div className="bg-card border border-border shadow-sm rounded-lg rounded-bl-sm px-4 py-3 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  </div>
+                )}
               </div>
             </ScrollArea>
+
 
             {/* Input */}
             <div className="px-5 py-4 border-t border-border bg-card shrink-0">
@@ -1016,13 +1077,15 @@ export default function ChatBot() {
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Schreib eine Nachricht..."
+                  placeholder={aiThinking ? "Ask AI denkt nach..." : "Frag mich alles – z.B. Preise, Termine..."}
+                  disabled={aiThinking}
                   className="flex-1 bg-muted border-0 text-[13px] h-11 font-body"
                   style={{ borderRadius: "22px" }}
                 />
-                <Button type="submit" size="icon" className="h-11 w-11 shrink-0 bg-primary hover:bg-primary/90" style={{ borderRadius: "22px" }}>
-                  <Send className="w-4 h-4" />
+                <Button type="submit" size="icon" disabled={aiThinking} className="h-11 w-11 shrink-0 bg-primary hover:bg-primary/90" style={{ borderRadius: "22px" }}>
+                  {aiThinking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </Button>
+
               </form>
             </div>
           </motion.div>
