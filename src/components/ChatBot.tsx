@@ -815,37 +815,53 @@ export default function ChatBot() {
   ];
 
   // ── Text input ──
-  const handleSend = () => {
+  const handleSend = async () => {
     const text = input.trim();
-    if (!text) return;
+    if (!text || aiThinking) return;
     setInput("");
     addMsg({ role: "user", content: text });
-    const lower = text.toLowerCase();
-    setTimeout(() => {
-      if (lower.includes("fahrstunde") || lower.includes("fahrlektion") || lower.includes("lektion")) {
-        startFahrstunde(); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("grundkurs") || lower.includes("kurs") || lower.includes("buchen") || lower.includes("termin")) {
-        startBooking(); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("faq") || lower.includes("frage") || lower.includes("hilfe")) {
-        handleAction("show_faq"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("kontakt") || lower.includes("telefon") || lower.includes("rückruf")) {
-        handleAction("contact"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("preis") || lower.includes("kosten") || lower.includes("chf")) {
-        handleAction("show_prices"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("kategorie") || lower.includes("a1") || lower.includes("a2")) {
-        handleAction("show_categories"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("email") || lower.includes("mail")) {
-        handleAction("email_contact"); setMessages((prev) => prev.slice(0, -1));
-      } else if (lower.includes("whatsapp")) {
-        handleAction("whatsapp"); setMessages((prev) => prev.slice(0, -1));
-      } else {
+
+    const history = [
+      ...messages
+        .filter((m) => m.content && !m.studentForm && !m.paymentStep)
+        .slice(-10)
+        .map((m) => ({ role: m.role === "user" ? "user" : "assistant", content: m.content })),
+      { role: "user", content: text },
+    ];
+
+    setAiThinking(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("chat-assistant", {
+        body: { messages: history, context: buildAiContext() },
+      });
+
+      if (error) throw error;
+
+      if (data?.reply) {
+        addMsg({ role: "bot", content: data.reply, buttons: data.flow ? undefined : mainMenu });
+      }
+      if (data?.flow) {
+        if (data.flow === "start_booking") startBooking();
+        else if (data.flow === "start_fahrstunde") startFahrstunde();
+        else handleAction(data.flow);
+      }
+      if (!data?.reply && !data?.flow) {
         addMsg({
           role: "bot",
           content: "Entschuldigung, das habe ich nicht ganz verstanden. Kann ich dir mit einem dieser Themen helfen?",
           buttons: mainMenu,
         });
       }
-    }, 500);
+    } catch (e) {
+      console.error("chat-assistant error", e);
+      addMsg({
+        role: "bot",
+        content: "Da ist gerade etwas schiefgelaufen. Wähle bitte ein Thema oder ruf uns an: **" + tenantConfig.contact.phone + "**",
+        buttons: mainMenu,
+      });
+    } finally {
+      setAiThinking(false);
+    }
   };
 
   const activeStep = bookingStep > 0 ? bookingStep : (fsStep > 0 ? fsStep : 0);
