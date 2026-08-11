@@ -250,6 +250,6 @@ ${(body.context ?? "").slice(0, 8000)}`;
     return json({ reply: "Das dauert gerade etwas zu lange – frag mich bitte nochmals oder wähle ein Thema.", flow });
   } catch (e) {
     console.error("chat-assistant failed", e);
-    return json({ error: "internal_error" }, 500);
+    return json({ error: `KI-Fehler: ${e instanceof Error ? e.message : String(e)}` }, 500);
   }
-});
+}
