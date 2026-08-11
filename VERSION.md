@@ -1,6 +1,7 @@
 # Version 1.9.1 — Hotfix: KI-Assistenten (Anbieter-Fallback)
 
 **Release-Datum:** 2026-08-11
+**Status:** ✅ Umgesetzt, geprüft & eingefroren (Freigabe vom Betreiber 2026-08-11)
 
 - **Fehlender Import behoben:** `supabase/functions/admin-assistant/index.ts` rief
   `resolveAiConfig` ohne Import auf → Serverfehler 500 im Tab „KI-Assistent".
