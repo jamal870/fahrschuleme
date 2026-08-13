@@ -151,13 +151,13 @@ const Fahrstunden = () => (
         <p className="text-muted-foreground font-body max-w-2xl mb-6">
           Flexibel Mo–Sa von 08–22 Uhr. Vorschulung, Grundschulung oder Perfektionsschulung – Schritt für Schritt lernst du alles, was du brauchst.
         </p>
-        <a
-          href={FAHRSTUNDEN_APP_URL} target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
-          style={{ borderRadius: "3px" }}
-        >
-          Fahrstunde buchen <ExternalLink className="w-4 h-4" />
-        </a>
+          <TrackedCta
+            to={FAHRSTUNDEN_APP_URL}
+            label="Fahrstunde buchen"
+            external
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
+            icon="external"
+          />
       </div>
     </header>
 
