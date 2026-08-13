@@ -6,6 +6,7 @@ import GoogleReviews from "@/components/GoogleReviews";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
+import TrackedCta from "@/components/TrackedCta";
 import { tenantConfig } from "@/config/tenant";
 import grundkurs1 from "@/assets/grundkurs-1.png";
 import grundkurs2 from "@/assets/grundkurs-2.png";
