@@ -83,13 +83,14 @@ const MotorradFuehrerscheinWettingen = () => {
             Kategorien AM, A1, A2 und A. Erfahrene Instruktoren, kleine Gruppen und Termine bis 22 Uhr.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link
+            <TrackedCta
               to="/grundkurs"
+              label="Kurs buchen"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
-              style={{ borderRadius: "3px" }}
+              icon="none"
             >
               Kurs buchen <ChevronRight className="w-4 h-4" />
-            </Link>
+            </TrackedCta>
             <a
               href="#kategorien"
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors"
