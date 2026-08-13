@@ -121,13 +121,13 @@ const FahrstundenPromotions = () => {
                   {p.starts_at && p.ends_at ? `Gültig ${fmt(p.starts_at)} – ${fmt(p.ends_at)}` : p.ends_at ? `Gültig bis ${fmt(p.ends_at)}` : `Gültig ab ${fmt(p.starts_at!)}`}
                 </p>
               )}
-              <a
-                href={FAHRSTUNDEN_APP_URL} target="_blank" rel="noopener noreferrer"
+              <TrackedCta
+                to={FAHRSTUNDEN_APP_URL}
+                label="Jetzt buchen"
+                external
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
-                style={{ borderRadius: "3px" }}
-              >
-                Jetzt buchen <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+                icon="external"
+              />
             </article>
           ))}
         </div>
