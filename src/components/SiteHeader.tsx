@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { ChevronDown, Menu, X, UserCircle2 } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import { tenantConfig } from "@/config/tenant";
+import { trackBookingClick } from "@/lib/analytics";
 
 const navItem =
   "hover:text-primary transition-colors py-1 border-b-2 border-transparent";
