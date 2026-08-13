@@ -3,6 +3,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ChatBot from "@/components/ChatBot";
 import Seo from "@/components/Seo";
+import TrackedCta from "@/components/TrackedCta";
 import { supabase } from "@/integrations/supabase/client";
 import { tenantConfig } from "@/config/tenant";
 import { CreditCard, Bike, Clock, Users, ExternalLink, Sparkles, Tag, ArrowRight } from "lucide-react";
