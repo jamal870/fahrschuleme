@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import TrackedCta from "@/components/TrackedCta";
 import { Sparkles, Tag, ArrowRight, ExternalLink } from "lucide-react";
 
 const FAHRSTUNDEN_APP_URL = "https://app.l-me.ch/api/anmeldung";
@@ -165,15 +166,13 @@ const PromotionsSection = () => {
               })()}
 
               {(p.category === "fahrstunden_auto" || p.category === "fahrstunden_motorrad") && (
-                <a
-                  href={FAHRSTUNDEN_APP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <TrackedCta
+                  to={FAHRSTUNDEN_APP_URL}
+                  label="Jetzt buchen"
+                  external
                   className="relative mt-5 inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
-                  style={{ borderRadius: "3px" }}
-                >
-                  Jetzt buchen <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                  icon="external"
+                />
               )}
 
               {/* Hover glow */}

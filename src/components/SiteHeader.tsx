@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { ChevronDown, Menu, X, UserCircle2 } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import { tenantConfig } from "@/config/tenant";
+import { trackBookingClick } from "@/lib/analytics";
 
 const navItem =
   "hover:text-primary transition-colors py-1 border-b-2 border-transparent";
@@ -40,7 +41,7 @@ const SiteHeader = () => {
               <div className="bg-card border border-border shadow-md min-w-[220px] py-2" style={{ borderRadius: "3px" }}>
                 <Link to="/motorrad" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Übersicht</Link>
                 <Link to="/motorrad-grundkurs-wettingen" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Grundkurs Wettingen</Link>
-                <Link to="/grundkurs" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Grundkurs buchen</Link>
+                <Link to="/grundkurs" onClick={() => trackBookingClick("Grundkurs buchen (Menü)")} className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Grundkurs buchen</Link>
                 <Link to="/preise" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Preise Motorrad</Link>
               </div>
             </div>

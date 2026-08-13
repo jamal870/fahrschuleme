@@ -3,6 +3,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ChatBot from "@/components/ChatBot";
 import Seo from "@/components/Seo";
+import TrackedCta from "@/components/TrackedCta";
 import { supabase } from "@/integrations/supabase/client";
 import { tenantConfig } from "@/config/tenant";
 import { CreditCard, Bike, Clock, Users, ExternalLink, Sparkles, Tag, ArrowRight } from "lucide-react";
@@ -120,13 +121,13 @@ const FahrstundenPromotions = () => {
                   {p.starts_at && p.ends_at ? `Gültig ${fmt(p.starts_at)} – ${fmt(p.ends_at)}` : p.ends_at ? `Gültig bis ${fmt(p.ends_at)}` : `Gültig ab ${fmt(p.starts_at!)}`}
                 </p>
               )}
-              <a
-                href={FAHRSTUNDEN_APP_URL} target="_blank" rel="noopener noreferrer"
+              <TrackedCta
+                to={FAHRSTUNDEN_APP_URL}
+                label="Jetzt buchen"
+                external
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
-                style={{ borderRadius: "3px" }}
-              >
-                Jetzt buchen <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+                icon="external"
+              />
             </article>
           ))}
         </div>
@@ -150,13 +151,13 @@ const Fahrstunden = () => (
         <p className="text-muted-foreground font-body max-w-2xl mb-6">
           Flexibel Mo–Sa von 08–22 Uhr. Vorschulung, Grundschulung oder Perfektionsschulung – Schritt für Schritt lernst du alles, was du brauchst.
         </p>
-        <a
-          href={FAHRSTUNDEN_APP_URL} target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
-          style={{ borderRadius: "3px" }}
-        >
-          Fahrstunde buchen <ExternalLink className="w-4 h-4" />
-        </a>
+          <TrackedCta
+            to={FAHRSTUNDEN_APP_URL}
+            label="Fahrstunde buchen"
+            external
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
+            icon="external"
+          />
       </div>
     </header>
 
@@ -187,14 +188,14 @@ const Fahrstunden = () => (
         <p className="text-muted-foreground font-body mb-6">
           Buche deine Fahrstunde direkt über unsere Fahrschul-App – einfach Termin auswählen und losfahren.
         </p>
-        <div className="flex flex-wrap gap-3 justify-center">
-          <a
-            href={FAHRSTUNDEN_APP_URL} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
-            style={{ borderRadius: "3px" }}
-          >
-            Online buchen <ExternalLink className="w-4 h-4" />
-          </a>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <TrackedCta
+              to={FAHRSTUNDEN_APP_URL}
+              label="Online buchen"
+              external
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
+              icon="external"
+            />
           <a href={`tel:${tenantConfig.contact.phone}`} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground" style={{ borderRadius: "3px" }}>
             {tenantConfig.contact.phone}
           </a>

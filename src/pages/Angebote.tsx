@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
+import TrackedCta from "@/components/TrackedCta";
 import { Sparkles, Tag, ArrowRight } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
 
@@ -134,23 +135,20 @@ const Angebote = () => {
                     </p>
                   )}
                   {p.category === "fahrstunden_auto" || p.category === "fahrstunden_motorrad" ? (
-                    <a
-                      href="https://app.l-me.ch/api/anmeldung"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <TrackedCta
+                      to="https://app.l-me.ch/api/anmeldung"
+                      label="Jetzt buchen"
+                      external
                       className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
-                      style={{ borderRadius: "3px" }}
-                    >
-                      Jetzt buchen <ArrowRight className="w-3.5 h-3.5" />
-                    </a>
+                      icon="arrow"
+                    />
                   ) : (
-                    <Link
+                    <TrackedCta
                       to={p.category === "mgk" || p.category === "grundkurs" ? "/kurstermine" : "/kontakt"}
+                      label="Jetzt buchen"
                       className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
-                      style={{ borderRadius: "3px" }}
-                    >
-                      Jetzt buchen <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                      icon="arrow"
+                    />
                   )}
                 </article>
               ))}

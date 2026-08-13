@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Clock, Users, MapPin, Bike, ChevronRight, ShieldCheck, GraduationCap, Calendar } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
 import Seo from "@/components/Seo";
+import TrackedCta from "@/components/TrackedCta";
 
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -58,13 +59,12 @@ const MotorradFuehrerscheinWettingen = () => {
           <Link to="/" className="flex items-center gap-2 text-sm font-heading font-bold text-foreground hover:text-primary transition-colors">
             <ArrowLeft className="w-4 h-4" /> Startseite
           </Link>
-          <Link
+          <TrackedCta
             to="/grundkurs"
+            label="Kurs buchen"
             className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
-            style={{ borderRadius: "3px" }}
-          >
-            Kurs buchen
-          </Link>
+            icon="none"
+          />
         </div>
       </nav>
 
@@ -83,13 +83,14 @@ const MotorradFuehrerscheinWettingen = () => {
             Kategorien AM, A1, A2 und A. Erfahrene Instruktoren, kleine Gruppen und Termine bis 22 Uhr.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link
+            <TrackedCta
               to="/grundkurs"
+              label="Kurs buchen"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
-              style={{ borderRadius: "3px" }}
+              icon="none"
             >
               Kurs buchen <ChevronRight className="w-4 h-4" />
-            </Link>
+            </TrackedCta>
             <a
               href="#kategorien"
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors"
@@ -153,13 +154,14 @@ const MotorradFuehrerscheinWettingen = () => {
           </div>
 
           <div className="text-center mt-10">
-            <Link
+            <TrackedCta
               to="/grundkurs"
+              label="Kurs buchen"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
-              style={{ borderRadius: "3px" }}
+              icon="none"
             >
               Kurs buchen <ChevronRight className="w-4 h-4" />
-            </Link>
+            </TrackedCta>
           </div>
         </div>
       </section>
