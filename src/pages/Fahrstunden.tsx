@@ -188,14 +188,14 @@ const Fahrstunden = () => (
         <p className="text-muted-foreground font-body mb-6">
           Buche deine Fahrstunde direkt über unsere Fahrschul-App – einfach Termin auswählen und losfahren.
         </p>
-        <div className="flex flex-wrap gap-3 justify-center">
-          <a
-            href={FAHRSTUNDEN_APP_URL} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
-            style={{ borderRadius: "3px" }}
-          >
-            Online buchen <ExternalLink className="w-4 h-4" />
-          </a>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <TrackedCta
+              to={FAHRSTUNDEN_APP_URL}
+              label="Online buchen"
+              external
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90"
+              icon="external"
+            />
           <a href={`tel:${tenantConfig.contact.phone}`} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground" style={{ borderRadius: "3px" }}>
             {tenantConfig.contact.phone}
           </a>
