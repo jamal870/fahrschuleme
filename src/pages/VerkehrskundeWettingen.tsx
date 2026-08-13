@@ -44,7 +44,7 @@ const VerkehrskundeWettingen = () => (
     secondaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine" }}
     breadcrumbs={[{ label: "Verkehrskunde Wettingen" }]}
     relatedLinks={[
-      { to: "/nothelferkurs-wettingen", title: "Nothelferkurs Wettingen", desc: "Der erste obligatorische Kurs – Voraussetzung für den Lernfahrausweis." },
+      
       { to: "/fahrschule-wettingen", title: "Fahrschule Wettingen", desc: "Auto- und Motorrad-Fahrstunden direkt bei uns." },
       { to: "/strassenverkehrsamt-aargau", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung zur praktischen Prüfung beim StVA." },
     ]}
