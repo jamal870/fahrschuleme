@@ -353,20 +353,19 @@ const Index = () => {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link
+            <TrackedCta
               to="/grundkurs-buchen"
+              label="Zum Buchungsformular"
               className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
-              style={{ borderRadius: "3px" }}
-            >
-              Zum Buchungsformular
-            </Link>
-            <Link
+              icon="none"
+            />
+            <TrackedCta
               to="/grundkurs-buchen?a1=1"
+              label="Nur Teil 3 (A1-Inhaber)"
+              value={250}
               className="inline-flex items-center gap-2 px-8 py-4 bg-card border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary/5 transition-colors"
-              style={{ borderRadius: "3px" }}
-            >
-              Nur Teil 3 (A1-Inhaber) – CHF 250
-            </Link>
+              icon="none"
+            />
           </div>
           <p className="text-xs text-muted-foreground text-center mt-3">
             Du bist bereits im Besitz der Kategorie A1? Buche direkt nur den Kursteil 3 zum Pauschalpreis.
