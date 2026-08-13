@@ -1,18 +1,19 @@
 # Google Ads Startpaket – Fahrschule me (Wettingen)
 
 Stand: 13.08.2026 · Zielseite: https://fahrschule-me.ch  
-Testbudget-Empfehlung: **CHF 300–500 / Monat**, Standort: Wettingen + 15 km (Baden, Neuenhof, Würenlos, Spreitenbach, Killwangen, Ennetbaden), Sprache: Deutsch, Zeitplan: Mo–So 07:00–22:00.
+Testbudget-Empfehlung: **CHF 250–400 / Monat**, Standort: Wettingen + 15 km (Baden, Neuenhof, Würenlos, Spreitenbach, Killwangen, Ennetbaden), Sprache: Deutsch, Zeitplan: Mo–So 07:00–22:00.
+
+> **Hinweis:** VKU und Nothelferkurse werden aktuell **nicht selbst angeboten**. Die Anzeigen konzentrieren sich deshalb auf Fahrstunden, Motorrad-Grundkurs (MGK) und Fahrschule allgemein.
 
 ---
 
-## Kontostruktur (4 Kampagnen)
+## Kontostruktur (3 Kampagnen)
 
 | # | Kampagne | Tagesbudget | Ziel-URL |
 |---|---|---|---|
 | 1 | Fahrschule Wettingen (Brand + Generisch) | CHF 5 | `/` |
 | 2 | Motorrad Grundkurs (MGK) | CHF 4 | `/grundkurs-buchen` |
 | 3 | Fahrstunden & Aktionen | CHF 4 | `/fahrstunden` |
-| 4 | VKU / Nothelfer | CHF 3 | `/kurse` |
 
 Gebotsstrategie: Start mit **Klicks maximieren (CPC-Limit CHF 3.00)**, nach ~30 Conversions auf **Conversions maximieren** umstellen.
 
@@ -57,12 +58,12 @@ Titel (15):
 10. Termine auch abends
 11. Faire Preise, klare Pakete
 12. Jetzt Probelektion sichern
-13. VKU, Nothelfer & Grundkurs
+13. Fahrstunden & Motorradkurs
 14. Von Wettingen bis Baden
 15. Direkt online anmelden
 
 Beschreibungen (4):
-1. Deine Fahrschule in Wettingen: Fahrstunden, VKU, Nothelfer und Motorrad-Grundkurse. Online buchbar.
+1. Deine Fahrschule in Wettingen: Fahrstunden und Motorrad-Grundkurse. Online buchbar.
 2. Individuelle Betreuung, moderne Fahrzeuge und flexible Termine – auch am Abend und am Wochenende.
 3. Transparente Preise, keine versteckten Kosten. Aktionen und Pakete direkt online sichern.
 4. Jetzt Termin anfragen und schneller zum Führerausweis. Wir begleiten dich Schritt für Schritt.
@@ -110,30 +111,14 @@ Beschreibungen:
 
 ---
 
-### Kampagne 4 – VKU / Nothelfer
-
-Keywords:
-- 🟢 "vku kurs wettingen" (Phrase/Exact)
-- 🟢 "verkehrskundeunterricht baden" (Phrase)
-- 🟢 "nothelferkurs wettingen" (Phrase)
-- 🟢 "nothelferkurs aargau" (Phrase)
-- 🟡 "vku termine" (Phrase)
-- 🔴 "vku" (allein – zu unspezifisch)
-- 🔴 "nothelferkurs" (allein – zu unspezifisch)
-
-Titel: VKU Kurs Wettingen · Nothelferkurs in Wettingen · Nächste VKU-Termine · In 4 Lektionen zum VKU · Jetzt Platz reservieren
-
-Beschreibungen:
-1. VKU und Nothelferkurs in Wettingen – aktuelle Termine online, Anmeldung in wenigen Klicks.
-2. Anerkannte Kurse, kompetente Leitung, faire Preise. Sichere dir jetzt deinen Platz.
-
----
-
 ## Auszuschliessende Keywords (kontoweit)
 
 > Diese Begriffe sollten als **Negative Keywords** auf Kontoebene hinterlegt werden, damit das Budget für irrelevante Suchanfragen nicht verbraucht wird.
 
 gratis, kostenlos, job, stelle, ausbildung fahrlehrer, fahrlehrer werden, lkw, bus, kategorie c, taxi, boot, flug, theorie app, simulator, gebrauchtwagen, occasion, zürich, bern, luzern, basel, deutschland, österreich, dietikon, fahrschule preise, kosten führerschein, motorrad grundkurs (als Negativ, falls ohne Ort), führerschein kosten, führerschein online, führerschein app, führerschein test, führerschein theorie lernen
+
+**Aktuell nicht angebotene Kurse (unbedingt als Negativ-Keywords):**
+- vku, verkehrskundeunterricht, verkehrskunde, nothelfer, nothelferkurs, nothelferkurs aargau, vku kurs, vku termine, vku baden, nothelfer baden, erste hilfe kurs, erste hilfe führerschein
 
 **Empfohlene zusätzliche Negative Keywords nach Standort:**
 - zürich, bern, luzern, basel, st. gallen, winterthur, dietikon, schlieren, uster, dübendorf, emmenbrücke, kriens, horw, regensdorf, wallisellen, opfikon, kloten, bülach, schaffhausen, frauenfeld, romanshorn, arbon, rapperswil, jona, wetzikon, wädenswil, richterswil, pfäffikon, freienbach, altendorf, lachen, galgenen, tuggen, schübelbach, benken, uznach, gommiswald, oberuzwil, jonschwil, kirchberg, bischofszell, amriswil, weinfelden, münchwilen, sirnach, wil, flums, walenstadt, sargans, vaduz, balzers, triefen, eschen, mauren, ruggell, gamprin, schellenberg, planken, schaan, untervaz, zizers, landquart, bad ragaz, pfäfers, vilters, sennwald, buchs, werdenberg, sevelen, wartau, triesen, triesenberg
@@ -142,8 +127,8 @@ gratis, kostenlos, job, stelle, ausbildung fahrlehrer, fahrlehrer werden, lkw, b
 
 ## Anzeigenerweiterungen
 
-- **Sitelinks:** Kurse · Fahrstunden · Aktionen · Kontakt
-- **Snippets:** Dienstleistungen: Fahrstunden, VKU, Nothelfer, Motorrad-Grundkurs
+- **Sitelinks:** Fahrstunden · Aktionen · Motorrad-Grundkurs · Kontakt
+- **Snippets:** Dienstleistungen: Fahrstunden, Motorrad-Grundkurs, Führerschein-Begleitung
 - **Callouts:** Online buchbar · Flexible Termine · Faire Preise · Auto & Motorrad
 - **Anruf-Erweiterung:** Telefonnummer der Fahrschule
 - **Standort-Erweiterung:** Google Business Profil verknüpfen (wichtig für lokale Suchen)
@@ -168,9 +153,9 @@ Umsetzung: Google Tag (gtag.js) in `index.html` einbinden, danach Conversion-Eve
 | 1 | Konto + Zahlung einrichten, Tracking einbauen, Kampagne 1 & 2 mit 🟢 Start-Keywords starten |
 | 2 | Suchbegriffe-Bericht prüfen, 🔴 Negative Keywords ergänzen, Duplikate kontrollieren |
 | 3 | 🟡 Test-Keywords dazuschalten, schwache Keywords pausieren |
-| 4 | Cost-per-Lead auswerten, Budget auf beste Kampagne umschichten |
+| 4 | Cost-per-Lead auswerten, Budget auf beste Kampagne umschichtigen |
 
-Richtwert: Bei CHF 400/Monat und CHF 2.50 CPC ≈ 160 Klicks. Bei 5 % Conversion-Rate ≈ 8 Anfragen/Monat → ca. CHF 50 pro Lead.
+Richtwert: Bei CHF 350/Monat und CHF 2.50 CPC ≈ 140 Klicks. Bei 5 % Conversion-Rate ≈ 7 Anfragen/Monat → ca. CHF 50 pro Lead.
 
 ---
 
@@ -180,11 +165,12 @@ Richtwert: Bei CHF 400/Monat und CHF 2.50 CPC ≈ 160 Klicks. Bei 5 % Conversion
 |---|---|---|---|
 | fahrschule wettingen | 🟢 Start | 1 | Exact + Phrase, Brand + Generisch |
 | motorrad grundkurs aargau | 🟢 Start | 2 | Lokalisierte Variante |
-| vku kurs wettingen | 🟢 Start | 4 | Exact + Phrase |
-| nothelferkurs wettingen | 🟢 Start | 4 | Lokalisiert |
+| fahrstunden wettingen | 🟢 Start | 3 | Lokalisiert |
 | fahrschule baden | 🟡 Test | 1 | Hoher CPC, eng beobachten |
 | praktische grundschulung a1 | 🟡 Test | 2 | Spezifisch, geringes Volumen |
 | motorrad grundkurs | 🔴 Negativ | alle | Zu breit, budgetfressend |
 | fahrschule dietikon | 🔴 Negativ | alle | Ausserhalb des Einzugsgebiets |
 | fahrschule preise | 🔴 Negativ | alle | Preisvergleichs-/Informationsabsicht |
 | kosten führerschein | 🔴 Negativ | alle | Reine Informationsabsicht |
+| vku kurs wettingen | 🔴 Negativ | alle | Wird aktuell nicht angeboten |
+| nothelferkurs wettingen | 🔴 Negativ | alle | Wird aktuell nicht angeboten |
