@@ -82,9 +82,12 @@ const LocalLandingPage = (p: LocalLandingProps) => {
           </h1>
           <p className="text-lg font-body text-muted-foreground max-w-2xl leading-relaxed mb-6">{p.intro}</p>
           <div className="flex flex-wrap gap-3">
-            <Link to={p.primaryCta.to} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity" style={{ borderRadius: "3px" }}>
-              {p.primaryCta.label} <ArrowRight className="w-4 h-4" />
-            </Link>
+            <TrackedCta
+              to={p.primaryCta.to}
+              label={p.primaryCta.label}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
+              icon="arrow"
+            />
             {p.secondaryCta && (
               <Link to={p.secondaryCta.to} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors" style={{ borderRadius: "3px" }}>
                 {p.secondaryCta.label}
