@@ -154,13 +154,14 @@ const MotorradFuehrerscheinWettingen = () => {
           </div>
 
           <div className="text-center mt-10">
-            <Link
+            <TrackedCta
               to="/grundkurs"
+              label="Kurs buchen"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
-              style={{ borderRadius: "3px" }}
+              icon="none"
             >
               Kurs buchen <ChevronRight className="w-4 h-4" />
-            </Link>
+            </TrackedCta>
           </div>
         </div>
       </section>
