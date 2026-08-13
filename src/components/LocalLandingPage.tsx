@@ -6,6 +6,7 @@ import Seo from "@/components/Seo";
 import GoogleReviews from "@/components/GoogleReviews";
 import Breadcrumbs, { type BreadcrumbItem } from "@/components/Breadcrumbs";
 import RelatedLinks, { type RelatedLink } from "@/components/RelatedLinks";
+import TrackedCta from "@/components/TrackedCta";
 import { tenantConfig } from "@/config/tenant";
 
 export interface LocalLandingProps {
