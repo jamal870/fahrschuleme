@@ -114,6 +114,9 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [aiThinking, setAiThinking] = useState(false);
+  // Wenn die KI nicht verfügbar ist (Token/Guthaben/Deploy), läuft der Chat
+  // still im normalen Menü-Modus weiter – ohne technische Fehlermeldung.
+  const [aiUnavailable, setAiUnavailable] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [autoOpened, setAutoOpened] = useState(false);
   const [aiQuestionCount, setAiQuestionCount] = useState(0);
@@ -860,6 +863,17 @@ export default function ChatBot() {
 
     const inBookingFlow = bookingStep > 0 || fsStep > 0;
 
+    // KI nicht verfügbar → direkt normaler Menü-Modus, keine Fehlermeldung.
+    if (aiUnavailable && !inBookingFlow) {
+      addMsg({
+        role: "bot",
+        content: "Gerne helfe ich dir weiter – wähle einfach ein Thema:",
+        buttons: mainMenu,
+      });
+      return;
+    }
+
+
     if (!inBookingFlow) {
       const nextCount = aiQuestionCount + 1;
       setAiQuestionCount(nextCount);
@@ -907,22 +921,16 @@ export default function ChatBot() {
       try { data = raw ? JSON.parse(raw) : null; } catch { /* kein JSON */ }
 
       if (!res.ok) {
-        const detail =
-          data?.message ||
-          data?.error ||
-          (raw ? raw.slice(0, 300) : "") ||
-          res.statusText;
-        const hint =
-          res.status === 404
-            ? "Die KI-Funktion ist auf dem Server nicht deployt."
-            : res.status === 429
-              ? "Das KI-Kontingent ist momentan erschöpft."
-              : res.status === 402
-                ? "Das KI-Guthaben ist aufgebraucht."
-                : res.status === 401 || res.status === 403
-                  ? "Zugriff auf die KI-Funktion verweigert (Key/Berechtigung)."
-                  : "Die KI-Funktion hat einen Fehler zurückgegeben.";
-        throw new Error(`${hint}\n\n**Fehler ${res.status}:** ${detail}`);
+        // Alle Serverfehler (Token/Guthaben/Deploy/Berechtigung) werden dem
+        // Kunden gegenüber nicht angezeigt – nur intern geloggt.
+        console.error("chat-assistant error", res.status, raw?.slice(0, 300));
+        setAiUnavailable(true);
+        addMsg({
+          role: "bot",
+          content: "Gerne helfe ich dir weiter – wähle einfach ein Thema:",
+          buttons: mainMenu,
+        });
+        return;
       }
 
       if (data?.reply) {
@@ -942,14 +950,10 @@ export default function ChatBot() {
       }
     } catch (e: any) {
       console.error("chat-assistant error", e);
-      const detail =
-        e?.message === "Failed to fetch"
-          ? "Server nicht erreichbar (Netzwerk/CORS)."
-          : (e?.message ?? String(e));
+      setAiUnavailable(true);
       addMsg({
         role: "bot",
-        content:
-          `⚠️ ${detail}\n\nWähle bitte ein Thema oder ruf uns an: **${tenantConfig.contact.phone}**`,
+        content: "Gerne helfe ich dir weiter – wähle einfach ein Thema:",
         buttons: mainMenu,
       });
     } finally {
