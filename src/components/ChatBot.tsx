@@ -114,6 +114,9 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [aiThinking, setAiThinking] = useState(false);
+  // Wenn die KI nicht verfügbar ist (Token/Guthaben/Deploy), läuft der Chat
+  // still im normalen Menü-Modus weiter – ohne technische Fehlermeldung.
+  const [aiUnavailable, setAiUnavailable] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [autoOpened, setAutoOpened] = useState(false);
   const [aiQuestionCount, setAiQuestionCount] = useState(0);
