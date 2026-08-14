@@ -630,6 +630,7 @@ function CourseSection({
   loading,
   requiresPrev = false,
   priceOverride,
+  promotion,
 }: {
   partNum: number;
   courses: CourseDate[];
@@ -638,6 +639,7 @@ function CourseSection({
   loading: boolean;
   requiresPrev?: boolean;
   priceOverride?: number;
+  promotion?: Promotion | null;
 }) {
   return (
     <div>
