@@ -10,6 +10,7 @@ import type { CourseDate, FahrstundenService, FahrstundenPackage, Instructor } f
 import { tenantConfig } from "@/config/tenant";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { dedupeCourses } from "@/lib/course-dedupe";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -169,13 +170,14 @@ export default function ChatBot() {
     };
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return data
+    const mapped = data
       .map((d: any) => ({
         id: d.id, day: d.day, date: d.date, time: d.time, location: d.location,
         instructor: d.instructor || undefined, price: Number(d.price), spotsAvailable: d.spots_available,
       }))
       .filter((c) => new Date(toIso(c.date)) >= today)
       .sort((a, b) => toIso(a.date).localeCompare(toIso(b.date)));
+    return dedupeCourses(mapped, part);
   }, []);
 
   const loadServices = useCallback(async (): Promise<FahrstundenService[]> => {

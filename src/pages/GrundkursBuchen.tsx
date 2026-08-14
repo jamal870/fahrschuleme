@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import PromoPrice from "@/components/PromoPrice";
+import { dedupeCourses } from "@/lib/course-dedupe";
 
 import BrandLogo from "@/components/BrandLogo";
 import SiteHeader from "@/components/SiteHeader";
@@ -129,10 +130,13 @@ export default function GrundkursBuchen() {
     if (!error && data) {
       setCoursesData(prev => ({
         ...prev,
-        [part]: data.map((d: any) => ({
-          id: d.id, day: d.day, date: d.date, time: d.time, location: d.location,
-          instructor: d.instructor || undefined, price: Number(d.price), spotsAvailable: d.spots_available,
-        })),
+        [part]: dedupeCourses(
+          data.map((d: any) => ({
+            id: d.id, day: d.day, date: d.date, time: d.time, location: d.location,
+            instructor: d.instructor || undefined, price: Number(d.price), spotsAvailable: d.spots_available,
+          })),
+          part,
+        ),
       }));
     }
     setLoadingPart(null);
