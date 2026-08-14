@@ -1,3 +1,26 @@
+# Version 1.9.2 — Duplikat-Erkennung bei Kursterminen
+
+**Release-Datum:** 2026-08-14
+**Status:** ✅ Umgesetzt (Freigabe vom Betreiber 2026-08-14)
+
+**Hintergrund:** Im SARI/asa-Portal ist neu nur noch ein Kursblock pro Woche geplant
+(Teil 1 Freitag 17:00, Teil 2 Samstag 08:00, Teil 3 Sonntag 08:00). Doppelt erfasste
+Termine dürfen weder importiert noch buchbar sein.
+
+- Neu: `src/lib/course-dedupe.ts` — Slot-Schlüssel `Teil|Datum|Startzeit`; pro Slot
+  bleibt der Eintrag mit den wenigsten freien Plätzen (dort hängen die Buchungen).
+- Duplikate werden ausgeblendet in `GrundkursBuchen.tsx`, `Kurstermine.tsx`
+  und im ASK-AI-Chatbot (`ChatBot.tsx`) — keine Doppelbuchung desselben Kurses mehr.
+- `import-asa-courses`: erkennt bestehende Termine auch unter abweichender ID
+  (Slot-Index) und markiert sie als `duplicate` → werden nicht angelegt.
+- `AsaImportDialog.tsx`: Badge „Duplikat – ignoriert", nicht auswählbar,
+  Ergebnis-Toast zählt ignorierte Duplikate.
+
+**Betriebshinweis:** Edge Function `import-asa-courses` muss auf dem VPS
+nachgezogen werden (`git pull` + Function-Restart).
+
+---
+
 # Version 1.9.1 — Hotfix: KI-Assistenten (Anbieter-Fallback)
 
 **Release-Datum:** 2026-08-11
