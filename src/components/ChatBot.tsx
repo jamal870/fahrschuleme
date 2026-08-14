@@ -887,11 +887,43 @@ export default function ChatBot() {
 
     setAiThinking(true);
     try {
-      const { data, error } = await supabase.functions.invoke("chat-assistant", {
-        body: { messages: history, context: buildAiContext() },
-      });
+      // Direkter Fetch statt supabase.functions.invoke: nur so bekommen wir
+      // Statuscode und die konkrete Fehlermeldung des Servers zu sehen.
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-assistant`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ messages: history, context: buildAiContext() }),
+        },
+      );
 
-      if (error) throw error;
+      const raw = await res.text();
+      let data: any = null;
+      try { data = raw ? JSON.parse(raw) : null; } catch { /* kein JSON */ }
+
+      if (!res.ok) {
+        const detail =
+          data?.message ||
+          data?.error ||
+          (raw ? raw.slice(0, 300) : "") ||
+          res.statusText;
+        const hint =
+          res.status === 404
+            ? "Die KI-Funktion ist auf dem Server nicht deployt."
+            : res.status === 429
+              ? "Das KI-Kontingent ist momentan erschöpft."
+              : res.status === 402
+                ? "Das KI-Guthaben ist aufgebraucht."
+                : res.status === 401 || res.status === 403
+                  ? "Zugriff auf die KI-Funktion verweigert (Key/Berechtigung)."
+                  : "Die KI-Funktion hat einen Fehler zurückgegeben.";
+        throw new Error(`${hint}\n\n**Fehler ${res.status}:** ${detail}`);
+      }
 
       if (data?.reply) {
         addMsg({ role: "bot", content: data.reply, buttons: data.flow ? undefined : mainMenu });
@@ -910,22 +942,20 @@ export default function ChatBot() {
       }
     } catch (e: any) {
       console.error("chat-assistant error", e);
-      const serverMsg =
-        (typeof e?.context?.body === "string" ? (() => { try { return JSON.parse(e.context.body)?.message; } catch { return null; } })() : null) ||
-        e?.message;
+      const detail =
+        e?.message === "Failed to fetch"
+          ? "Server nicht erreichbar (Netzwerk/CORS)."
+          : (e?.message ?? String(e));
       addMsg({
         role: "bot",
         content:
-          (serverMsg && typeof serverMsg === "string" && serverMsg.length < 300 && !/non-2xx/i.test(serverMsg)
-            ? serverMsg + "\n\n"
-            : "Da ist gerade etwas schiefgelaufen. ") +
-          "Wähle bitte ein Thema oder ruf uns an: **" + tenantConfig.contact.phone + "**",
+          `⚠️ ${detail}\n\nWähle bitte ein Thema oder ruf uns an: **${tenantConfig.contact.phone}**`,
         buttons: mainMenu,
       });
-
     } finally {
       setAiThinking(false);
     }
+
   };
 
   const activeStep = bookingStep > 0 ? bookingStep : (fsStep > 0 ? fsStep : 0);
