@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bike, Check, MapPin, Clock, User, AlertCircle, CreditCard, Loader2 } from "lucide-react";
+import { Bike, Check, MapPin, Clock, User, AlertCircle, CreditCard, Loader2, Sparkles, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,11 +10,33 @@ import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import PromoPrice from "@/components/PromoPrice";
 
 import BrandLogo from "@/components/BrandLogo";
 import SiteHeader from "@/components/SiteHeader";
 import Seo from "@/components/Seo";
 const LFA_MUSTER_URL = "/images/lernfahrausweis-muster.jpeg";
+
+interface Promotion {
+  id: string;
+  title: string;
+  description: string | null;
+  price: string | null;
+  badge: string | null;
+  original_price: number | null;
+  discount_price: number | null;
+  category: string | null;
+  starts_at: string | null;
+  ends_at: string | null;
+}
+
+const isPromotionActive = (p: Promotion | null): boolean => {
+  if (!p) return false;
+  const now = new Date();
+  if (p.starts_at && new Date(p.starts_at) > now) return false;
+  if (p.ends_at && new Date(p.ends_at) < now) return false;
+  return true;
+};
 
 // Parse "DD.MM.YYYY" to a comparable Date
 function parseCourseDate(dateStr: string): Date {
