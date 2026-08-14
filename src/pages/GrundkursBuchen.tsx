@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bike, Check, MapPin, Clock, User, AlertCircle, CreditCard, Loader2 } from "lucide-react";
+import { Bike, Check, MapPin, Clock, User, AlertCircle, CreditCard, Loader2, Sparkles, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,11 +10,33 @@ import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import PromoPrice from "@/components/PromoPrice";
 
 import BrandLogo from "@/components/BrandLogo";
 import SiteHeader from "@/components/SiteHeader";
 import Seo from "@/components/Seo";
 const LFA_MUSTER_URL = "/images/lernfahrausweis-muster.jpeg";
+
+interface Promotion {
+  id: string;
+  title: string;
+  description: string | null;
+  price: string | null;
+  badge: string | null;
+  original_price: number | null;
+  discount_price: number | null;
+  category: string | null;
+  starts_at: string | null;
+  ends_at: string | null;
+}
+
+const isPromotionActive = (p: Promotion | null): boolean => {
+  if (!p) return false;
+  const now = new Date();
+  if (p.starts_at && new Date(p.starts_at) > now) return false;
+  if (p.ends_at && new Date(p.ends_at) < now) return false;
+  return true;
+};
 
 // Parse "DD.MM.YYYY" to a comparable Date
 function parseCourseDate(dateStr: string): Date {
@@ -52,6 +74,7 @@ export default function GrundkursBuchen() {
   const [selections, setSelections] = useState<Record<number, CourseDate | null>>({ 1: null, 2: null, 3: null });
   const [coursesData, setCoursesData] = useState<Record<number, CourseDate[]>>({});
   const [loadingPart, setLoadingPart] = useState<number | null>(null);
+  const [promotion, setPromotion] = useState<Promotion | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -81,6 +104,19 @@ export default function GrundkursBuchen() {
       loadCourseDates(2);
       loadCourseDates(3);
     }
+
+    // Aktive MGK-Aktion laden
+    (async () => {
+      const { data } = await supabase
+        .from("promotions")
+        .select("id,title,description,price,badge,original_price,discount_price,category,starts_at,ends_at")
+        .eq("active", true)
+        .in("category", ["mgk", "grundkurs"])
+        .order("sort_order", { ascending: true })
+        .limit(1);
+      const first = (data || [])[0] as Promotion | undefined;
+      if (first && isPromotionActive(first)) setPromotion(first);
+    })();
   }, [a1Only]);
 
   const loadCourseDates = async (part: number) => {
@@ -149,11 +185,13 @@ export default function GrundkursBuchen() {
     setErrors({});
     setIsSubmitting(true);
 
-    const selectedCoursesWithParts = Object.entries(selections)
-      .filter(([, v]) => v !== null)
-      .map(([part, course]) => ({ part: parseInt(part), course: course! }));
-    const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
-    const total = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, c) => sum + c.price, 0);
+      const selectedCoursesWithParts = Object.entries(selections)
+        .filter(([, v]) => v !== null)
+        .map(([part, course]) => ({ part: parseInt(part), course: course! }));
+      const selectedCourses = selectedCoursesWithParts.map(({ course }) => course);
+      const total = a1Only
+        ? A1_TEIL3_PRICE
+        : selectedCoursesWithParts.reduce((sum, { part, course }) => sum + getCoursePrice(course, part), 0);
     const isOnline = paymentMethod === "stripe";
     const checkoutWindow = isOnline ? window.open("", "_blank") : null;
 
@@ -220,7 +258,20 @@ export default function GrundkursBuchen() {
   const selectedCourses = Object.entries(selections)
     .filter(([, v]) => v !== null)
     .map(([part, course]) => ({ part: parseInt(part), course: course! }));
-  const basePrice = a1Only ? A1_TEIL3_PRICE : selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
+
+  const getCoursePrice = (course: CourseDate, part: number) => {
+    if (a1Only && part === 3) return A1_TEIL3_PRICE;
+    if (isPromotionActive(promotion) && promotion?.discount_price != null) return promotion.discount_price;
+    return course.price;
+  };
+
+  const originalBasePrice = a1Only
+    ? A1_TEIL3_PRICE
+    : selectedCourses.reduce((sum, { course }) => sum + course.price, 0);
+  const basePrice = a1Only
+    ? A1_TEIL3_PRICE
+    : selectedCourses.reduce((sum, { part, course }) => sum + getCoursePrice(course, part), 0);
+  const savings = Math.max(0, originalBasePrice - basePrice);
   // 3 % Aufschlag bei Online-Zahlung (Stripe-Gebühren), auf 5 Rappen gerundet
   const ONLINE_FEE_RATE = 0.03;
   const isOnlinePayment = paymentMethod === "stripe";
@@ -289,6 +340,34 @@ export default function GrundkursBuchen() {
 
         </div>
 
+        {isPromotionActive(promotion) && (
+          <div
+            className="relative overflow-hidden border border-primary/30 bg-primary/5 p-4 text-center mb-6"
+            style={{ borderRadius: "3px" }}
+          >
+            <div
+              aria-hidden
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: "radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)",
+                backgroundSize: "20px 20px",
+              }}
+            />
+            <div className="relative flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+              <span className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-[10px] font-heading font-bold uppercase tracking-widest px-2.5 py-1" style={{ borderRadius: "3px" }}>
+                <Sparkles className="w-3 h-3" />
+                {promotion?.badge || "AKTION"}
+              </span>
+              <span className="text-sm font-body text-foreground">
+                <strong className="font-heading">{promotion?.title}</strong>
+                {promotion?.description && (
+                  <span className="text-muted-foreground"> — {promotion.description}</span>
+                )}
+              </span>
+            </div>
+          </div>
+        )}
+
         <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 text-center mb-8">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">Keine passenden Kursdaten gefunden???</strong> Kursteil 3 bis 50 cm³ auf Anfrage!
@@ -307,6 +386,7 @@ export default function GrundkursBuchen() {
               selected={selections[1]}
               onSelect={(course) => selectCourse(1, course)}
               loading={loadingPart === 1}
+              promotion={promotion}
             />
 
             {/* Part 2 - Always visible so customers can browse all dates */}
@@ -318,6 +398,7 @@ export default function GrundkursBuchen() {
                 onSelect={(course) => selectCourse(2, course)}
                 loading={loadingPart === 2}
                 requiresPrev={!selections[1]}
+                promotion={promotion}
               />
             </div>
           </>
@@ -333,6 +414,7 @@ export default function GrundkursBuchen() {
             loading={loadingPart === 3}
             requiresPrev={!a1Only && !selections[2]}
             priceOverride={a1Only ? A1_TEIL3_PRICE : undefined}
+            promotion={promotion}
           />
         </div>
 
@@ -357,20 +439,40 @@ export default function GrundkursBuchen() {
                 <div className="bg-card border border-border rounded-xl p-5 mb-6">
                   <h3 className="font-semibold text-foreground mb-4">Ihre gewählten Kurstermine:</h3>
                   <div className="space-y-4">
-                    {selectedCourses.map(({ part, course }) => (
-                      <div key={part}>
-                        <div className="bg-primary text-primary-foreground text-center py-1.5 rounded-lg text-sm font-semibold mb-2">
-                          MGK Teil {part}
+                    {selectedCourses.map(({ part, course }) => {
+                      const original = a1Only && part === 3 ? A1_TEIL3_PRICE : course.price;
+                      const discounted = getCoursePrice(course, part);
+                      const hasDiscount = discounted < original;
+                      return (
+                        <div key={part}>
+                          <div className="bg-primary text-primary-foreground text-center py-1.5 rounded-lg text-sm font-semibold mb-2">
+                            MGK Teil {part}
+                          </div>
+                          <div className="space-y-0.5">
+                            <p className="text-sm text-muted-foreground">📅 {course.date} &nbsp; 🕐 {course.time}</p>
+                            <p className="text-sm text-muted-foreground">📍 {course.location}</p>
+                            <div className="flex items-baseline gap-2 flex-wrap">
+                              <span className="font-bold text-primary">CHF {discounted.toFixed(2)}</span>
+                              {hasDiscount && (
+                                <>
+                                  <span className="text-sm text-muted-foreground line-through">CHF {original.toFixed(2)}</span>
+                                  <span className="inline-flex items-center gap-1 bg-primary text-primary-foreground text-[9px] font-heading font-bold uppercase tracking-wider px-1.5 py-0.5" style={{ borderRadius: "3px" }}>
+                                    <Tag className="w-2.5 h-2.5" /> Aktion
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <div className="space-y-0.5">
-                          <p className="text-sm text-muted-foreground">📅 {course.date} &nbsp; 🕐 {course.time}</p>
-                          <p className="text-sm text-muted-foreground">📍 {course.location}</p>
-                          <p className="font-bold text-primary">CHF {(a1Only && part === 3 ? A1_TEIL3_PRICE : course.price).toFixed(2)}</p>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   <div className="border-t border-border mt-4 pt-4 text-right space-y-1">
+                    {savings > 0 && (
+                      <p className="text-sm text-primary font-semibold">
+                        Du sparst dank Aktion: <span className="font-bold">CHF {savings.toFixed(2)}</span>
+                      </p>
+                    )}
                     {onlineFee > 0 && (
                       <>
                         <p className="text-sm text-muted-foreground">
@@ -548,6 +650,7 @@ function CourseSection({
   loading,
   requiresPrev = false,
   priceOverride,
+  promotion,
 }: {
   partNum: number;
   courses: CourseDate[];
@@ -556,6 +659,7 @@ function CourseSection({
   loading: boolean;
   requiresPrev?: boolean;
   priceOverride?: number;
+  promotion?: Promotion | null;
 }) {
   return (
     <div>
@@ -642,7 +746,24 @@ function CourseSection({
                     </p>
                   )}
                 </div>
-                <p className="font-bold text-primary mt-3">CHF {(priceOverride ?? course.price).toFixed(2)}</p>
+                {(() => {
+                  const original = priceOverride ?? course.price;
+                  const discounted = priceOverride ?? (isPromotionActive(promotion) && promotion?.discount_price != null ? promotion.discount_price : course.price);
+                  const hasDiscount = discounted < original;
+                  return (
+                    <div className="mt-3 flex items-baseline gap-2 flex-wrap">
+                      <span className="font-bold text-primary">CHF {discounted.toFixed(2)}</span>
+                      {hasDiscount && (
+                        <>
+                          <span className="text-sm text-muted-foreground line-through">CHF {original.toFixed(2)}</span>
+                          <span className="inline-flex items-center gap-1 bg-primary text-primary-foreground text-[9px] font-heading font-bold uppercase tracking-wider px-1.5 py-0.5" style={{ borderRadius: "3px" }}>
+                            <Tag className="w-2.5 h-2.5" /> Aktion
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  );
+                })()}
                 <span className={`inline-block text-[10px] font-semibold px-2.5 py-1 rounded-full mt-1.5 ${
                   course.spotsAvailable <= 2 ? "bg-destructive text-destructive-foreground" : "bg-success text-success-foreground"
                 }`}>
