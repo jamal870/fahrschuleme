@@ -19,7 +19,7 @@ interface AsaItem {
   time: string;
   location: string;
   spots: number | null;
-  action: "new" | "update" | "unchanged";
+  action: "new" | "update" | "unchanged" | "duplicate";
   changes: string[];
 }
 
@@ -80,7 +80,7 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
 
     const list = ((data as any).items || []) as AsaItem[];
     setItems(list);
-    setSelected(new Set(list.filter((i) => i.action !== "unchanged").map((i) => i.id)));
+    setSelected(new Set(list.filter((i) => i.action === "new" || i.action === "update").map((i) => i.id)));
     setLoaded(true);
     if (list.length === 0) toast.info("Keine Kurse im asa-Portal gefunden");
   };
@@ -107,7 +107,10 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
 
     }
     const r = data as any;
-    toast.success(`${r.created} neu, ${r.updated} aktualisiert`);
+    toast.success(
+      `${r.created} neu, ${r.updated} aktualisiert` +
+        (r.duplicates ? `, ${r.duplicates} Duplikate ignoriert` : ""),
+    );
     if (r.errors?.length) toast.warning(r.errors.join(" | "));
 
     // Importierte Termine direkt in den Google Kalender schreiben
@@ -146,6 +149,7 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
   const badge = (a: AsaItem["action"]) =>
     a === "new" ? <Badge>neu</Badge>
       : a === "update" ? <Badge variant="secondary">geändert</Badge>
+      : a === "duplicate" ? <Badge variant="destructive">Duplikat – ignoriert</Badge>
       : <Badge variant="outline">unverändert</Badge>;
 
   return (
@@ -204,7 +208,7 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
                 variant="outline"
                 size="sm"
                 onClick={() =>
-                  setSelected(new Set(visibleItems.filter((i) => i.action !== "unchanged").map((i) => i.id)))
+                  setSelected(new Set(visibleItems.filter((i) => i.action === "new" || i.action === "update").map((i) => i.id)))
                 }
               >
                 Alle im Zeitraum
@@ -224,7 +228,7 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
               <div key={i.id} className="flex items-start gap-3 rounded border p-2 text-sm">
                 <Checkbox
                   checked={selected.has(i.id)}
-                  disabled={i.action === "unchanged"}
+                  disabled={i.action === "unchanged" || i.action === "duplicate"}
                   onCheckedChange={() => toggle(i.id)}
                   className="mt-1"
                 />
