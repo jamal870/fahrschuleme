@@ -5,6 +5,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
 import TrackedCta from "@/components/TrackedCta";
+import PromoPrice from "@/components/PromoPrice";
 import { Sparkles, Tag, ArrowRight } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
 
@@ -118,17 +119,13 @@ const Angebote = () => {
                   {p.description && (
                     <p className="text-sm text-muted-foreground font-body mb-5 flex-1 whitespace-pre-line leading-relaxed">{p.description}</p>
                   )}
-                  {(p.price || p.discount_price != null) && (
-                    <div className="pt-4 border-t border-border flex items-baseline gap-2 flex-wrap mb-4">
-                      <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Aktionspreis</span>
-                      <div className="ml-auto flex items-baseline gap-2">
-                        {p.original_price != null && (
-                          <span className="font-body text-base text-muted-foreground line-through">CHF {Number(p.original_price).toFixed(0)}.-</span>
-                        )}
-                        <span className="font-heading font-bold text-2xl text-primary">{p.price || `CHF ${Number(p.discount_price).toFixed(0)}.-`}</span>
-                      </div>
-                    </div>
-                  )}
+                  <PromoPrice
+                    price={p.price}
+                    originalPrice={p.original_price}
+                    discountPrice={p.discount_price}
+                    className="mb-4"
+                  />
+
                   {(p.starts_at || p.ends_at) && (
                     <p className="text-xs font-body text-muted-foreground mb-4">
                       {p.starts_at && p.ends_at ? `Gültig ${fmt(p.starts_at)} – ${fmt(p.ends_at)}` : p.ends_at ? `Gültig bis ${fmt(p.ends_at)}` : `Gültig ab ${fmt(p.starts_at!)}`}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import TrackedCta from "@/components/TrackedCta";
+import PromoPrice from "@/components/PromoPrice";
 import { Sparkles, Tag, ArrowRight, ExternalLink } from "lucide-react";
 
 const FAHRSTUNDEN_APP_URL = "https://app.l-me.ch/api/anmeldung";
@@ -133,21 +134,8 @@ const PromotionsSection = () => {
                 </p>
               )}
 
-              {(p.price || p.discount_price != null) && (
-                <div className="relative pt-5 border-t border-border flex items-baseline gap-2 flex-wrap">
-                  <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Aktionspreis</span>
-                  <div className="ml-auto flex items-baseline gap-2">
-                    {p.original_price != null && (
-                      <span className="font-body text-lg text-muted-foreground line-through">
-                        CHF {Number(p.original_price).toFixed(0)}.-
-                      </span>
-                    )}
-                    <span className="font-heading font-bold text-3xl text-primary">
-                      {p.price || `CHF ${Number(p.discount_price).toFixed(0)}.-`}
-                    </span>
-                  </div>
-                </div>
-              )}
+              <PromoPrice price={p.price} originalPrice={p.original_price} discountPrice={p.discount_price} />
+
 
               {(p.starts_at || p.ends_at) && (() => {
                 const fmt = (iso: string) => new Date(iso).toLocaleDateString("de-CH", { day: "2-digit", month: "2-digit", year: "numeric" });
