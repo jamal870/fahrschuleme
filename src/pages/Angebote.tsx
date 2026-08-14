@@ -5,6 +5,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
 import TrackedCta from "@/components/TrackedCta";
+import PromoPrice from "@/components/PromoPrice";
 import { Sparkles, Tag, ArrowRight } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
 
