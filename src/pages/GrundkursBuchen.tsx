@@ -340,6 +340,34 @@ export default function GrundkursBuchen() {
 
         </div>
 
+        {isPromotionActive(promotion) && (
+          <div
+            className="relative overflow-hidden border border-primary/30 bg-primary/5 p-4 text-center mb-6"
+            style={{ borderRadius: "3px" }}
+          >
+            <div
+              aria-hidden
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: "radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)",
+                backgroundSize: "20px 20px",
+              }}
+            />
+            <div className="relative flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+              <span className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-[10px] font-heading font-bold uppercase tracking-widest px-2.5 py-1" style={{ borderRadius: "3px" }}>
+                <Sparkles className="w-3 h-3" />
+                {promotion?.badge || "AKTION"}
+              </span>
+              <span className="text-sm font-body text-foreground">
+                <strong className="font-heading">{promotion?.title}</strong>
+                {promotion?.description && (
+                  <span className="text-muted-foreground"> — {promotion.description}</span>
+                )}
+              </span>
+            </div>
+          </div>
+        )}
+
         <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 text-center mb-8">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">Keine passenden Kursdaten gefunden???</strong> Kursteil 3 bis 50 cm³ auf Anfrage!
