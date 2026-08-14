@@ -386,6 +386,7 @@ export default function GrundkursBuchen() {
               selected={selections[1]}
               onSelect={(course) => selectCourse(1, course)}
               loading={loadingPart === 1}
+              promotion={promotion}
             />
 
             {/* Part 2 - Always visible so customers can browse all dates */}
@@ -397,6 +398,7 @@ export default function GrundkursBuchen() {
                 onSelect={(course) => selectCourse(2, course)}
                 loading={loadingPart === 2}
                 requiresPrev={!selections[1]}
+                promotion={promotion}
               />
             </div>
           </>
@@ -412,6 +414,7 @@ export default function GrundkursBuchen() {
             loading={loadingPart === 3}
             requiresPrev={!a1Only && !selections[2]}
             priceOverride={a1Only ? A1_TEIL3_PRICE : undefined}
+            promotion={promotion}
           />
         </div>
 
