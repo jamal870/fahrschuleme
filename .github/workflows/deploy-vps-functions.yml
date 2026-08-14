@@ -52,18 +52,25 @@ jobs:
               STACK_DIR="$SUPA_DIR" bash "$APP_DIR/infrastructure/supabase/scripts/deploy-functions.sh"
             fi
 
-            echo "==> Restart edge functions container in $SUPA_DIR"
-            cd "$SUPA_DIR"
-            docker compose up -d --force-recreate functions
+            echo "==> Edge-Functions-Container ermitteln"
+            CONTAINER="$(docker ps --format '{{.Names}}\t{{.Image}}' | grep -i 'edge-runtime' | head -n1 | cut -f1)"
+            if [ -z "$CONTAINER" ]; then
+              CONTAINER="$(docker ps --format '{{.Names}}' | grep -iE 'edge|functions' | head -n1)"
+            fi
+            [ -n "$CONTAINER" ] || { echo "Kein Edge-Functions-Container gefunden"; docker ps --format '{{.Names}}'; exit 1; }
+            echo "Container: $CONTAINER"
 
-            echo "==> Wait for container to become healthy"
+            echo "==> Restart $CONTAINER"
+            docker restart "$CONTAINER"
+
+            echo "==> Warten bis Container laeuft"
             for i in $(seq 1 20); do
-              if docker compose ps functions | grep -qi 'up'; then
-                echo "functions container is up"
+              if [ "$(docker inspect -f '{{.State.Running}}' "$CONTAINER" 2>/dev/null)" = "true" ]; then
+                echo "$CONTAINER laeuft"
                 break
               fi
               sleep 3
             done
 
-            docker compose logs --tail=30 functions || true
+            docker logs --tail=30 "$CONTAINER" || true
             echo "==> Deploy finished"
