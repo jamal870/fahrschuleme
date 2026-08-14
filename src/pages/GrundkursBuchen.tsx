@@ -439,20 +439,40 @@ export default function GrundkursBuchen() {
                 <div className="bg-card border border-border rounded-xl p-5 mb-6">
                   <h3 className="font-semibold text-foreground mb-4">Ihre gewählten Kurstermine:</h3>
                   <div className="space-y-4">
-                    {selectedCourses.map(({ part, course }) => (
-                      <div key={part}>
-                        <div className="bg-primary text-primary-foreground text-center py-1.5 rounded-lg text-sm font-semibold mb-2">
-                          MGK Teil {part}
+                    {selectedCourses.map(({ part, course }) => {
+                      const original = a1Only && part === 3 ? A1_TEIL3_PRICE : course.price;
+                      const discounted = getCoursePrice(course, part);
+                      const hasDiscount = discounted < original;
+                      return (
+                        <div key={part}>
+                          <div className="bg-primary text-primary-foreground text-center py-1.5 rounded-lg text-sm font-semibold mb-2">
+                            MGK Teil {part}
+                          </div>
+                          <div className="space-y-0.5">
+                            <p className="text-sm text-muted-foreground">📅 {course.date} &nbsp; 🕐 {course.time}</p>
+                            <p className="text-sm text-muted-foreground">📍 {course.location}</p>
+                            <div className="flex items-baseline gap-2 flex-wrap">
+                              <span className="font-bold text-primary">CHF {discounted.toFixed(2)}</span>
+                              {hasDiscount && (
+                                <>
+                                  <span className="text-sm text-muted-foreground line-through">CHF {original.toFixed(2)}</span>
+                                  <span className="inline-flex items-center gap-1 bg-primary text-primary-foreground text-[9px] font-heading font-bold uppercase tracking-wider px-1.5 py-0.5" style={{ borderRadius: "3px" }}>
+                                    <Tag className="w-2.5 h-2.5" /> Aktion
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <div className="space-y-0.5">
-                          <p className="text-sm text-muted-foreground">📅 {course.date} &nbsp; 🕐 {course.time}</p>
-                          <p className="text-sm text-muted-foreground">📍 {course.location}</p>
-                          <p className="font-bold text-primary">CHF {(a1Only && part === 3 ? A1_TEIL3_PRICE : course.price).toFixed(2)}</p>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   <div className="border-t border-border mt-4 pt-4 text-right space-y-1">
+                    {savings > 0 && (
+                      <p className="text-sm text-primary font-semibold">
+                        Du sparst dank Aktion: <span className="font-bold">CHF {savings.toFixed(2)}</span>
+                      </p>
+                    )}
                     {onlineFee > 0 && (
                       <>
                         <p className="text-sm text-muted-foreground">
