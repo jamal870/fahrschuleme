@@ -74,6 +74,7 @@ export default function GrundkursBuchen() {
   const [selections, setSelections] = useState<Record<number, CourseDate | null>>({ 1: null, 2: null, 3: null });
   const [coursesData, setCoursesData] = useState<Record<number, CourseDate[]>>({});
   const [loadingPart, setLoadingPart] = useState<number | null>(null);
+  const [promotion, setPromotion] = useState<Promotion | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -103,6 +104,19 @@ export default function GrundkursBuchen() {
       loadCourseDates(2);
       loadCourseDates(3);
     }
+
+    // Aktive MGK-Aktion laden
+    (async () => {
+      const { data } = await supabase
+        .from("promotions")
+        .select("id,title,description,price,badge,original_price,discount_price,category,starts_at,ends_at")
+        .eq("active", true)
+        .in("category", ["mgk", "grundkurs"])
+        .order("sort_order", { ascending: true })
+        .limit(1);
+      const first = (data || [])[0] as Promotion | undefined;
+      if (first && isPromotionActive(first)) setPromotion(first);
+    })();
   }, [a1Only]);
 
   const loadCourseDates = async (part: number) => {
