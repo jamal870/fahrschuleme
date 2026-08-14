@@ -726,7 +726,24 @@ function CourseSection({
                     </p>
                   )}
                 </div>
-                <p className="font-bold text-primary mt-3">CHF {(priceOverride ?? course.price).toFixed(2)}</p>
+                {(() => {
+                  const original = priceOverride ?? course.price;
+                  const discounted = priceOverride ?? (isPromotionActive(promotion) && promotion?.discount_price != null ? promotion.discount_price : course.price);
+                  const hasDiscount = discounted < original;
+                  return (
+                    <div className="mt-3 flex items-baseline gap-2 flex-wrap">
+                      <span className="font-bold text-primary">CHF {discounted.toFixed(2)}</span>
+                      {hasDiscount && (
+                        <>
+                          <span className="text-sm text-muted-foreground line-through">CHF {original.toFixed(2)}</span>
+                          <span className="inline-flex items-center gap-1 bg-primary text-primary-foreground text-[9px] font-heading font-bold uppercase tracking-wider px-1.5 py-0.5" style={{ borderRadius: "3px" }}>
+                            <Tag className="w-2.5 h-2.5" /> Aktion
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  );
+                })()}
                 <span className={`inline-block text-[10px] font-semibold px-2.5 py-1 rounded-full mt-1.5 ${
                   course.spotsAvailable <= 2 ? "bg-destructive text-destructive-foreground" : "bg-success text-success-foreground"
                 }`}>
