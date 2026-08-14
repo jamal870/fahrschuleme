@@ -863,6 +863,17 @@ export default function ChatBot() {
 
     const inBookingFlow = bookingStep > 0 || fsStep > 0;
 
+    // KI nicht verfügbar → direkt normaler Menü-Modus, keine Fehlermeldung.
+    if (aiUnavailable && !inBookingFlow) {
+      addMsg({
+        role: "bot",
+        content: "Gerne helfe ich dir weiter – wähle einfach ein Thema:",
+        buttons: mainMenu,
+      });
+      return;
+    }
+
+
     if (!inBookingFlow) {
       const nextCount = aiQuestionCount + 1;
       setAiQuestionCount(nextCount);
