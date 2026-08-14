@@ -115,10 +115,26 @@ Deno.serve(async (req) => {
       .from("course_dates").select("id, part, date, time, location, price, spots_available");
     if (exErr) return json({ error: "DB-Fehler: " + exErr.message }, 500);
     const existing = new Map((existingRows || []).map((r: any) => [r.id, r]));
+    // Slot-Index: Teil|Datum|Startzeit – erkennt denselben Kurs auch unter anderer ID
+    const startOf = (t: string) => String(t || "").split(/[–-]/)[0].trim();
+    const slotIndex = new Map<string, any>();
+    for (const r of existingRows || []) {
+      slotIndex.set(`${r.part}|${r.date}|${startOf(r.time)}`, r);
+    }
 
     const items = parsed.map((c) => {
       const cur = existing.get(c.id);
-      if (!cur) return { ...c, action: "new" as const, changes: [] as string[] };
+      if (!cur) {
+        const dup = slotIndex.get(`${c.part}|${c.date}|${startOf(c.time)}`);
+        if (dup) {
+          return {
+            ...c,
+            action: "duplicate" as const,
+            changes: [`Bereits vorhanden als "${dup.id}" – wird ignoriert`],
+          };
+        }
+        return { ...c, action: "new" as const, changes: [] as string[] };
+      }
       const changes: string[] = [];
       if (cur.date !== c.date) changes.push(`Datum ${cur.date} → ${c.date}`);
       if (cur.time !== c.time) changes.push(`Zeit ${cur.time} → ${c.time}`);
@@ -131,7 +147,10 @@ Deno.serve(async (req) => {
     }
 
     // --- Übernehmen ---
-    const selectable = items.filter((i) => i.action !== "unchanged" && (!onlyIds || onlyIds.includes(i.id)));
+    const selectable = items.filter(
+      (i) => i.action !== "unchanged" && i.action !== "duplicate" && (!onlyIds || onlyIds.includes(i.id)),
+    );
+    const duplicates = items.filter((i) => i.action === "duplicate").length;
     let created = 0, updated = 0;
     const errors: string[] = [];
 
@@ -152,7 +171,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return json({ section, created, updated, skipped: items.length - selectable.length, errors });
+    return json({ section, created, updated, duplicates, skipped: items.length - selectable.length, errors });
   } catch (e) {
     console.error("import-asa-courses error:", e);
     return json({ error: (e as Error).message }, 500);

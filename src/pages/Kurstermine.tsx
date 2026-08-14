@@ -5,6 +5,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
+import { dedupeCourses } from "@/lib/course-dedupe";
 
 interface CourseRow {
   id: string;
@@ -90,7 +91,7 @@ const Kurstermine = () => {
           const iso = toIsoDate(r.date);
           return new Date(iso) >= today;
         });
-        setRows(future);
+        setRows(dedupeCourses(future));
       }
       setLoading(false);
     })();
