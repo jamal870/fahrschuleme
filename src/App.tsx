@@ -78,6 +78,9 @@ const App = () => (
           <Route path="/angebote" element={<Angebote />} />
           <Route path="/aktionen" element={<Angebote />} />
           <Route path="/strassenverkehrsamt-aargau" element={<StrassenverkehrsamtAargau />} />
+          <Route path="/kosten-fuehrerschein-aargau" element={<KostenFuehrerscheinAargau />} />
+          <Route path="/motorrad-kategorien-vergleich" element={<MotorradKategorienVergleich />} />
+          <Route path="/wie-viele-fahrstunden" element={<WieVieleFahrstunden />} />
           <Route path="/fuer-fahrlehrer" element={<FuerFahrlehrer />} />
           <Route path="/app" element={<FuerFahrlehrer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
