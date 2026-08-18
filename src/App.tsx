@@ -29,6 +29,9 @@ import Kontakt from "./pages/Kontakt.tsx";
 import Kurstermine from "./pages/Kurstermine.tsx";
 import Angebote from "./pages/Angebote.tsx";
 import StrassenverkehrsamtAargau from "./pages/StrassenverkehrsamtAargau.tsx";
+import KostenFuehrerscheinAargau from "./pages/KostenFuehrerscheinAargau.tsx";
+import MotorradKategorienVergleich from "./pages/MotorradKategorienVergleich.tsx";
+import WieVieleFahrstunden from "./pages/WieVieleFahrstunden.tsx";
 import FuerFahrlehrer from "./pages/FuerFahrlehrer.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import WhatsAppFloat from "./components/WhatsAppFloat.tsx";
@@ -75,6 +78,9 @@ const App = () => (
           <Route path="/angebote" element={<Angebote />} />
           <Route path="/aktionen" element={<Angebote />} />
           <Route path="/strassenverkehrsamt-aargau" element={<StrassenverkehrsamtAargau />} />
+          <Route path="/kosten-fuehrerschein-aargau" element={<KostenFuehrerscheinAargau />} />
+          <Route path="/motorrad-kategorien-vergleich" element={<MotorradKategorienVergleich />} />
+          <Route path="/wie-viele-fahrstunden" element={<WieVieleFahrstunden />} />
           <Route path="/fuer-fahrlehrer" element={<FuerFahrlehrer />} />
           <Route path="/app" element={<FuerFahrlehrer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

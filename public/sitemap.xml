@@ -20,6 +20,9 @@
   <url><loc>https://www.fahrschule-me.ch/app</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.fahrschule-me.ch/preise</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.fahrschule-me.ch/strassenverkehrsamt-aargau</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.fahrschule-me.ch/kosten-fuehrerschein-aargau</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.fahrschule-me.ch/motorrad-kategorien-vergleich</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.fahrschule-me.ch/wie-viele-fahrstunden</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.fahrschule-me.ch/team</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.fahrschule-me.ch/kontakt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.fahrschule-me.ch/impressum</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
