@@ -62,6 +62,67 @@ const Datenschutz = () => {
         </section>
 
         <section className="mb-6">
+          <h2 className="text-xl font-heading font-bold mb-3">3a. Google Analytics 4 (Reichweitenmessung)</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Wir setzen Google Analytics 4 (Google Ireland Limited, Messkennung G-FD5JQ1V10E) ein, um die Nutzung unserer
+            Website statistisch auszuwerten und unser Angebot zu verbessern. Erfasst werden gekürzte IP-Adressen,
+            aufgerufene Seiten, Verweildauer, ungefähre Region sowie Geräte- und Browserdaten. Eine Übermittlung von Daten
+            an Server in den USA kann nicht ausgeschlossen werden. Rechtsgrundlage ist unser überwiegendes Interesse an
+            einer bedarfsgerechten Gestaltung der Website (Art. 13 DSG i.V.m. Art. 31 DSG). Nach Schweizer Recht ist für
+            rein analytische Cookies keine vorgängige Einwilligung erforderlich; wir informieren dich an dieser Stelle
+            transparent darüber. Du kannst die Erfassung jederzeit mit dem Browser-Add-on
+            «Google Analytics Opt-out» (tools.google.com/dlpage/gaoptout) oder über die Cookie-Einstellungen bzw. den
+            «Do Not Track»-Modus deines Browsers unterbinden.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-heading font-bold mb-3">3b. Zahlungsabwicklung mit Stripe</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Für Online-Zahlungen (Karte, TWINT, Klarna) arbeiten wir mit Stripe (Stripe Payments Europe Ltd., Irland /
+            Stripe Inc., USA) zusammen. Bei einer Online-Zahlung werden Name, E-Mail-Adresse, Buchungsreferenz und
+            Zahlungsbetrag an Stripe übermittelt; die vollständigen Kartendaten werden ausschliesslich von Stripe erhoben
+            und verarbeitet – wir erhalten und speichern keine Kartennummern. Stripe ist nach PCI-DSS Level 1
+            zertifiziert. Eine Datenübermittlung in die USA kann stattfinden. Rechtsgrundlage: Vertragsabwicklung
+            gemäss Art. 13 DSG.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-heading font-bold mb-3">3c. E-Mail-Versand (Resend)</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Buchungsbestätigungen, Rechnungen und Kurserinnerungen versenden wir über den Dienstleister Resend
+            (Resend Inc.). Dabei werden deine E-Mail-Adresse, dein Name und die Buchungsdaten verarbeitet. Die
+            Verarbeitung erfolgt ausschliesslich zur Abwicklung deiner Buchung und Ausbildung; Werbe-E-Mails versenden
+            wir nur mit deiner Einwilligung und mit jederzeitiger Abmeldemöglichkeit. Rechtsgrundlage: Vertragsabwicklung
+            gemäss Art. 13 DSG.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-heading font-bold mb-3">3d. KI-Chatbot («ASK AI»)</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Unser Website-Chatbot beantwortet Fragen zu Kursen, Preisen und Terminen. Deine Eingaben werden zur
+            Beantwortung an einen KI-Dienstleister (u.a. OpenAI, Google Gemini oder Anthropic) übermittelt und dort
+            kurzfristig verarbeitet. Bitte gib im Chat keine besonders schützenswerten Personendaten (z.B.
+            Gesundheitsdaten) ein. Chatverläufe werden nur für die Dauer der Sitzung in deinem Browser gehalten;
+            Buchungsanfragen aus dem Chat speichern wir wie andere Buchungen. Der Chatbot liefert unverbindliche
+            Auskünfte und ersetzt keine medizinische, rechtliche oder behördliche Beratung. Rechtsgrundlage: Art. 13 DSG.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-xl font-heading font-bold mb-3">3e. Hosting & Server-Standort</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Die Website wird über ein Content-Delivery-Netzwerk ausgeliefert; unsere Anwendungs- und Datenbankserver
+            (Buchungen, Teilnehmerdaten) werden auf einem dedizierten Server in Europa (EU/Schweiz) betrieben.
+            Serverseitig fallen technische Protokolldaten (IP-Adresse, Zeitpunkt, aufgerufene Ressource) an, die der
+            Betriebssicherheit dienen und regelmässig gelöscht werden. Rechtsgrundlage: Art. 13 DSG.
+          </p>
+        </section>
+
+
+        <section className="mb-6">
           <h2 className="text-xl font-heading font-bold mb-3">4. Datensicherheit</h2>
           <p className="text-muted-foreground leading-relaxed">
             Wir setzen technische und organisatorische Massnahmen ein, um deine Daten vor unberechtigtem Zugriff zu schützen.

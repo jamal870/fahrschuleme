@@ -633,17 +633,41 @@ export default function GrundkursBuchen() {
                   </div>
                 )}
 
+                {/* AGB / Datenschutz */}
+                <div className="mt-8 p-4 border-2 border-border bg-muted/30" style={{ borderRadius: "3px" }}>
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={termsAccepted}
+                      onChange={(e) => setTermsAccepted(e.target.checked)}
+                      className="mt-1 w-5 h-5 accent-primary"
+                      aria-required="true"
+                    />
+                    <span className="text-sm text-foreground">
+                      Ich habe die <Link to="/agb" target="_blank" className="text-primary underline hover:no-underline">AGB</Link> und die{" "}
+                      <Link to="/datenschutz" target="_blank" className="text-primary underline hover:no-underline">Datenschutzerklärung</Link>{" "}
+                      gelesen und akzeptiere sie. <span className="text-destructive">*</span>
+                    </span>
+                  </label>
+                  <p className="text-xs text-muted-foreground mt-3">
+                    Deine Daten (Name, Adresse, E-Mail, Telefon, Geburtsdatum) werden ausschliesslich zur Abwicklung
+                    deiner Kursbuchung verarbeitet – gemäss unserer{" "}
+                    <Link to="/datenschutz" target="_blank" className="text-primary underline hover:no-underline">Datenschutzerklärung</Link>.
+                  </p>
+                </div>
+
                 {/* Submit */}
                 <div className="flex justify-end mt-8">
                   <Button
                     onClick={handleSubmit}
-                    disabled={isSubmitting || (a1Only && !a1Confirmed)}
+                    disabled={isSubmitting || (a1Only && !a1Confirmed) || !termsAccepted}
                     className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg"
                   >
                     {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                     {paymentMethod === "stripe" ? "Weiter zur Zahlung" : "Jetzt verbindlich buchen"}
                   </Button>
                 </div>
+
               </div>
             </motion.div>
           )}
