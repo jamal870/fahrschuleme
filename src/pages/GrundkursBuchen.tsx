@@ -88,6 +88,8 @@ export default function GrundkursBuchen() {
   const [category, setCategory] = useState("A1 bis 125ccm");
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "barzahlung" | "ueberweisung">("stripe");
   const [a1Confirmed, setA1Confirmed] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -186,6 +188,11 @@ export default function GrundkursBuchen() {
       toast.error("Bitte bestätige, dass du bereits im Besitz von A1 bist.");
       return;
     }
+    if (!termsAccepted) {
+      toast.error("Bitte akzeptiere die AGB und die Datenschutzerklärung.");
+      return;
+    }
+
     setErrors({});
     setIsSubmitting(true);
 
