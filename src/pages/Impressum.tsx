@@ -30,7 +30,7 @@ const Impressum = () => {
           <p>E-Mail: <a className="text-primary hover:underline" href={`mailto:${c.email}`}>{c.email}</a></p>
           <p>Inhaber & Geschäftsführer: {l.ownerName}</p>
           <p>Unternehmensform: Einzelunternehmen</p>
-          <p>Handelsregistereintrag: Kanton Aargau</p>
+
         </section>
 
         <section className="mb-8">
