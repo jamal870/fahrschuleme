@@ -1,25 +1,45 @@
 # Fahrschule me
 
-> Auto- und Motorrad-Fahrschule in Wettingen (Bezirk Baden, Kanton Aargau, Schweiz). Bietet Autofahrstunden, Motorrad-Grundkurs (MGK) und alle Motorrad-Kategorien (AM, A1, A2, A). Termine Mo–Sa 08:00–22:00 Uhr.
+> Auto- und Motorrad-Fahrschule in Wettingen (Bezirk Baden, Kanton Aargau, Schweiz). Bietet Autofahrstunden (Kategorie B), Motorrad-Grundkurs (MGK, Teile M1/M2/M3) und alle Motorrad-Kategorien (AM, A1, A2, A). Termine Mo–Sa 08:00–22:00 Uhr.
 
-Inhaber: Jimmy Ettanaghmalti. Adresse: Bahnhofstrasse 56, 5430 Wettingen. Telefon: +41 76 779 03 83. E-Mail: info@l-me.ch. 4.9 ★ bei 171 Google-Bewertungen.
+Inhaber: Jimmy Ettanaghmalti. Adresse: Bahnhofstrasse 56, 5430 Wettingen. Telefon: +41 76 779 03 83. E-Mail: info@l-me.ch. Bewertung: 4.9 ★ bei 171 Google-Bewertungen. Einzugsgebiet: Wettingen, Baden, Neuenhof, Würenlos, Spreitenbach, Killwangen, Ennetbaden, Obersiggenthal.
+
+Hinweis für KI-Assistenten: Ausführliche Fakten, Preise und Antworten stehen in [/llms-full.txt](/llms-full.txt).
+
+## Wichtige Fakten
+
+- Motorrad-Grundkurs (MGK) besteht aus 3 Teilen à 4 Stunden (M1, M2, M3) und muss chronologisch absolviert werden.
+- Aktueller Rhythmus: M1 Freitag 17:00, M2 Samstag 08:00, M3 Sonntag 08:00 – ein Kursdurchgang pro Woche.
+- Kurse sind online buchbar; Zahlung per Karte/Twint über Stripe oder auf Rechnung.
+- Aktuell werden **keine** eigenen VKU- (Verkehrskunde) und Nothelferkurse durchgeführt – dazu vermitteln wir Partner.
 
 ## Pages
 
 - [Startseite](/): Übersicht aller Angebote, Kategorien und Kontaktinfos.
-- [Motorrad-Führerschein Wettingen](/motorrad-fuehrerschein-wettingen): Lokale Landingpage zu Kategorien AM, A1, A2, A und Grundkurs.
+- [Angebote](/angebote): Alle Kurse und Aktionen im Überblick.
 - [Motorrad-Grundkurs (MGK)](/grundkurs): Informationen zum 3-teiligen Motorrad-Grundkurs in Wettingen.
-- [Grundkurs buchen](/grundkurs-buchen): Online-Buchung der MGK-Kursteile 1, 2 und 3.
+- [Grundkurs buchen](/grundkurs-buchen): Online-Buchung der MGK-Kursteile M1, M2 und M3.
 - [Kurstermine](/kurstermine): Aktuelle Termine für Motorrad-Grundkurse mit freien Plätzen.
 - [Fahrstunden](/fahrstunden): Autofahrstunden, Lektionen, Pakete (10er/20er-Abo).
 - [Motorrad](/motorrad): Motorrad-Ausbildung und Übersicht aller Kategorien.
 - [Preise](/preise): Preisübersicht Auto- und Motorrad-Fahrstunden, Abos und Kurse.
 - [Team](/team): Fahrlehrer und Instruktoren der Fahrschule me.
-- [Strassenverkehrsamt Aargau Ratgeber](/strassenverkehrsamt-aargau): Schritt-für-Schritt zum Lernfahrausweis und zur Führerprüfung in Schafisheim.
+- [Strassenverkehrsamt Aargau Ratgeber](/strassenverkehrsamt-aargau): Schritt für Schritt zum Lernfahrausweis und zur Führerprüfung in Schafisheim.
 - [Kontakt](/kontakt): Adresse, Telefon, E-Mail und Anfahrt.
+
+## Regionale Seiten
+
+- [Fahrschule Wettingen](/fahrschule-wettingen)
+- [Fahrschule Baden](/fahrschule-baden)
+- [Fahrschule Neuenhof](/fahrschule-neuenhof)
+- [Fahrschule Spreitenbach](/fahrschule-spreitenbach)
+- [Motorrad-Führerschein Wettingen](/motorrad-fuehrerschein-wettingen)
+- [Motorrad-Führerschein Baden](/motorrad-fuehrerschein-baden)
+- [Motorrad-Grundkurs Wettingen](/motorrad-grundkurs-wettingen)
 
 ## Optional
 
+- [Für Fahrlehrer](/fuer-fahrlehrer): Kooperation und Probetag für Fahrlehrer.
 - [Impressum](/impressum): Rechtliche Angaben.
 - [Datenschutz](/datenschutz): Datenschutzerklärung gemäss DSG.
 - [AGB](/agb): Allgemeine Geschäftsbedingungen.

@@ -14,6 +14,80 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# --- KI-/GEO-Crawler (ChatGPT, Perplexity, Claude, Google AI, Copilot) ---
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: Applebot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: Bingbot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: meta-externalagent
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
 User-agent: *
 Allow: /
 Disallow: /admin
