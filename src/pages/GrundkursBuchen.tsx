@@ -186,6 +186,11 @@ export default function GrundkursBuchen() {
       toast.error("Bitte bestätige, dass du bereits im Besitz von A1 bist.");
       return;
     }
+    if (!termsAccepted) {
+      toast.error("Bitte akzeptiere die AGB und die Datenschutzerklärung.");
+      return;
+    }
+
     setErrors({});
     setIsSubmitting(true);
 
