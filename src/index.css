@@ -56,7 +56,15 @@
     --sidebar-ring: 195 90% 55%;
 
     --section-alt: 40 14% 97%;
+
+    /* Glanz / Depth Tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(195 90% 55%), hsl(175 85% 45%));
+    --gradient-sheen: linear-gradient(120deg, transparent 20%, hsl(0 0% 100% / 0.55) 50%, transparent 80%);
+    --shadow-soft: 0 6px 20px -8px hsl(200 30% 20% / 0.18);
+    --shadow-elegant: 0 18px 45px -20px hsl(195 90% 35% / 0.35);
+    --shadow-glow: 0 0 0 1px hsl(var(--primary) / 0.18), 0 12px 32px -12px hsl(var(--primary) / 0.45);
   }
+
 
   .dark {
     --background: 0 0% 8%;
