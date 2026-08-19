@@ -14,9 +14,18 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["Rajdhani", "sans-serif"],
-        body: ["DM Sans", "sans-serif"],
+        heading: ["Sora", "sans-serif"],
+        body: ["Manrope", "sans-serif"],
       },
+      backgroundImage: {
+        "gradient-primary": "var(--gradient-primary)",
+      },
+      boxShadow: {
+        soft: "var(--shadow-soft)",
+        elegant: "var(--shadow-elegant)",
+        glow: "var(--shadow-glow)",
+      },
+
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
