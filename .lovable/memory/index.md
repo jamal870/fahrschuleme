@@ -1,7 +1,7 @@
 # Project Memory
 
 ## Core
-- Light theme, primary accent #e8501a. Fonts: Rajdhani (headings), DM Sans (body). 3px border-radius.
+- Light theme, primary accent Türkis-Cyan (hsl 195 90% 55%). Fonts ab v1.9.3: Sora (Headings, gemischte Schreibweise, kein uppercase), Manrope (Body). 3px border-radius. Glanz-Tokens: --gradient-primary, --shadow-soft/elegant/glow, Klassen .text-shine, .card-glow, .sheen.
 - Routing: BrowserRouter (echte Pfade). HashRouter ist ab v1.8.0 verboten — verursachte Google-Indexierungsfehler. Keine iFrame-Einbettung aktiv.
 - Editable site content lives in DB table `site_content` (key/value JSONB), loaded via `useSiteContent()` hook with `tenant.ts` as fallback. Admin edits in Admin-Tab „Inhalte & Preise".
 - `src/config/tenant.ts` is the DEFAULT/fallback only; runtime values come from `site_content`.
