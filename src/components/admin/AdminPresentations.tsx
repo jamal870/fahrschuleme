@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Download, Play, Trash2, Upload, Presentation } from "lucide-react";
+import { Download, Film, Play, Trash2, Upload, Presentation } from "lucide-react";
 import PresentationViewer from "./PresentationViewer";
+import PresentationVideosDialog from "./PresentationVideosDialog";
+import { parseVideos, type SlideVideo } from "@/lib/presentation-videos";
 
 type Presentation = {
   id: string;
@@ -15,6 +17,7 @@ type Presentation = {
   sort_order: number;
   pptx_path: string | null;
   pdf_path: string | null;
+  videos: SlideVideo[];
 };
 
 const BUCKET = "presentations";
@@ -30,7 +33,9 @@ const AdminPresentations = () => {
   const [description, setDescription] = useState("");
   const [pptxFile, setPptxFile] = useState<File | null>(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [viewer, setViewer] = useState<{ url: string; title: string } | null>(null);
+  const [viewer, setViewer] = useState<{ url: string; title: string; videos: SlideVideo[] } | null>(null);
+  const [videoEditor, setVideoEditor] = useState<Presentation | null>(null);
+
 
   const load = async () => {
     setLoading(true);
@@ -40,7 +45,15 @@ const AdminPresentations = () => {
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: true });
     if (error) toast.error("Laden fehlgeschlagen: " + error.message);
-    else setItems((data as Presentation[]) ?? []);
+    else
+      setItems(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ((data as any[]) ?? []).map((row) => ({
+          ...(row as Omit<Presentation, "videos">),
+          videos: parseVideos(row.videos),
+        })),
+      );
+
     setLoading(false);
   };
 
@@ -108,7 +121,7 @@ const AdminPresentations = () => {
   const present = async (p: Presentation) => {
     if (!p.pdf_path) return toast.error("Für die Anzeige im Browser wird eine PDF-Version benötigt.");
     const url = await signedUrl(p.pdf_path);
-    if (url) setViewer({ url, title: p.title });
+    if (url) setViewer({ url, title: p.title, videos: p.videos ?? [] });
   };
 
   const download = async (path: string) => {
@@ -188,6 +201,9 @@ const AdminPresentations = () => {
                     <Download className="w-4 h-4 mr-1" /> PPTX
                   </Button>
                 )}
+                <Button size="sm" variant="outline" onClick={() => setVideoEditor(p)} className="font-body">
+                  <Film className="w-4 h-4 mr-1" /> Videos{p.videos?.length ? ` (${p.videos.length})` : ""}
+                </Button>
                 <Button size="sm" variant="ghost" onClick={() => remove(p)} className="font-body text-destructive">
                   <Trash2 className="w-4 h-4" />
                 </Button>
@@ -197,7 +213,26 @@ const AdminPresentations = () => {
         </div>
       )}
 
-      {viewer && <PresentationViewer url={viewer.url} title={viewer.title} onClose={() => setViewer(null)} />}
+      {viewer && (
+        <PresentationViewer
+          url={viewer.url}
+          title={viewer.title}
+          videos={viewer.videos}
+          resolveVideoSrc={(path) => signedUrl(path)}
+          onClose={() => setViewer(null)}
+        />
+      )}
+
+      {videoEditor && (
+        <PresentationVideosDialog
+          presentationId={videoEditor.id}
+          presentationTitle={videoEditor.title}
+          videos={videoEditor.videos ?? []}
+          onClose={() => setVideoEditor(null)}
+          onSaved={load}
+        />
+      )}
+
     </div>
   );
 };

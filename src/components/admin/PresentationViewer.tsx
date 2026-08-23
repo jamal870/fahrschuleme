@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, X, Film } from "lucide-react";
+import { getEmbedUrl, type SlideVideo } from "@/lib/presentation-videos";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
 
@@ -10,9 +11,12 @@ type Props = {
   url: string;
   title: string;
   onClose: () => void;
+  videos?: SlideVideo[];
+  /** Löst einen Storage-Pfad in eine abspielbare URL auf */
+  resolveVideoSrc?: (path: string) => Promise<string | null>;
 };
 
-const PresentationViewer = ({ url, title, onClose }: Props) => {
+const PresentationViewer = ({ url, title, onClose, videos = [], resolveVideoSrc }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,6 +25,22 @@ const PresentationViewer = ({ url, title, onClose }: Props) => {
   const [total, setTotal] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [playing, setPlaying] = useState<{ src: string; title: string; embed: boolean } | null>(null);
+
+  const slideVideos = useMemo(() => videos.filter((v) => v.slide === page), [videos, page]);
+
+  const openVideo = async (v: SlideVideo) => {
+    if (v.url) {
+      const embed = getEmbedUrl(v.url);
+      setPlaying({ src: embed ?? v.url, title: v.title ?? "Video", embed: !!embed });
+      return;
+    }
+    if (v.path && resolveVideoSrc) {
+      const src = await resolveVideoSrc(v.path);
+      if (src) setPlaying({ src, title: v.title ?? "Video", embed: false });
+    }
+  };
+
 
   useEffect(() => {
     let cancelled = false;
@@ -72,13 +92,18 @@ const PresentationViewer = ({ url, title, onClose }: Props) => {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (playing) {
+        if (e.key === "Escape") { e.preventDefault(); setPlaying(null); }
+        return;
+      }
       if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); next(); }
       if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prev(); }
       if (e.key === "Escape" && !document.fullscreenElement) onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev, onClose]);
+  }, [next, prev, onClose, playing]);
+
 
   useEffect(() => {
     const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
@@ -110,11 +135,45 @@ const PresentationViewer = ({ url, title, onClose }: Props) => {
         </div>
       </div>
 
-      <div ref={containerRef} className="flex-1 min-h-0 flex items-center justify-center p-2 bg-muted/40">
+      <div ref={containerRef} className="flex-1 min-h-0 flex items-center justify-center p-2 bg-muted/40 relative">
         {error ? (
           <p className="font-body text-destructive text-center px-6">{error}</p>
         ) : (
           <canvas ref={canvasRef} className="shadow-elegant" style={{ borderRadius: "3px" }} />
+        )}
+
+        {!playing && slideVideos.length > 0 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-wrap justify-center gap-2 px-3">
+            {slideVideos.map((v, i) => (
+              <Button key={i} size="sm" onClick={() => openVideo(v)} className="font-body sheen shadow-elegant">
+                <Film className="w-4 h-4 mr-1" /> {v.title || `Video ${i + 1}`}
+              </Button>
+            ))}
+          </div>
+        )}
+
+        {playing && (
+          <div className="absolute inset-0 bg-black flex flex-col">
+            <div className="flex items-center justify-between gap-3 px-4 py-2">
+              <span className="font-heading font-bold text-white truncate">{playing.title}</span>
+              <Button variant="ghost" size="icon" onClick={() => setPlaying(null)} aria-label="Video schliessen">
+                <X className="w-4 h-4 text-white" />
+              </Button>
+            </div>
+            <div className="flex-1 min-h-0 flex items-center justify-center">
+              {playing.embed ? (
+                <iframe
+                  src={playing.src}
+                  title={playing.title}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen"
+                  allowFullScreen
+                />
+              ) : (
+                <video src={playing.src} controls autoPlay className="max-w-full max-h-full" />
+              )}
+            </div>
+          </div>
         )}
       </div>
 
@@ -131,3 +190,4 @@ const PresentationViewer = ({ url, title, onClose }: Props) => {
 };
 
 export default PresentationViewer;
+
