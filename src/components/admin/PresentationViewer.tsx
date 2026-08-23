@@ -92,13 +92,18 @@ const PresentationViewer = ({ url, title, onClose, videos = [], resolveVideoSrc 
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (playing) {
+        if (e.key === "Escape") { e.preventDefault(); setPlaying(null); }
+        return;
+      }
       if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); next(); }
       if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prev(); }
       if (e.key === "Escape" && !document.fullscreenElement) onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev, onClose]);
+  }, [next, prev, onClose, playing]);
+
 
   useEffect(() => {
     const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
