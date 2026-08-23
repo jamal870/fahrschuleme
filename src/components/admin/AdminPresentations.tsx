@@ -45,7 +45,15 @@ const AdminPresentations = () => {
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: true });
     if (error) toast.error("Laden fehlgeschlagen: " + error.message);
-    else setItems((data as Presentation[]) ?? []);
+    else
+      setItems(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ((data as any[]) ?? []).map((row) => ({
+          ...(row as Omit<Presentation, "videos">),
+          videos: parseVideos(row.videos),
+        })),
+      );
+
     setLoading(false);
   };
 
@@ -113,7 +121,7 @@ const AdminPresentations = () => {
   const present = async (p: Presentation) => {
     if (!p.pdf_path) return toast.error("Für die Anzeige im Browser wird eine PDF-Version benötigt.");
     const url = await signedUrl(p.pdf_path);
-    if (url) setViewer({ url, title: p.title });
+    if (url) setViewer({ url, title: p.title, videos: p.videos ?? [] });
   };
 
   const download = async (path: string) => {
