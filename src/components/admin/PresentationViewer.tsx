@@ -135,11 +135,45 @@ const PresentationViewer = ({ url, title, onClose, videos = [], resolveVideoSrc 
         </div>
       </div>
 
-      <div ref={containerRef} className="flex-1 min-h-0 flex items-center justify-center p-2 bg-muted/40">
+      <div ref={containerRef} className="flex-1 min-h-0 flex items-center justify-center p-2 bg-muted/40 relative">
         {error ? (
           <p className="font-body text-destructive text-center px-6">{error}</p>
         ) : (
           <canvas ref={canvasRef} className="shadow-elegant" style={{ borderRadius: "3px" }} />
+        )}
+
+        {!playing && slideVideos.length > 0 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-wrap justify-center gap-2 px-3">
+            {slideVideos.map((v, i) => (
+              <Button key={i} size="sm" onClick={() => openVideo(v)} className="font-body sheen shadow-elegant">
+                <Film className="w-4 h-4 mr-1" /> {v.title || `Video ${i + 1}`}
+              </Button>
+            ))}
+          </div>
+        )}
+
+        {playing && (
+          <div className="absolute inset-0 bg-black flex flex-col">
+            <div className="flex items-center justify-between gap-3 px-4 py-2">
+              <span className="font-heading font-bold text-white truncate">{playing.title}</span>
+              <Button variant="ghost" size="icon" onClick={() => setPlaying(null)} aria-label="Video schliessen">
+                <X className="w-4 h-4 text-white" />
+              </Button>
+            </div>
+            <div className="flex-1 min-h-0 flex items-center justify-center">
+              {playing.embed ? (
+                <iframe
+                  src={playing.src}
+                  title={playing.title}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen"
+                  allowFullScreen
+                />
+              ) : (
+                <video src={playing.src} controls autoPlay className="max-w-full max-h-full" />
+              )}
+            </div>
+          </div>
         )}
       </div>
 
@@ -156,3 +190,4 @@ const PresentationViewer = ({ url, title, onClose, videos = [], resolveVideoSrc 
 };
 
 export default PresentationViewer;
+
