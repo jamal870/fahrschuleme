@@ -16,6 +16,7 @@ import AdminEmailSettings from "@/components/admin/AdminEmailSettings";
 import AdminContent from "@/components/admin/AdminContent";
 import AdminAssistant from "@/components/admin/AdminAssistant";
 import AdminAiSettings from "@/components/admin/AdminAiSettings";
+import AdminPresentations from "@/components/admin/AdminPresentations";
 
 import BrandLogo from "@/components/BrandLogo";
 import ChangePasswordDialog from "@/components/admin/ChangePasswordDialog";
@@ -128,6 +129,7 @@ const Admin = () => {
             <TabsTrigger value="content" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Inhalte & Preise</TabsTrigger>
             <TabsTrigger value="assistant" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Assistent</TabsTrigger>
             <TabsTrigger value="ai-settings" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Keys</TabsTrigger>
+            <TabsTrigger value="presentations" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Präsentationen</TabsTrigger>
           </TabsList>
 
           <TabsContent value="courses"><AdminCourseDates /></TabsContent>
@@ -144,6 +146,7 @@ const Admin = () => {
           <TabsContent value="content"><AdminContent /></TabsContent>
           <TabsContent value="assistant"><AdminAssistant /></TabsContent>
           <TabsContent value="ai-settings"><AdminAiSettings /></TabsContent>
+          <TabsContent value="presentations"><AdminPresentations /></TabsContent>
 
         </Tabs>
       </main>

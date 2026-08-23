@@ -1,3 +1,19 @@
+# Version 1.9.4 — Präsentationen im Admin-Bereich
+
+**Release-Datum:** 2026-08-23
+**Status:** ✅ Umgesetzt (Freigabe vom Betreiber 2026-08-23)
+
+- Neuer Admin-Tab „Präsentationen“ (`src/components/admin/AdminPresentations.tsx`).
+- Upload je Präsentation: PPTX (Download/Bearbeiten) und optional PDF (Anzeige im Browser).
+- Vollbild-Presenter `PresentationViewer.tsx` (pdfjs-dist, Pfeiltasten/Space, Vollbild-API).
+- Neue Tabelle `public.presentations` + privater Storage-Bucket `presentations`;
+  Lesen/Schreiben ausschliesslich für Admins (has_role).
+
+**Betriebshinweis:** `scripts/migration/11-presentations.sql` auf dem VPS ausführen
+(Tabelle, Policies und Bucket), danach Netlify-Deploy.
+
+---
+
 # Version 1.9.2 — Duplikat-Erkennung bei Kursterminen
 
 **Release-Datum:** 2026-08-14
