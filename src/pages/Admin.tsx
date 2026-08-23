@@ -16,6 +16,7 @@ import AdminEmailSettings from "@/components/admin/AdminEmailSettings";
 import AdminContent from "@/components/admin/AdminContent";
 import AdminAssistant from "@/components/admin/AdminAssistant";
 import AdminAiSettings from "@/components/admin/AdminAiSettings";
+import AdminPresentations from "@/components/admin/AdminPresentations";
 
 import BrandLogo from "@/components/BrandLogo";
 import ChangePasswordDialog from "@/components/admin/ChangePasswordDialog";
