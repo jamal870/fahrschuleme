@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Download, Play, Trash2, Upload, Presentation } from "lucide-react";
+import { Download, Film, Play, Trash2, Upload, Presentation } from "lucide-react";
 import PresentationViewer from "./PresentationViewer";
+import PresentationVideosDialog from "./PresentationVideosDialog";
+import { parseVideos, type SlideVideo } from "@/lib/presentation-videos";
 
 type Presentation = {
   id: string;
@@ -15,6 +17,7 @@ type Presentation = {
   sort_order: number;
   pptx_path: string | null;
   pdf_path: string | null;
+  videos: SlideVideo[];
 };
 
 const BUCKET = "presentations";
@@ -30,7 +33,9 @@ const AdminPresentations = () => {
   const [description, setDescription] = useState("");
   const [pptxFile, setPptxFile] = useState<File | null>(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [viewer, setViewer] = useState<{ url: string; title: string } | null>(null);
+  const [viewer, setViewer] = useState<{ url: string; title: string; videos: SlideVideo[] } | null>(null);
+  const [videoEditor, setVideoEditor] = useState<Presentation | null>(null);
+
 
   const load = async () => {
     setLoading(true);
