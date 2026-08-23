@@ -436,6 +436,7 @@ Deno.serve(async (req) => {
         headers: {
           'Content-Type': 'application/json',
           'Lovable-Context': 'cron',
+          apikey: serviceKey,
           Authorization: `Bearer ${serviceKey}`,
         },
         body: '{}',
