@@ -201,6 +201,9 @@ const AdminPresentations = () => {
                     <Download className="w-4 h-4 mr-1" /> PPTX
                   </Button>
                 )}
+                <Button size="sm" variant="outline" onClick={() => setVideoEditor(p)} className="font-body">
+                  <Film className="w-4 h-4 mr-1" /> Videos{p.videos?.length ? ` (${p.videos.length})` : ""}
+                </Button>
                 <Button size="sm" variant="ghost" onClick={() => remove(p)} className="font-body text-destructive">
                   <Trash2 className="w-4 h-4" />
                 </Button>
@@ -210,7 +213,26 @@ const AdminPresentations = () => {
         </div>
       )}
 
-      {viewer && <PresentationViewer url={viewer.url} title={viewer.title} onClose={() => setViewer(null)} />}
+      {viewer && (
+        <PresentationViewer
+          url={viewer.url}
+          title={viewer.title}
+          videos={viewer.videos}
+          resolveVideoSrc={(path) => signedUrl(path)}
+          onClose={() => setViewer(null)}
+        />
+      )}
+
+      {videoEditor && (
+        <PresentationVideosDialog
+          presentationId={videoEditor.id}
+          presentationTitle={videoEditor.title}
+          videos={videoEditor.videos ?? []}
+          onClose={() => setVideoEditor(null)}
+          onSaved={load}
+        />
+      )}
+
     </div>
   );
 };
