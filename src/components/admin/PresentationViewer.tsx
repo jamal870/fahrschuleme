@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, X, Film } from "lucide-react";
+import { getEmbedUrl, type SlideVideo } from "@/lib/presentation-videos";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
 
@@ -10,9 +11,12 @@ type Props = {
   url: string;
   title: string;
   onClose: () => void;
+  videos?: SlideVideo[];
+  /** Löst einen Storage-Pfad in eine abspielbare URL auf */
+  resolveVideoSrc?: (path: string) => Promise<string | null>;
 };
 
-const PresentationViewer = ({ url, title, onClose }: Props) => {
+const PresentationViewer = ({ url, title, onClose, videos = [], resolveVideoSrc }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,6 +25,22 @@ const PresentationViewer = ({ url, title, onClose }: Props) => {
   const [total, setTotal] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [playing, setPlaying] = useState<{ src: string; title: string; embed: boolean } | null>(null);
+
+  const slideVideos = useMemo(() => videos.filter((v) => v.slide === page), [videos, page]);
+
+  const openVideo = async (v: SlideVideo) => {
+    if (v.url) {
+      const embed = getEmbedUrl(v.url);
+      setPlaying({ src: embed ?? v.url, title: v.title ?? "Video", embed: !!embed });
+      return;
+    }
+    if (v.path && resolveVideoSrc) {
+      const src = await resolveVideoSrc(v.path);
+      if (src) setPlaying({ src, title: v.title ?? "Video", embed: false });
+    }
+  };
+
 
   useEffect(() => {
     let cancelled = false;
