@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { Download, Film, Play, Trash2, Upload, Presentation } from "lucide-react";
 import PresentationViewer from "./PresentationViewer";
 import PresentationVideosDialog from "./PresentationVideosDialog";
+import PresentationEmbedViewer from "./PresentationEmbedViewer";
+import { toEmbedUrl } from "@/lib/presentation-embed";
 import { parseVideos, type SlideVideo } from "@/lib/presentation-videos";
 
 type Presentation = {
@@ -17,6 +19,7 @@ type Presentation = {
   sort_order: number;
   pptx_path: string | null;
   pdf_path: string | null;
+  embed_url: string | null;
   videos: SlideVideo[];
 };
 
@@ -33,6 +36,8 @@ const AdminPresentations = () => {
   const [description, setDescription] = useState("");
   const [pptxFile, setPptxFile] = useState<File | null>(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [embedUrl, setEmbedUrl] = useState("");
+  const [embedViewer, setEmbedViewer] = useState<{ url: string; title: string } | null>(null);
   const [viewer, setViewer] = useState<{ url: string; title: string; videos: SlideVideo[] } | null>(null);
   const [videoEditor, setVideoEditor] = useState<Presentation | null>(null);
 
@@ -63,7 +68,10 @@ const AdminPresentations = () => {
 
   const upload = async () => {
     if (!title.trim()) return toast.error("Bitte einen Titel eingeben");
-    if (!pptxFile && !pdfFile) return toast.error("Bitte mindestens eine Datei wählen (PPTX oder PDF)");
+    const embed = embedUrl.trim() ? toEmbedUrl(embedUrl) : null;
+    if (embedUrl.trim() && !embed) return toast.error("Google-Link nicht erkannt (Slides- oder Drive-Link einfügen)");
+    if (!pptxFile && !pdfFile && !embed)
+      return toast.error("Bitte eine Datei wählen (PPTX/PDF) oder einen Google-Link angeben");
     setUploading(true);
     try {
       const folder = crypto.randomUUID();
@@ -87,6 +95,7 @@ const AdminPresentations = () => {
         sort_order: items.length,
         pptx_path,
         pdf_path,
+        embed_url: embed,
       });
       if (insErr) throw insErr;
 
@@ -95,6 +104,7 @@ const AdminPresentations = () => {
       setDescription("");
       setPptxFile(null);
       setPdfFile(null);
+      setEmbedUrl("");
       (document.getElementById("pptx-input") as HTMLInputElement | null)?.value &&
         ((document.getElementById("pptx-input") as HTMLInputElement).value = "");
       (document.getElementById("pdf-input") as HTMLInputElement | null)?.value &&
@@ -119,6 +129,8 @@ const AdminPresentations = () => {
   };
 
   const present = async (p: Presentation) => {
+    const embed = p.embed_url ? toEmbedUrl(p.embed_url) : null;
+    if (embed) return setEmbedViewer({ url: embed, title: p.title });
     if (!p.pdf_path) return toast.error("Für die Anzeige im Browser wird eine PDF-Version benötigt.");
     const url = await signedUrl(p.pdf_path);
     if (url) setViewer({ url, title: p.title, videos: p.videos ?? [] });
@@ -158,6 +170,15 @@ const AdminPresentations = () => {
             <Label htmlFor="pptx-input" className="font-body">PowerPoint-Datei (.pptx)</Label>
             <Input id="pptx-input" type="file" accept=".pptx,.ppt" onChange={(e) => setPptxFile(e.target.files?.[0] ?? null)} />
           </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="embed-input" className="font-body">Google Slides / Drive Link (1:1 mit Animationen &amp; Videos)</Label>
+            <Input
+              id="embed-input"
+              value={embedUrl}
+              onChange={(e) => setEmbedUrl(e.target.value)}
+              placeholder="https://docs.google.com/presentation/d/…"
+            />
+          </div>
           <div className="space-y-2">
             <Label htmlFor="pdf-input" className="font-body">PDF-Version (für Anzeige im Browser)</Label>
             <Input id="pdf-input" type="file" accept="application/pdf" onChange={(e) => setPdfFile(e.target.files?.[0] ?? null)} />
@@ -188,7 +209,7 @@ const AdminPresentations = () => {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Button size="sm" onClick={() => present(p)} disabled={!p.pdf_path} className="font-body">
+                <Button size="sm" onClick={() => present(p)} disabled={!p.pdf_path && !p.embed_url} className="font-body">
                   <Play className="w-4 h-4 mr-1" /> Präsentieren
                 </Button>
                 {p.pdf_path && (
@@ -211,6 +232,14 @@ const AdminPresentations = () => {
             </div>
           ))}
         </div>
+      )}
+
+      {embedViewer && (
+        <PresentationEmbedViewer
+          url={embedViewer.url}
+          title={embedViewer.title}
+          onClose={() => setEmbedViewer(null)}
+        />
       )}
 
       {viewer && (
