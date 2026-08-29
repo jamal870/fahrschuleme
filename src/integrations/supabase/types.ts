@@ -499,6 +499,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          embed_url: string | null
           id: string
           pdf_path: string | null
           pptx_path: string | null
@@ -506,10 +507,12 @@ export type Database = {
           sort_order: number
           title: string
           updated_at: string
+          videos: Json
         }
         Insert: {
           created_at?: string
           description?: string | null
+          embed_url?: string | null
           id?: string
           pdf_path?: string | null
           pptx_path?: string | null
@@ -517,10 +520,12 @@ export type Database = {
           sort_order?: number
           title: string
           updated_at?: string
+          videos?: Json
         }
         Update: {
           created_at?: string
           description?: string | null
+          embed_url?: string | null
           id?: string
           pdf_path?: string | null
           pptx_path?: string | null
@@ -528,6 +533,7 @@ export type Database = {
           sort_order?: number
           title?: string
           updated_at?: string
+          videos?: Json
         }
         Relationships: []
       }
