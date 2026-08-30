@@ -156,7 +156,7 @@ const AsaImportDialog = ({ open, onClose, onImported }: Props) => {
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-heading uppercase">Kurse aus asa importieren</DialogTitle>
+          <DialogTitle className="font-heading">Kurse aus asa importieren</DialogTitle>
         </DialogHeader>
 
         <p className="text-sm text-muted-foreground">

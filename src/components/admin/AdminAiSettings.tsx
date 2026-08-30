@@ -197,7 +197,7 @@ export default function AdminAiSettings() {
       )}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-heading uppercase">
+          <CardTitle className="flex items-center gap-2 font-heading">
             <KeyRound className="h-5 w-5 text-primary" /> KI-Anbieter &amp; Schlüssel
           </CardTitle>
         </CardHeader>
@@ -286,7 +286,7 @@ export default function AdminAiSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-heading uppercase">Modell pro Assistent</CardTitle>
+          <CardTitle className="font-heading">Modell pro Assistent</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {assistants.map((a) => (

@@ -93,7 +93,7 @@ const AdminEmailSettings = () => {
       {groups.map((group) => (
         <Card key={group}>
           <CardContent className="p-5 space-y-4">
-            <h3 className="font-heading font-bold uppercase text-sm text-primary">{group}</h3>
+            <h3 className="font-heading font-bold text-sm text-primary">{group}</h3>
             {FIELDS.filter((f) => f.group === group).map((f) => (
               <div key={f.key} className="space-y-1.5">
                 <Label htmlFor={f.key} className="text-sm font-medium">{f.label}</Label>

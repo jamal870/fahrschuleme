@@ -90,7 +90,7 @@ const AdminAssistant = ({ onDataChanged }: { onDataChanged?: () => void }) => {
     <div className="bg-card border border-border" style={{ borderRadius: "3px" }}>
       <div className="flex items-center gap-2 border-b border-border px-4 py-3">
         <Sparkles className="w-4 h-4 text-primary" />
-        <h2 className="font-heading font-bold uppercase text-sm">KI-Assistent</h2>
+        <h2 className="font-heading font-bold text-sm">KI-Assistent</h2>
         <span className="text-xs text-muted-foreground font-body">Aktionen &amp; Kurse verwalten</span>
       </div>
 

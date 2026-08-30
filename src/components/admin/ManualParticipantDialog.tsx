@@ -128,7 +128,7 @@ const ManualParticipantDialog = ({ course, open, onClose, onAdded }: Props) => {
     <Dialog open={open} onOpenChange={(v) => { if (!v) { reset(); onClose(); } }}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-heading uppercase">
+          <DialogTitle className="font-heading">
             Teilnehmer manuell hinzufügen
           </DialogTitle>
           {course && (
@@ -141,7 +141,7 @@ const ManualParticipantDialog = ({ course, open, onClose, onAdded }: Props) => {
 
         {/* Bestehende Teilnehmer suchen */}
         <div className="space-y-2 border border-border p-3" style={{ borderRadius: "3px" }}>
-          <Label className="flex items-center gap-2 text-xs uppercase font-heading">
+          <Label className="flex items-center gap-2 text-xs font-heading">
             <Search className="w-3.5 h-3.5" /> Bestehende Teilnehmer suchen (optional)
           </Label>
           <div className="relative">

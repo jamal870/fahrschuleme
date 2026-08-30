@@ -216,7 +216,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-auto">
         <DialogHeader>
-          <DialogTitle className="font-heading uppercase">
+          <DialogTitle className="font-heading">
             Anwesenheit & Verwaltung – Teil {course?.part} · {dayNameFromDateStr(course?.date, course?.day)}, {course?.date}
           </DialogTitle>
         </DialogHeader>
@@ -317,7 +317,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
         <Dialog open={!!signFor} onOpenChange={(v) => !v && setSignFor(null)}>
           <DialogContent className="max-w-xl">
             <DialogHeader>
-              <DialogTitle className="font-heading uppercase">
+              <DialogTitle className="font-heading">
                 Unterschrift – {signFor?.first_name} {signFor?.last_name}
               </DialogTitle>
             </DialogHeader>
@@ -335,7 +335,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
         <Dialog open={!!moveFor} onOpenChange={(v) => !v && setMoveFor(null)}>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle className="font-heading uppercase">
+              <DialogTitle className="font-heading">
                 Teilnehmer verschieben – {moveFor?.first_name} {moveFor?.last_name}
               </DialogTitle>
             </DialogHeader>
