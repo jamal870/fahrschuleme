@@ -84,7 +84,7 @@ const Admin = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
         <div className="max-w-md w-full bg-card border-2 border-destructive p-8 text-center space-y-4" style={{ borderRadius: "3px" }}>
-          <h1 className="font-heading font-bold text-2xl text-destructive uppercase">Zugriff verweigert</h1>
+          <h1 className="font-heading font-bold text-2xl text-destructive">Zugriff verweigert</h1>
           <p className="font-body text-foreground">{accessError}</p>
           <div className="flex gap-2 justify-center pt-2">
             <Button variant="outline" onClick={() => navigate("/")} className="font-body">Zur Startseite</Button>
@@ -119,17 +119,17 @@ const Admin = () => {
       <main className="max-w-7xl mx-auto px-6 py-8">
         <Tabs defaultValue="courses" className="space-y-6">
           <TabsList className="bg-muted border border-border p-1 h-auto flex-wrap gap-1">
-            <TabsTrigger value="courses" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Kurstermine</TabsTrigger>
-            <TabsTrigger value="photo" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Foto-Planung</TabsTrigger>
-            <TabsTrigger value="bookings" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Buchungen</TabsTrigger>
-            <TabsTrigger value="participants" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Teilnehmer</TabsTrigger>
-            <TabsTrigger value="team" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Team</TabsTrigger>
-            <TabsTrigger value="promotions" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Aktionen</TabsTrigger>
-            <TabsTrigger value="emails" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">E-Mails</TabsTrigger>
-            <TabsTrigger value="content" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Inhalte & Preise</TabsTrigger>
-            <TabsTrigger value="assistant" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Assistent</TabsTrigger>
-            <TabsTrigger value="ai-settings" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Keys</TabsTrigger>
-            <TabsTrigger value="presentations" className="font-heading uppercase text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Präsentationen</TabsTrigger>
+            <TabsTrigger value="courses" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Kurstermine</TabsTrigger>
+            <TabsTrigger value="photo" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Foto-Planung</TabsTrigger>
+            <TabsTrigger value="bookings" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Buchungen</TabsTrigger>
+            <TabsTrigger value="participants" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Teilnehmer</TabsTrigger>
+            <TabsTrigger value="team" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Team</TabsTrigger>
+            <TabsTrigger value="promotions" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Aktionen</TabsTrigger>
+            <TabsTrigger value="emails" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">E-Mails</TabsTrigger>
+            <TabsTrigger value="content" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Inhalte & Preise</TabsTrigger>
+            <TabsTrigger value="assistant" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Assistent</TabsTrigger>
+            <TabsTrigger value="ai-settings" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Keys</TabsTrigger>
+            <TabsTrigger value="presentations" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Präsentationen</TabsTrigger>
           </TabsList>
 
           <TabsContent value="courses"><AdminCourseDates /></TabsContent>

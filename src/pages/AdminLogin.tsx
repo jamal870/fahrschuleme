@@ -38,7 +38,7 @@ const AdminLogin = () => {
           <div className="flex items-center justify-center gap-2 mb-2">
             <BrandLogo imgClassName="h-12 w-auto" />
           </div>
-          <CardTitle className="text-lg font-heading uppercase">Admin Login</CardTitle>
+          <CardTitle className="text-lg font-heading">Admin Login</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -68,7 +68,7 @@ const AdminLogin = () => {
                 </button>
               </div>
             </div>
-            <Button type="submit" className="w-full font-heading uppercase" disabled={loading} style={{ borderRadius: "3px" }}>
+            <Button type="submit" className="w-full font-heading" disabled={loading} style={{ borderRadius: "3px" }}>
               <Lock className="w-4 h-4 mr-2" />
               {loading ? "Wird eingeloggt..." : "Einloggen"}
             </Button>

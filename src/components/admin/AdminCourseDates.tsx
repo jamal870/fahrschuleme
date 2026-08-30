@@ -257,7 +257,7 @@ const AdminCourseDates = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <CardTitle className="text-xl font-heading uppercase">Kurstermine verwalten</CardTitle>
+        <CardTitle className="text-xl font-heading">Kurstermine verwalten</CardTitle>
         <div className="flex gap-2 flex-wrap">
           <Button variant="outline" size="sm" onClick={fetchCourses} className="font-body">
             <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
@@ -317,7 +317,7 @@ const AdminCourseDates = () => {
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle className="font-heading uppercase">{editing ? "Termin bearbeiten" : "Neuer Kurstermin"}</DialogTitle>
+                <DialogTitle className="font-heading">{editing ? "Termin bearbeiten" : "Neuer Kurstermin"}</DialogTitle>
               </DialogHeader>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2"><Label>Teil</Label>
@@ -368,8 +368,8 @@ const AdminCourseDates = () => {
 
       <Tabs defaultValue="list">
         <TabsList>
-          <TabsTrigger value="list" className="font-heading uppercase text-xs">Liste</TabsTrigger>
-          <TabsTrigger value="calendar" className="font-heading uppercase text-xs">Kalender</TabsTrigger>
+          <TabsTrigger value="list" className="font-heading text-xs">Liste</TabsTrigger>
+          <TabsTrigger value="calendar" className="font-heading text-xs">Kalender</TabsTrigger>
         </TabsList>
 
         <TabsContent value="list">
@@ -449,7 +449,7 @@ const AdminCourseDates = () => {
                       );
                       const groupHeader = (part: number, count: number) => (
                         <TableRow key={`hdr-${part}`} className="bg-primary/10 hover:bg-primary/10">
-                          <TableCell colSpan={10} className="py-2 font-heading uppercase text-sm tracking-wide text-primary">
+                          <TableCell colSpan={10} className="py-2 font-heading text-sm tracking-wide text-primary">
                             Kategorie M {part} <span className="text-muted-foreground font-body normal-case tracking-normal">· {count} Termin{count === 1 ? "" : "e"}</span>
                           </TableCell>
                         </TableRow>
@@ -505,12 +505,12 @@ const AdminCourseDates = () => {
                 <Button variant="ghost" size="sm" onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() - 1, 1))}>
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
-                <h3 className="font-heading uppercase text-lg">{monthNames[calMonth.getMonth()]} {calMonth.getFullYear()}</h3>
+                <h3 className="font-heading text-lg">{monthNames[calMonth.getMonth()]} {calMonth.getFullYear()}</h3>
                 <Button variant="ghost" size="sm" onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 1))}>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
-              <div className="grid grid-cols-7 gap-1 text-xs font-heading uppercase text-muted-foreground mb-1">
+              <div className="grid grid-cols-7 gap-1 text-xs font-heading text-muted-foreground mb-1">
                 {["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].map((d) => <div key={d} className="text-center py-1">{d}</div>)}
               </div>
               <div className="grid grid-cols-7 gap-1">
@@ -604,7 +604,7 @@ const BulkCreateDialog = ({ open, onClose, onCreated }: { open: boolean; onClose
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-2xl">
-        <DialogHeader><DialogTitle className="font-heading uppercase">Mehrere Termine anlegen</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle className="font-heading">Mehrere Termine anlegen</DialogTitle></DialogHeader>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2"><Label>Startdatum</Label>
             <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
@@ -639,7 +639,7 @@ const BulkCreateDialog = ({ open, onClose, onCreated }: { open: boolean; onClose
 
         {preview.length > 0 && (
           <div className="mt-2 p-3 bg-muted/40" style={{ borderRadius: "3px" }}>
-            <p className="text-xs font-heading uppercase mb-1 text-muted-foreground">Vorschau ({preview.length})</p>
+            <p className="text-xs font-heading mb-1 text-muted-foreground">Vorschau ({preview.length})</p>
             <div className="flex flex-wrap gap-1">
               {preview.map((p, i) => (
                 <span key={i} className="text-xs px-2 py-0.5 bg-primary/10 text-primary font-body" style={{ borderRadius: "3px" }}>

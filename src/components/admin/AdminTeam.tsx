@@ -216,7 +216,7 @@ const MemberCard = ({ member, onChange, onSave, onDelete, onCancel, saving, isNe
 
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div className="space-y-1.5">
-    <Label className="font-body text-xs uppercase tracking-wide text-muted-foreground">{label}</Label>
+    <Label className="font-body text-xs tracking-wide text-muted-foreground">{label}</Label>
     {children}
   </div>
 );

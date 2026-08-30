@@ -217,7 +217,7 @@ const AdminParticipants = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <CardTitle className="text-xl font-heading uppercase">Teilnehmerliste</CardTitle>
+        <CardTitle className="text-xl font-heading">Teilnehmerliste</CardTitle>
         <div className="flex gap-2 items-center flex-wrap">
           <div className="relative">
             <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -332,7 +332,7 @@ const AdminParticipants = () => {
                             </div>
                             <div className="grid md:grid-cols-2 gap-4 text-sm font-body">
                               <div className="space-y-2">
-                                <div className="font-heading uppercase text-xs text-muted-foreground mb-1">Persönlich</div>
+                                <div className="font-heading text-xs text-muted-foreground mb-1">Persönlich</div>
                                 <div><strong>{r.first_name} {r.last_name}</strong></div>
                                 <div className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Geb.: {r.birth_date || "–"}</div>
                                 <div>FA-Nr.: {r.fa_number || "–"}</div>
@@ -373,14 +373,14 @@ const AdminParticipants = () => {
                                 )}
                               </div>
                               <div className="space-y-1">
-                                <div className="font-heading uppercase text-xs text-muted-foreground mb-1">Zahlung</div>
+                                <div className="font-heading text-xs text-muted-foreground mb-1">Zahlung</div>
                                 <div>Methode: <strong>{r.payment_method}</strong></div>
                                 <div>Status: <strong className={r.payment_status === "paid" ? "text-green-700" : "text-amber-700"}>{r.payment_status}</strong></div>
                                 <div>Betrag: <strong>CHF {r.total_price}.–</strong></div>
                                 <div className="text-xs text-muted-foreground">Gebucht: {new Date(r.created_at).toLocaleString("de-CH")}</div>
                               </div>
                               <div className="md:col-span-2">
-                                <div className="font-heading uppercase text-xs text-muted-foreground mb-1">Termine</div>
+                                <div className="font-heading text-xs text-muted-foreground mb-1">Termine</div>
                                 {r.courses.length === 0 ? (
                                   <p className="text-muted-foreground">Keine Kurstermine.</p>
                                 ) : (
@@ -410,7 +410,7 @@ const AdminParticipants = () => {
       <AlertDialog open={!!confirmAction} onOpenChange={(v) => !v && !confirmBusy && setConfirmAction(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-heading uppercase">
+            <AlertDialogTitle className="font-heading">
               {confirmAction?.mode === "cancel" ? "Buchung stornieren" : "Buchung endgültig löschen"}
             </AlertDialogTitle>
             <AlertDialogDescription className="font-body">

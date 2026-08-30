@@ -123,7 +123,7 @@ const AdminPhotoImport = () => {
     <div className="space-y-6">
       <Card>
         <CardContent className="p-6 space-y-4">
-          <CardTitle className="text-xl font-heading uppercase flex items-center gap-2">
+          <CardTitle className="text-xl font-heading flex items-center gap-2">
             <Calendar className="w-5 h-5" /> Kalender-Abo
           </CardTitle>
           <p className="font-body text-sm text-muted-foreground">
@@ -147,7 +147,7 @@ const AdminPhotoImport = () => {
 
       <Card>
         <CardContent className="p-6 space-y-4">
-          <CardTitle className="text-xl font-heading uppercase flex items-center gap-2">
+          <CardTitle className="text-xl font-heading flex items-center gap-2">
             <Camera className="w-5 h-5" /> Kurse per Foto planen
           </CardTitle>
           <p className="font-body text-sm text-muted-foreground">

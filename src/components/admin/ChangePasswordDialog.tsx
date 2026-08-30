@@ -33,7 +33,7 @@ const ChangePasswordDialog = () => {
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle className="font-heading uppercase">Passwort ändern</DialogTitle>
+          <DialogTitle className="font-heading">Passwort ändern</DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
           <div className="space-y-1">
