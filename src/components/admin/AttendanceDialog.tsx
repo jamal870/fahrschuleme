@@ -202,7 +202,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       present: r.present,
     }));
     const pdf = generateParticipantList(
-      { part: course.part, date: course.date, day: course.day, time: course.time,
+      { part: course.part, date: course.date, day: dayNameFromDateStr(course.date, course.day), time: course.time,
         location: course.location, instructor: course.instructor,
         instructor_number: (course as any).instructor_number },
       participants,
