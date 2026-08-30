@@ -31,3 +31,4 @@
 - [Document Generation](mem://features/admin/document-generation) — PDF generation for invoices and confirmations
 - [Routing](mem://architecture/routing/browserrouter) — BrowserRouter, Canonicals auf www, Legacy-Hash-Redirect
 - [VPS-only DB](.lovable/memory/constraints/vps-only-db.md) — Produktiv nur VPS-Supabase, keine Cloud-DB-Fixes
+- [Single Production Deploy](mem://constraints/single-production-deploy) — Nur Netlify + VPS, kein zweiter Deploy-Pfad
