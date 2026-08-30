@@ -200,6 +200,7 @@ const AdminParticipants = () => {
   };
 
   const load = async () => {
+    setLoading(true);
 
     const { data: bks, error } = await supabase
       .from("bookings")
