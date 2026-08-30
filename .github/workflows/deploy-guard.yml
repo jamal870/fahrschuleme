@@ -1,0 +1,102 @@
+name: Deploy Guard
+
+# Deploy-Guard: Stellt sicher, dass es genau EINEN Produktions-Deploy-Pfad gibt:
+#   - Frontend/Hosting: NUR Netlify (deploy-netlify.yml)
+#   - Edge Functions:   NUR VPS via SSH (deploy-vps-functions.yml)
+# Jeder andere Deploy-Pfad (Vercel, Cloudflare, Firebase, zweiter Netlify-Deploy,
+# direkter Lovable-Publish-Job etc.) laesst den Guard fehlschlagen und blockiert
+# damit den Merge / macht den unerwuenschten Deploy sofort sichtbar.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'netlify.toml'
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'netlify.toml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enforce single production deploy path
+        shell: bash
+        run: |
+          set -euo pipefail
+          WF_DIR=".github/workflows"
+          FAIL=0
+
+          echo "==> Erlaubte Deploy-Workflows:"
+          echo "    - deploy-netlify.yml        (Hosting: Netlify)"
+          echo "    - deploy-vps-functions.yml  (Edge Functions: VPS via SSH)"
+
+          # 1) Genau EIN Hosting-Deploy auf Netlify erlaubt
+          NETLIFY_DEPLOYS=$(grep -rl "actions-netlify" "$WF_DIR" | sort)
+          COUNT=$(echo "$NETLIFY_DEPLOYS" | grep -c . || true)
+          echo "==> Netlify-Deploy-Workflows gefunden: $COUNT"
+          echo "$NETLIFY_DEPLOYS"
+          if [ "$COUNT" -ne 1 ] || [ "$NETLIFY_DEPLOYS" != ".github/workflows/deploy-netlify.yml" ]; then
+            echo "::error::Es darf genau einen Netlify-Deploy geben (deploy-netlify.yml). Gefunden: $NETLIFY_DEPLOYS"
+            FAIL=1
+          fi
+
+          # 2) Verbotene Deploy-Targets duerfen in KEINEM Workflow vorkommen
+          FORBIDDEN_PATTERNS=(
+            "vercel"
+            "cloudflare/wrangler"
+            "wrangler-action"
+            "FirebaseExtended/action-hosting-deploy"
+            "firebase deploy"
+            "aws s3 sync"
+            "aws-actions/"
+            "azure/webapps-deploy"
+            "render-deploy"
+            "surge.sh"
+            "gh-pages"
+            "peaceiris/actions-gh-pages"
+          )
+          for pattern in "${FORBIDDEN_PATTERNS[@]}"; do
+            if grep -rqi "$pattern" "$WF_DIR"; then
+              echo "::error::Verbotenes Deploy-Target gefunden: '$pattern'"
+              grep -rni "$pattern" "$WF_DIR" || true
+              FAIL=1
+            fi
+          done
+
+          # 3) Deploy-Workflows duerfen NUR auf main hoeren (kein zweiter Branch-Pfad)
+          for wf in deploy-netlify.yml deploy-vps-functions.yml; do
+            if grep -A5 "^on:" "$WF_DIR/$wf" | grep -E "branches:" | grep -vqE "branches:\s*\[main\]"; then
+              echo "::error::$wf darf nur auf Branch [main] deployen."
+              FAIL=1
+            fi
+          done
+
+          # 4) VPS-Workflow darf NUR Edge Functions / Migrationen anfassen
+          if ! grep -q "paths:" "$WF_DIR/deploy-vps-functions.yml" \
+             || ! grep -q "supabase/functions" "$WF_DIR/deploy-vps-functions.yml"; then
+            echo "::error::deploy-vps-functions.yml muss pfadbegrenzt auf supabase/functions bleiben."
+            FAIL=1
+          fi
+
+          # 5) Kein Frontend-Build im VPS-Workflow (Netlify ist das einzige Hosting)
+          if grep -qE "bun run build|npm run build|pnpm build" "$WF_DIR/deploy-vps-functions.yml"; then
+            echo "::error::deploy-vps-functions.yml darf kein Frontend bauen - Hosting ist nur Netlify."
+            FAIL=1
+          fi
+
+          if [ "$FAIL" -ne 0 ]; then
+            echo "::error::Deploy-Guard FEHLGESCHLAGEN - ein zweiter Deploy-Pfad wurde erkannt und blockiert."
+            exit 1
+          fi
+
+          echo "==> Deploy-Guard OK: Einziger Produktions-Pfad ist Netlify (+ VPS Edge Functions)."
