@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Search, UserPlus, X } from "lucide-react";
+import { dayNameFromDateStr } from "@/lib/utils";
 import type { Tables } from "@/integrations/supabase/types";
 
 type CourseDate = Tables<"course_dates">;
@@ -132,7 +133,7 @@ const ManualParticipantDialog = ({ course, open, onClose, onAdded }: Props) => {
           </DialogTitle>
           {course && (
             <p className="text-sm text-muted-foreground font-body">
-              Teil {course.part} · {course.day}, {course.date} · {course.time} · {course.location}
+              Teil {course.part} · {dayNameFromDateStr(course.date, course.day)}, {course.date} · {course.time} · {course.location}
               {" · "}<span className={course.spots_available <= 1 ? "text-destructive font-semibold" : ""}>{course.spots_available} Plätze frei</span>
             </p>
           )}

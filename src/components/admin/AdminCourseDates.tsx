@@ -409,7 +409,7 @@ const AdminCourseDates = () => {
                       const renderRow = (c: CourseDate, dim = false) => (
                         <TableRow key={c.id} className={dim ? "opacity-60" : ""}>
                           <TableCell className="font-medium">Teil {c.part}</TableCell>
-                          <TableCell>{c.day}</TableCell><TableCell>{c.date}</TableCell><TableCell>{c.time}</TableCell>
+                          <TableCell>{(() => { const d = parseDate(c.date); return d ? dayName(d) : c.day; })()}</TableCell><TableCell>{c.date}</TableCell><TableCell>{c.time}</TableCell>
                           <TableCell>{c.location}</TableCell><TableCell>{c.instructor || "–"}</TableCell>
                           <TableCell>{c.instructor_number || "–"}</TableCell>
                           <TableCell>CHF {c.price}</TableCell>

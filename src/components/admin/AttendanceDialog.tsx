@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { PenLine, FileDown, RefreshCw, Check, ChevronDown, ArrowRightLeft, Clock, BadgeCheck } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { dayNameFromDateStr } from "@/lib/utils";
 import SignaturePad from "./SignaturePad";
 import { generateParticipantList, downloadPdf, type Participant, type ParticipantFilter } from "@/lib/pdf-generator";
 import { Badge } from "@/components/ui/badge";
@@ -201,7 +202,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       present: r.present,
     }));
     const pdf = generateParticipantList(
-      { part: course.part, date: course.date, day: course.day, time: course.time,
+      { part: course.part, date: course.date, day: dayNameFromDateStr(course.date, course.day), time: course.time,
         location: course.location, instructor: course.instructor,
         instructor_number: (course as any).instructor_number },
       participants,
@@ -216,7 +217,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-auto">
         <DialogHeader>
           <DialogTitle className="font-heading uppercase">
-            Anwesenheit & Verwaltung – Teil {course?.part} · {course?.day}, {course?.date}
+            Anwesenheit & Verwaltung – Teil {course?.part} · {dayNameFromDateStr(course?.date, course?.day)}, {course?.date}
           </DialogTitle>
         </DialogHeader>
 
@@ -363,7 +364,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                         return (
                           <SelectItem key={c.id} value={c.id} disabled={full}>
                             {earlier ? "◀ früher · " : ""}
-                            {c.day}, {c.date} · {c.time} · {c.location}
+                            {dayNameFromDateStr(c.date, c.day)}, {c.date} · {c.time} · {c.location}
                             {c.instructor ? ` · ${c.instructor}` : ""} · {full ? "ausgebucht" : `${c.spots_available} frei`}
                           </SelectItem>
                         );
