@@ -436,10 +436,16 @@ const AdminParticipants = () => {
                                 ) : (
                                   <ul className="space-y-1">
                                     {r.courses.map((c) => (
-                                      <li key={c.id} className="bg-card border border-border px-2 py-1" style={{ borderRadius: "3px" }}>
-                                        <strong>Teil {c.part}</strong> · {c.day}, {c.date} · {c.time} · {c.location}
-                                        {c.instructor ? ` · ${c.instructor}` : ""}
+                                      <li key={c.id} className="bg-card border border-border px-2 py-1 flex items-center justify-between gap-2" style={{ borderRadius: "3px" }}>
+                                        <span>
+                                          <strong>Teil {c.part}</strong> · {dayNameFromDateStr(c.date, c.day)}, {c.date} · {c.time} · {c.location}
+                                          {c.instructor ? ` · ${c.instructor}` : ""}
+                                        </span>
+                                        <Button size="sm" variant="outline" className="h-7 px-2 font-body shrink-0" onClick={() => openMove(r, c)}>
+                                          <ArrowRightLeft className="w-3.5 h-3.5 mr-1" /> Verschieben
+                                        </Button>
                                       </li>
+
                                     ))}
                                   </ul>
                                 )}
