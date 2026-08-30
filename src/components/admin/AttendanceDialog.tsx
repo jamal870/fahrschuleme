@@ -347,21 +347,31 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                 <Label className="font-body">Neuer Termin (nur Teil {course?.part})</Label>
                 {moveTargets.length === 0 ? (
                   <p className="text-sm text-destructive font-body">
-                    Kein anderer Teil-{course?.part}-Kurs mit freien Plätzen gefunden.
+                    Kein anderer Teil-{course?.part}-Kurs gefunden.
                   </p>
                 ) : (
                   <Select value={moveTargetId} onValueChange={setMoveTargetId}>
                     <SelectTrigger><SelectValue placeholder="Zielkurs wählen..." /></SelectTrigger>
                     <SelectContent>
-                      {moveTargets.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.day}, {c.date} · {c.time} · {c.location}
-                          {c.instructor ? ` · ${c.instructor}` : ""} · {c.spots_available} frei
-                        </SelectItem>
-                      ))}
+                      {moveTargets.map((c) => {
+                        const toTs = (d: string) => {
+                          const [dd, mm, yyyy] = (d || "").split(".");
+                          return yyyy && mm && dd ? new Date(`${yyyy}-${mm}-${dd}`).getTime() : 0;
+                        };
+                        const earlier = course ? toTs(c.date) < toTs(course.date) : false;
+                        const full = (c.spots_available ?? 0) <= 0;
+                        return (
+                          <SelectItem key={c.id} value={c.id} disabled={full}>
+                            {earlier ? "◀ früher · " : ""}
+                            {c.day}, {c.date} · {c.time} · {c.location}
+                            {c.instructor ? ` · ${c.instructor}` : ""} · {full ? "ausgebucht" : `${c.spots_available} frei`}
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                 )}
+
               </div>
 
               <div className="space-y-2">
