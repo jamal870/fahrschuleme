@@ -463,7 +463,51 @@ const AdminParticipants = () => {
         </CardContent>
       </Card>
 
+      <Dialog open={!!moveFor} onOpenChange={(v) => !v && !moving && setMoveFor(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Termin verschieben</DialogTitle>
+          </DialogHeader>
+          {moveFor && (
+            <div className="space-y-3 text-sm font-body">
+              <p>
+                <strong>{moveFor.row.first_name} {moveFor.row.last_name}</strong><br />
+                Aktuell: Teil {moveFor.course.part} · {dayNameFromDateStr(moveFor.course.date, moveFor.course.day)}, {moveFor.course.date} · {moveFor.course.time}
+              </p>
+              <div className="space-y-1">
+                <Label className="text-xs">Neuer Termin (nur Teil {moveFor.course.part})</Label>
+                <Select value={moveTargetId} onValueChange={setMoveTargetId}>
+                  <SelectTrigger><SelectValue placeholder={moveTargets.length ? "Termin wählen" : "Keine freien Termine"} /></SelectTrigger>
+                  <SelectContent>
+                    {moveTargets.map((c) => {
+                      const cur = toIso(moveFor.course.date)?.getTime() ?? 0;
+                      const t = toIso(c.date)?.getTime() ?? 0;
+                      return (
+                        <SelectItem key={c.id} value={c.id}>
+                          {t < cur ? "◀ früher · " : ""}{dayNameFromDateStr(c.date, c.day)}, {c.date} · {c.time} · {c.location}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Grund (optional, erscheint in der E-Mail)</Label>
+                <Textarea rows={3} value={moveReason} onChange={(e) => setMoveReason(e.target.value)} placeholder="z.B. Auf Wunsch des Teilnehmers." />
+              </div>
+            </div>
+          )}
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setMoveFor(null)} disabled={moving} className="font-body">Abbrechen</Button>
+            <Button onClick={confirmMove} disabled={moving || !moveTargetId} className="font-body">
+              <ArrowRightLeft className="w-4 h-4 mr-1" /> {moving ? "Verschieben..." : "Verschieben & benachrichtigen"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <AlertDialog open={!!confirmAction} onOpenChange={(v) => !v && !confirmBusy && setConfirmAction(null)}>
+
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="font-heading">
