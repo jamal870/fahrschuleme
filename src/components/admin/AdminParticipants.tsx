@@ -152,8 +152,55 @@ const AdminParticipants = () => {
 
 
 
+  // Termin verschieben
+  const [moveFor, setMoveFor] = useState<null | { row: Row; course: CourseInfo }>(null);
+  const [moveTargets, setMoveTargets] = useState<CourseInfo[]>([]);
+  const [moveTargetId, setMoveTargetId] = useState("");
+  const [moveReason, setMoveReason] = useState("");
+  const [moving, setMoving] = useState(false);
+
+  const openMove = async (row: Row, course: CourseInfo) => {
+    setMoveFor({ row, course });
+    setMoveTargetId("");
+    setMoveReason("");
+    setMoveTargets([]);
+    const { data, error } = await supabase
+      .from("course_dates")
+      .select("id, part, day, date, time, location, instructor")
+      .eq("part", course.part)
+      .neq("id", course.id)
+      .order("date");
+    if (error) { toast.error("Fehler beim Laden der Zielkurse"); return; }
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const future = ((data as CourseInfo[]) || [])
+      .filter((c) => { const dt = toIso(c.date); return dt && dt.getTime() >= today.getTime(); })
+      .sort((a, b) => (toIso(a.date)?.getTime() ?? 0) - (toIso(b.date)?.getTime() ?? 0));
+    setMoveTargets(future);
+  };
+
+  const confirmMove = async () => {
+    if (!moveFor || !moveTargetId) return;
+    setMoving(true);
+    const { data, error } = await supabase.functions.invoke("move-booking-participant", {
+      body: {
+        booking_id: moveFor.row.id,
+        from_course_date_id: moveFor.course.id,
+        to_course_date_id: moveTargetId,
+        reason: moveReason || null,
+      },
+    });
+    setMoving(false);
+    if (error || (data as any)?.error) {
+      toast.error("Verschieben fehlgeschlagen: " + (error?.message || (data as any)?.error));
+      return;
+    }
+    toast.success("Termin verschoben – Bestätigung per E-Mail versendet.");
+    setMoveFor(null);
+    await load();
+  };
+
   const load = async () => {
-    setLoading(true);
+
     const { data: bks, error } = await supabase
       .from("bookings")
       .select("*")
