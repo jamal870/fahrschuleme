@@ -98,19 +98,19 @@ const Admin = () => {
   if (!isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b-2 border-primary bg-card">
+    <div className="min-h-screen bg-section-alt">
+      <header className="sticky top-0 z-40 border-b-2 border-primary bg-card shadow-soft">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BrandLogo imgClassName="h-10 w-auto" />
-            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 font-heading font-bold" style={{ borderRadius: "3px" }}>ADMIN</span>
+            <span className="text-xs bg-gradient-primary text-primary-foreground px-2.5 py-1 font-heading font-bold tracking-wide rounded-lg shadow-glow">Admin</span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => navigate("/")} className="font-body">
+            <Button variant="outline" size="sm" onClick={() => navigate("/")} className="font-body rounded-lg">
               <Globe className="w-4 h-4 mr-2" /> Zur Webseite
             </Button>
             <ChangePasswordDialog />
-            <Button variant="ghost" size="sm" onClick={handleLogout} className="font-body">
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="font-body rounded-lg">
               <LogOut className="w-4 h-4 mr-2" /> Abmelden
             </Button>
           </div>
@@ -118,19 +118,30 @@ const Admin = () => {
       </header>
       <main className="max-w-7xl mx-auto px-6 py-8">
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="bg-muted border border-border p-1 h-auto flex-wrap gap-1">
-            <TabsTrigger value="courses" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Kurstermine</TabsTrigger>
-            <TabsTrigger value="photo" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Foto-Planung</TabsTrigger>
-            <TabsTrigger value="bookings" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Buchungen</TabsTrigger>
-            <TabsTrigger value="participants" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Teilnehmer</TabsTrigger>
-            <TabsTrigger value="team" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Team</TabsTrigger>
-            <TabsTrigger value="promotions" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Aktionen</TabsTrigger>
-            <TabsTrigger value="emails" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">E-Mails</TabsTrigger>
-            <TabsTrigger value="content" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Inhalte & Preise</TabsTrigger>
-            <TabsTrigger value="assistant" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Assistent</TabsTrigger>
-            <TabsTrigger value="ai-settings" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">KI-Keys</TabsTrigger>
-            <TabsTrigger value="presentations" className="font-heading text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground/80 hover:bg-background px-4 py-2">Präsentationen</TabsTrigger>
+          <TabsList className="bg-card border border-border p-1.5 h-auto flex-wrap gap-1 rounded-lg shadow-soft">
+            {[
+              ["courses", "Kurstermine"],
+              ["photo", "Foto-Planung"],
+              ["bookings", "Buchungen"],
+              ["participants", "Teilnehmer"],
+              ["team", "Team"],
+              ["promotions", "Aktionen"],
+              ["emails", "E-Mails"],
+              ["content", "Inhalte & Preise"],
+              ["assistant", "KI-Assistent"],
+              ["ai-settings", "KI-Keys"],
+              ["presentations", "Präsentationen"],
+            ].map(([value, label]) => (
+              <TabsTrigger
+                key={value}
+                value={value}
+                className="sheen font-heading text-sm font-semibold tracking-tight rounded-lg px-4 py-2 transition-all data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow data-[state=inactive]:text-muted-foreground hover:text-primary hover:bg-section-alt"
+              >
+                {label}
+              </TabsTrigger>
+            ))}
           </TabsList>
+
 
           <TabsContent value="courses"><AdminCourseDates /></TabsContent>
           <TabsContent value="photo"><AdminPhotoImport /></TabsContent>
