@@ -149,10 +149,9 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       .select("*")
       .eq("part", course.part)
       .neq("id", course.id)
-      .gt("spots_available", 0)
       .order("date");
     if (error) { toast.error("Fehler beim Laden der Zielkurse"); return; }
-    // Only future dates (course.date format: "dd.mm.yyyy")
+    // Alle künftigen Termine ab heute – auch solche VOR dem aktuellen Kursdatum
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const toIso = (d: string) => {
       const [dd, mm, yyyy] = (d || "").split(".");
@@ -167,6 +166,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       return da - db;
     });
     setMoveTargets(future);
+
   };
 
   const confirmMove = async () => {
