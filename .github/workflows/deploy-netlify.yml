@@ -16,6 +16,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Deploy-Guard: Dieser Workflow ist der EINZIGE Hosting-Deploy (Netlify).
+      # Schlaegt fehl, wenn ein zweiter Hosting-Deploy-Pfad auftaucht.
+      - name: Deploy-Guard (single hosting target)
+        shell: bash
+        run: |
+          set -euo pipefail
+          OTHERS=$(grep -rl "actions-netlify" .github/workflows | grep -v "deploy-netlify.yml" || true)
+          if [ -n "$OTHERS" ]; then
+            echo "::error::Zweiter Netlify-Deploy-Pfad gefunden: $OTHERS - Deploy blockiert."
+            exit 1
+          fi
+          if grep -rqiE "vercel|cloudflare/wrangler|firebase deploy|gh-pages" .github/workflows; then
+            echo "::error::Fremdes Hosting-Target in Workflows gefunden - Deploy blockiert."
+            exit 1
+          fi
+          echo "Deploy-Guard OK: Netlify ist das einzige Hosting-Target."
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
