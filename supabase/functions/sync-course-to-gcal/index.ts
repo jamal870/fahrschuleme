@@ -366,12 +366,21 @@ Deno.serve(async (req) => {
     // Teilnehmer für diesen Kurs laden (alle ausser storniert)
     const { data: items } = await supabase
       .from("booking_items")
-      .select("booking_id, bookings!inner(first_name, last_name, phone, email, status, payment_status)")
+      .select("booking_id, bookings!inner(id, first_name, last_name, phone, email, status, payment_status)")
       .eq("course_date_id", courseDateId);
     const CANCELLED = ["cancelled", "canceled", "storniert", "refunded", "deleted"];
+    // Duplikate entfernen: gleiche Buchung / gleiche Person nur einmal anzeigen
+    const seen = new Set<string>();
     const participants = (items || [])
       .map((it: any) => it.bookings)
-      .filter((b: any) => b && !CANCELLED.includes(String(b.status || "").toLowerCase()));
+      .filter((b: any) => b && !CANCELLED.includes(String(b.status || "").toLowerCase()))
+      .filter((b: any) => {
+        const key = String(b.id || "") ||
+          `${String(b.email || "").toLowerCase()}|${String(b.first_name || "").toLowerCase()}|${String(b.last_name || "").toLowerCase()}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
     const tnCount = participants.length;
 
     const statusLabel = (b: any) => {
