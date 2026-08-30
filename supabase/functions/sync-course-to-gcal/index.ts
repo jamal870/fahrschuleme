@@ -375,8 +375,12 @@ Deno.serve(async (req) => {
       .map((it: any) => it.bookings)
       .filter((b: any) => b && !CANCELLED.includes(String(b.status || "").toLowerCase()))
       .filter((b: any) => {
-        const key = String(b.id || "") ||
-          `${String(b.email || "").toLowerCase()}|${String(b.first_name || "").toLowerCase()}|${String(b.last_name || "").toLowerCase()}`;
+        // Pro Person nur einmal: mehrere Buchungen derselben Person (gleiche E-Mail
+        // oder gleicher Name) werden zu einem Eintrag zusammengefasst.
+        const email = String(b.email || "").toLowerCase().trim();
+        const name =
+          `${String(b.first_name || "").toLowerCase().trim()}|${String(b.last_name || "").toLowerCase().trim()}`;
+        const key = email ? `e:${email}` : `n:${name}`;
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
