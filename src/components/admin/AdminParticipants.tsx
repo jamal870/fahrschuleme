@@ -7,11 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { RefreshCw, Mail, Phone, MapPin, Calendar, BadgeCheck, Clock, ChevronDown, ChevronRight, Search, Pencil, Save, X, Send, Ban, Trash2 } from "lucide-react";
+import { RefreshCw, Mail, Phone, MapPin, Calendar, BadgeCheck, Clock, ChevronDown, ChevronRight, Search, Pencil, Save, X, Send, Ban, Trash2, ArrowRightLeft } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { dayNameFromDateStr } from "@/lib/utils";
 
 interface Booking {
   id: string;
@@ -150,8 +152,56 @@ const AdminParticipants = () => {
 
 
 
+  // Termin verschieben
+  const [moveFor, setMoveFor] = useState<null | { row: Row; course: CourseInfo }>(null);
+  const [moveTargets, setMoveTargets] = useState<CourseInfo[]>([]);
+  const [moveTargetId, setMoveTargetId] = useState("");
+  const [moveReason, setMoveReason] = useState("");
+  const [moving, setMoving] = useState(false);
+
+  const openMove = async (row: Row, course: CourseInfo) => {
+    setMoveFor({ row, course });
+    setMoveTargetId("");
+    setMoveReason("");
+    setMoveTargets([]);
+    const { data, error } = await supabase
+      .from("course_dates")
+      .select("id, part, day, date, time, location, instructor")
+      .eq("part", course.part)
+      .neq("id", course.id)
+      .order("date");
+    if (error) { toast.error("Fehler beim Laden der Zielkurse"); return; }
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const future = ((data as CourseInfo[]) || [])
+      .filter((c) => { const dt = toIso(c.date); return dt && dt.getTime() >= today.getTime(); })
+      .sort((a, b) => (toIso(a.date)?.getTime() ?? 0) - (toIso(b.date)?.getTime() ?? 0));
+    setMoveTargets(future);
+  };
+
+  const confirmMove = async () => {
+    if (!moveFor || !moveTargetId) return;
+    setMoving(true);
+    const { data, error } = await supabase.functions.invoke("move-booking-participant", {
+      body: {
+        booking_id: moveFor.row.id,
+        from_course_date_id: moveFor.course.id,
+        to_course_date_id: moveTargetId,
+        reason: moveReason || null,
+      },
+    });
+    setMoving(false);
+    if (error || (data as any)?.error) {
+      toast.error("Verschieben fehlgeschlagen: " + (error?.message || (data as any)?.error));
+      return;
+    }
+    toast.success("Termin verschoben – Bestätigung per E-Mail versendet.");
+    setMoveFor(null);
+    await load();
+  };
+
   const load = async () => {
     setLoading(true);
+
     const { data: bks, error } = await supabase
       .from("bookings")
       .select("*")
@@ -386,10 +436,16 @@ const AdminParticipants = () => {
                                 ) : (
                                   <ul className="space-y-1">
                                     {r.courses.map((c) => (
-                                      <li key={c.id} className="bg-card border border-border px-2 py-1" style={{ borderRadius: "3px" }}>
-                                        <strong>Teil {c.part}</strong> · {c.day}, {c.date} · {c.time} · {c.location}
-                                        {c.instructor ? ` · ${c.instructor}` : ""}
+                                      <li key={c.id} className="bg-card border border-border px-2 py-1 flex items-center justify-between gap-2" style={{ borderRadius: "3px" }}>
+                                        <span>
+                                          <strong>Teil {c.part}</strong> · {dayNameFromDateStr(c.date, c.day)}, {c.date} · {c.time} · {c.location}
+                                          {c.instructor ? ` · ${c.instructor}` : ""}
+                                        </span>
+                                        <Button size="sm" variant="outline" className="h-7 px-2 font-body shrink-0" onClick={() => openMove(r, c)}>
+                                          <ArrowRightLeft className="w-3.5 h-3.5 mr-1" /> Verschieben
+                                        </Button>
                                       </li>
+
                                     ))}
                                   </ul>
                                 )}
@@ -407,7 +463,51 @@ const AdminParticipants = () => {
         </CardContent>
       </Card>
 
+      <Dialog open={!!moveFor} onOpenChange={(v) => !v && !moving && setMoveFor(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Termin verschieben</DialogTitle>
+          </DialogHeader>
+          {moveFor && (
+            <div className="space-y-3 text-sm font-body">
+              <p>
+                <strong>{moveFor.row.first_name} {moveFor.row.last_name}</strong><br />
+                Aktuell: Teil {moveFor.course.part} · {dayNameFromDateStr(moveFor.course.date, moveFor.course.day)}, {moveFor.course.date} · {moveFor.course.time}
+              </p>
+              <div className="space-y-1">
+                <Label className="text-xs">Neuer Termin (nur Teil {moveFor.course.part})</Label>
+                <Select value={moveTargetId} onValueChange={setMoveTargetId}>
+                  <SelectTrigger><SelectValue placeholder={moveTargets.length ? "Termin wählen" : "Keine freien Termine"} /></SelectTrigger>
+                  <SelectContent>
+                    {moveTargets.map((c) => {
+                      const cur = toIso(moveFor.course.date)?.getTime() ?? 0;
+                      const t = toIso(c.date)?.getTime() ?? 0;
+                      return (
+                        <SelectItem key={c.id} value={c.id}>
+                          {t < cur ? "◀ früher · " : ""}{dayNameFromDateStr(c.date, c.day)}, {c.date} · {c.time} · {c.location}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Grund (optional, erscheint in der E-Mail)</Label>
+                <Textarea rows={3} value={moveReason} onChange={(e) => setMoveReason(e.target.value)} placeholder="z.B. Auf Wunsch des Teilnehmers." />
+              </div>
+            </div>
+          )}
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setMoveFor(null)} disabled={moving} className="font-body">Abbrechen</Button>
+            <Button onClick={confirmMove} disabled={moving || !moveTargetId} className="font-body">
+              <ArrowRightLeft className="w-4 h-4 mr-1" /> {moving ? "Verschieben..." : "Verschieben & benachrichtigen"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <AlertDialog open={!!confirmAction} onOpenChange={(v) => !v && !confirmBusy && setConfirmAction(null)}>
+
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="font-heading">
