@@ -30,3 +30,4 @@
 - [White-Label Configuration](mem://architecture/white-label/tenant-configuration) — Centralized tenant config file structure
 - [Document Generation](mem://features/admin/document-generation) — PDF generation for invoices and confirmations
 - [Routing](mem://architecture/routing/browserrouter) — BrowserRouter, Canonicals auf www, Legacy-Hash-Redirect
+- [VPS-only DB](.lovable/memory/constraints/vps-only-db.md) — Produktiv nur VPS-Supabase, keine Cloud-DB-Fixes
