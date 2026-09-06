@@ -105,11 +105,12 @@ const AdminBookingNotificationEmail = ({
           {totalPrice && <Text style={priceRow}><strong>Betrag:</strong> CHF {totalPrice}</Text>}
         </Section>
 
-        {/* Gebuchte Kurse (Detail) */}
+        {/* Gebuchte Kurse (Detail) — sorted by Kursteil so the order is always
+            predictable, independent of the order the caller supplied. */}
         {courses && courses.length > 0 && (
           <Section style={card}>
             <Heading style={cardTitle}>Gebuchte Kurse</Heading>
-            {courses.map((c, i) => (
+            {[...courses].sort((a, b) => Number(a.part ?? 0) - Number(b.part ?? 0)).map((c, i) => (
               <Section key={i} style={courseBlock}>
                 <Text style={courseTitle}>
                   {bookingType === 'grundkurs' ? `MGK Teil ${c.part ?? ''}` : `Teil ${c.part ?? ''}`}
@@ -168,7 +169,9 @@ export const template = {
     totalPrice: '450.00',
     bookingDate: '24. September 2024',
     items: 'MGK Teil 1, MGK Teil 2',
+    // Intentionally out of order — exercises the sort-by-Kursteil rendering.
     courses: [
+      { part: 3, date: '2024-11-27', time: '13:00', location: 'Wettingen', price: 225 },
       { part: 1, date: '2024-09-27', time: '17:00', location: 'Wettingen', price: 225 },
       { part: 2, date: '2024-09-28', time: '13:00', location: 'Wettingen', price: 225 },
     ],

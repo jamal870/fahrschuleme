@@ -82,7 +82,9 @@ serve(async (req) => {
             .from("course_dates")
             .select("*")
             .in("id", courseIds);
-          courses = courseData || [];
+          // Sort ascending by course part (Teil 1, 2, 3, ...) — Postgres does not
+          // preserve the `id` list order for `IN (...)` queries.
+          courses = (courseData || []).slice().sort((a: any, b: any) => Number(a.part) - Number(b.part));
         }
 
         // Google-Kalender pro betroffenem MGK-Kurs aktualisieren (Teilnehmerliste)

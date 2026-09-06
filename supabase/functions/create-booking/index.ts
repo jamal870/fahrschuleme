@@ -188,11 +188,21 @@ serve(async (req) => {
           .from("course_dates")
           .select("*")
           .in("id", courseDateIds);
-        const coursesForEmail = (courseDetails || []).map((c: any) => ({
-          part: c.part, date: c.date, time: c.time, location: c.location, price: c.price,
-        }));
+        // Sort ascending by course part (Teil 1, 2, 3, ...) so the confirmation
+        // email/PDF always lists courses in a predictable order, regardless of
+        // how Postgres returns rows for an `IN (...)` query.
+        const coursesForEmail = (courseDetails || [])
+          .slice()
+          .sort((a: any, b: any) => Number(a.part) - Number(b.part))
+          .map((c: any) => ({
+            part: c.part, date: c.date, time: c.time, location: c.location, price: c.price,
+          }));
 
-        const courseSummary = courses.map((c: any) => `MGK Teil ${c.part}`).join(', ');
+        const courseSummary = courses
+          .slice()
+          .sort((a: any, b: any) => Number(a.part) - Number(b.part))
+          .map((c: any) => `MGK Teil ${c.part}`)
+          .join(', ');
         const now = new Date();
         const bookingDateStr = now.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
         const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
