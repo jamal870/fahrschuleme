@@ -34,7 +34,7 @@ const Email = ({ firstName, courses = [], reason, bookingId }: BookingCancelledP
 
         {courses.length > 0 && (
           <Section style={card}>
-            {courses.map((c, i) => (
+            {[...courses].sort((a, b) => Number(a.part ?? 0) - Number(b.part ?? 0)).map((c, i) => (
               <Text key={i} style={detailRow}>
                 <strong>Teil {c.part}</strong> · {c.day ? `${c.day}, ` : ''}{c.date} · {c.time} · {c.location}
               </Text>

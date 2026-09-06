@@ -41,7 +41,13 @@ jobs:
           echo "    - deploy-vps-functions.yml  (Edge Functions: VPS via SSH)"
 
           # 1) Genau EIN Hosting-Deploy auf Netlify erlaubt
-          NETLIFY_DEPLOYS=$(grep -rl "actions-netlify" "$WF_DIR" | sort)
+          # Es wird gezielt nach der tatsaechlichen Action-Referenz-Zeile
+          # gesucht (Praefix "uses:" + Action-Name), nicht nach dem blossen
+          # Action-Namen als String - sonst wuerde dieses Guard-Skript sich
+          # selbst als zweiten Deploy-Pfad erkennen, weil es den Namen der
+          # Action fuer diese Pruefung im Quelltext erwaehnen muss.
+          NETLIFY_ACTION="nwtgck/actions-netlify"
+          NETLIFY_DEPLOYS=$(grep -rlE "uses:[[:space:]]*${NETLIFY_ACTION}" "$WF_DIR" | grep -v "deploy-guard.yml" | sort)
           COUNT=$(echo "$NETLIFY_DEPLOYS" | grep -c . || true)
           echo "==> Netlify-Deploy-Workflows gefunden: $COUNT"
           echo "$NETLIFY_DEPLOYS"
@@ -50,7 +56,12 @@ jobs:
             FAIL=1
           fi
 
-          # 2) Verbotene Deploy-Targets duerfen in KEINEM Workflow vorkommen
+          # 2) Verbotene Deploy-Targets duerfen in KEINEM (anderen) Workflow vorkommen
+          # deploy-guard.yml und deploy-netlify.yml selbst muessen diese
+          # Namen zwangslaeufig als Text auflisten (Dokumentation bzw. die
+          # eigene Mini-Pruefung in deploy-netlify.yml) - beide werden daher
+          # von diesem Scan ausgenommen. Sie enthalten laut Check 1 ohnehin
+          # nur den erlaubten Netlify-Deploy-Schritt.
           FORBIDDEN_PATTERNS=(
             "vercel"
             "cloudflare/wrangler"
@@ -65,10 +76,11 @@ jobs:
             "gh-pages"
             "peaceiris/actions-gh-pages"
           )
+          GUARD_FILES=(--exclude="deploy-guard.yml" --exclude="deploy-netlify.yml")
           for pattern in "${FORBIDDEN_PATTERNS[@]}"; do
-            if grep -rqi "$pattern" "$WF_DIR"; then
+            if grep -rqi "${GUARD_FILES[@]}" "$pattern" "$WF_DIR"; then
               echo "::error::Verbotenes Deploy-Target gefunden: '$pattern'"
-              grep -rni "$pattern" "$WF_DIR" || true
+              grep -rni "${GUARD_FILES[@]}" "$pattern" "$WF_DIR" || true
               FAIL=1
             fi
           done

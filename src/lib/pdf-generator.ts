@@ -7,13 +7,27 @@
 import jsPDF from "jspdf";
 import { tenantConfig } from "@/config/tenant";
 
-// ── Brand Colors (from CSS vars: --primary: 18 80% 50% ≈ #E8501A) ──
-const ORANGE = [232, 80, 26] as const;
+// ── Brand Colors ──
+// Kept in sync with the transactional email templates
+// (supabase/functions/_shared/transactional-email-templates/*.tsx) so PDF and
+// E-Mail share the same navy header / orange accent / card look.
+const ORANGE = [232, 80, 26] as const; // #e8501a
+const NAVY = [26, 35, 68] as const; // #1a2344
 const DARK = [26, 26, 26] as const;
 const GRAY = [100, 110, 120] as const;
 const LIGHT_GRAY = [200, 205, 210] as const;
 const WHITE = [255, 255, 255] as const;
 const BG_WARM = [252, 250, 247] as const;
+const CARD_BG = [250, 250, 250] as const; // #fafafa
+const CARD_BORDER = [238, 238, 238] as const; // #eeeeee
+
+export interface CourseDetail {
+  part: number | string;
+  date: string;
+  time?: string;
+  location?: string;
+  price?: number | string;
+}
 
 interface BookingData {
   id: string;
@@ -30,37 +44,108 @@ interface BookingData {
   payment_method: string;
   created_at: string;
   items?: string[];
+  /** Per-course details (MGK Teil, Datum, Uhrzeit, Ort, Preis) for grundkurs bookings. */
+  courses?: CourseDetail[];
 }
 
 // ── Shared Helpers ──
 
 function addLogo(doc: jsPDF) {
   const { logoText, name } = tenantConfig.brand;
-  // "DRIVE" in bold
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  // Navy header band — mirrors the `headerSection` of the transactional emails.
+  doc.setFillColor(...NAVY);
+  doc.rect(0, 0, pageWidth, 32, "F");
+
+  // "DRIVE" in white bold
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
-  doc.setTextColor(...DARK);
-  doc.text(logoText.main.toUpperCase(), 20, 25);
+  doc.setTextColor(...WHITE);
+  doc.text(logoText.main.toUpperCase(), 20, 20);
 
-  // "me" in orange (italic simulation)
+  // "me" in orange
   const mainWidth = doc.getTextWidth(logoText.main.toUpperCase());
   doc.setFont("helvetica", "normal");
   doc.setFontSize(20);
   doc.setTextColor(...ORANGE);
-  doc.text(logoText.accent, 20 + mainWidth + 1, 25);
+  doc.text(logoText.accent, 20 + mainWidth + 1, 20);
 
   // "Fahrschule" subtitle
   doc.setFontSize(9);
-  doc.setTextColor(...GRAY);
-  doc.text(logoText.sub, 20, 31);
+  doc.setTextColor(220, 225, 235);
+  doc.text(logoText.sub, 20, 27);
 
-  return 35;
+  return 40;
 }
 
 function addOrangeBar(doc: jsPDF, y: number, width: number = 170) {
   doc.setFillColor(...ORANGE);
   doc.rect(20, y, width, 1.5, "F");
   return y + 6;
+}
+
+function formatCourseDate(dateStr: string): string {
+  try {
+    const dt = new Date(dateStr);
+    if (isNaN(dt.getTime())) return dateStr;
+    return dt.toLocaleDateString("de-CH", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" });
+  } catch {
+    return dateStr;
+  }
+}
+
+/**
+ * Renders the "Gebuchte Kurse" section as a list of cards (one per course
+ * part), matching the orange-left-border course cards used in the
+ * transactional emails. Courses are sorted ascending by Kursteil so the
+ * order is always predictable, regardless of the order they were passed in.
+ */
+function addCoursesSection(doc: jsPDF, courses: CourseDetail[], y: number): number {
+  const pageBottom = doc.internal.pageSize.getHeight() - 24;
+  y = addSectionTitle(doc, "Gebuchte Kurse", y);
+
+  const sorted = [...courses].sort((a, b) => Number(a.part) - Number(b.part));
+
+  sorted.forEach((course) => {
+    const rows = [
+      ["Datum:", formatCourseDate(course.date)],
+      ...(course.time ? [["Uhrzeit:", course.time]] : []),
+      ...(course.location ? [["Ort:", course.location]] : []),
+      ...(course.price !== undefined && course.price !== null && course.price !== ""
+        ? [["Preis:", `CHF ${Number(course.price).toFixed(2)}`]]
+        : []),
+    ];
+    const cardHeight = 15 + (rows.length - 1) * 5.5;
+
+    if (y + cardHeight > pageBottom) {
+      addFooter(doc);
+      doc.addPage();
+      y = addLogo(doc);
+      y = addOrangeBar(doc, y);
+    }
+
+    // Card background + orange left border (mirrors `courseBlock` in the emails)
+    doc.setFillColor(...WHITE);
+    doc.setDrawColor(...CARD_BORDER);
+    doc.roundedRect(20, y, 170, cardHeight, 1, 1, "FD");
+    doc.setFillColor(...ORANGE);
+    doc.rect(20, y, 1.2, cardHeight, "F");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.5);
+    doc.setTextColor(...NAVY);
+    doc.text(`MGK TEIL ${course.part}`, 24, y + 6);
+
+    let ry = y + 11;
+    rows.forEach(([key, value]) => {
+      ry = addKeyValue(doc, key, value, ry, 24, 55);
+    });
+
+    y += cardHeight + 4;
+  });
+
+  return y + 2;
 }
 
 function addSectionTitle(doc: jsPDF, title: string, y: number): number {
@@ -213,6 +298,9 @@ export function generateInvoice(data: BookingData): jsPDF {
 
   y = addCustomerBlock(doc, data, y);
   y = addItemsTable(doc, data, y);
+  if (data.courses && data.courses.length > 0) {
+    y = addCoursesSection(doc, data.courses, y);
+  }
   y = addBankDetails(doc, y);
 
   // Payment note
@@ -248,6 +336,9 @@ export function generateBookingConfirmation(data: BookingData): jsPDF {
 
   y = addCustomerBlock(doc, data, y);
   y = addItemsTable(doc, data, y);
+  if (data.courses && data.courses.length > 0) {
+    y = addCoursesSection(doc, data.courses, y);
+  }
 
   // Meeting point
   y = addSectionTitle(doc, "Treffpunkt", y);

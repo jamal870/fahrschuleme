@@ -141,8 +141,27 @@ const AdminBookings = () => {
     fetchBookings();
   };
 
-  const handlePdf = (type: string, b: Booking) => {
-    const data = { ...b, items: [] as string[] };
+  const handlePdf = async (type: string, b: Booking) => {
+    const data: Record<string, any> = { ...b, items: [] as string[] };
+
+    // For Grundkurs-Buchungen die gebuchten Kursteile (Datum/Zeit/Ort/Preis)
+    // laden, damit die PDFs dieselben Kurs-Karten wie die Buchungs-E-Mail zeigen.
+    if (b.booking_type === "grundkurs") {
+      const { data: items } = await supabase
+        .from("booking_items")
+        .select("course_date_id")
+        .eq("booking_id", b.id);
+      const courseIds = (items || []).map((i: any) => i.course_date_id).filter(Boolean) as string[];
+      if (courseIds.length > 0) {
+        const { data: cd } = await supabase
+          .from("course_dates")
+          .select("part, date, time, location, price")
+          .in("id", courseIds);
+        // Nach Kursteil aufsteigend sortieren (Teil 1, 2, 3, ...)
+        data.courses = (cd || []).slice().sort((a: any, c: any) => Number(a.part) - Number(c.part));
+      }
+    }
+
     const suffix = `${b.last_name}_${b.id.slice(0, 6)}`;
     let doc;
     switch (type) {

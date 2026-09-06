@@ -22,12 +22,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          OTHERS=$(grep -rl "actions-netlify" .github/workflows | grep -v "deploy-netlify.yml" || true)
+          # Es wird gezielt nach der tatsaechlichen Action-Referenz-Zeile
+          # gesucht (Praefix "uses:" + Action-Name), nicht nach dem blossen
+          # Action-Namen als String - sonst wuerde auch deploy-guard.yml
+          # anschlagen, das den Namen der Action fuer seine eigene Pruefung
+          # im Quelltext erwaehnen muss.
+          NETLIFY_ACTION="nwtgck/actions-netlify"
+          OTHERS=$(grep -rlE "uses:[[:space:]]*${NETLIFY_ACTION}" .github/workflows | grep -v -e "deploy-netlify.yml" -e "deploy-guard.yml" || true)
           if [ -n "$OTHERS" ]; then
             echo "::error::Zweiter Netlify-Deploy-Pfad gefunden: $OTHERS - Deploy blockiert."
             exit 1
           fi
-          if grep -rqiE "vercel|cloudflare/wrangler|firebase deploy|gh-pages" .github/workflows; then
+          # deploy-guard.yml und diese Datei selbst muessen die verbotenen
+          # Namen zwangslaeufig als Text auflisten (siehe deploy-guard.yml),
+          # daher von diesem Scan ausgenommen.
+          if grep -rqiE --exclude="deploy-guard.yml" --exclude="deploy-netlify.yml" "vercel|cloudflare/wrangler|firebase deploy|gh-pages" .github/workflows; then
             echo "::error::Fremdes Hosting-Target in Workflows gefunden - Deploy blockiert."
             exit 1
           fi

@@ -52,7 +52,8 @@ Deno.serve(async (req) => {
     if (courseIds.length) {
       const { data: cd } = await admin
         .from("course_dates").select("id, part, day, date, time, location").in("id", courseIds);
-      courses = cd || [];
+      // Sort ascending by course part so the cancellation email lists courses predictably.
+      courses = (cd || []).slice().sort((a: any, b: any) => Number(a.part) - Number(b.part));
     }
 
     // Only restore spots if booking was confirmed (i.e. spots were decremented)
