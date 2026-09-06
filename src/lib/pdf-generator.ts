@@ -8,11 +8,13 @@ import jsPDF from "jspdf";
 import { tenantConfig } from "@/config/tenant";
 
 // ── Brand Colors ──
-// Kept in sync with the transactional email templates
+// Matches the real site brand (src/index.css --primary: 195 90% 55% ≈
+// #25C0F4, plus the navy blue "L" mark from public/logo-lme.png), and is
+// kept in sync with the transactional email templates
 // (supabase/functions/_shared/transactional-email-templates/*.tsx) so PDF and
-// E-Mail share the same navy header / orange accent / card look.
-const ORANGE = [232, 80, 26] as const; // #e8501a
-const NAVY = [26, 35, 68] as const; // #1a2344
+// E-Mail share the same header / accent / card look.
+const CYAN = [37, 192, 244] as const; // #25c0f4
+const NAVY = [29, 59, 189] as const; // #1d3bbd
 const DARK = [26, 26, 26] as const;
 const GRAY = [100, 110, 120] as const;
 const LIGHT_GRAY = [200, 205, 210] as const;
@@ -64,11 +66,11 @@ function addLogo(doc: jsPDF) {
   doc.setTextColor(...WHITE);
   doc.text(logoText.main.toUpperCase(), 20, 20);
 
-  // "me" in orange
+  // "me" in cyan (brand accent)
   const mainWidth = doc.getTextWidth(logoText.main.toUpperCase());
   doc.setFont("helvetica", "normal");
   doc.setFontSize(20);
-  doc.setTextColor(...ORANGE);
+  doc.setTextColor(...CYAN);
   doc.text(logoText.accent, 20 + mainWidth + 1, 20);
 
   // "Fahrschule" subtitle
@@ -79,8 +81,8 @@ function addLogo(doc: jsPDF) {
   return 40;
 }
 
-function addOrangeBar(doc: jsPDF, y: number, width: number = 170) {
-  doc.setFillColor(...ORANGE);
+function addAccentBar(doc: jsPDF, y: number, width: number = 170) {
+  doc.setFillColor(...CYAN);
   doc.rect(20, y, width, 1.5, "F");
   return y + 6;
 }
@@ -97,7 +99,7 @@ function formatCourseDate(dateStr: string): string {
 
 /**
  * Renders the "Gebuchte Kurse" section as a list of cards (one per course
- * part), matching the orange-left-border course cards used in the
+ * part), matching the cyan-left-border course cards used in the
  * transactional emails. Courses are sorted ascending by Kursteil so the
  * order is always predictable, regardless of the order they were passed in.
  */
@@ -122,14 +124,14 @@ function addCoursesSection(doc: jsPDF, courses: CourseDetail[], y: number): numb
       addFooter(doc);
       doc.addPage();
       y = addLogo(doc);
-      y = addOrangeBar(doc, y);
+      y = addAccentBar(doc, y);
     }
 
-    // Card background + orange left border (mirrors `courseBlock` in the emails)
+    // Card background + cyan left border (mirrors `courseBlock` in the emails)
     doc.setFillColor(...WHITE);
     doc.setDrawColor(...CARD_BORDER);
     doc.roundedRect(20, y, 170, cardHeight, 1, 1, "FD");
-    doc.setFillColor(...ORANGE);
+    doc.setFillColor(...CYAN);
     doc.rect(20, y, 1.2, cardHeight, "F");
 
     doc.setFont("helvetica", "bold");
@@ -151,7 +153,7 @@ function addCoursesSection(doc: jsPDF, courses: CourseDetail[], y: number): numb
 function addSectionTitle(doc: jsPDF, title: string, y: number): number {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
-  doc.setTextColor(...ORANGE);
+  doc.setTextColor(...CYAN);
   doc.text(title.toUpperCase(), 20, y);
   return y + 7;
 }
@@ -171,7 +173,7 @@ function addFooter(doc: jsPDF) {
   const { contact, brand } = tenantConfig;
 
   // Footer bar
-  doc.setFillColor(...ORANGE);
+  doc.setFillColor(...CYAN);
   doc.rect(0, pageH - 18, 210, 18, "F");
 
   doc.setFont("helvetica", "normal");
@@ -214,7 +216,7 @@ function addCustomerBlock(doc: jsPDF, data: BookingData, y: number): number {
 
 function addItemsTable(doc: jsPDF, data: BookingData, y: number): number {
   // Table header
-  doc.setFillColor(...ORANGE);
+  doc.setFillColor(...CYAN);
   doc.roundedRect(20, y, 170, 8, 1, 1, "F");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
@@ -254,7 +256,7 @@ function addItemsTable(doc: jsPDF, data: BookingData, y: number): number {
   doc.setFontSize(12);
   doc.setTextColor(...DARK);
   doc.text("Gesamt:", 120, y);
-  doc.setTextColor(...ORANGE);
+  doc.setTextColor(...CYAN);
   doc.text(`CHF ${data.total_price.toFixed(2)}`, 170, y, { align: "right" });
 
   return y + 10;
@@ -280,7 +282,7 @@ function docNumber(prefix: string, id: string, date: string): string {
 export function generateInvoice(data: BookingData): jsPDF {
   const doc = new jsPDF();
   let y = addLogo(doc);
-  y = addOrangeBar(doc, y);
+  y = addAccentBar(doc, y);
 
   // Title
   doc.setFont("helvetica", "bold");
@@ -320,7 +322,7 @@ export function generateInvoice(data: BookingData): jsPDF {
 export function generateBookingConfirmation(data: BookingData): jsPDF {
   const doc = new jsPDF();
   let y = addLogo(doc);
-  y = addOrangeBar(doc, y);
+  y = addAccentBar(doc, y);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
@@ -370,7 +372,7 @@ export function generateBookingConfirmation(data: BookingData): jsPDF {
 export function generateReminder(data: BookingData, reminderLevel: 1 | 2 | 3 = 1): jsPDF {
   const doc = new jsPDF();
   let y = addLogo(doc);
-  y = addOrangeBar(doc, y);
+  y = addAccentBar(doc, y);
 
   const levelText = reminderLevel === 1 ? "1. ZAHLUNGSERINNERUNG" :
     reminderLevel === 2 ? "2. MAHNUNG" : "LETZTE MAHNUNG";
@@ -420,7 +422,7 @@ export function generateReminder(data: BookingData, reminderLevel: 1 | 2 | 3 = 1
     y += 6;
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
-    doc.setTextColor(...ORANGE);
+    doc.setTextColor(...CYAN);
     doc.text(`Fällig: CHF ${(data.total_price + fees).toFixed(2)}`, 170, y, { align: "right" });
     y += 10;
   }
@@ -443,7 +445,7 @@ export function generateReminder(data: BookingData, reminderLevel: 1 | 2 | 3 = 1
 export function generateReceipt(data: BookingData): jsPDF {
   const doc = new jsPDF();
   let y = addLogo(doc);
-  y = addOrangeBar(doc, y);
+  y = addAccentBar(doc, y);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
@@ -521,7 +523,7 @@ export function generateParticipantList(
 
   const doc = new jsPDF({ orientation: "landscape" });
   let y = addLogo(doc);
-  y = addOrangeBar(doc, y, 257);
+  y = addAccentBar(doc, y, 257);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
@@ -558,7 +560,7 @@ export function generateParticipantList(
   ];
 
   // Header bar
-  doc.setFillColor(...ORANGE);
+  doc.setFillColor(...CYAN);
   doc.rect(20, y, 257, 8, "F");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
@@ -609,7 +611,7 @@ export function generateParticipantList(
       doc.addPage();
       y = 20;
       // redraw column header on new page
-      doc.setFillColor(...ORANGE);
+      doc.setFillColor(...CYAN);
       doc.rect(20, y, 257, 8, "F");
       doc.setFont("helvetica", "bold");
       doc.setFontSize(8);

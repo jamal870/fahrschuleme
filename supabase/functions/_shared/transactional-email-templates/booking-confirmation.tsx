@@ -5,7 +5,7 @@ import {
 import type { TemplateEntry } from './registry.ts'
 
 const SITE_NAME = "Drive me Fahrschule"
-const LOGO_URL = "https://dspspshgnointeqxgnrw.supabase.co/storage/v1/object/public/email-assets/logo-lme-light.png"
+const LOGO_URL = "https://drive-me.ch/logo-lme.png"
 
 interface EmailSettings {
   footer_signature?: string
@@ -71,7 +71,7 @@ const BookingConfirmationEmail = ({
           <Section style={headerSection}>
             <Img src={LOGO_URL} alt="L me Fahrschule Wettingen" width="180" style={logoStyle} />
           </Section>
-          <Section style={orangeBar} />
+          <Section style={accentBar} />
 
           <Heading style={h1}>Buchungsbestätigung</Heading>
 
@@ -212,31 +212,34 @@ export const template = {
   },
 } satisfies TemplateEntry
 
-// ── Styles — shared design system (navy header, orange accent, light cards) ──
-// Kept in sync with admin-booking-notification.tsx / course-reminder.tsx so the
-// customer-facing confirmation looks like every other transactional email.
-const main = { backgroundColor: '#f4f4f5', fontFamily: "'DM Sans', Arial, sans-serif" }
+// ── Styles — matches the real site brand (see src/index.css --primary: 195 90%
+// 55% ≈ #25C0F4, font-heading "Sora" / font-body "Manrope", public/logo-lme.png)
+// instead of the old orange/navy scheme. Kept in sync with
+// admin-booking-notification.tsx so both booking emails look identical.
+const CYAN = '#25c0f4'
+const NAVY = '#1d3bbd' // matches the "L" mark in the logo
+const main = { backgroundColor: '#f4f4f5', fontFamily: "'Manrope', Arial, sans-serif" }
 const container = { padding: '32px 24px', maxWidth: '600px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '8px' }
-const headerSection = { backgroundColor: '#1a2344', padding: '24px 25px', borderRadius: '8px 8px 0 0', marginBottom: '4px', textAlign: 'center' as const }
+const headerSection = { backgroundColor: '#ffffff', padding: '16px 25px', borderRadius: '8px 8px 0 0', marginBottom: '4px', textAlign: 'center' as const }
 const logoStyle = { margin: '0 auto' }
-const orangeBar = { backgroundColor: '#e8501a', height: '4px', borderRadius: '2px', margin: '0 0 24px' }
+const accentBar = { backgroundColor: CYAN, height: '3px', borderRadius: '2px', margin: '0 0 24px' }
 
-const h1 = { fontSize: '22px', fontWeight: '700' as const, color: '#1a1a1a', margin: '0 0 8px' }
+const h1 = { fontFamily: "'Sora', Arial, sans-serif", fontSize: '22px', fontWeight: '700' as const, color: '#1a1a1a', margin: '0 0 8px' }
 const text = { fontSize: '14px', color: '#555555', lineHeight: '1.6', margin: '0 0 20px', whiteSpace: 'pre-line' as const }
 const bulletText = { fontSize: '13px', color: '#3a3a3a', lineHeight: '1.5', margin: '0 0 4px' }
 const smallText = { fontSize: '12px', color: '#777777', lineHeight: '1.6', margin: '0 0 16px', fontStyle: 'italic' as const }
 
 const card = { backgroundColor: '#fafafa', borderRadius: '6px', padding: '16px 18px', margin: '0 0 12px', border: '1px solid #eeeeee' }
-const cardTitle = { fontSize: '14px', fontWeight: '700' as const, color: '#e8501a', margin: '0 0 10px', textTransform: 'uppercase' as const, letterSpacing: '0.5px' }
+const cardTitle = { fontFamily: "'Sora', Arial, sans-serif", fontSize: '14px', fontWeight: '700' as const, color: CYAN, margin: '0 0 10px', textTransform: 'uppercase' as const, letterSpacing: '0.5px' }
 const detailRow = { fontSize: '13px', color: '#3a3a3a', lineHeight: '1.6', margin: '0 0 4px', whiteSpace: 'pre-line' as const }
 const priceRow = { fontSize: '15px', color: '#1a1a1a', lineHeight: '1.6', margin: '4px 0 0', fontWeight: '600' as const }
-const courseBlock = { padding: '10px 12px', margin: '0 0 8px', backgroundColor: '#ffffff', border: '1px solid #eeeeee', borderLeft: '3px solid #e8501a', borderRadius: '4px' }
-const courseTitle = { fontSize: '13px', fontWeight: '700' as const, color: '#1a2344', margin: '0 0 6px', textTransform: 'uppercase' as const, letterSpacing: '0.3px' }
+const courseBlock = { padding: '10px 12px', margin: '0 0 8px', backgroundColor: '#ffffff', border: '1px solid #eeeeee', borderLeft: `3px solid ${CYAN}`, borderRadius: '4px' }
+const courseTitle = { fontFamily: "'Sora', Arial, sans-serif", fontSize: '13px', fontWeight: '700' as const, color: NAVY, margin: '0 0 6px', textTransform: 'uppercase' as const, letterSpacing: '0.3px' }
 
 const importantCard = { backgroundColor: '#fff5f5', border: '1px solid #f5c6c6', borderRadius: '6px', padding: '16px 18px', margin: '0 0 12px' }
-const cardTitleImportant = { fontSize: '14px', fontWeight: '700' as const, color: '#c53030', margin: '0 0 10px', textTransform: 'uppercase' as const, letterSpacing: '0.5px' }
+const cardTitleImportant = { fontFamily: "'Sora', Arial, sans-serif", fontSize: '14px', fontWeight: '700' as const, color: '#c53030', margin: '0 0 10px', textTransform: 'uppercase' as const, letterSpacing: '0.5px' }
 const importantText = { fontSize: '13px', color: '#c53030', lineHeight: '1.6', margin: '0', fontWeight: '600' as const, whiteSpace: 'pre-line' as const }
 
 const divider = { borderColor: '#e5e5e5', margin: '20px 0 16px' }
 const footer = { fontSize: '13px', color: '#8a9aaa', margin: '0', whiteSpace: 'pre-line' as const }
-const footerBrand = { fontSize: '11px', color: '#e8501a', margin: '2px 0 0', fontWeight: '600' as const }
+const footerBrand = { fontSize: '11px', color: CYAN, margin: '2px 0 0', fontWeight: '600' as const }
