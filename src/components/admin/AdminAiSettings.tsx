@@ -30,12 +30,14 @@ const PROVIDER_LABELS: Record<string, string> = {
   openai: "OpenAI",
   gemini: "Google Gemini",
   anthropic: "Anthropic Claude",
+  mistral: "Mistral AI (EU-gehostet)",
 };
 
 const PROVIDER_HINTS: Record<string, string> = {
   openai: "Key aus platform.openai.com → API keys (sk-…)",
   gemini: "Key aus aistudio.google.com → API key",
   anthropic: "Key aus console.anthropic.com → API keys (sk-ant-…)",
+  mistral: "Key aus console.mistral.ai/api-keys — Anbieter mit Sitz und Rechenzentren in der EU (Frankreich)",
 };
 
 const MODEL_SUGGESTIONS: Record<string, string[]> = {
@@ -48,6 +50,7 @@ const MODEL_SUGGESTIONS: Record<string, string[]> = {
   openai: ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini"],
   gemini: ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.5-pro"],
   anthropic: ["claude-sonnet-4-20250514", "claude-3-5-haiku-20241022"],
+  mistral: ["mistral-small-latest", "mistral-large-latest", "mistral-medium-latest", "open-mixtral-8x22b"],
 };
 
 
@@ -61,6 +64,7 @@ const DEFAULT_PROVIDERS: ProviderRow[] = [
   { provider: "openai", enabled: false, has_key: false, masked_key: null },
   { provider: "gemini", enabled: false, has_key: false, masked_key: null },
   { provider: "anthropic", enabled: false, has_key: false, masked_key: null },
+  { provider: "mistral", enabled: false, has_key: false, masked_key: null },
 ];
 
 const DEFAULT_ASSISTANTS: AssistantRow[] = [
@@ -209,6 +213,7 @@ export default function AdminAiSettings() {
                   <span className="font-semibold">{PROVIDER_LABELS[p.provider] ?? p.provider}</span>
                   {p.has_key && <Badge variant="secondary">{p.masked_key}</Badge>}
                   {p.provider === "lovable" && <Badge variant="outline">kein Key nötig</Badge>}
+                  {p.provider === "mistral" && <Badge variant="outline">EU-Hosting</Badge>}
                 </div>
                 <div className="flex items-center gap-2">
                   <Label htmlFor={`sw-${p.provider}`} className="text-sm text-muted-foreground">

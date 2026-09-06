@@ -27,7 +27,7 @@ if (!supabaseUrl || !serviceKey || !anonKey) {
 
 const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
 
-const PROVIDERS = ["lovable", "openai", "gemini", "anthropic"];
+const PROVIDERS = ["lovable", "openai", "gemini", "anthropic", "mistral"];
 const ASSISTANTS = ["chatbot", "admin"];
 
 const friendly = (msg: string) =>
