@@ -1,5 +1,8 @@
-// Zentrale Auswahl des KI-Anbieters (Lovable AI, OpenAI, Google Gemini, Anthropic).
-// Die Schlüssel liegen in public.ai_providers und werden nur serverseitig gelesen.
+// Zentrale Auswahl des KI-Anbieters (Lovable AI, OpenAI, Google Gemini,
+// Anthropic, Mistral AI). Die Schlüssel liegen in public.ai_providers und
+// werden nur serverseitig gelesen.
+// Mistral AI ist ein in der EU (Frankreich) gehosteter Anbieter und daher
+// eine datenschutzfreundliche Alternative zu den US-Anbietern.
 
 export type AiCallConfig = {
   provider: string;
@@ -13,6 +16,7 @@ export const DEFAULT_MODELS: Record<string, string> = {
   openai: "gpt-4o-mini",
   gemini: "gemini-2.0-flash",
   anthropic: "claude-sonnet-4-20250514",
+  mistral: "mistral-small-latest",
 };
 
 type Client = {
@@ -27,6 +31,7 @@ const ENV_KEYS: Record<string, string[]> = {
   openai: ["OPENAI_API_KEY"],
   gemini: ["GEMINI_API_KEY", "GOOGLE_AI_API_KEY"],
   anthropic: ["ANTHROPIC_API_KEY"],
+  mistral: ["MISTRAL_API_KEY"],
 };
 
 function envKey(provider: string): string | null {
@@ -39,7 +44,7 @@ function envKey(provider: string): string | null {
 
 // Wenn kein Anbieter konfiguriert ist: erster verfügbarer Env-Key gewinnt.
 function envFallback(): AiCallConfig | { error: string } {
-  for (const provider of ["openai", "gemini", "anthropic"]) {
+  for (const provider of ["openai", "gemini", "anthropic", "mistral"]) {
     const key = envKey(provider);
     if (key) return buildConfig(provider, DEFAULT_MODELS[provider], key);
   }
@@ -63,6 +68,14 @@ function buildConfig(provider: string, model: string, apiKey: string): AiCallCon
       provider,
       model: model || DEFAULT_MODELS.gemini,
       url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+      headers: { Authorization: `Bearer ${apiKey}` },
+    };
+  }
+  if (provider === "mistral") {
+    return {
+      provider,
+      model: model || DEFAULT_MODELS.mistral,
+      url: "https://api.mistral.ai/v1/chat/completions",
       headers: { Authorization: `Bearer ${apiKey}` },
     };
   }
@@ -151,7 +164,7 @@ export async function alternativeConfigs(
     });
   }
 
-  for (const provider of ["openai", "gemini", "anthropic"]) {
+  for (const provider of ["openai", "gemini", "anthropic", "mistral"]) {
     if (seen.has(provider)) continue;
     let apiKey: string | null = null;
     try {
