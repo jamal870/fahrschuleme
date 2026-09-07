@@ -103,13 +103,14 @@ const Datenschutz = () => {
           <h2 className="text-xl font-heading font-bold mb-3">3d. KI-Chatbot («ASK AI»)</h2>
           <p className="text-muted-foreground leading-relaxed">
             Unser Website-Chatbot beantwortet Fragen zu Kursen, Preisen und Terminen. Deine Eingaben werden zur
-            Beantwortung an einen KI-Dienstleister übermittelt und dort kurzfristig verarbeitet. Je nach Konfiguration
-            kommt dabei entweder ein Anbieter mit Sitz und Rechenzentren in der EU (Mistral AI, Frankreich) oder – falls
-            dieser nicht aktiv ist – ein US-Anbieter (u.a. OpenAI, Google Gemini oder Anthropic) zum Einsatz; im
-            letzteren Fall kann eine Datenübermittlung in die USA stattfinden. Bitte gib im Chat keine besonders
-            schützenswerten Personendaten (z.B. Gesundheitsdaten) ein. Chatverläufe werden nur für die Dauer der
-            Sitzung in deinem Browser gehalten; Buchungsanfragen aus dem Chat speichern wir wie andere Buchungen. Der
-            Chatbot liefert unverbindliche Auskünfte und ersetzt keine medizinische, rechtliche oder behördliche
+            Beantwortung an einen KI-Dienstleister übermittelt und dort kurzfristig verarbeitet. Wir setzen dafür
+            primär Mistral AI (Mistral AI SAS, Frankreich) ein, einen Anbieter mit Sitz und Rechenzentren in der EU;
+            eine Datenübermittlung findet in diesem Fall innerhalb der EU statt. Nur falls dieser Dienst technisch
+            nicht verfügbar sein sollte, weichen wir auf einen US-Anbieter (u.a. OpenAI, Google Gemini oder Anthropic)
+            aus; in diesem Ausnahmefall kann eine Datenübermittlung in die USA stattfinden. Bitte gib im Chat keine
+            besonders schützenswerten Personendaten (z.B. Gesundheitsdaten) ein. Chatverläufe werden nur für die Dauer
+            der Sitzung in deinem Browser gehalten; Buchungsanfragen aus dem Chat speichern wir wie andere Buchungen.
+            Der Chatbot liefert unverbindliche Auskünfte und ersetzt keine medizinische, rechtliche oder behördliche
             Beratung. Rechtsgrundlage: Art. 13 DSG.
           </p>
         </section>
