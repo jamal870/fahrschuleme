@@ -104,6 +104,15 @@ function buildAiContext(): string {
     "",
     "FAQ:",
     faqData.map((f) => `F: ${f.question}\nA: ${f.answer}`).join("\n"),
+    "",
+    "Fahrschule-Software & App für Fahrlehrer (eigenes Produkt von Fahrschule me):",
+    "- Wir entwickeln und verkaufen selbst eine Fahrschul-Verwaltungssoftware/App für Fahrlehrer und Fahrschulen (Kalender & Termine, Schülerverwaltung, Rechnungen & Zahlungen, Umsatz/Berichte, Prüfungsplanung).",
+    "- Native App für iOS und Android, zusätzlich Desktop-Version im Browser.",
+    "- 30 Tage kostenlos testen, keine Kreditkarte nötig. Danach Solo (CHF 39/Monat) oder Solo+ inkl. Buchhaltung & Rechnungswesen (CHF 57.50/Monat), jährliche Zahlung.",
+    "- Solo+ enthält unser eigenes Buchhaltungs- und Rechnungswesen-Tool finza.tech (Ausgaben erfassen, Fahrlehrer-Abrechnung als PDF, Steuerexport Excel) – vollständig integriert, kein separates Tool nötig.",
+    "- Infos & Test starten: https://fahrschule-me.ch/fuer-fahrlehrer",
+    "- App Store: https://apps.apple.com/ch/app/fahrschule-me/id6762010003",
+    "- Google Play: https://play.google.com/store/apps/details?id=com.driveme.fahrschule",
   ].join("\n");
 }
 
