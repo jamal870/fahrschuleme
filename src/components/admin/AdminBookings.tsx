@@ -18,6 +18,7 @@ import {
   generateReminder,
   generateReceipt,
   downloadPdf,
+  type BookingData,
 } from "@/lib/pdf-generator";
 
 interface Booking {
