@@ -143,7 +143,7 @@ const AdminBookings = () => {
   };
 
   const handlePdf = async (type: string, b: Booking) => {
-    const data: Record<string, any> = { ...b, items: [] as string[] };
+    const data: BookingData = { ...b, items: [] };
 
     // For Grundkurs-Buchungen die gebuchten Kursteile (Datum/Zeit/Ort/Preis)
     // laden, damit die PDFs dieselben Kurs-Karten wie die Buchungs-E-Mail zeigen.
