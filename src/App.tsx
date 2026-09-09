@@ -1,41 +1,53 @@
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
-import GrundkursBuchen from "./pages/GrundkursBuchen.tsx";
-import Admin from "./pages/Admin.tsx";
-import AdminLogin from "./pages/AdminLogin.tsx";
-import BuchungErfolgreich from "./pages/BuchungErfolgreich.tsx";
-import Unsubscribe from "./pages/Unsubscribe.tsx";
-import Impressum from "./pages/Impressum.tsx";
-import Datenschutz from "./pages/Datenschutz.tsx";
-import AGB from "./pages/AGB.tsx";
-import Team from "./pages/Team.tsx";
-import MotorradFuehrerscheinWettingen from "./pages/MotorradFuehrerscheinWettingen.tsx";
-import MotorradGrundkursWettingen from "./pages/MotorradGrundkursWettingen.tsx";
-import FahrschuleWettingen from "./pages/FahrschuleWettingen.tsx";
-import FahrschuleBaden from "./pages/FahrschuleBaden.tsx";
-import FahrschuleNeuenhof from "./pages/FahrschuleNeuenhof.tsx";
-import FahrschuleSpreitenbach from "./pages/FahrschuleSpreitenbach.tsx";
-import MotorradFuehrerscheinBaden from "./pages/MotorradFuehrerscheinBaden.tsx";
-import NothelferkursWettingen from "./pages/NothelferkursWettingen.tsx";
-import VerkehrskundeWettingen from "./pages/VerkehrskundeWettingen.tsx";
-import Fahrstunden from "./pages/Fahrstunden.tsx";
-import Motorrad from "./pages/Motorrad.tsx";
-import Preise from "./pages/Preise.tsx";
-import Kontakt from "./pages/Kontakt.tsx";
-import Kurstermine from "./pages/Kurstermine.tsx";
-import Angebote from "./pages/Angebote.tsx";
-import StrassenverkehrsamtAargau from "./pages/StrassenverkehrsamtAargau.tsx";
-import KostenFuehrerscheinAargau from "./pages/KostenFuehrerscheinAargau.tsx";
-import MotorradKategorienVergleich from "./pages/MotorradKategorienVergleich.tsx";
-import WieVieleFahrstunden from "./pages/WieVieleFahrstunden.tsx";
-import FuerFahrlehrer from "./pages/FuerFahrlehrer.tsx";
-import NotFound from "./pages/NotFound.tsx";
 import WhatsAppFloat from "./components/WhatsAppFloat.tsx";
 import { SiteContentProvider } from "@/hooks/useSiteContent";
+
+// Nur die Startseite wird eager geladen (häufigster Einstiegspunkt).
+// Alle anderen Routen werden lazy geladen, damit das initiale JS-Bundle
+// klein bleibt (Core Web Vitals / Ladezeit als Rankingfaktor).
+const GrundkursBuchen = lazy(() => import("./pages/GrundkursBuchen.tsx"));
+const Admin = lazy(() => import("./pages/Admin.tsx"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin.tsx"));
+const BuchungErfolgreich = lazy(() => import("./pages/BuchungErfolgreich.tsx"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe.tsx"));
+const Impressum = lazy(() => import("./pages/Impressum.tsx"));
+const Datenschutz = lazy(() => import("./pages/Datenschutz.tsx"));
+const AGB = lazy(() => import("./pages/AGB.tsx"));
+const Team = lazy(() => import("./pages/Team.tsx"));
+const MotorradFuehrerscheinWettingen = lazy(() => import("./pages/MotorradFuehrerscheinWettingen.tsx"));
+const MotorradGrundkursWettingen = lazy(() => import("./pages/MotorradGrundkursWettingen.tsx"));
+const FahrschuleWettingen = lazy(() => import("./pages/FahrschuleWettingen.tsx"));
+const FahrschuleBaden = lazy(() => import("./pages/FahrschuleBaden.tsx"));
+const FahrschuleNeuenhof = lazy(() => import("./pages/FahrschuleNeuenhof.tsx"));
+const FahrschuleSpreitenbach = lazy(() => import("./pages/FahrschuleSpreitenbach.tsx"));
+const MotorradFuehrerscheinBaden = lazy(() => import("./pages/MotorradFuehrerscheinBaden.tsx"));
+const NothelferkursWettingen = lazy(() => import("./pages/NothelferkursWettingen.tsx"));
+const VerkehrskundeWettingen = lazy(() => import("./pages/VerkehrskundeWettingen.tsx"));
+const Fahrstunden = lazy(() => import("./pages/Fahrstunden.tsx"));
+const Motorrad = lazy(() => import("./pages/Motorrad.tsx"));
+const Preise = lazy(() => import("./pages/Preise.tsx"));
+const Kontakt = lazy(() => import("./pages/Kontakt.tsx"));
+const Kurstermine = lazy(() => import("./pages/Kurstermine.tsx"));
+const Angebote = lazy(() => import("./pages/Angebote.tsx"));
+const StrassenverkehrsamtAargau = lazy(() => import("./pages/StrassenverkehrsamtAargau.tsx"));
+const KostenFuehrerscheinAargau = lazy(() => import("./pages/KostenFuehrerscheinAargau.tsx"));
+const MotorradKategorienVergleich = lazy(() => import("./pages/MotorradKategorienVergleich.tsx"));
+const WieVieleFahrstunden = lazy(() => import("./pages/WieVieleFahrstunden.tsx"));
+const FuerFahrlehrer = lazy(() => import("./pages/FuerFahrlehrer.tsx"));
+const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+
+const RouteFallback = () => (
+  <div className="flex min-h-[60vh] items-center justify-center">
+    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  </div>
+);
 
 const queryClient = new QueryClient();
 
@@ -47,6 +59,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <main>
+        <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/grundkurs" element={<GrundkursBuchen />} />
@@ -86,6 +99,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
         </main>
         <WhatsAppFloat />
       </BrowserRouter>

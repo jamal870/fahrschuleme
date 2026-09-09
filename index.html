@@ -7,6 +7,14 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=4" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=4" />
 
+    <!-- Google Fonts: preconnect + eigenes <link>, statt @import in CSS.
+         @import blockiert das Rendering, bis die App-CSS geladen UND daraus
+         die Font-URL entdeckt ist (sequentiell); so lädt die Font-CSS
+         parallel zu allen anderen Ressourcen. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Sora:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" />
+
     <title>Fahrschule me – Auto- & Motorradfahrschule Wettingen</title>
     <meta name="description" content="Fahrschule me in Wettingen: Autoprüfung, Motorrad-Grundkurs (MGK) und individuelle Fahrstunden mit erfahrenen Instruktoren. Flexible Termine Mo–Sa 08–22 Uhr." />
     <meta name="author" content="Fahrschule me" />
