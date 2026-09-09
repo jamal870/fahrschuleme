@@ -31,7 +31,7 @@ export interface CourseDetail {
   price?: number | string;
 }
 
-interface BookingData {
+export interface BookingData {
   id: string;
   first_name: string;
   last_name: string;
