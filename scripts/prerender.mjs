@@ -23,6 +23,12 @@
 // bundle is missing), that route falls back to the old meta-only shell
 // instead of failing the whole build.
 //
+// Also syncs the sitewide aggregateRating/sameAs JSON-LD and the
+// llms(.full).txt rating text with the live Google review data (same
+// source as the on-page <GoogleReviews> widget) so it can't quietly go
+// stale — see fetchLiveReviewData() below. Equally defensive: any failure
+// there just keeps the existing static numbers.
+//
 // Runs after `vite build` (see package.json "build" script). Safe to run
 // multiple times; only ever reads dist/index.html as the template and
 // writes new files, never mutates other build output.
@@ -68,6 +74,82 @@ function replaceOrThrow(html, regex, replacement, label) {
     throw new Error(`prerender: expected to find ${label} in the template but didn't — index.html may have changed.`);
   }
   return html.replace(regex, replacement);
+}
+
+// Keeps the sitewide aggregateRating (and the sameAs Google Maps link) in
+// sync with the real, live Google review data instead of a hand-typed
+// number that quietly goes stale — same data source the on-page
+// <GoogleReviews> widget uses (supabase/functions/get-google-reviews),
+// which itself caches the Google Places API response for 24h. Best-effort:
+// any failure (missing env vars, network, bad response) just keeps the
+// existing static numbers in index.html/llms.txt — never fails the build.
+async function fetchLiveReviewData() {
+  const supabaseUrl = process.env.VITE_SUPABASE_URL;
+  const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!supabaseUrl || !supabaseKey) {
+    console.warn("prerender: VITE_SUPABASE_URL/VITE_SUPABASE_PUBLISHABLE_KEY not set — keeping static review numbers.");
+    return null;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const res = await fetch(`${supabaseUrl}/functions/v1/get-google-reviews`, {
+      headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      console.warn(`prerender: get-google-reviews returned HTTP ${res.status} — keeping static review numbers.`);
+      return null;
+    }
+    const data = await res.json();
+    if (typeof data.rating !== "number" || typeof data.total !== "number") {
+      console.warn("prerender: get-google-reviews returned no usable rating — keeping static review numbers.");
+      return null;
+    }
+    return { rating: data.rating, total: data.total, mapsUrl: typeof data.mapsUrl === "string" ? data.mapsUrl : null };
+  } catch (err) {
+    console.warn(`prerender: could not fetch live review data (${err.message}) — keeping static review numbers.`);
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+// Sitewide DrivingSchool JSON-LD lives once in the template and is copied
+// unchanged into every route's HTML, so patching it here updates it
+// everywhere in one pass.
+function applyLiveReviewDataToTemplate(template, live) {
+  if (!live) return template;
+  let html = template;
+  html = html.replace(/"ratingValue":\s*"[^"]*"/, `"ratingValue": "${live.rating.toFixed(1)}"`);
+  html = html.replace(/"reviewCount":\s*"[^"]*"/, `"reviewCount": "${live.total}"`);
+  if (live.mapsUrl) {
+    // Real Google Maps/Business profile link replaces the previous
+    // self-referencing placeholder — sameAs should point at an external
+    // profile, not the site itself.
+    html = html.replace(/"sameAs":\s*\[[^\]]*\]/, `"sameAs": ${JSON.stringify([live.mapsUrl])}`);
+  }
+  return html;
+}
+
+// public/llms.txt and public/llms-full.txt (copied verbatim into dist/ by
+// vite build) also quote the rating/review count in prose — keep those in
+// sync too so AI crawlers reading them don't see a different number than
+// the JSON-LD.
+function applyLiveReviewDataToTextFile(path, live) {
+  if (!live || !existsSync(path)) return;
+  const rating = live.rating.toFixed(1);
+  let text = readFileSync(path, "utf-8");
+  text = text.replace(
+    /Bewertung: [\d.,]+ ★ bei \d+ Google-Bewertungen\./,
+    `Bewertung: ${rating} ★ bei ${live.total} Google-Bewertungen.`,
+  );
+  text = text.replace(
+    /- Bewertung: [\d.,]+ von 5 Sternen bei \d+ Google-Bewertungen/,
+    `- Bewertung: ${rating} von 5 Sternen bei ${live.total} Google-Bewertungen`,
+  );
+  writeFileSync(path, text);
 }
 
 // Old, meta-tags-only shell (title/description/canonical/OG/Twitter swapped
@@ -168,8 +250,11 @@ async function main() {
   if (!existsSync(TEMPLATE_PATH)) {
     throw new Error(`prerender: ${TEMPLATE_PATH} not found — run "vite build" first.`);
   }
-  const template = readFileSync(TEMPLATE_PATH, "utf-8");
-  const renderRoute = await loadRenderRoute();
+  const rawTemplate = readFileSync(TEMPLATE_PATH, "utf-8");
+  const [renderRoute, liveReviewData] = await Promise.all([loadRenderRoute(), fetchLiveReviewData()]);
+  const template = applyLiveReviewDataToTemplate(rawTemplate, liveReviewData);
+  applyLiveReviewDataToTextFile(join(DIST_DIR, "llms.txt"), liveReviewData);
+  applyLiveReviewDataToTextFile(join(DIST_DIR, "llms-full.txt"), liveReviewData);
 
   let written = 0;
   let ssrCount = 0;
@@ -198,6 +283,11 @@ async function main() {
 
   console.log(
     `prerender: wrote ${written} static HTML files (${SEO_ROUTES.length} routes + aliases), ${ssrCount} with real SSR content.`,
+  );
+  console.log(
+    liveReviewData
+      ? `prerender: synced live review data (${liveReviewData.rating.toFixed(1)}★, ${liveReviewData.total} Bewertungen).`
+      : "prerender: kept static review numbers (live fetch unavailable).",
   );
 }
 
