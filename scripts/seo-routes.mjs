@@ -1,16 +1,15 @@
-// Single source of truth for the build-time "meta shell" prerendering step
-// (see scripts/prerender.mjs). Mirrors the title/description/path props
-// passed to <Seo> in each page component (src/pages/*.tsx) — keep in sync
-// when those change. Only title/description/canonical/OG/Twitter tags are
-// prerendered here (no JSON-LD) to keep the build step simple and robust;
-// the sitewide DrivingSchool JSON-LD in index.html still applies to every
-// page, and llms.txt/llms-full.txt separately cover structured facts for
-// AI systems.
+// List of routes prerendered at build time (see scripts/prerender.mjs and
+// src/entry-server.tsx). For each `path`, prerender.mjs server-renders the
+// real page component and uses its actual <Seo>-generated title,
+// description, canonical link and JSON-LD — so title/description here are
+// only the fallback used if that SSR render throws for some reason (keep
+// them roughly in sync with the page's <Seo> props, but a mismatch only
+// matters in that fallback case).
 //
 // `aliases` are extra URL paths that render the same page component and
-// therefore get the same title/description, but whose canonical link still
-// points at the primary `path` — matching what <Seo path="..."> does today
-// for these routes.
+// therefore get the same content, but whose canonical link still points at
+// the primary `path` — matching what <Seo path="..."> does today for these
+// routes.
 
 export const SEO_ROUTES = [
   {

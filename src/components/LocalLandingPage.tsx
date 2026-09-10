@@ -37,7 +37,7 @@ const LocalLandingPage = (p: LocalLandingProps) => {
       "@context": "https://schema.org",
       "@type": p.serviceType,
       name: `${tenantConfig.brand.name} – ${p.serviceName}`,
-      url: `${SITE_URL}/#${p.path}`,
+      url: `${SITE_URL}${p.path}`,
       telephone: tenantConfig.contact.phone,
       email: tenantConfig.contact.email,
       address: {
