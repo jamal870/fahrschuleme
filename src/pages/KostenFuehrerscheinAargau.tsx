@@ -242,7 +242,16 @@ const KostenFuehrerscheinAargau = () => (
       <p className="flex gap-3 text-xs text-muted-foreground mb-10">
         <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-primary" />
         Preise der Fahrschule me sind verbindlich (Stand August 2026). Amtliche Gebühren und Kurskosten Dritter sind
-        Richtwerte – massgebend sind das Strassenverkehrsamt Aargau und der jeweilige Anbieter.
+        Richtwerte – massgebend sind das{" "}
+        <a
+          href="https://www.ag.ch/de/verwaltung/dvi/strassenverkehrsamt"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline hover:no-underline"
+        >
+          Strassenverkehrsamt Aargau
+        </a>{" "}
+        und der jeweilige Anbieter.
       </p>
 
       <section className="bg-primary text-primary-foreground p-8 md:p-12 text-center" style={{ borderRadius: "3px" }}>
