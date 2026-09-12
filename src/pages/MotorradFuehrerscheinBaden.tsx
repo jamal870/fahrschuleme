@@ -17,7 +17,7 @@ const MotorradFuehrerscheinBaden = () => (
       { title: "Treffpunkt Bahnhof Baden", desc: "Für Fahrstunden treffen wir uns direkt am Bahnhof Baden – keine Parkplatzsuche." },
       { title: "MGK in Wettingen", desc: "Den obligatorischen 12h-Grundkurs absolvierst du in Wettingen, schnell erreichbar." },
       { title: "Erfahrene Instruktoren", desc: "Eidgenössisch geprüfte Fahrlehrer mit jahrelanger Praxis." },
-      { title: "Flexible Termine", desc: "Mo–Sa 08–22 Uhr – auch abends und samstags." },
+      { title: "Flexible Termine", desc: "Termine nach Vereinbarung – auch abends und samstags." },
       { title: "Komplettpaket", desc: "MGK, Fahrstunden, Vor-Prüfungsfahrt und Prüfungsanmeldung aus einer Hand." },
     ]}
     longText={[

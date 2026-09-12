@@ -15,7 +15,7 @@ const VerkehrskundeWettingen = () => (
     benefits={[
       { title: "Anerkannt vom StVA Aargau", desc: "Offiziell zugelassener VKU-Kurs für alle Kategorien (B, A1, A2, A)." },
       { title: "8 Lektionen", desc: "Gesetzlich vorgeschrieben – verteilt auf mehrere Abende oder einen Block." },
-      { title: "Pauschalpreis 130 CHF", desc: "Inklusive aller VKU-Unterlagen – keine Zusatzkosten." },
+      { title: "Pauschalpreis 180 CHF", desc: "Inklusive aller VKU-Unterlagen – keine Zusatzkosten." },
       { title: "Erfahrene Moderatoren", desc: "Unsere Fahrlehrer machen Theorie verständlich und praxisnah." },
       { title: "Zentral in Wettingen", desc: "Bahnhofstrasse 56 – mit ÖV und Auto bestens erreichbar." },
       { title: "Online buchen", desc: "Termin reservieren, bezahlen und loslegen – alles digital." },
@@ -36,7 +36,7 @@ const VerkehrskundeWettingen = () => (
     ]}
     faqs={[
       { q: "Wie lange dauert der VKU?", a: "8 Lektionen à 45 Minuten – kompakt verteilt auf mehrere Abende oder einen Block." },
-      { q: "Was kostet der VKU?", a: "130 CHF pauschal, inklusive aller VKU-Unterlagen." },
+      { q: "Was kostet der VKU?", a: "180 CHF pauschal, inklusive aller VKU-Unterlagen." },
       { q: "Wann muss ich den VKU absolvieren?", a: "Spätestens vor der praktischen Führerprüfung. Wir empfehlen aber, ihn zu Beginn der Ausbildung zu machen." },
       { q: "Ist der VKU für Motorradfahrer Pflicht?", a: "Ja – der VKU ist für alle Kategorien (B, A1, A2, A) Voraussetzung für die praktische Prüfung." },
     ]}

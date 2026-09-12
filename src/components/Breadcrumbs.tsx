@@ -19,7 +19,7 @@ const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
       "@type": "ListItem",
       position: i + 1,
       name: it.label,
-      item: it.to ? `${SITE_URL}/#${it.to}` : undefined,
+      item: it.to ? `${SITE_URL}${it.to}` : undefined,
     })),
   };
 

@@ -15,11 +15,11 @@ interface Row {
 
 const amtlich: Row[] = [
   { pos: "Sehtest (Optiker/Augenarzt)", betrag: "CHF 15–25", quelle: "Optiker", hinweis: "Gültig 2 Jahre" },
-  { pos: "Nothilfekurs (10 Std.)", betrag: "CHF 100–150", quelle: "Kursanbieter", hinweis: "Gültig 6 Jahre – wir vermitteln Partner" },
+  { pos: "Nothelferkurs (10 Std.)", betrag: "CHF 120", quelle: "Fahrschule me", hinweis: "Gültig 6 Jahre – inkl. Kursdokumentation und Nothelferausweis" },
   { pos: "Gesuch Lernfahrausweis (Gemeinde)", betrag: "ca. CHF 30", quelle: "Wohngemeinde", hinweis: "Einreichung Einwohnerkontrolle" },
   { pos: "Theorieprüfung", betrag: "CHF 30", quelle: "StVA Aargau, Schafisheim", hinweis: "50 Fragen, max. 5 Fehler" },
   { pos: "Ausstellung Lernfahrausweis", betrag: "ca. CHF 50", quelle: "StVA Aargau", hinweis: "Gültig 24 Monate (Kat. B)" },
-  { pos: "Verkehrskundeunterricht (VKU, 8 Std.)", betrag: "ca. CHF 200–280", quelle: "Partneranbieter", hinweis: "Führen wir aktuell nicht selbst durch" },
+  { pos: "Verkehrskundeunterricht (VKU, 8 Std.)", betrag: "CHF 180", quelle: "Fahrschule me", hinweis: "Inkl. VKU-Unterlagen" },
   { pos: "Praktische Führerprüfung", betrag: "CHF 120", quelle: "StVA Aargau", hinweis: "Dauer ca. 60 Minuten" },
   { pos: "Ausstellung Führerausweis auf Probe", betrag: "ca. CHF 65", quelle: "StVA Aargau", hinweis: "Probezeit 3 Jahre" },
 ];
@@ -39,7 +39,7 @@ const szenarien = [
     titel: "Auto Kategorie B – sparsam",
     lektionen: "20 Lektionen",
     total: "ca. CHF 2'550",
-    detail: "Amtliche Kosten (ca. CHF 550) + Administrationsbeitrag CHF 130 + 20 Lektionen im Abo (CHF 1'760) + VKU beim Partner.",
+    detail: "Amtliche Kosten (ca. CHF 550) + Administrationsbeitrag CHF 130 + 20 Lektionen im Abo (CHF 1'760) + VKU bei Fahrschule me (CHF 180).",
   },
   {
     titel: "Auto Kategorie B – realistisch",
@@ -61,7 +61,7 @@ const faq = [
     name: "Was kostet der Autoführerschein im Kanton Aargau insgesamt?",
     acceptedAnswer: {
       "@type": "Answer",
-      text: "Mit 30 Fahrstunden liegen die Gesamtkosten im Kanton Aargau bei rund CHF 3'600–4'100. Darin enthalten sind amtliche Gebühren von ca. CHF 550 (Sehtest, Nothilfekurs, Lernfahrausweis, Theorie- und praktische Prüfung), der VKU beim Partneranbieter sowie die Fahrstunden zu CHF 95 pro 45 Minuten bei der Fahrschule me in Wettingen.",
+      text: "Mit 30 Fahrstunden liegen die Gesamtkosten im Kanton Aargau bei rund CHF 3'600–4'100. Darin enthalten sind amtliche Gebühren von ca. CHF 550 (Sehtest, Nothelferkurs, Lernfahrausweis, Theorie- und praktische Prüfung), der VKU bei Fahrschule me (CHF 180) sowie die Fahrstunden zu CHF 95 pro 45 Minuten bei der Fahrschule me in Wettingen.",
     },
   },
   {
@@ -177,7 +177,7 @@ const KostenFuehrerscheinAargau = () => (
         <p className="text-sm text-foreground leading-relaxed">
           <strong className="font-heading">Kurzantwort:</strong> Der Autoführerschein (Kategorie B) kostet im Kanton Aargau
           insgesamt rund <strong>CHF 3'600–4'100</strong> bei 30 Fahrstunden. Davon entfallen ca. <strong>CHF 550</strong> auf
-          amtliche Gebühren, ca. <strong>CHF 200–280</strong> auf den VKU und der Rest auf Fahrstunden
+          amtliche Gebühren, <strong>CHF 180</strong> auf den VKU und der Rest auf Fahrstunden
           (CHF 95 pro 45 Minuten, günstiger im Abo). Der Motorrad-Grundkurs kostet CHF 480 für alle drei Teile.
         </p>
       </section>
@@ -242,13 +242,22 @@ const KostenFuehrerscheinAargau = () => (
       <p className="flex gap-3 text-xs text-muted-foreground mb-10">
         <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-primary" />
         Preise der Fahrschule me sind verbindlich (Stand August 2026). Amtliche Gebühren und Kurskosten Dritter sind
-        Richtwerte – massgebend sind das Strassenverkehrsamt Aargau und der jeweilige Anbieter.
+        Richtwerte – massgebend sind das{" "}
+        <a
+          href="https://www.ag.ch/de/verwaltung/dvi/strassenverkehrsamt"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline hover:no-underline"
+        >
+          Strassenverkehrsamt Aargau
+        </a>{" "}
+        und der jeweilige Anbieter.
       </p>
 
       <section className="bg-primary text-primary-foreground p-8 md:p-12 text-center" style={{ borderRadius: "3px" }}>
         <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">Fahrstunden in Wettingen buchen</h2>
         <p className="opacity-95 mb-6 max-w-2xl mx-auto">
-          Mo–Sa 08:00–22:00 Uhr, Abendtermine möglich – im Raum Wettingen, Baden, Neuenhof und Spreitenbach.
+          Termine nach Vereinbarung, auch abends – im Raum Wettingen, Baden, Neuenhof und Spreitenbach.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link to="/fahrstunden" className="px-6 py-3 bg-background text-primary font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Autofahrstunden</Link>

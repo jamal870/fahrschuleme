@@ -4,18 +4,18 @@ const FahrschuleWettingen = () => (
   <LocalLandingPage
     path="/fahrschule-wettingen"
     seoTitle="Fahrschule Wettingen – Auto & Motorrad | Fahrschule me"
-    seoDescription="Fahrschule in Wettingen für Auto- und Motorrad-Fahrstunden. Erfahrene Instruktoren, faire Preise, Mo–Sa 08–22 Uhr. Direkt online buchen bei Fahrschule me."
+    seoDescription="Fahrschule in Wettingen für Auto- und Motorrad-Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung. Direkt online buchen bei Fahrschule me."
     badge="Fahrschule Wettingen"
     h1="Deine Fahrschule in"
     h1Accent="Wettingen"
-    intro="Auto- und Motorrad-Fahrstunden direkt in Wettingen – mit erfahrenen, eidgenössisch geprüften Fahrlehrern. Flexible Termine Mo–Sa von 08:00 bis 22:00 Uhr, transparente Preise und persönliche Betreuung bis zur Prüfung."
+    intro="Auto- und Motorrad-Fahrstunden direkt in Wettingen – mit erfahrenen, eidgenössisch geprüften Fahrlehrern. Flexible Termine nach Vereinbarung, transparente Preise und persönliche Betreuung bis zur Prüfung."
     meetingPoint={{ label: "Wettingen", address: "Bahnhofstrasse 56, 5430 Wettingen" }}
     serviceName="Fahrschule Wettingen"
     serviceType="DrivingSchool"
     benefits={[
       { title: "Auto & Motorrad", desc: "Kategorie B (Auto), AM, A1, A2 und A (Motorrad) – alles aus einer Hand." },
       { title: "Faire Preise", desc: "Einzellektion Auto 95 CHF, Motorrad 130 CHF. Mit Abo sparst du bis zu 150 CHF." },
-      { title: "Flexible Zeiten", desc: "Mo–Sa von 08:00 bis 22:00 Uhr – Lektionen auch nach Feierabend." },
+      { title: "Flexible Zeiten", desc: "Termine nach Vereinbarung – Lektionen auch nach Feierabend." },
       { title: "Treffpunkt zentral", desc: "Bahnhofstrasse 56, gut erreichbar mit dem ÖV und Auto." },
       { title: "Online-Buchung", desc: "Termine direkt online buchen und bezahlen – Twint, Karte oder Rechnung." },
       { title: "Persönliche Betreuung", desc: "Du wirst von der ersten Lektion bis zur Prüfung vom selben Fahrlehrer betreut." },

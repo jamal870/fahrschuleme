@@ -239,8 +239,26 @@ const MotorradKategorienVergleich = () => (
 
       <p className="flex gap-3 text-xs text-muted-foreground mb-10">
         <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-primary" />
-        Angaben zu Alter und Leistung folgen der Schweizer Verkehrszulassungsverordnung (Stand August 2026);
-        massgebend ist das Strassenverkehrsamt Aargau. Preise gemäss Preisliste der Fahrschule me.
+        Angaben zu Alter und Leistung folgen der Schweizer Verkehrszulassungsverordnung (Stand August 2026), siehe die
+        Ausweiskategorien bei{" "}
+        <a
+          href="https://fuehrerausweise.ch/ausweiskategorien/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline hover:no-underline"
+        >
+          fuehrerausweise.ch
+        </a>{" "}
+        (Vereinigung der Strassenverkehrsämter); massgebend ist das{" "}
+        <a
+          href="https://www.ag.ch/de/verwaltung/dvi/strassenverkehrsamt"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline hover:no-underline"
+        >
+          Strassenverkehrsamt Aargau
+        </a>
+        . Preise gemäss Preisliste der Fahrschule me.
       </p>
 
       <section className="bg-primary text-primary-foreground p-8 md:p-12 text-center" style={{ borderRadius: "3px" }}>

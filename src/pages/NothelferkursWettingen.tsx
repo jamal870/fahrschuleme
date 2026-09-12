@@ -17,7 +17,7 @@ const NothelferkursWettingen = () => (
       { title: "Kompakt: 10 Stunden", desc: "An einem Wochenende oder über mehrere Abende absolvierbar." },
       { title: "Praxisnah", desc: "Reanimation, stabile Seitenlage, Verbände – alles unter realistischen Bedingungen geübt." },
       { title: "6 Jahre gültig", desc: "Der Nothelferausweis ist 6 Jahre lang gültig." },
-      { title: "Faire Pauschale", desc: "130 CHF inkl. Kursdokumentation und Nothelferausweis – keine versteckten Kosten." },
+      { title: "Faire Pauschale", desc: "120 CHF inkl. Kursdokumentation und Nothelferausweis – keine versteckten Kosten." },
       { title: "Direkt in Wettingen", desc: "Zentral gelegen, gut erreichbar mit ÖV und Auto." },
     ]}
     longText={[
@@ -36,7 +36,7 @@ const NothelferkursWettingen = () => (
     ]}
     faqs={[
       { q: "Wie lange dauert der Kurs?", a: "10 Stunden – kompakt an einem Wochenende oder verteilt auf mehrere Abende." },
-      { q: "Was kostet der Nothelferkurs?", a: "130 CHF pauschal, inklusive Kursdokumentation und offiziellem Nothelferausweis." },
+      { q: "Was kostet der Nothelferkurs?", a: "120 CHF pauschal, inklusive Kursdokumentation und offiziellem Nothelferausweis." },
       { q: "Wie lange ist der Ausweis gültig?", a: "6 Jahre. Danach ist eine Auffrischung empfohlen, aber für den Lernfahrausweis nur bei Neuerwerb nötig." },
       { q: "Ist der Kurs auch für Motorradfahrer Pflicht?", a: "Ja – für alle Lernfahrausweise (Auto und Motorrad) gleichermassen." },
     ]}

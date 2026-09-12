@@ -123,7 +123,7 @@ export const tenantConfig: TenantConfig = {
       detail: "Bahnhofstrasse 56",
       city: "5430 Wettingen",
     },
-    openingHours: "Mo–Sa 08:00–22:00",
+    openingHours: "Nach Vereinbarung",
   },
 
   location: {
@@ -181,8 +181,8 @@ export const tenantConfig: TenantConfig = {
       { name: "Motorrad Tageskurs (4h)", price: "200.-" },
     ],
     extras: [
-      { title: "Verkehrskunde", name: "Verkehrskunde", price: "130.-", note: "Inkl. der obligatorischen VKU-Unterlagen" },
-      { title: "Nothelfer", name: "Nothelfer", price: "130.-", note: "Inkl. Kursdokumentation und Nothelferausweis (6 Jahre gültig)" },
+      { title: "Verkehrskunde", name: "Verkehrskunde", price: "180.-", note: "Inkl. der obligatorischen VKU-Unterlagen" },
+      { title: "Nothelfer", name: "Nothelfer", price: "120.-", note: "Inkl. Kursdokumentation und Nothelferausweis (6 Jahre gültig)" },
     ],
   },
 
@@ -195,7 +195,7 @@ export const tenantConfig: TenantConfig = {
   chatbot: {
     welcomeMessage: "Hoi! 👋 Willkommen bei **Fahrschule me** in Wettingen.\nWie kann ich dir helfen?",
     grundkursIntro: "Super! Der Motorrad-Grundkurs bei Fahrschule me dauert 12 Stunden (3 Teile). Er ist gesetzlich vorgeschrieben für alle Kategorien.\n\nWelche Kategorie interessiert dich?",
-    fahrstundenIntro: "Fahrstunden bei Fahrschule me – flexibel Mo–Sa von 08–22 Uhr.\n\nWas möchtest du buchen?",
+    fahrstundenIntro: "Fahrstunden bei Fahrschule me – Termine nach Vereinbarung.\n\nWas möchtest du buchen?",
     autoOpenDelayMs: 0,
   },
 

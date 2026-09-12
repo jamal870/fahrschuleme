@@ -37,7 +37,7 @@ const homeFaqJsonLd = {
     {
       "@type": "Question",
       name: "Welche Öffnungs- und Unterrichtszeiten habt ihr?",
-      acceptedAnswer: { "@type": "Answer", text: "Fahrstunden und Kurse sind Montag bis Samstag von 08:00 bis 22:00 Uhr möglich – ideal auch nach Feierabend." },
+      acceptedAnswer: { "@type": "Answer", text: "Fahrstunden und Kurse finden nach Vereinbarung statt – auch abends und am Wochenende, ganz nach deinem Zeitplan." },
     },
   ],
 };
@@ -47,7 +47,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Seo
         title="Fahrschule me Wettingen – Auto, Motorrad & Grundkurs Baden"
-        description="Fahrschule in Wettingen & Baden: Autoprüfung, Motorrad-Grundkurs (MGK) und Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine Mo–Sa 08–22 Uhr."
+        description="Fahrschule in Wettingen & Baden: Autoprüfung, Motorrad-Grundkurs (MGK) und Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung."
         path="/"
         jsonLd={homeFaqJsonLd}
       />
@@ -206,7 +206,7 @@ const Index = () => {
           <div className="bg-section-alt border border-border p-8 md:p-12" style={{ borderRadius: "3px" }}>
             <h2 className="text-2xl font-heading font-bold text-foreground mb-4">Motorrad Fahrstunden</h2>
             <p className="text-muted-foreground font-body mb-6 max-w-2xl">
-              Flexibel Mo–Sa von 08–22 Uhr. Ob Vorschulung, Grundschulung oder Perfektionsschulung – Schritt für Schritt lernst du alles, was du benötigst.
+              Termine nach Vereinbarung. Ob Vorschulung, Grundschulung oder Perfektionsschulung – Schritt für Schritt lernst du alles, was du benötigst.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
