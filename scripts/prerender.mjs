@@ -23,11 +23,11 @@
 // bundle is missing), that route falls back to the old meta-only shell
 // instead of failing the whole build.
 //
-// Also syncs the sitewide aggregateRating/sameAs JSON-LD and the
-// llms(.full).txt rating text with the live Google review data (same
-// source as the on-page <GoogleReviews> widget) so it can't quietly go
-// stale — see fetchLiveReviewData() below. Equally defensive: any failure
-// there just keeps the existing static numbers.
+// Also syncs the sitewide sameAs JSON-LD (real Google Maps profile link)
+// and the llms(.full).txt rating text with the live Google review data
+// (same source as the on-page <GoogleReviews> widget) so it can't quietly
+// go stale — see fetchLiveReviewData() below. Equally defensive: any
+// failure there just keeps the existing static numbers.
 //
 // Runs after `vite build` (see package.json "build" script). Safe to run
 // multiple times; only ever reads dist/index.html as the template and
@@ -119,18 +119,22 @@ async function fetchLiveReviewData() {
 // Sitewide DrivingSchool JSON-LD lives once in the template and is copied
 // unchanged into every route's HTML, so patching it here updates it
 // everywhere in one pass.
+//
+// No ratingValue/reviewCount here on purpose: Google does not display
+// review rich results for LocalBusiness/Organization (and subtypes, incl.
+// DrivingSchool) when the reviewed entity hosts the review markup itself
+// ("self-serving reviews", policy since 2019) — so aggregateRating/Review
+// markup here would only ever produce a permanent "invalid item" warning
+// in Search Console, never a rich result. The real star rating in Search
+// and Maps comes from the Google Business Profile directly; the visible
+// rating/count on the page (via <GoogleReviews>) covers the "make it
+// visible" recommendation without the ineligible structured data.
 function applyLiveReviewDataToTemplate(template, live) {
-  if (!live) return template;
-  let html = template;
-  html = html.replace(/"ratingValue":\s*"[^"]*"/, `"ratingValue": "${live.rating.toFixed(1)}"`);
-  html = html.replace(/"reviewCount":\s*"[^"]*"/, `"reviewCount": "${live.total}"`);
-  if (live.mapsUrl) {
-    // Real Google Maps/Business profile link replaces the previous
-    // self-referencing placeholder — sameAs should point at an external
-    // profile, not the site itself.
-    html = html.replace(/"sameAs":\s*\[[^\]]*\]/, `"sameAs": ${JSON.stringify([live.mapsUrl])}`);
-  }
-  return html;
+  if (!live || !live.mapsUrl) return template;
+  // Real Google Maps/Business profile link replaces the previous
+  // self-referencing placeholder — sameAs should point at an external
+  // profile, not the site itself.
+  return template.replace(/"sameAs":\s*\[[^\]]*\]/, `"sameAs": ${JSON.stringify([live.mapsUrl])}`);
 }
 
 // public/llms.txt and public/llms-full.txt (copied verbatim into dist/ by
