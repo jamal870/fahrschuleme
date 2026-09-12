@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Star, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { tenantConfig } from "@/config/tenant";
 
 interface Review {
   rating: number;
@@ -81,38 +80,8 @@ const GoogleReviews = ({ heading = "Google Bewertungen" }: { heading?: string })
 
   if (error || !data || !data.reviews?.length) return null;
 
-  // JSON-LD aggregate rating
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: tenantConfig.brand.name,
-    aggregateRating: data.rating
-      ? {
-          "@type": "AggregateRating",
-          ratingValue: data.rating,
-          reviewCount: data.total,
-        }
-      : undefined,
-    review: data.reviews.map((r) => ({
-      "@type": "Review",
-      reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5 },
-      author: { "@type": "Person", name: r.author },
-      reviewBody: r.text,
-    })),
-  };
-
   return (
     <section className="bg-section-alt py-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd)
-            .replace(/</g, "\\u003c")
-            .replace(/>/g, "\\u003e")
-            .replace(/&/g, "\\u0026"),
-        }}
-      />
-
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-8">
           <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">
