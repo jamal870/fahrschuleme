@@ -4,11 +4,11 @@ const FahrschuleNeuenhof = () => (
   <LocalLandingPage
     path="/fahrschule-neuenhof"
     seoTitle="Fahrschule Neuenhof – Auto & Motorrad | Fahrschule me"
-    seoDescription="Fahrschule für Neuenhof: Auto- und Motorrad-Fahrstunden mit Treffpunkt Wettingen. Mo–Sa 08–22 Uhr, faire Preise. Online buchen bei Fahrschule me."
+    seoDescription="Fahrschule für Neuenhof: Auto- und Motorrad-Fahrstunden mit Treffpunkt Wettingen. Termine nach Vereinbarung, faire Preise. Online buchen bei Fahrschule me."
     badge="Fahrschule Neuenhof"
     h1="Deine Fahrschule für"
     h1Accent="Neuenhof"
-    intro="Du wohnst in Neuenhof? Unsere Fahrschule liegt nur wenige Minuten entfernt in Wettingen – schnell erreichbar mit Bus, Velo oder Auto. Auto- und Motorrad-Ausbildung aus einer Hand, flexible Zeiten Mo–Sa 08–22 Uhr."
+    intro="Du wohnst in Neuenhof? Unsere Fahrschule liegt nur wenige Minuten entfernt in Wettingen – schnell erreichbar mit Bus, Velo oder Auto. Auto- und Motorrad-Ausbildung aus einer Hand, Termine nach Vereinbarung."
     meetingPoint={{ label: "Wettingen (für Neuenhof)", address: "Bahnhofstrasse 56, 5430 Wettingen" }}
     serviceName="Fahrschule Neuenhof"
     serviceType="DrivingSchool"
@@ -16,7 +16,7 @@ const FahrschuleNeuenhof = () => (
       { title: "Nur 5 Minuten von Neuenhof", desc: "Unser Standort Wettingen liegt direkt nebenan – kurze Anfahrt, kein Stress." },
       { title: "Auto & Motorrad", desc: "Kategorie B (Auto) sowie A1, A2 und A (Motorrad) – komplettes Angebot." },
       { title: "Faire Preise", desc: "Auto-Lektion 95 CHF, Motorrad 130 CHF. Abos mit Rabatt verfügbar." },
-      { title: "Flexible Zeiten", desc: "Mo–Sa 08:00–22:00 Uhr – auch nach Feierabend oder am Wochenende." },
+      { title: "Flexible Zeiten", desc: "Termine nach Vereinbarung – auch nach Feierabend oder am Wochenende." },
       { title: "Persönliche Betreuung", desc: "Vom ersten Kontakt bis zur Prüfung: ein fester Ansprechpartner." },
       { title: "Direkt online buchen", desc: "Termine ansehen, reservieren und bezahlen – in wenigen Klicks." },
     ]}

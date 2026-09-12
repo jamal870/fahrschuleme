@@ -4,18 +4,18 @@ const FahrschuleBaden = () => (
   <LocalLandingPage
     path="/fahrschule-baden"
     seoTitle="Fahrschule Baden – Treffpunkt Bahnhof | Fahrschule me"
-    seoDescription="Fahrschule für Baden mit Treffpunkt Bahnhof Baden. Auto- und Motorrad-Fahrstunden, MGK, Mo–Sa 08–22 Uhr. Direkt online buchen bei Fahrschule me."
+    seoDescription="Fahrschule für Baden mit Treffpunkt Bahnhof Baden. Auto- und Motorrad-Fahrstunden, MGK, Termine nach Vereinbarung. Direkt online buchen bei Fahrschule me."
     badge="Fahrschule Baden"
     h1="Fahrschule für"
     h1Accent="Baden – Treffpunkt Bahnhof"
-    intro="Du wohnst in Baden? Kein Problem: Wir treffen dich direkt am Bahnhof Baden für deine Auto- oder Motorrad-Fahrstunde. Erfahrene Fahrlehrer, faire Preise und flexible Termine Mo–Sa von 08:00 bis 22:00 Uhr."
+    intro="Du wohnst in Baden? Kein Problem: Wir treffen dich direkt am Bahnhof Baden für deine Auto- oder Motorrad-Fahrstunde. Erfahrene Fahrlehrer, faire Preise und flexible Termine nach Vereinbarung."
     meetingPoint={{ label: "Baden Bahnhof", address: "Bahnhofplatz, 5400 Baden (Treffpunkt nach Absprache)" }}
     serviceName="Fahrschule Baden"
     serviceType="DrivingSchool"
     benefits={[
       { title: "Treffpunkt Bahnhof Baden", desc: "Wir holen dich direkt am Bahnhof Baden ab – kein Anfahrtsweg, keine Parkplatzsuche." },
       { title: "Auto & Motorrad", desc: "Kategorie B (Auto), AM, A1, A2 und A (Motorrad) – komplettes Angebot." },
-      { title: "Flexible Zeiten", desc: "Mo–Sa von 08:00 bis 22:00 Uhr – ideal vor oder nach der Arbeit." },
+      { title: "Flexible Zeiten", desc: "Termine nach Vereinbarung – ideal vor oder nach der Arbeit." },
       { title: "Faire Preise", desc: "95 CHF pro Autolektion, 130 CHF pro Motorradlektion. Abos verfügbar." },
       { title: "MGK Wettingen", desc: "Den Motorrad-Grundkurs absolvierst du bei uns in Wettingen – wenige Minuten von Baden entfernt." },
       { title: "Persönlicher Fahrlehrer", desc: "Vom Erstkontakt bis zur Prüfung wirst du vom selben erfahrenen Fahrlehrer betreut." },

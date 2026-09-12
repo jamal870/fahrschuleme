@@ -233,7 +233,7 @@ const StrassenverkehrsamtAargau = () => {
           </h2>
           <p className="text-base md:text-lg opacity-95 mb-6 max-w-2xl mx-auto">
             {tenantConfig.brand.name} in {tenantConfig.location.city} – wir trainieren gezielt
-            die Prüfungsstrecken des Strassenverkehrsamts Aargau. Mo–Sa 08–22 Uhr.
+            die Prüfungsstrecken des Strassenverkehrsamts Aargau. Termine nach Vereinbarung.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link

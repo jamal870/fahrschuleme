@@ -4,7 +4,7 @@ const FahrschuleSpreitenbach = () => (
   <LocalLandingPage
     path="/fahrschule-spreitenbach"
     seoTitle="Fahrschule Spreitenbach – Auto & Motorrad | Fahrschule me"
-    seoDescription="Fahrschule für Spreitenbach mit Treffpunkt Wettingen. Auto- & Motorrad-Fahrstunden, MGK, faire Preise. Mo–Sa 08–22 Uhr. Online buchen bei Fahrschule me."
+    seoDescription="Fahrschule für Spreitenbach mit Treffpunkt Wettingen. Auto- & Motorrad-Fahrstunden, MGK, faire Preise. Termine nach Vereinbarung. Online buchen bei Fahrschule me."
     badge="Fahrschule Spreitenbach"
     h1="Fahrschule für"
     h1Accent="Spreitenbach"
@@ -16,7 +16,7 @@ const FahrschuleSpreitenbach = () => (
       { title: "Schnell aus Spreitenbach", desc: "Via Limmattalbahn oder Auto bist du in unter 10 Minuten bei uns." },
       { title: "Auto & Motorrad", desc: "Kategorie B, A1, A2 und A – das komplette Angebot." },
       { title: "Faire Preise", desc: "95 CHF Auto, 130 CHF Motorrad. Mit Abo bis zu 150 CHF Rabatt." },
-      { title: "Flexible Termine", desc: "Mo–Sa 08–22 Uhr – auch abends und am Samstag möglich." },
+      { title: "Flexible Termine", desc: "Termine nach Vereinbarung – auch abends und am Samstag möglich." },
       { title: "MGK in Wettingen", desc: "Den obligatorischen Motorrad-Grundkurs absolvierst du direkt bei uns." },
       { title: "Online-Buchung", desc: "Termine reservieren, Twint/Karte zahlen – alles digital." },
     ]}

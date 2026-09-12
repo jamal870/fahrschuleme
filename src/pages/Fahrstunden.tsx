@@ -146,7 +146,7 @@ const Fahrstunden = () => (
         <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Fahrstunden</p>
         <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">Motorrad & Auto Fahrstunden</h1>
         <p className="text-muted-foreground font-body max-w-2xl mb-6">
-          Flexibel Mo–Sa von 08–22 Uhr. Vorschulung, Grundschulung oder Perfektionsschulung – Schritt für Schritt lernst du alles, was du brauchst.
+          Termine nach Vereinbarung. Vorschulung, Grundschulung oder Perfektionsschulung – Schritt für Schritt lernst du alles, was du brauchst.
         </p>
           <TrackedCta
             to={FAHRSTUNDEN_APP_URL}

@@ -158,7 +158,7 @@ const Angebote = () => {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-4">Fahrschule me – Dein Partner in Wettingen & Baden</h2>
           <p className="text-muted-foreground font-body leading-relaxed mb-3">
-            Wir bieten Motorrad-Grundkurse (MGK) für die Kategorien A1, A2 und A sowie Auto-Fahrstunden im gesamten Raum Aargau. Treffpunkte: Wettingen (Hauptsitz) und Baden Bahnhof. Lektionen sind Mo–Sa von 08:00 bis 22:00 Uhr buchbar – ideal auch nach Feierabend.
+            Wir bieten Motorrad-Grundkurse (MGK) für die Kategorien A1, A2 und A sowie Auto-Fahrstunden im gesamten Raum Aargau. Treffpunkte: Wettingen (Hauptsitz) und Baden Bahnhof. Lektionen sind nach Vereinbarung buchbar – ideal auch nach Feierabend.
           </p>
           <p className="text-muted-foreground font-body leading-relaxed">
             Jede Aktion ist transparent, ohne versteckte Kosten und direkt online buchbar. Schnell sein lohnt sich – die Plätze in den Aktionsterminen sind begrenzt.

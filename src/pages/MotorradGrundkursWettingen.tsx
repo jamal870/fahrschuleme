@@ -4,7 +4,7 @@ const MotorradGrundkursWettingen = () => (
   <LocalLandingPage
     path="/motorrad-grundkurs-wettingen"
     seoTitle="Motorrad Grundkurs Wettingen – MGK A1/A2/A | Fahrschule me"
-    seoDescription="Motorrad-Grundkurs (MGK) in Wettingen für A1, A2 und A. 12 Stunden in 3 Teilen, kleine Gruppen, Mo–Sa 08–22 Uhr. Online buchen bei Fahrschule me."
+    seoDescription="Motorrad-Grundkurs (MGK) in Wettingen für A1, A2 und A. 12 Stunden in 3 Teilen, kleine Gruppen, Termine nach Vereinbarung. Online buchen bei Fahrschule me."
     badge="MGK Wettingen"
     h1="Motorrad Grundkurs (MGK) in"
     h1Accent="Wettingen"
@@ -16,7 +16,7 @@ const MotorradGrundkursWettingen = () => (
       { title: "Alle Kategorien", desc: "MGK für A1 (125 cc), A2 (35 kW) und A (unbegrenzt) – passend zu deinem Ausweis." },
       { title: "12 Stunden in 3 Teilen", desc: "Die Kursteile M1, M2 und M3 absolvierst du in der gesetzlich vorgeschriebenen Reihenfolge." },
       { title: "Kleine Gruppen", desc: "Wenige Teilnehmer pro Kurs – mehr persönliche Anleitung, schnellere Lernfortschritte." },
-      { title: "Mo–Sa 08–22 Uhr", desc: "Flexible Termine – auch nach Feierabend oder am Samstag." },
+      { title: "Nach Vereinbarung", desc: "Flexible Termine – auch nach Feierabend oder am Samstag." },
       { title: "Erfahrene Instruktoren", desc: "Eidgenössisch geprüfte Fahrlehrer mit jahrelanger Praxiserfahrung." },
       { title: "Direkt online buchen", desc: "Termine ansehen, Platz reservieren, zahlen – alles in wenigen Minuten." },
     ]}

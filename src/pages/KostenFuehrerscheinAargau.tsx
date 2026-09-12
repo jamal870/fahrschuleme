@@ -257,7 +257,7 @@ const KostenFuehrerscheinAargau = () => (
       <section className="bg-primary text-primary-foreground p-8 md:p-12 text-center" style={{ borderRadius: "3px" }}>
         <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">Fahrstunden in Wettingen buchen</h2>
         <p className="opacity-95 mb-6 max-w-2xl mx-auto">
-          Mo–Sa 08:00–22:00 Uhr, Abendtermine möglich – im Raum Wettingen, Baden, Neuenhof und Spreitenbach.
+          Termine nach Vereinbarung, auch abends – im Raum Wettingen, Baden, Neuenhof und Spreitenbach.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link to="/fahrstunden" className="px-6 py-3 bg-background text-primary font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Autofahrstunden</Link>

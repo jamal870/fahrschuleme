@@ -41,7 +41,7 @@ const categories = [
 const advantages = [
   { icon: GraduationCap, title: "Erfahrene Instruktoren", desc: "Staatlich geprüfte Fahrlehrer mit jahrelanger Erfahrung im Motorradunterricht." },
   { icon: Users, title: "Kleine Gruppen", desc: "Persönliche Betreuung und mehr Fahrzeit pro Teilnehmer im Grundkurs." },
-  { icon: Clock, title: "Flexible Zeiten", desc: "Termine Mo–Sa von 08:00 bis 22:00 Uhr – passend zu deinem Alltag." },
+  { icon: Clock, title: "Flexible Zeiten", desc: "Termine nach Vereinbarung – passend zu deinem Alltag." },
   { icon: ShieldCheck, title: "Sicheres Fahren", desc: "Fokus auf defensiver Fahrtechnik und sicherem Verhalten im Strassenverkehr." },
 ];
 
@@ -50,7 +50,7 @@ const MotorradFuehrerscheinWettingen = () => {
     <div className="min-h-screen bg-background">
       <Seo
         title="Motorrad Führerschein Wettingen – MGK & Kategorien A/A1/A2 | Fahrschule me"
-        description="Motorradführerschein in Wettingen (Bezirk Baden): Grundkurs MGK, Kategorien AM, A1, A2 und A. Kleine Gruppen, flexible Termine Mo–Sa 08–22 Uhr."
+        description="Motorradführerschein in Wettingen (Bezirk Baden): Grundkurs MGK, Kategorien AM, A1, A2 und A. Kleine Gruppen, Termine nach Vereinbarung."
         path="/motorrad-fuehrerschein-wettingen"
         jsonLd={faqJsonLd}
       />
@@ -80,7 +80,7 @@ const MotorradFuehrerscheinWettingen = () => {
           </h1>
           <p className="text-lg font-body text-muted-foreground leading-relaxed mb-8 max-w-2xl">
             Hol dir deinen Motorradführerschein bei {tenantConfig.brand.name} in {tenantConfig.location.city} –
-            Kategorien AM, A1, A2 und A. Erfahrene Instruktoren, kleine Gruppen und Termine bis 22 Uhr.
+            Kategorien AM, A1, A2 und A. Erfahrene Instruktoren, kleine Gruppen und Termine nach Vereinbarung.
           </p>
           <div className="flex flex-wrap gap-3">
             <TrackedCta
@@ -108,7 +108,7 @@ const MotorradFuehrerscheinWettingen = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {[
               { icon: <Bike className="w-5 h-5 mx-auto mb-1" />, label: "AM / A1 / A2 / A" },
-              { icon: <Clock className="w-5 h-5 mx-auto mb-1" />, label: "Mo–Sa 08:00–22:00" },
+              { icon: <Clock className="w-5 h-5 mx-auto mb-1" />, label: "Nach Vereinbarung" },
               { icon: <Users className="w-5 h-5 mx-auto mb-1" />, label: "Kleine Gruppen" },
               { icon: <MapPin className="w-5 h-5 mx-auto mb-1" />, label: `${tenantConfig.location.city} / ${tenantConfig.location.region}` },
             ].map((s, i) => (
