@@ -127,6 +127,23 @@ const Datenschutz = () => {
 
 
         <section className="mb-6">
+          <h2 className="text-xl font-heading font-bold mb-3">3f. Standortdaten in der App «Fahrschule me»</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            In unserer mobilen App «Fahrschule me» zeichnet das Gerät des Fahrlehrers während einer Fahrstunde die
+            gefahrene Strecke per GPS auf – auch dann, wenn das Display gesperrt ist oder die App im Hintergrund läuft.
+            Erfasst werden dabei Geoposition (Breiten-/Längengrad), Zeitstempel, Geschwindigkeit und
+            Standortgenauigkeit. Zweck: Der Fahrschüler kann die aufgezeichnete Strecke nach der Fahrstunde auf einer
+            Karte ansehen und privat zum Üben nachfahren. Es findet keine Live-Ortung und keine Navigation statt; die
+            Strecke ist erst nach Abschluss der Fahrstunde sichtbar. Zugriff auf die Standortdaten haben ausschliesslich
+            der betreffende Fahrlehrer, der betroffene Fahrschüler sowie Administratoren der jeweiligen Fahrschule.
+            Die Daten werden auf unseren in Abschnitt 3e beschriebenen Servern gespeichert und nicht an Dritte
+            weitergegeben. Du kannst jederzeit die Löschung einzelner aufgezeichneter Strecken oder deines gesamten
+            Kontos verlangen (Kontakt siehe Abschnitt 5). Rechtsgrundlage: Vertragsabwicklung/Fahrausbildung gemäss
+            Art. 13 DSG.
+          </p>
+        </section>
+
+        <section className="mb-6">
           <h2 className="text-xl font-heading font-bold mb-3">4. Datensicherheit</h2>
           <p className="text-muted-foreground leading-relaxed">
             Wir setzen technische und organisatorische Massnahmen ein, um deine Daten vor unberechtigtem Zugriff zu schützen.
