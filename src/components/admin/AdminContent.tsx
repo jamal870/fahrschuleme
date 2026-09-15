@@ -180,6 +180,7 @@ const AdminContent = () => {
           <p className="text-sm text-muted-foreground">Diese Werte werden automatisch in die Rechtsseiten eingesetzt. Der Fliesstext der Paragrafen bleibt aus rechtlichen Gründen im Code.</p>
           <div className="grid md:grid-cols-2 gap-4">
             <div><Label>Inhaber-Name</Label><Input value={legal.ownerName} onChange={(e) => set("legal", (v) => ({ ...(v as typeof legal), ownerName: e.target.value }))} /></div>
+            <div><Label>Firma (Rechtsträger hinter der Marke)</Label><Input value={legal.entityName} onChange={(e) => set("legal", (v) => ({ ...(v as typeof legal), entityName: e.target.value }))} /></div>
             <div><Label>Gerichtsstand</Label><Input value={legal.jurisdiction} onChange={(e) => set("legal", (v) => ({ ...(v as typeof legal), jurisdiction: e.target.value }))} /></div>
             <div><Label>Stand-Datum (z.B. „Juni 2026")</Label><Input value={legal.standDate} onChange={(e) => set("legal", (v) => ({ ...(v as typeof legal), standDate: e.target.value }))} /></div>
             <div><Label>Bearbeitungsgebühr CHF</Label><Input value={legal.processingFeeChf} onChange={(e) => set("legal", (v) => ({ ...(v as typeof legal), processingFeeChf: e.target.value }))} /></div>
