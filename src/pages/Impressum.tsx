@@ -30,6 +30,7 @@ const Impressum = () => {
           <p>E-Mail: <a className="text-primary hover:underline" href={`mailto:${c.email}`}>{c.email}</a></p>
           <p>Inhaber & Geschäftsführer: {l.ownerName}</p>
           <p>Unternehmensform: Einzelunternehmen</p>
+          <p>UID: CHE-322.008.477</p>
           <p>{b.name} ist eine Marke der {l.entityName || "Ettanaghmalti Finza Solutions"}.</p>
 
         </section>
