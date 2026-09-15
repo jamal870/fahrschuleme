@@ -17,6 +17,7 @@ export type SiteContent = {
   contact: typeof tenantConfig.contact;
   legal: {
     ownerName: string;
+    entityName: string;
     jurisdiction: string;
     standDate: string;
     processingFeeChf: string;
@@ -43,7 +44,8 @@ export const DEFAULT_CONTENT: SiteContent = {
   brand: tenantConfig.brand,
   contact: tenantConfig.contact,
   legal: {
-    ownerName: "Jimmy Ettanaghmalti",
+    ownerName: "Jamal Ettanaghmalti",
+    entityName: "Ettanaghmalti Finza Solutions",
     jurisdiction: "Wettingen, Kanton Aargau",
     standDate: "Juni 2026",
     processingFeeChf: "30.–",
