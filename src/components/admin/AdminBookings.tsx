@@ -57,6 +57,17 @@ interface CourseDateInfo {
   location: string | null;
 }
 
+// Kursdaten kommen als "TT.MM.JJJJ" (Schweizer Format, siehe
+// import-asa-courses). new Date("TT.MM.JJJJ") interpretiert das fälschlich
+// als US-Format MM.DD.YYYY (z.B. wird aus "02.10.2026" = 2. Oktober der
+// 10. Februar) - deshalb hier explizit TT.MM.JJJJ parsen.
+function formatCourseDate(dateStr: string): string {
+  const swiss = dateStr.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  const dt = swiss ? new Date(Number(swiss[3]), Number(swiss[2]) - 1, Number(swiss[1])) : new Date(dateStr);
+  if (isNaN(dt.getTime())) return dateStr;
+  return dt.toLocaleDateString("de-CH", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
 const AdminBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -397,7 +408,7 @@ const AdminBookings = () => {
                         <li key={item.id} className="bg-muted/50 p-2 rounded">
                           {cd && (
                             <span>
-                              <strong>MGK Teil {cd.part}</strong> · {new Date(cd.date).toLocaleDateString("de-CH", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" })}
+                              <strong>MGK Teil {cd.part}</strong> · {formatCourseDate(cd.date)}
                               {cd.time && <> · {cd.time}</>}
                               {cd.location && <> · {cd.location}</>}
                             </span>

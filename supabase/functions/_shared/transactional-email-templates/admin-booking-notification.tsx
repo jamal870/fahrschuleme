@@ -37,7 +37,13 @@ interface AdminBookingNotificationProps {
 function formatCourseDate(d?: string) {
   if (!d) return ''
   try {
-    const dt = new Date(d)
+    // Kursdaten kommen als "TT.MM.JJJJ" (Schweizer Format, siehe
+    // import-asa-courses). new Date("TT.MM.JJJJ") interpretiert das
+    // fälschlich als US-Format MM.DD.YYYY (z.B. wird aus "02.10.2026"
+    // = 2. Oktober der 10. Februar) - deshalb hier explizit TT.MM.JJJJ
+    // parsen statt der Date-Konstruktor-Rätselraterei zu überlassen.
+    const swiss = d.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/)
+    const dt = swiss ? new Date(Number(swiss[3]), Number(swiss[2]) - 1, Number(swiss[1])) : new Date(d)
     if (isNaN(dt.getTime())) return d
     return dt.toLocaleDateString('de-CH', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' })
   } catch { return d }
