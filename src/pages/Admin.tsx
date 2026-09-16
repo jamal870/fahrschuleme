@@ -20,6 +20,7 @@ import AdminPresentations from "@/components/admin/AdminPresentations";
 
 import BrandLogo from "@/components/BrandLogo";
 import ChangePasswordDialog from "@/components/admin/ChangePasswordDialog";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const Admin = () => {
   const [loading, setLoading] = useState(true);
@@ -143,21 +144,17 @@ const Admin = () => {
           </TabsList>
 
 
-          <TabsContent value="courses"><AdminCourseDates /></TabsContent>
-          <TabsContent value="photo"><AdminPhotoImport /></TabsContent>
-          <TabsContent value="bookings"><AdminBookings /></TabsContent>
-          <TabsContent value="participants"><AdminParticipants /></TabsContent>
-          
-          
-          
-          
-          <TabsContent value="team"><AdminTeam /></TabsContent>
-          <TabsContent value="promotions"><AdminPromotions /></TabsContent>
-          <TabsContent value="emails"><AdminEmailSettings /></TabsContent>
-          <TabsContent value="content"><AdminContent /></TabsContent>
-          <TabsContent value="assistant"><AdminAssistant /></TabsContent>
-          <TabsContent value="ai-settings"><AdminAiSettings /></TabsContent>
-          <TabsContent value="presentations"><AdminPresentations /></TabsContent>
+          <TabsContent value="courses"><AdminErrorBoundary label="Kurstermine"><AdminCourseDates /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="photo"><AdminErrorBoundary label="Foto-Planung"><AdminPhotoImport /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="bookings"><AdminErrorBoundary label="Buchungen"><AdminBookings /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="participants"><AdminErrorBoundary label="Teilnehmer"><AdminParticipants /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="team"><AdminErrorBoundary label="Team"><AdminTeam /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="promotions"><AdminErrorBoundary label="Aktionen"><AdminPromotions /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="emails"><AdminErrorBoundary label="E-Mails"><AdminEmailSettings /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="content"><AdminErrorBoundary label="Inhalte & Preise"><AdminContent /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="assistant"><AdminErrorBoundary label="KI-Assistent"><AdminAssistant /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="ai-settings"><AdminErrorBoundary label="KI-Keys"><AdminAiSettings /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="presentations"><AdminErrorBoundary label="Präsentationen"><AdminPresentations /></AdminErrorBoundary></TabsContent>
 
         </Tabs>
       </main>
