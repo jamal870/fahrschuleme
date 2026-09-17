@@ -49,6 +49,12 @@ const AdminPromotions = () => {
   const [items, setItems] = useState<Promotion[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ ...empty });
+  // Ungespeicherte Änderungen pro Aktion, solange das Feld noch bearbeitet
+  // wird. Ohne das würde jeder Tastendruck sofort ein update()+load()
+  // auslösen; bei schnellem Tippen überholen sich diese Requests und ein
+  // späteres load() überschreibt das Feld wieder mit einem alten
+  // Zwischenstand (führte zu zerhacktem/unbearbeitbarem Text).
+  const [drafts, setDrafts] = useState<Record<string, Partial<Promotion>>>({});
 
   const load = async () => {
     setLoading(true);
@@ -89,6 +95,19 @@ const AdminPromotions = () => {
     const { error } = await supabase.from("promotions").update(patch).eq("id", id);
     if (error) toast.error(error.message);
     else load();
+  };
+
+  const setDraft = (id: string, patch: Partial<Promotion>) =>
+    setDrafts((d) => ({ ...d, [id]: { ...d[id], ...patch } }));
+
+  const val = <K extends keyof Promotion>(p: Promotion, key: K): Promotion[K] =>
+    (drafts[p.id]?.[key] ?? p[key]) as Promotion[K];
+
+  const commitDraft = (id: string) => {
+    const patch = drafts[id];
+    if (!patch || Object.keys(patch).length === 0) return;
+    setDrafts((d) => { const next = { ...d }; delete next[id]; return next; });
+    update(id, patch);
   };
 
   const remove = async (id: string) => {
@@ -183,11 +202,19 @@ const AdminPromotions = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                   <div>
                     <Label className="text-xs">Titel</Label>
-                    <Input value={p.title} onChange={(e) => update(p.id, { title: e.target.value })} />
+                    <Input
+                      value={val(p, "title")}
+                      onChange={(e) => setDraft(p.id, { title: e.target.value })}
+                      onBlur={() => commitDraft(p.id)}
+                    />
                   </div>
                   <div>
                     <Label className="text-xs">Badge</Label>
-                    <Input value={p.badge ?? ""} onChange={(e) => update(p.id, { badge: e.target.value })} />
+                    <Input
+                      value={val(p, "badge") ?? ""}
+                      onChange={(e) => setDraft(p.id, { badge: e.target.value })}
+                      onBlur={() => commitDraft(p.id)}
+                    />
                   </div>
                   <div>
                     <Label className="text-xs">Kategorie</Label>
@@ -204,32 +231,65 @@ const AdminPromotions = () => {
                   </div>
                   <div>
                     <Label className="text-xs">Aktionspreis (CHF)</Label>
-                    <Input type="number" step="0.01" value={p.discount_price ?? ""} onChange={(e) => update(p.id, { discount_price: e.target.value ? Number(e.target.value) : null })} />
+                    <Input
+                      type="number" step="0.01"
+                      value={val(p, "discount_price") ?? ""}
+                      onChange={(e) => setDraft(p.id, { discount_price: e.target.value ? Number(e.target.value) : null })}
+                      onBlur={() => commitDraft(p.id)}
+                    />
                   </div>
                   <div>
                     <Label className="text-xs">Ursprungspreis (CHF)</Label>
-                    <Input type="number" step="0.01" value={p.original_price ?? ""} onChange={(e) => update(p.id, { original_price: e.target.value ? Number(e.target.value) : null })} />
+                    <Input
+                      type="number" step="0.01"
+                      value={val(p, "original_price") ?? ""}
+                      onChange={(e) => setDraft(p.id, { original_price: e.target.value ? Number(e.target.value) : null })}
+                      onBlur={() => commitDraft(p.id)}
+                    />
                   </div>
                   <div>
                     <Label className="text-xs">Preis-Text</Label>
-                    <Input value={p.price ?? ""} onChange={(e) => update(p.id, { price: e.target.value })} />
+                    <Input
+                      value={val(p, "price") ?? ""}
+                      onChange={(e) => setDraft(p.id, { price: e.target.value })}
+                      onBlur={() => commitDraft(p.id)}
+                    />
                   </div>
                   <div>
                     <Label className="text-xs">Gültig ab</Label>
-                    <Input type="datetime-local" value={toLocal(p.starts_at)} onChange={(e) => update(p.id, { starts_at: e.target.value ? new Date(e.target.value).toISOString() : null })} />
+                    <Input
+                      type="datetime-local"
+                      value={toLocal(val(p, "starts_at"))}
+                      onChange={(e) => setDraft(p.id, { starts_at: e.target.value ? new Date(e.target.value).toISOString() : null })}
+                      onBlur={() => commitDraft(p.id)}
+                    />
                   </div>
                   <div>
                     <Label className="text-xs">Gültig bis</Label>
-                    <Input type="datetime-local" value={toLocal(p.ends_at)} onChange={(e) => update(p.id, { ends_at: e.target.value ? new Date(e.target.value).toISOString() : null })} />
+                    <Input
+                      type="datetime-local"
+                      value={toLocal(val(p, "ends_at"))}
+                      onChange={(e) => setDraft(p.id, { ends_at: e.target.value ? new Date(e.target.value).toISOString() : null })}
+                      onBlur={() => commitDraft(p.id)}
+                    />
                   </div>
                   <div>
                     <Label className="text-xs">Sortierung</Label>
-                    <Input type="number" value={p.sort_order} onChange={(e) => update(p.id, { sort_order: Number(e.target.value) })} />
+                    <Input
+                      type="number"
+                      value={val(p, "sort_order")}
+                      onChange={(e) => setDraft(p.id, { sort_order: Number(e.target.value) })}
+                      onBlur={() => commitDraft(p.id)}
+                    />
                   </div>
                 </div>
                 <div>
                   <Label className="text-xs">Beschreibung</Label>
-                  <Textarea value={p.description ?? ""} onChange={(e) => update(p.id, { description: e.target.value })} />
+                  <Textarea
+                    value={val(p, "description") ?? ""}
+                    onChange={(e) => setDraft(p.id, { description: e.target.value })}
+                    onBlur={() => commitDraft(p.id)}
+                  />
                 </div>
                 <div className="flex items-center justify-between gap-3 pt-2 border-t border-border">
                   <div className="flex items-center gap-2">
