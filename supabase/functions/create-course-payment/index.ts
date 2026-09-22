@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { RESERVATION_MINUTES } from "../_shared/release-pending-booking.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -114,8 +115,13 @@ serve(async (req) => {
       customer_email: customerId ? undefined : email,
       line_items: lineItems,
       mode: "payment",
-       success_url: `${origin}/buchung-erfolgreich?booking_id=${bookingId}`,
-       cancel_url: `${origin}/grundkurs`,
+      success_url: `${origin}/buchung-erfolgreich?booking_id=${bookingId}`,
+      // Abbruchseite gibt die Plätze sofort frei (cancel-course-payment).
+      cancel_url: `${origin}/buchung-abgebrochen?booking_id=${bookingId}`,
+      // Befristete Reservierung: nach Ablauf schickt Stripe checkout.session.expired
+      // und der Webhook gibt die Kursplätze wieder frei. Stripe verlangt mindestens
+      // 30 Min. ab Eingang der Anfrage - +1 Min. Puffer gegen Uhren-/Laufzeitdifferenz.
+      expires_at: Math.floor(Date.now() / 1000) + (RESERVATION_MINUTES + 1) * 60,
       metadata: {
         booking_id: bookingId,
         customer_name: customerName || "",
