@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { handleFailedPayment } from "../_shared/release-pending-booking.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -29,6 +30,25 @@ serve(async (req) => {
 
     console.log(`[STRIPE-WEBHOOK] Event type: ${event.type}`);
 
+    // Nicht abgeschlossene Zahlung: Session abgelaufen (30 Min. nach Erstellung,
+    // siehe create-course-payment) oder verzögerte Zahlungsart (z.B. TWINT/Klarna)
+    // endgültig fehlgeschlagen. Kursplätze sofort wieder freigeben und Kunde +
+    // Admins informieren - vorher blieb der Platz dauerhaft als "Ausgebucht" hängen.
+    if (event.type === "checkout.session.expired" || event.type === "checkout.session.async_payment_failed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const bookingId = session.metadata?.booking_id;
+      if (bookingId) {
+        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+        const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+        const supabase = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
+        const reason = event.type === "checkout.session.expired" ? "abgelaufen" : "fehlgeschlagen";
+        const released = await handleFailedPayment(supabase, supabaseUrl, serviceKey, bookingId, reason);
+        console.log(`[STRIPE-WEBHOOK] ${event.type} for ${bookingId}: ${released ? "Plätze freigegeben" : "bereits verarbeitet"}`);
+      } else {
+        console.error(`[STRIPE-WEBHOOK] No booking_id in session metadata (${event.type})`);
+      }
+    }
+
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const bookingId = session.metadata?.booking_id;
@@ -50,15 +70,32 @@ serve(async (req) => {
       );
 
       // Update booking status to confirmed
-      const { error: updateError } = await supabase
+      const { data: updatedRows, error: updateError } = await supabase
         .from("bookings")
         .update({ status: "confirmed", payment_status: "paid" })
         .eq("id", bookingId)
-        .eq("status", "pending_payment");
+        .eq("status", "pending_payment")
+        .select("id");
 
       if (updateError) {
         console.error("[STRIPE-WEBHOOK] Update error:", updateError);
         throw updateError;
+      }
+
+      if (!updatedRows?.length) {
+        // Entweder Webhook-Wiederholung (Buchung schon bestätigt) oder die
+        // Zahlung kam an, nachdem die Reservierung bereits freigegeben wurde.
+        // Letzteres darf keine Bestätigungsmail auslösen - der Platz kann
+        // inzwischen anderweitig vergeben sein.
+        const { data: current } = await supabase
+          .from("bookings").select("status, payment_status").eq("id", bookingId).maybeSingle();
+        if (current?.status !== "confirmed") {
+          console.error(`[STRIPE-WEBHOOK] ZAHLUNG NACH FREIGABE für ${bookingId} (status=${current?.status}, payment_status=${current?.payment_status}) - manuell prüfen/erstatten`);
+          return new Response(JSON.stringify({ received: true, warning: "payment-after-release" }), {
+            headers: { "Content-Type": "application/json" },
+            status: 200,
+          });
+        }
       }
 
       // Fetch booking for email

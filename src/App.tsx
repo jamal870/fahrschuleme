@@ -8,6 +8,7 @@ import GrundkursBuchen from "./pages/GrundkursBuchen.tsx";
 import Admin from "./pages/Admin.tsx";
 import AdminLogin from "./pages/AdminLogin.tsx";
 import BuchungErfolgreich from "./pages/BuchungErfolgreich.tsx";
+import BuchungAbgebrochen from "./pages/BuchungAbgebrochen.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
 import Impressum from "./pages/Impressum.tsx";
 import Datenschutz from "./pages/Datenschutz.tsx";
@@ -52,6 +53,7 @@ const App = () => (
           <Route path="/grundkurs" element={<GrundkursBuchen />} />
           <Route path="/grundkurs-buchen" element={<GrundkursBuchen />} />
           <Route path="/buchung-erfolgreich" element={<BuchungErfolgreich />} />
+          <Route path="/buchung-abgebrochen" element={<BuchungAbgebrochen />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="/impressum" element={<Impressum />} />
           <Route path="/datenschutz" element={<Datenschutz />} />

@@ -18,6 +18,8 @@ import { template as courseMoved } from './course-moved.tsx'
 import { template as fahrlehrerTrialConfirmation } from './fahrlehrer-trial-confirmation.tsx'
 import { template as fahrlehrerTrialAdmin } from './fahrlehrer-trial-admin.tsx'
 import { template as bookingCancelled } from './booking-cancelled.tsx'
+import { template as paymentFailed } from './payment-failed.tsx'
+import { template as adminPaymentFailed } from './admin-payment-failed.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'booking-confirmation': bookingConfirmation,
@@ -29,4 +31,6 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'fahrlehrer-trial-confirmation': fahrlehrerTrialConfirmation,
   'fahrlehrer-trial-admin': fahrlehrerTrialAdmin,
   'booking-cancelled': bookingCancelled,
+  'payment-failed': paymentFailed,
+  'admin-payment-failed': adminPaymentFailed,
 }

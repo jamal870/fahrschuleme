@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { releaseStalePendingBookings } from "../_shared/release-pending-booking.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -113,6 +114,15 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: "Keine Kurstermine ausgewählt" }), {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
+      }
+
+      // Abgelaufene Online-Reservierungen zuerst freigeben, damit ein Platz, der
+      // nur durch einen abgebrochenen Zahlungsversuch blockiert ist, wieder
+      // buchbar wird (Sicherheitsnetz, falls der Stripe-Webhook nicht ankam).
+      try {
+        await releaseStalePendingBookings(supabase, Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+      } catch (e) {
+        console.warn("[CREATE-BOOKING] stale release failed", (e as Error).message);
       }
 
       // Verify all courses exist, have spots, and fetch authoritative prices

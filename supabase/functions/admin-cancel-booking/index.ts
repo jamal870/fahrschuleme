@@ -56,8 +56,10 @@ Deno.serve(async (req) => {
       courses = (cd || []).slice().sort((a: any, b: any) => Number(a.part) - Number(b.part));
     }
 
-    // Only restore spots if booking was confirmed (i.e. spots were decremented)
-    const shouldRestore = booking.status === "confirmed";
+    // Der Trigger trg_decrement_spots zieht Plätze bereits beim Anlegen der
+    // booking_items ab - also auch bei "pending_payment" (Online-Zahlung noch
+    // offen). Nur bei bereits stornierten Buchungen sind die Plätze schon zurück.
+    const shouldRestore = booking.status === "confirmed" || booking.status === "pending_payment";
 
     if (mode === "cancel") {
       const { error: updErr } = await admin
