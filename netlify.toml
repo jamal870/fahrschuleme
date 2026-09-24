@@ -164,6 +164,32 @@
   status = 301
   force = true
 
+# ---------- DACH-Akquise-Agent: Demo-Seiten auf Wildcard-Subdomains ----------
+# Für generierte Demo-Landingpages auf beliebigen Subdomains von l-me.ch und
+# finza.tech (z.B. test123.l-me.ch) — proxied auf den n8n-Webhook des Workflows
+# "DACH-Akquise-Agent - Demo-Seiten Webhook (Phase 3)".
+#
+# status = 200 macht daraus einen PROXY (die Browser-Adressleiste zeigt weiter
+# die Subdomain), nicht status = 301/302 (sichtbare Weiterleitung).
+#
+# WICHTIG: Muss NACH der literalen l-me.ch/www.l-me.ch-301-Weiterleitung oben
+# stehen — sonst würde die alte Domain l-me.ch/www.l-me.ch (Migration nach
+# fahrschule-me.ch) plötzlich auf die Demo-Seite umgeleitet statt auf die
+# echte Website. Die Wildcard *.l-me.ch trifft nur zusätzliche Subdomains wie
+# test123.l-me.ch, nicht die bereits oben behandelten exakten Hosts.
+# finza.tech ist (noch) keine Domain dieser Netlify-Site — die Regel ist hier
+# ein No-Op, bis das eingerichtet ist; gehört eigentlich ins finza.tech-Repo.
+[[redirects]]
+  from = "https://*.l-me.ch/*"
+  to = "https://peachpuff-mosquito-717649.hostingersite.com/webhook/demo"
+  status = 200
+  force = true
+[[redirects]]
+  from = "https://*.finza.tech/*"
+  to = "https://peachpuff-mosquito-717649.hostingersite.com/webhook/demo"
+  status = 200
+  force = true
+
 # ---------- Apex ↔ www ----------
 # KEINE eigene Apex→www-Regel!
 # Netlify leitet automatisch auf die als "Primary domain" gesetzte Variante um.
