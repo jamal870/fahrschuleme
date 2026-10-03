@@ -131,9 +131,20 @@ const AdminPresentations = () => {
   const present = async (p: Presentation) => {
     const embed = p.embed_url ? toEmbedUrl(p.embed_url) : null;
     if (embed) return setEmbedViewer({ url: embed, title: p.title });
-    if (!p.pdf_path) return toast.error("Für die Anzeige im Browser wird eine PDF-Version benötigt.");
-    const url = await signedUrl(p.pdf_path);
-    if (url) setViewer({ url, title: p.title, videos: p.videos ?? [] });
+    if (p.pdf_path) {
+      const url = await signedUrl(p.pdf_path);
+      if (url) setViewer({ url, title: p.title, videos: p.videos ?? [] });
+      return;
+    }
+    if (p.pptx_path) {
+      // PPTX direkt im Office-Online-Player (Animationen & eingebettete Videos)
+      const url = await signedUrl(p.pptx_path);
+      if (url)
+        setEmbedViewer({
+          url: `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`,
+          title: p.title,
+        });
+    }
   };
 
   const download = async (path: string) => {
@@ -185,8 +196,8 @@ const AdminPresentations = () => {
           </div>
         </div>
         <p className="font-body text-sm text-muted-foreground">
-          Tipp: In PowerPoint über „Speichern unter → PDF" eine PDF-Version erzeugen. Nur damit lässt sich die
-          Präsentation direkt im Browser im Vollbild zeigen; die PPTX-Datei bleibt zum Download und Bearbeiten hinterlegt.
+          Die PPTX wird direkt im Browser angezeigt (inkl. Videos). Optional kann zusätzlich eine PDF-Version
+          hochgeladen werden; sie wird bevorzugt, wenn du Videos pro Folie unter „Videos" zuordnest.
         </p>
         <Button onClick={upload} disabled={uploading} className="font-body sheen">
           <Upload className="w-4 h-4 mr-2" /> {uploading ? "Wird hochgeladen…" : "Hochladen"}
@@ -209,7 +220,7 @@ const AdminPresentations = () => {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Button size="sm" onClick={() => present(p)} disabled={!p.pdf_path && !p.embed_url} className="font-body">
+                <Button size="sm" onClick={() => present(p)} disabled={!p.pdf_path && !p.embed_url && !p.pptx_path} className="font-body">
                   <Play className="w-4 h-4 mr-1" /> Präsentieren
                 </Button>
                 {p.pdf_path && (
