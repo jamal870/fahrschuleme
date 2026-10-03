@@ -150,10 +150,22 @@ const AdminCourseDates = () => {
   };
 
   const handleDelete = async (id: string) => {
+    const { count } = await supabase
+      .from("booking_items")
+      .select("id", { count: "exact", head: true })
+      .eq("course_date_id", id);
+    if (count && count > 0) {
+      toast.error(`Dieser Termin hat ${count} Buchung(en) und kann nicht gelöscht werden. Bitte zuerst die Buchungen stornieren oder umbuchen.`);
+      return;
+    }
     if (!confirm("Kurstermin wirklich löschen?")) return;
     await syncGcal(id, "delete");
     const { error } = await supabase.from("course_dates").delete().eq("id", id);
-    if (error) toast.error("Fehler: " + error.message);
+    if (error) {
+      toast.error(error.code === "23503"
+        ? "Der Termin ist noch mit Buchungen verknüpft und kann nicht gelöscht werden."
+        : "Fehler: " + error.message);
+    }
     else { toast.success("Gelöscht"); fetchCourses(); }
   };
 
