@@ -150,15 +150,25 @@ const AdminCourseDates = () => {
   };
 
   const handleDelete = async (id: string) => {
-    const { count } = await supabase
+    const { data: linked } = await supabase
       .from("booking_items")
-      .select("id", { count: "exact", head: true })
+      .select("id, bookings(status)")
       .eq("course_date_id", id);
-    if (count && count > 0) {
-      toast.error(`Dieser Termin hat ${count} Buchung(en) und kann nicht gelöscht werden. Bitte zuerst die Buchungen stornieren oder umbuchen.`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const items = ((linked as any[]) ?? []);
+    const active = items.filter((i) => i.bookings?.status !== "cancelled");
+    if (active.length > 0) {
+      toast.error(`Dieser Termin hat ${active.length} aktive Buchung(en) und kann nicht gelöscht werden. Bitte zuerst stornieren oder umbuchen.`);
       return;
     }
-    if (!confirm("Kurstermin wirklich löschen?")) return;
+    const cancelled = items.length;
+    if (!confirm(cancelled
+      ? `Kurstermin wirklich löschen? ${cancelled} stornierte Buchungs-Verknüpfung(en) werden dabei entfernt.`
+      : "Kurstermin wirklich löschen?")) return;
+    if (cancelled) {
+      const { error: unlinkErr } = await supabase.from("booking_items").delete().eq("course_date_id", id);
+      if (unlinkErr) { toast.error("Fehler: " + unlinkErr.message); return; }
+    }
     await syncGcal(id, "delete");
     const { error } = await supabase.from("course_dates").delete().eq("id", id);
     if (error) {
