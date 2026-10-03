@@ -242,7 +242,7 @@ export default function GrundkursBuchen() {
       const { data: stripeData, error: stripeError } = await supabase.functions.invoke('create-course-payment', {
         body: {
           bookingId: bookingResult.bookingId,
-          email,
+          email: email.trim().toLowerCase(),
           customerName: `${firstName} ${lastName}`,
         },
       });

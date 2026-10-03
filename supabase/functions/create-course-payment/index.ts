@@ -46,7 +46,8 @@ serve(async (req) => {
     }
 
     // Verify caller's email matches booking email (prevents unauthorized access)
-    if (booking.email !== email) {
+    // create-booking speichert die E-Mail getrimmt und kleingeschrieben.
+    if (String(booking.email).trim().toLowerCase() !== String(email).trim().toLowerCase()) {
       throw new Error("Email does not match booking");
     }
 
@@ -102,7 +103,8 @@ serve(async (req) => {
     }));
 
     // Check if customer already exists
-    const customers = await stripe.customers.list({ email, limit: 1 });
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const customers = await stripe.customers.list({ email: normalizedEmail, limit: 1 });
     let customerId: string | undefined;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
@@ -112,7 +114,7 @@ serve(async (req) => {
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      customer_email: customerId ? undefined : email,
+      customer_email: customerId ? undefined : normalizedEmail,
       line_items: lineItems,
       mode: "payment",
       success_url: `${origin}/buchung-erfolgreich?booking_id=${bookingId}`,
