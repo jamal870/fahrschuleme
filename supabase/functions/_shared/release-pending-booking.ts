@@ -49,7 +49,19 @@ export async function releasePendingBooking(supabase: any, bookingId: string): P
 
   for (const cid of courseIds) {
     const { error: incErr } = await supabase.rpc("increment_spots", { course_id: cid });
-    if (incErr) console.error("[release-pending-booking] increment_spots failed", cid, incErr.message);
+    if (incErr) {
+      console.error("[release-pending-booking] increment_spots failed, Fallback", cid, incErr.message);
+      // Fallback: Platz direkt zurückbuchen, damit er nicht dauerhaft blockiert bleibt.
+      const { data: cd } = await supabase.from("course_dates").select("spots_available").eq("id", cid).maybeSingle();
+      if (cd) {
+        const { error: updErr } = await supabase
+          .from("course_dates")
+          .update({ spots_available: Number(cd.spots_available) + 1 })
+          .eq("id", cid)
+          .eq("spots_available", cd.spots_available);
+        if (updErr) console.error("[release-pending-booking] Fallback fehlgeschlagen - Plätze manuell prüfen", cid, updErr.message);
+      }
+    }
   }
 
   let courses: ReleasedBooking["courses"] = [];
