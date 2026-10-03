@@ -212,6 +212,8 @@ export default function GrundkursBuchen() {
       return;
     }
 
+    let pendingBookingId: string | null = null;
+    let paymentStartFailed = false;
     try {
       // Create booking via server-side edge function
       const { data: bookingResult, error: bookingError } = await supabase.functions.invoke('create-booking', {
@@ -226,6 +228,8 @@ export default function GrundkursBuchen() {
       });
 
       if (bookingError || !bookingResult?.bookingId) throw new Error(bookingError?.message || bookingResult?.error || "Buchung fehlgeschlagen");
+
+      pendingBookingId = bookingResult.bookingId;
 
       if (!isOnline) {
         toast.success("Buchung erfolgreich! Du erhältst die Bestätigung per E-Mail mit Zahlungsinformationen.");
@@ -244,6 +248,7 @@ export default function GrundkursBuchen() {
       });
 
       if (stripeError || !stripeData?.url) {
+        paymentStartFailed = true;
         throw new Error(stripeError?.message || "Stripe-Zahlung konnte nicht gestartet werden.");
       }
 
@@ -260,7 +265,16 @@ export default function GrundkursBuchen() {
         // no-op
       }
       console.error('Booking error:', err);
-      toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
+      if (paymentStartFailed && pendingBookingId) {
+        // Reservierte Plätze sofort freigeben, damit ein erneuter Versuch nicht
+        // zusätzliche "Zahlung offen"-Buchungen erzeugt.
+        supabase.functions
+          .invoke("cancel-course-payment", { body: { bookingId: pendingBookingId } })
+          .catch((e) => console.warn("[release pending booking]", e));
+        toast.error("Die Online-Zahlung konnte nicht gestartet werden. Es wurde nichts gebucht. Bitte wähle Barzahlung/Überweisung oder melde dich telefonisch bei uns.");
+      } else {
+        toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
+      }
     } finally {
       setIsSubmitting(false);
     }
