@@ -137,7 +137,7 @@ serve(async (req) => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("[CREATE-COURSE-PAYMENT] Error:", errorMessage);
-    return new Response(JSON.stringify({ error: "Zahlung konnte nicht initialisiert werden. Bitte versuche es erneut." }), {
+    return new Response(JSON.stringify({ error: "Zahlung konnte nicht initialisiert werden. Bitte versuche es erneut.", detail: errorMessage.slice(0, 300) }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });

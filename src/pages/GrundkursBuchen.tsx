@@ -249,6 +249,13 @@ export default function GrundkursBuchen() {
 
       if (stripeError || !stripeData?.url) {
         paymentStartFailed = true;
+        try {
+          // Grund aus der Antwort der Funktion für die Fehlersuche in der Konsole ausgeben
+          const body = await (stripeError as { context?: Response } | null)?.context?.json();
+          console.error("[create-course-payment]", body?.detail ?? body ?? stripeError);
+        } catch {
+          console.error("[create-course-payment]", stripeError);
+        }
         throw new Error(stripeError?.message || "Stripe-Zahlung konnte nicht gestartet werden.");
       }
 
