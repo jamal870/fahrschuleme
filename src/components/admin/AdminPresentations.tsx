@@ -83,12 +83,12 @@ const AdminPresentations = () => {
 
       if (pptxFile) {
         pptx_path = `${folder}/${sanitize(pptxFile.name)}`;
-        const { error } = await supabase.storage.from(BUCKET).upload(pptx_path, pptxFile, { upsert: true });
+        const { error } = await supabase.storage.from(BUCKET).upload(pptx_path, pptxFile);
         if (error) throw error;
       }
       if (pdfFile) {
         pdf_path = `${folder}/${sanitize(pdfFile.name)}`;
-        const { error } = await supabase.storage.from(BUCKET).upload(pdf_path, pdfFile, { upsert: true });
+        const { error } = await supabase.storage.from(BUCKET).upload(pdf_path, pdfFile);
         if (error) throw error;
       }
 

@@ -45,7 +45,7 @@ const PresentationVideosDialog = ({
     setUploading(true);
     try {
       const path = `${presentationId}/videos/${Date.now()}_${sanitize(file.name)}`;
-      const { error } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true });
+      const { error } = await supabase.storage.from(BUCKET).upload(path, file);
       if (error) throw error;
       update(i, { path, url: undefined, title: list[i].title || file.name });
       toast.success("Video hochgeladen");
