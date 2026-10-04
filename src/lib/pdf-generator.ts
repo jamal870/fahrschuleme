@@ -588,7 +588,7 @@ export function generateParticipantList(
     return pm || "–";
   };
 
-  const MIN_ROW_H = 16;
+  const MIN_ROW_H = 14;
   const LINE_H = 3.6;
   const PAGE_BOTTOM = 195; // landscape A4 = 210mm, leave room for footer
 
@@ -702,19 +702,18 @@ export function generateParticipantList(
   doc.setTextColor(...GRAY);
   doc.text("Mit der Unterschrift wird die Teilnahme am o.g. Kurstag bestätigt.", 20, y);
 
-  // Unterschriftsfeld Fahrlehrer (rechts neben dem Hinweis)
-  if (y + 22 > PAGE_BOTTOM) {
+  // Unterschriftsfeld Fahrlehrer (rechts neben dem Hinweis, damit alles auf eine Seite passt)
+  if (y + 14 > 190) {
     addFooter(doc);
     doc.addPage();
     y = 30;
   }
-  y += 4; // Platz für die Unterschrift über der Linie
   const sigX = 160;
   const sigW = 117;
   const sigLineY = y + 9;
   if (course.instructor_signature) {
     try {
-      doc.addImage(course.instructor_signature, "PNG", sigX + 2, sigLineY - 12, 50, 12);
+      doc.addImage(course.instructor_signature, "PNG", sigX + 2, sigLineY - 11, 50, 11);
     } catch (_e) { /* ungültiges Bild ignorieren */ }
   }
   doc.setDrawColor(...DARK);
