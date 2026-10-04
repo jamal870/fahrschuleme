@@ -45,6 +45,9 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
   const [signFor, setSignFor] = useState<AttendanceRow | null>(null);
   // Datum für die PDF-Liste (JJJJ-MM-TT); leer = Datum des Kurstermins
   const [pdfDate, setPdfDate] = useState("");
+  // Manuelle Angaben für die PDF (leer = Werte des Kurstermins)
+  const [pdfInstructor, setPdfInstructor] = useState("");
+  const [pdfTime, setPdfTime] = useState("");
   // Fahrlehrer-Unterschrift (pro Kurstermin)
   const [instrSig, setInstrSig] = useState<string | null>(null);
   const [instrOpen, setInstrOpen] = useState(false);
@@ -114,7 +117,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
   };
 
   useEffect(() => { if (open) load(); /* eslint-disable-next-line */ }, [open, course?.id]);
-  useEffect(() => { setPdfDate(""); }, [course?.id]);
+  useEffect(() => { setPdfDate(""); setPdfInstructor(""); setPdfTime(""); }, [course?.id]);
 
   const upsert = async (row: AttendanceRow, patch: Partial<AttendanceRow>) => {
     if (!course) return;
@@ -251,8 +254,8 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     const dm = pdfDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     const listDate = dm ? `${dm[3]}.${dm[2]}.${dm[1]}` : course.date;
     const pdf = generateParticipantList(
-      { part: course.part, date: listDate, day: dayNameFromDateStr(listDate, course.day), time: course.time,
-        location: course.location, instructor: course.instructor,
+      { part: course.part, date: listDate, day: dayNameFromDateStr(listDate, course.day), time: pdfTime.trim() || course.time,
+        location: course.location, instructor: pdfInstructor.trim() || course.instructor,
         instructor_number: (course as any).instructor_number,
         instructor_signature: instrSig ?? defaultSig },
       participants,
@@ -289,6 +292,30 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
               {pdfDate && (
                 <Button variant="ghost" size="sm" onClick={() => setPdfDate("")} className="font-body px-2">Zurücksetzen</Button>
               )}
+            </div>
+            <div className="flex items-center gap-1">
+              <Label htmlFor="pdf-time" className="text-sm font-body whitespace-nowrap">Zeit</Label>
+              <input
+                id="pdf-time"
+                type="text"
+                value={pdfTime}
+                onChange={(e) => setPdfTime(e.target.value)}
+                placeholder={course?.time ?? "17:00 – 21:00"}
+                title="Leer = Zeit des Kurstermins"
+                className="h-9 w-36 rounded-md border border-input bg-background px-2 text-sm font-body"
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              <Label htmlFor="pdf-instructor" className="text-sm font-body whitespace-nowrap">Fahrlehrer</Label>
+              <input
+                id="pdf-instructor"
+                type="text"
+                value={pdfInstructor}
+                onChange={(e) => setPdfInstructor(e.target.value)}
+                placeholder={(course as any)?.instructor || "Name eintragen"}
+                title="Leer = Fahrlehrer des Kurstermins"
+                className="h-9 w-44 rounded-md border border-input bg-background px-2 text-sm font-body"
+              />
             </div>
             <Button variant="outline" size="sm" onClick={load} disabled={loading} className="font-body">
               <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
