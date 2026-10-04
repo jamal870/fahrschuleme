@@ -700,6 +700,27 @@ export function generateParticipantList(
   doc.setTextColor(...GRAY);
   doc.text("Mit der Unterschrift wird die Teilnahme am o.g. Kurstag bestätigt.", 20, y);
 
+  // Unterschriftsfeld Fahrlehrer (rechts neben dem Hinweis)
+  if (y + 16 > PAGE_BOTTOM) {
+    addFooter(doc);
+    doc.addPage();
+    y = 30;
+  }
+  const sigX = 160;
+  const sigW = 117;
+  const sigLineY = y + 9;
+  doc.setDrawColor(...DARK);
+  doc.line(sigX, sigLineY, sigX + sigW, sigLineY);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...GRAY);
+  const instructorLabel = [
+    "Unterschrift Fahrlehrer",
+    course.instructor ? `: ${course.instructor}` : "",
+    course.instructor_number ? ` (Nr. ${course.instructor_number})` : "",
+  ].join("");
+  doc.text(instructorLabel, sigX, sigLineY + 4);
+
   addFooter(doc);
   return doc;
 }
