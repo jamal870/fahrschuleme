@@ -25,6 +25,9 @@ type Presentation = {
 
 const BUCKET = "presentations";
 
+const isOfficeFile = (path: string | null) => !!path && /\.pptx?$/i.test(path);
+const sourceLabel = (path: string) => (path.split(".").pop() ?? "Datei").toUpperCase();
+
 const sanitize = (name: string) =>
   name.normalize("NFKD").replace(/[^\w.\-]+/g, "_").slice(-80);
 
@@ -136,15 +139,17 @@ const AdminPresentations = () => {
       if (url) setViewer({ url, title: p.title, videos: p.videos ?? [] });
       return;
     }
-    if (p.pptx_path) {
+    if (isOfficeFile(p.pptx_path)) {
       // PPTX direkt im Office-Online-Player (Animationen & eingebettete Videos)
-      const url = await signedUrl(p.pptx_path);
+      const url = await signedUrl(p.pptx_path!);
       if (url)
         setEmbedViewer({
           url: `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`,
           title: p.title,
         });
+      return;
     }
+    toast.error("Für die Anzeige im Browser wird eine PDF-Version benötigt (Quelldatei ist nur zum Download).");
   };
 
   const download = async (path: string) => {
@@ -178,8 +183,8 @@ const AdminPresentations = () => {
             <Textarea id="pres-desc" rows={1} value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="pptx-input" className="font-body">PowerPoint-Datei (.pptx)</Label>
-            <Input id="pptx-input" type="file" accept=".pptx,.ppt" onChange={(e) => setPptxFile(e.target.files?.[0] ?? null)} />
+            <Label htmlFor="pptx-input" className="font-body">Quelldatei (.pptx, .key oder .zip)</Label>
+            <Input id="pptx-input" type="file" accept=".pptx,.ppt,.key,.zip" onChange={(e) => setPptxFile(e.target.files?.[0] ?? null)} />
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="embed-input" className="font-body">Google Slides / Drive Link (1:1 mit Animationen &amp; Videos)</Label>
@@ -220,7 +225,7 @@ const AdminPresentations = () => {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Button size="sm" onClick={() => present(p)} disabled={!p.pdf_path && !p.embed_url && !p.pptx_path} className="font-body">
+                <Button size="sm" onClick={() => present(p)} disabled={!p.pdf_path && !p.embed_url && !isOfficeFile(p.pptx_path)} className="font-body">
                   <Play className="w-4 h-4 mr-1" /> Präsentieren
                 </Button>
                 {p.pdf_path && (
@@ -230,7 +235,7 @@ const AdminPresentations = () => {
                 )}
                 {p.pptx_path && (
                   <Button size="sm" variant="outline" onClick={() => download(p.pptx_path!)} className="font-body">
-                    <Download className="w-4 h-4 mr-1" /> PPTX
+                    <Download className="w-4 h-4 mr-1" /> {sourceLabel(p.pptx_path)}
                   </Button>
                 )}
                 <Button size="sm" variant="outline" onClick={() => setVideoEditor(p)} className="font-body">
