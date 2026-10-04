@@ -48,6 +48,8 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
   // Fahrlehrer-Unterschrift (pro Kurstermin)
   const [instrSig, setInstrSig] = useState<string | null>(null);
   const [instrOpen, setInstrOpen] = useState(false);
+  // Standard-Unterschrift: gilt für alle Kurse ohne eigene Unterschrift
+  const [defaultSig, setDefaultSig] = useState<string | null>(null);
 
   // Move-participant state
   const [moveFor, setMoveFor] = useState<AttendanceRow | null>(null);
@@ -72,6 +74,12 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       .eq("course_date_id", course.id)
       .maybeSingle();
     setInstrSig(instr?.signature_data ?? null);
+    const { data: def } = await (supabase as any)
+      .from("instructor_default_signature")
+      .select("signature_data")
+      .eq("id", "default")
+      .maybeSingle();
+    setDefaultSig(def?.signature_data ?? null);
 
     const bookings = (items || [])
       .map((it: any) => it.bookings)
@@ -164,6 +172,16 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     toast.success(dataUrl ? "Unterschrift Fahrlehrer gespeichert" : "Unterschrift Fahrlehrer entfernt");
   };
 
+  // Unterschrift als Standard für ALLE Kurse speichern (wirkt auch auf bereits stattgefundene)
+  const saveDefaultSig = async (dataUrl: string | null) => {
+    const { error } = await (supabase as any)
+      .from("instructor_default_signature")
+      .upsert({ id: "default", signature_data: dataUrl, updated_at: new Date().toISOString() }, { onConflict: "id" });
+    if (error) { toast.error("Speichern fehlgeschlagen: " + error.message); return; }
+    setDefaultSig(dataUrl);
+    toast.success(dataUrl ? "Gilt jetzt für alle Kurse" : "Standard-Unterschrift entfernt");
+  };
+
   const clearSig = async (row: AttendanceRow) => {
     if (!row.signature_id) return;
     await upsert(row, { signature_data: null });
@@ -236,7 +254,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       { part: course.part, date: listDate, day: dayNameFromDateStr(listDate, course.day), time: course.time,
         location: course.location, instructor: course.instructor,
         instructor_number: (course as any).instructor_number,
-        instructor_signature: instrSig },
+        instructor_signature: instrSig ?? defaultSig },
       participants,
       filter
     );
@@ -292,16 +310,28 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
 
         <div className="flex items-center gap-3 flex-wrap border border-border rounded-md p-3 mb-2">
           <span className="font-body text-sm font-medium">Unterschrift Fahrlehrer{(course as any)?.instructor ? `: ${(course as any).instructor}` : ""}</span>
-          {instrSig ? (
-            <img src={instrSig} alt="Unterschrift Fahrlehrer" className="h-10 bg-white border border-border rounded" />
+          {(instrSig ?? defaultSig) ? (
+            <img src={(instrSig ?? defaultSig)!} alt="Unterschrift Fahrlehrer" className="h-10 bg-white border border-border rounded" />
           ) : (
             <span className="text-sm text-muted-foreground font-body">noch nicht unterschrieben</span>
+          )}
+          {!instrSig && defaultSig && (
+            <span className="text-xs text-muted-foreground font-body">(Standard für alle Kurse)</span>
           )}
           <Button variant="outline" size="sm" onClick={() => setInstrOpen(true)} className="font-body">
             <PenLine className="w-4 h-4 mr-1" /> {instrSig ? "Neu unterschreiben" : "Unterschreiben"}
           </Button>
           {instrSig && (
             <Button variant="ghost" size="sm" onClick={() => saveInstrSig(null)} className="font-body text-destructive">Entfernen</Button>
+          )}
+          {(instrSig ?? defaultSig) && (
+            <Button
+              variant="outline" size="sm"
+              onClick={() => { if (confirm("Diese Unterschrift für ALLE Kurse (auch vergangene) verwenden?")) saveDefaultSig((instrSig ?? defaultSig)!); }}
+              className="font-body"
+            >
+              Für alle Kurse verwenden
+            </Button>
           )}
         </div>
 
