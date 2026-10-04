@@ -43,6 +43,11 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
   const [rows, setRows] = useState<AttendanceRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [signFor, setSignFor] = useState<AttendanceRow | null>(null);
+  // Datum für die PDF-Liste (JJJJ-MM-TT); leer = Datum des Kurstermins
+  const [pdfDate, setPdfDate] = useState("");
+  // Fahrlehrer-Unterschrift (pro Kurstermin)
+  const [instrSig, setInstrSig] = useState<string | null>(null);
+  const [instrOpen, setInstrOpen] = useState(false);
 
   // Move-participant state
   const [moveFor, setMoveFor] = useState<AttendanceRow | null>(null);
@@ -59,6 +64,14 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       .select("booking_id, bookings!inner(id, first_name, last_name, phone, email, birth_date, fa_number, payment_method, payment_status, status)")
       .eq("course_date_id", course.id);
     if (error) { toast.error("Fehler beim Laden"); setLoading(false); return; }
+
+    // Fahrlehrer-Unterschrift (Tabelle fehlt evtl. noch -> still ignorieren)
+    const { data: instr } = await (supabase as any)
+      .from("course_instructor_signatures")
+      .select("signature_data")
+      .eq("course_date_id", course.id)
+      .maybeSingle();
+    setInstrSig(instr?.signature_data ?? null);
 
     const bookings = (items || [])
       .map((it: any) => it.bookings)
@@ -93,6 +106,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
   };
 
   useEffect(() => { if (open) load(); /* eslint-disable-next-line */ }, [open, course?.id]);
+  useEffect(() => { setPdfDate(""); }, [course?.id]);
 
   const upsert = async (row: AttendanceRow, patch: Partial<AttendanceRow>) => {
     if (!course) return;
@@ -134,6 +148,20 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     await upsert(signFor, { signature_data: dataUrl, present: true });
     setSignFor(null);
     toast.success("Unterschrift gespeichert");
+  };
+
+  const saveInstrSig = async (dataUrl: string | null) => {
+    if (!course) return;
+    const { error } = await (supabase as any)
+      .from("course_instructor_signatures")
+      .upsert(
+        { course_date_id: course.id, signature_data: dataUrl, signed_at: dataUrl ? new Date().toISOString() : null, updated_at: new Date().toISOString() },
+        { onConflict: "course_date_id" },
+      );
+    if (error) { toast.error("Speichern fehlgeschlagen: " + error.message); return; }
+    setInstrSig(dataUrl);
+    setInstrOpen(false);
+    toast.success(dataUrl ? "Unterschrift Fahrlehrer gespeichert" : "Unterschrift Fahrlehrer entfernt");
   };
 
   const clearSig = async (row: AttendanceRow) => {
@@ -201,15 +229,19 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       signature: r.signature_data,
       present: r.present,
     }));
+    // Manuell gewähltes Datum (JJJJ-MM-TT) -> "TT.MM.JJJJ"; sonst Datum des Kurstermins
+    const dm = pdfDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const listDate = dm ? `${dm[3]}.${dm[2]}.${dm[1]}` : course.date;
     const pdf = generateParticipantList(
-      { part: course.part, date: course.date, day: dayNameFromDateStr(course.date, course.day), time: course.time,
+      { part: course.part, date: listDate, day: dayNameFromDateStr(listDate, course.day), time: course.time,
         location: course.location, instructor: course.instructor,
-        instructor_number: (course as any).instructor_number },
+        instructor_number: (course as any).instructor_number,
+        instructor_signature: instrSig },
       participants,
       filter
     );
     const suffix = filter === "paid" ? "_bezahlt" : filter === "unpaid" ? "_offen" : "";
-    downloadPdf(pdf, `Anwesenheit_MGK${course.part}_${course.date.replace(/\./g, "-")}${suffix}.pdf`);
+    downloadPdf(pdf, `Anwesenheit_MGK${course.part}_${listDate.replace(/\./g, "-")}${suffix}.pdf`);
   };
 
   return (
@@ -225,7 +257,21 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
           <p className="text-sm text-muted-foreground font-body">
             {rows.length} bestätigte Teilnehmer · Verschieben nur innerhalb gleicher Teil-Nummer möglich.
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center flex-wrap">
+            <div className="flex items-center gap-1">
+              <Label htmlFor="pdf-date" className="text-sm font-body whitespace-nowrap">Datum auf PDF</Label>
+              <input
+                id="pdf-date"
+                type="date"
+                value={pdfDate}
+                onChange={(e) => setPdfDate(e.target.value)}
+                title="Leer = Datum des Kurstermins"
+                className="h-9 rounded-md border border-input bg-background px-2 text-sm font-body"
+              />
+              {pdfDate && (
+                <Button variant="ghost" size="sm" onClick={() => setPdfDate("")} className="font-body px-2">Zurücksetzen</Button>
+              )}
+            </div>
             <Button variant="outline" size="sm" onClick={load} disabled={loading} className="font-body">
               <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
             </Button>
@@ -242,6 +288,21 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+        </div>
+
+        <div className="flex items-center gap-3 flex-wrap border border-border rounded-md p-3 mb-2">
+          <span className="font-body text-sm font-medium">Unterschrift Fahrlehrer{(course as any)?.instructor ? `: ${(course as any).instructor}` : ""}</span>
+          {instrSig ? (
+            <img src={instrSig} alt="Unterschrift Fahrlehrer" className="h-10 bg-white border border-border rounded" />
+          ) : (
+            <span className="text-sm text-muted-foreground font-body">noch nicht unterschrieben</span>
+          )}
+          <Button variant="outline" size="sm" onClick={() => setInstrOpen(true)} className="font-body">
+            <PenLine className="w-4 h-4 mr-1" /> {instrSig ? "Neu unterschreiben" : "Unterschreiben"}
+          </Button>
+          {instrSig && (
+            <Button variant="ghost" size="sm" onClick={() => saveInstrSig(null)} className="font-body text-destructive">Entfernen</Button>
+          )}
         </div>
 
         {loading ? (
@@ -312,6 +373,16 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
             </TableBody>
           </Table>
         )}
+
+        {/* Fahrlehrer sign sub-dialog */}
+        <Dialog open={instrOpen} onOpenChange={setInstrOpen}>
+          <DialogContent className="max-w-xl">
+            <DialogHeader>
+              <DialogTitle className="font-heading">Unterschrift Fahrlehrer</DialogTitle>
+            </DialogHeader>
+            <SignaturePad initial={instrSig} onSave={saveInstrSig} onCancel={() => setInstrOpen(false)} />
+          </DialogContent>
+        </Dialog>
 
         {/* Sign sub-dialog */}
         <Dialog open={!!signFor} onOpenChange={(v) => !v && setSignFor(null)}>
