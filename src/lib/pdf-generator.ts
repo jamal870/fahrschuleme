@@ -498,6 +498,8 @@ export interface ParticipantCourseInfo {
   location: string;
   instructor?: string | null;
   instructor_number?: string | null;
+  /** Unterschrift des Fahrlehrers als PNG-Data-URL (optional) */
+  instructor_signature?: string | null;
 }
 
 export interface Participant {
@@ -701,14 +703,20 @@ export function generateParticipantList(
   doc.text("Mit der Unterschrift wird die Teilnahme am o.g. Kurstag bestätigt.", 20, y);
 
   // Unterschriftsfeld Fahrlehrer (rechts neben dem Hinweis)
-  if (y + 16 > PAGE_BOTTOM) {
+  if (y + 22 > PAGE_BOTTOM) {
     addFooter(doc);
     doc.addPage();
     y = 30;
   }
+  y += 4; // Platz für die Unterschrift über der Linie
   const sigX = 160;
   const sigW = 117;
   const sigLineY = y + 9;
+  if (course.instructor_signature) {
+    try {
+      doc.addImage(course.instructor_signature, "PNG", sigX + 2, sigLineY - 12, 50, 12);
+    } catch (_e) { /* ungültiges Bild ignorieren */ }
+  }
   doc.setDrawColor(...DARK);
   doc.line(sigX, sigLineY, sigX + sigW, sigLineY);
   doc.setFont("helvetica", "normal");
