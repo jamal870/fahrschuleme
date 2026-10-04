@@ -43,6 +43,8 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
   const [rows, setRows] = useState<AttendanceRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [signFor, setSignFor] = useState<AttendanceRow | null>(null);
+  // Datum für die PDF-Liste (JJJJ-MM-TT); leer = Datum des Kurstermins
+  const [pdfDate, setPdfDate] = useState("");
 
   // Move-participant state
   const [moveFor, setMoveFor] = useState<AttendanceRow | null>(null);
@@ -93,6 +95,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
   };
 
   useEffect(() => { if (open) load(); /* eslint-disable-next-line */ }, [open, course?.id]);
+  useEffect(() => { setPdfDate(""); }, [course?.id]);
 
   const upsert = async (row: AttendanceRow, patch: Partial<AttendanceRow>) => {
     if (!course) return;
@@ -201,15 +204,18 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       signature: r.signature_data,
       present: r.present,
     }));
+    // Manuell gewähltes Datum (JJJJ-MM-TT) -> "TT.MM.JJJJ"; sonst Datum des Kurstermins
+    const dm = pdfDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const listDate = dm ? `${dm[3]}.${dm[2]}.${dm[1]}` : course.date;
     const pdf = generateParticipantList(
-      { part: course.part, date: course.date, day: dayNameFromDateStr(course.date, course.day), time: course.time,
+      { part: course.part, date: listDate, day: dayNameFromDateStr(listDate, course.day), time: course.time,
         location: course.location, instructor: course.instructor,
         instructor_number: (course as any).instructor_number },
       participants,
       filter
     );
     const suffix = filter === "paid" ? "_bezahlt" : filter === "unpaid" ? "_offen" : "";
-    downloadPdf(pdf, `Anwesenheit_MGK${course.part}_${course.date.replace(/\./g, "-")}${suffix}.pdf`);
+    downloadPdf(pdf, `Anwesenheit_MGK${course.part}_${listDate.replace(/\./g, "-")}${suffix}.pdf`);
   };
 
   return (
@@ -225,7 +231,21 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
           <p className="text-sm text-muted-foreground font-body">
             {rows.length} bestätigte Teilnehmer · Verschieben nur innerhalb gleicher Teil-Nummer möglich.
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center flex-wrap">
+            <div className="flex items-center gap-1">
+              <Label htmlFor="pdf-date" className="text-sm font-body whitespace-nowrap">Datum auf PDF</Label>
+              <input
+                id="pdf-date"
+                type="date"
+                value={pdfDate}
+                onChange={(e) => setPdfDate(e.target.value)}
+                title="Leer = Datum des Kurstermins"
+                className="h-9 rounded-md border border-input bg-background px-2 text-sm font-body"
+              />
+              {pdfDate && (
+                <Button variant="ghost" size="sm" onClick={() => setPdfDate("")} className="font-body px-2">Zurücksetzen</Button>
+              )}
+            </div>
             <Button variant="outline" size="sm" onClick={load} disabled={loading} className="font-body">
               <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
             </Button>
