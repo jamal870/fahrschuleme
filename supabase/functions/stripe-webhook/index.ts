@@ -140,7 +140,7 @@ serve(async (req) => {
 
         // Send confirmation email
         try {
-          await supabase.functions.invoke("send-transactional-email", {
+          const { error: confirmErr } = await supabase.functions.invoke("send-transactional-email", {
             body: {
               templateName: "booking-confirmation",
               recipientEmail: booking.email,
@@ -171,6 +171,7 @@ serve(async (req) => {
               },
             },
           });
+          if (confirmErr) throw confirmErr;
           console.log(`[STRIPE-WEBHOOK] Confirmation email sent for ${bookingId}`);
         } catch (emailErr) {
           console.error("[STRIPE-WEBHOOK] Email error:", emailErr);
@@ -212,6 +213,7 @@ serve(async (req) => {
                 templateData: {
                   bookingId: bookingId,
                   bookingType: booking.booking_type,
+                  paymentStatus: "paid",
                   firstName: booking.first_name,
                   lastName: booking.last_name,
                   email: booking.email,
