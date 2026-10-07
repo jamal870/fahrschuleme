@@ -28,11 +28,16 @@ interface AdminBookingNotificationProps {
   birthDate?: string
   faNumber?: string
   paymentMethod?: string
+  /** 'paid' wenn die Online-Zahlung bereits eingegangen ist (Stripe-Webhook) */
+  paymentStatus?: string
   totalPrice?: string
   bookingDate?: string
   items?: string
   courses?: CourseDetail[]
 }
+
+const isOnlinePayment = (pm?: string) =>
+  !!pm && (pm.toLowerCase().includes('stripe') || pm.toLowerCase().includes('online'))
 
 function formatCourseDate(d?: string) {
   if (!d) return ''
@@ -62,6 +67,7 @@ const AdminBookingNotificationEmail = ({
   birthDate,
   faNumber,
   paymentMethod,
+  paymentStatus,
   totalPrice,
   bookingDate,
   items,
@@ -80,7 +86,11 @@ const AdminBookingNotificationEmail = ({
 
         <Heading style={h1}>📋 Neue Buchung eingegangen</Heading>
 
-        {paymentMethod && paymentMethod.toLowerCase().includes('stripe') || paymentMethod && paymentMethod.toLowerCase().includes('online') ? (
+        {isOnlinePayment(paymentMethod) && paymentStatus === 'paid' ? (
+          <Section style={paidBanner}>
+            <Text style={paidText}>✅ Zahlung eingegangen – der Kunde hat online bezahlt. Die Buchung ist bestätigt.</Text>
+          </Section>
+        ) : isOnlinePayment(paymentMethod) ? (
           <Section style={pendingPaymentBanner}>
             <Text style={pendingPaymentText}>⏳ Zahlung ausstehend – Kunde wurde zur Online-Zahlung weitergeleitet. Buchung wird erst nach erfolgreicher Zahlung bestätigt.</Text>
           </Section>
@@ -155,8 +165,10 @@ const AdminBookingNotificationEmail = ({
 export const template = {
   component: AdminBookingNotificationEmail,
   subject: (data: Record<string, any>) => {
-    const isOnline = data.paymentMethod && (data.paymentMethod.toLowerCase().includes('stripe') || data.paymentMethod.toLowerCase().includes('online'));
-    const prefix = isOnline ? '⏳ Zahlung ausstehend' : 'Neue Buchung';
+    const isOnline = isOnlinePayment(data.paymentMethod);
+    const prefix = isOnline && data.paymentStatus === 'paid'
+      ? '✅ Zahlung eingegangen'
+      : isOnline ? '⏳ Zahlung ausstehend' : 'Neue Buchung';
     return `${prefix}: ${data.firstName || ''} ${data.lastName || ''} – ${data.bookingType === 'grundkurs' ? 'MGK' : 'Fahrstunde'}`;
   },
   displayName: 'Admin-Buchungsbenachrichtigung',
@@ -205,6 +217,8 @@ const priceRow = { fontSize: '15px', color: '#1a1a1a', lineHeight: '1.6', margin
 const courseBlock = { padding: '10px 12px', margin: '0 0 8px', backgroundColor: '#ffffff', border: '1px solid #eeeeee', borderLeft: `3px solid ${CYAN}`, borderRadius: '4px' }
 const courseTitle = { fontFamily: "'Sora', Arial, sans-serif", fontSize: '13px', fontWeight: '700' as const, color: NAVY, margin: '0 0 6px', textTransform: 'uppercase' as const, letterSpacing: '0.3px' }
 
+const paidBanner = { backgroundColor: '#e6f4ea', border: '1px solid #34a853', borderRadius: '6px', padding: '12px 16px', margin: '0 0 20px' }
+const paidText = { fontSize: '13px', color: '#1e7e34', lineHeight: '1.5', margin: '0', fontWeight: '600' as const }
 const pendingPaymentBanner = { backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', padding: '12px 16px', margin: '0 0 20px' }
 const pendingPaymentText = { fontSize: '13px', color: '#856404', lineHeight: '1.5', margin: '0', fontWeight: '600' as const }
 
