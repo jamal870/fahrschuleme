@@ -137,6 +137,26 @@ serve(async (req) => {
         });
       }
 
+      // Doppelbuchung verhindern: dieselbe E-Mail hat einen der gewählten
+      // Kurstermine bereits aktiv gebucht (bestätigt oder Zahlung offen).
+      const { data: existing } = await supabase
+        .from("booking_items")
+        .select("course_date_id, bookings!inner(email, status)")
+        .in("course_date_id", courseDateIds)
+        .eq("bookings.email", email.trim().toLowerCase())
+        .in("bookings.status", ["confirmed", "pending_payment"]);
+      if (existing && existing.length > 0) {
+        const dupParts = courses
+          .filter((c: any) => existing.some((e: any) => e.course_date_id === c.id))
+          .map((c: any) => `Teil ${c.part}`)
+          .join(", ");
+        return new Response(JSON.stringify({
+          error: `Du hast ${dupParts} bereits gebucht. Bitte melde dich bei uns, falls du etwas ändern möchtest.`,
+        }), {
+          status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       const noSpots = courses.find((c: any) => c.spots_available <= 0);
       if (noSpots) {
         return new Response(JSON.stringify({ error: `Kein Platz mehr verfügbar für Kursteil ${noSpots.part}` }), {
