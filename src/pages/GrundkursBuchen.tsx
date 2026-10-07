@@ -227,7 +227,17 @@ export default function GrundkursBuchen() {
         },
       });
 
-      if (bookingError || !bookingResult?.bookingId) throw new Error(bookingError?.message || bookingResult?.error || "Buchung fehlgeschlagen");
+      if (bookingError || !bookingResult?.bookingId) {
+        // Fachliche Fehlermeldung des Servers (z. B. Doppelbuchung, ausgebucht) anzeigen
+        let serverMsg: string | undefined = bookingResult?.error;
+        try {
+          const body = await (bookingError as { context?: Response } | null)?.context?.json();
+          if (body?.error) serverMsg = body.error;
+        } catch { /* keine JSON-Antwort */ }
+        const err = new Error(serverMsg || bookingError?.message || "Buchung fehlgeschlagen");
+        (err as Error & { userMessage?: string }).userMessage = serverMsg;
+        throw err;
+      }
 
       pendingBookingId = bookingResult.bookingId;
 
@@ -280,7 +290,8 @@ export default function GrundkursBuchen() {
           .catch((e) => console.warn("[release pending booking]", e));
         toast.error("Die Online-Zahlung konnte nicht gestartet werden. Es wurde nichts gebucht. Bitte wähle Barzahlung/Überweisung oder melde dich telefonisch bei uns.");
       } else {
-        toast.error("Buchung fehlgeschlagen. Bitte versuche es erneut.");
+        const userMessage = (err as Error & { userMessage?: string })?.userMessage;
+        toast.error(userMessage || "Buchung fehlgeschlagen. Bitte versuche es erneut.");
       }
     } finally {
       setIsSubmitting(false);
