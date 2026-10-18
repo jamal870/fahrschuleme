@@ -7,10 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { RefreshCw, Wallet, Download } from "lucide-react";
+import { RefreshCw, Wallet, Download, BadgeCheck } from "lucide-react";
 import PaymentDialog from "./PaymentDialog";
 import {
-  chf, methodLabel, normalizeMethod, paymentStatusLabel, PAYMENT_METHODS, type BookingPayment,
+  chf, methodLabel, normalizeMethod, paymentStatusLabel, addPayment, PAYMENT_METHODS, type BookingPayment,
 } from "@/lib/payments";
 
 interface BookingRow {
@@ -40,6 +40,28 @@ const AdminFinance = () => {
   const [search, setSearch] = useState("");
   const [includeCancelled, setIncludeCancelled] = useState(false);
   const [payFor, setPayFor] = useState<BookingRow | null>(null);
+  const [confirming, setConfirming] = useState<string | null>(null);
+
+  // Schnellbestätigung: offener Restbetrag ist eingegangen (Überweisung / TWINT / Bar)
+  const confirmReceived = async (r: Row) => {
+    if (r.remaining <= 0) return;
+    const method = normalizeMethod(r.payment_method);
+    if (!confirm(`${chf(r.remaining)} von ${r.first_name} ${r.last_name} als eingegangen (${methodLabel(method)}) bestätigen?`)) return;
+    setConfirming(r.id);
+    try {
+      await addPayment({
+        booking_id: r.id, amount: r.remaining, method,
+        paid_at: new Date().toISOString().slice(0, 10),
+        note: method === "ueberweisung" ? "Zahlungseingang bestätigt" : null,
+      });
+      toast.success(`${chf(r.remaining)} erfasst – Buchung ist bezahlt`);
+      await load();
+    } catch (e) {
+      toast.error("Bestätigen fehlgeschlagen: " + (e as Error).message);
+    } finally {
+      setConfirming(null);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
@@ -219,7 +241,17 @@ const AdminFinance = () => {
                     <TableCell className={`text-right ${r.remaining > 0 ? "text-amber-700 font-medium" : ""}`}>{chf(r.remaining)}</TableCell>
                     <TableCell><span className={`text-xs px-2 py-0.5 rounded ${statusBadge(r.payment_status)}`}>{paymentStatusLabel(r.payment_status)}</span></TableCell>
                     <TableCell>
-                      <Button size="sm" variant="outline" className="h-7 px-2" onClick={() => setPayFor(r)}>Zahlungen</Button>
+                      <div className="flex gap-1 justify-end">
+                        {r.remaining > 0 && r.status !== "cancelled" && normalizeMethod(r.payment_method) !== "stripe" && (
+                          <Button size="sm" variant="outline" disabled={confirming === r.id}
+                            className="h-7 px-2 border-green-600 text-green-700 hover:bg-green-50"
+                            title={`${chf(r.remaining)} als eingegangen bestätigen`}
+                            onClick={() => confirmReceived(r)}>
+                            <BadgeCheck className="w-3.5 h-3.5 mr-1" /> Eingang bestätigen
+                          </Button>
+                        )}
+                        <Button size="sm" variant="outline" className="h-7 px-2" onClick={() => setPayFor(r)}>Zahlungen</Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
