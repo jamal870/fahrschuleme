@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { RefreshCw, Wallet, Download, BadgeCheck } from "lucide-react";
 import PaymentDialog from "./PaymentDialog";
+import BookingCoursesDialog from "./BookingCoursesDialog";
 import {
   chf, methodLabel, normalizeMethod, paymentStatusLabel, addPayment, PAYMENT_METHODS, type BookingPayment,
 } from "@/lib/payments";
@@ -19,6 +20,7 @@ interface BookingRow {
   first_name: string;
   last_name: string;
   email: string;
+  phone?: string | null;
   booking_type: string;
   total_price: number;
   status: string;
@@ -40,6 +42,7 @@ const AdminFinance = () => {
   const [search, setSearch] = useState("");
   const [includeCancelled, setIncludeCancelled] = useState(false);
   const [payFor, setPayFor] = useState<BookingRow | null>(null);
+  const [coursesFor, setCoursesFor] = useState<BookingRow | null>(null);
   const [confirming, setConfirming] = useState<string | null>(null);
 
   // Schnellbestätigung: offener Restbetrag ist eingegangen (Überweisung / TWINT / Bar)
@@ -67,7 +70,7 @@ const AdminFinance = () => {
     setLoading(true);
     const [{ data: b, error: be }, { data: p, error: pe }] = await Promise.all([
       supabase.from("bookings")
-        .select("id, created_at, first_name, last_name, email, booking_type, total_price, status, payment_method, payment_status")
+        .select("id, created_at, first_name, last_name, email, phone, booking_type, total_price, status, payment_method, payment_status")
         .order("created_at", { ascending: false }),
       (supabase as any).from("booking_payments").select("*"),
     ]);
@@ -229,7 +232,10 @@ const AdminFinance = () => {
                   <TableRow key={r.id} className={r.status === "cancelled" ? "opacity-60" : ""}>
                     <TableCell className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleDateString("de-CH")}</TableCell>
                     <TableCell>
-                      <div className="font-medium">{r.first_name} {r.last_name}</div>
+                      <button type="button" className="font-medium text-left hover:underline hover:text-primary"
+                        title="Gebuchte Kurse anzeigen" onClick={() => setCoursesFor(r)}>
+                        {r.first_name} {r.last_name}
+                      </button>
                       <div className="text-xs text-muted-foreground">{r.email}</div>
                     </TableCell>
                     <TableCell><Badge variant="outline">{r.booking_type}</Badge></TableCell>
@@ -262,6 +268,7 @@ const AdminFinance = () => {
       </Card>
 
       <PaymentDialog booking={payFor} open={!!payFor} onClose={() => setPayFor(null)} onChanged={load} />
+      <BookingCoursesDialog booking={coursesFor} open={!!coursesFor} onClose={() => setCoursesFor(null)} />
     </div>
   );
 };
