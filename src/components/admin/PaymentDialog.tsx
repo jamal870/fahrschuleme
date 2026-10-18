@@ -6,7 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Trash2, Plus, BadgeCheck } from "lucide-react";
+import { Trash2, Plus, BadgeCheck, Pencil, Ban } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Textarea } from "@/components/ui/textarea";
 import {
   addPayment, deletePayment, fetchPayments, chf, methodLabel, normalizeMethod, sumPaid,
   PAYMENT_METHODS, type BookingPayment, type PaymentMethod,
@@ -18,6 +20,7 @@ export interface PaymentDialogBooking {
   last_name: string;
   total_price: number;
   payment_method?: string | null;
+  status?: string | null;
 }
 
 interface Props {
@@ -38,8 +41,19 @@ const PaymentDialog = ({ booking, open, onClose, onChanged }: Props) => {
   const [method, setMethod] = useState<PaymentMethod>("bar");
   const [paidAt, setPaidAt] = useState(today());
   const [note, setNote] = useState("");
+  // Betrag der Buchung anpassen (z. B. Rabatt, A1-Preis)
+  const [editingTotal, setEditingTotal] = useState(false);
+  const [newTotal, setNewTotal] = useState("");
+  const [totalReason, setTotalReason] = useState("");
+  const [localTotal, setLocalTotal] = useState<number | null>(null);
+  // Buchung stornieren
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [cancelNotify, setCancelNotify] = useState(true);
+  const [cancelling, setCancelling] = useState(false);
 
-  const total = Number(booking?.total_price ?? 0);
+  const total = localTotal ?? Number(booking?.total_price ?? 0);
+  const isCancelled = booking?.status === "cancelled";
   const paid = sumPaid(payments);
   const remaining = Math.max(0, Math.round((total - paid) * 100) / 100);
 
@@ -62,6 +76,13 @@ const PaymentDialog = ({ booking, open, onClose, onChanged }: Props) => {
       setMethod(normalizeMethod(booking.payment_method));
       setPaidAt(today());
       setNote("");
+      setLocalTotal(null);
+      setEditingTotal(false);
+      setNewTotal("");
+      setTotalReason("");
+      setCancelOpen(false);
+      setCancelReason("");
+      setCancelNotify(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, booking?.id]);
@@ -95,6 +116,47 @@ const PaymentDialog = ({ booking, open, onClose, onChanged }: Props) => {
     }
   };
 
+  const saveTotal = async () => {
+    if (!booking) return;
+    const v = parseFloat(newTotal.replace(",", "."));
+    if (!(v >= 0)) { toast.error("Bitte einen gültigen Betrag eingeben"); return; }
+    if (v < paid) {
+      toast.error(`Der neue Betrag (${chf(v)}) ist kleiner als die bereits bezahlte Summe (${chf(paid)}). Zuerst eine Zahlung löschen.`);
+      return;
+    }
+    setSaving(true);
+    try {
+      const { error } = await supabase.from("bookings").update({ total_price: v }).eq("id", booking.id);
+      if (error) throw error;
+      setLocalTotal(v);
+      setEditingTotal(false);
+      // Zahlungsstatus wird in der DB per Trigger (bookings_total_recalc) neu abgeleitet
+      toast.success(`Betrag auf ${chf(v)} geändert${totalReason.trim() ? ` (${totalReason.trim()})` : ""}`);
+      onChanged?.();
+    } catch (e) {
+      toast.error("Betrag konnte nicht geändert werden: " + (e as Error).message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const cancelBooking = async () => {
+    if (!booking) return;
+    setCancelling(true);
+    const { data, error } = await supabase.functions.invoke("admin-cancel-booking", {
+      body: { bookingId: booking.id, mode: "cancel", reason: cancelReason.trim() || null, notify: cancelNotify },
+    });
+    setCancelling(false);
+    if (error || (data as any)?.error) {
+      toast.error("Stornieren fehlgeschlagen: " + (error?.message || (data as any)?.error));
+      return;
+    }
+    toast.success(cancelNotify ? "Buchung storniert – Kunde wurde per E-Mail informiert" : "Buchung storniert");
+    setCancelOpen(false);
+    onChanged?.();
+    onClose();
+  };
+
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-2xl">
@@ -106,7 +168,15 @@ const PaymentDialog = ({ booking, open, onClose, onChanged }: Props) => {
 
         <div className="grid grid-cols-3 gap-3 text-sm">
           <div className="rounded-md border border-border p-3">
-            <div className="text-muted-foreground">Betrag</div>
+            <div className="text-muted-foreground flex items-center justify-between">
+              <span>Betrag</span>
+              {!isCancelled && !editingTotal && (
+                <button type="button" className="text-xs underline flex items-center gap-1 hover:text-foreground"
+                  onClick={() => { setNewTotal(total.toFixed(2)); setEditingTotal(true); }} title="Betrag anpassen">
+                  <Pencil className="w-3 h-3" /> anpassen
+                </button>
+              )}
+            </div>
             <div className="font-semibold text-lg">{chf(total)}</div>
           </div>
           <div className="rounded-md border border-border p-3">
@@ -119,6 +189,35 @@ const PaymentDialog = ({ booking, open, onClose, onChanged }: Props) => {
           </div>
         </div>
 
+        {editingTotal && (
+          <div className="rounded-md border border-amber-300 bg-amber-50 p-3 space-y-2">
+            <div className="font-medium text-sm">Betrag der Buchung anpassen</div>
+            <div className="grid gap-2 md:grid-cols-3">
+              <div className="space-y-1">
+                <Label htmlFor="new-total" className="text-xs">Neuer Betrag (CHF)</Label>
+                <Input id="new-total" type="number" inputMode="decimal" step="0.05" min="0"
+                  value={newTotal} onChange={(e) => setNewTotal(e.target.value)} />
+              </div>
+              <div className="space-y-1 md:col-span-2">
+                <Label htmlFor="total-reason" className="text-xs">Grund (optional)</Label>
+                <Input id="total-reason" value={totalReason} onChange={(e) => setTotalReason(e.target.value)} placeholder="z. B. Rabatt, nur Teil 3, Kulanz" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button size="sm" disabled={saving} onClick={saveTotal}>Betrag speichern</Button>
+              <Button size="sm" variant="ghost" onClick={() => setEditingTotal(false)}>Abbrechen</Button>
+            </div>
+            <p className="text-xs text-muted-foreground">Der Status (Offen / Teilbezahlt / Bezahlt) wird aus dem neuen Betrag neu berechnet.</p>
+          </div>
+        )}
+
+        {isCancelled && (
+          <div className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm">
+            Diese Buchung ist <strong>storniert</strong>. Zahlungen können nur noch eingesehen oder gelöscht werden.
+          </div>
+        )}
+
+        {!isCancelled && (
         <div className="rounded-md border border-border p-3 space-y-3">
           <div className="font-medium text-sm">Zahlung erfassen</div>
           <div className="grid gap-3 md:grid-cols-4">
@@ -157,6 +256,7 @@ const PaymentDialog = ({ booking, open, onClose, onChanged }: Props) => {
             )}
           </div>
         </div>
+        )}
 
         <div>
           <div className="font-medium text-sm mb-1">Bisherige Zahlungen</div>
@@ -193,6 +293,36 @@ const PaymentDialog = ({ booking, open, onClose, onChanged }: Props) => {
             </Table>
           )}
         </div>
+        {!isCancelled && (
+          <div className="border-t border-border pt-3">
+            {!cancelOpen ? (
+              <Button variant="outline" size="sm" className="border-destructive text-destructive hover:bg-destructive/10"
+                onClick={() => setCancelOpen(true)}>
+                <Ban className="w-4 h-4 mr-1" /> Buchung stornieren
+              </Button>
+            ) : (
+              <div className="rounded-md border border-destructive/40 bg-destructive/5 p-3 space-y-2">
+                <div className="font-medium text-sm">Buchung stornieren</div>
+                <p className="text-xs text-muted-foreground">
+                  Die Kursplätze werden wieder freigegeben, die Buchung bleibt als „storniert" sichtbar.
+                  {paid > 0 && <> Bereits bezahlt: <strong>{chf(paid)}</strong> – eine Rückerstattung musst du separat vornehmen.</>}
+                </p>
+                <Textarea rows={2} value={cancelReason} onChange={(e) => setCancelReason(e.target.value)}
+                  placeholder="Grund für den Kunden (optional, steht in der E-Mail)" />
+                <label className="text-sm flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={cancelNotify} onChange={(e) => setCancelNotify(e.target.checked)} />
+                  Kunde per E-Mail informieren
+                </label>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="destructive" disabled={cancelling} onClick={cancelBooking}>
+                    {cancelling ? "Storniere…" : "Jetzt stornieren"}
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => setCancelOpen(false)}>Abbrechen</Button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

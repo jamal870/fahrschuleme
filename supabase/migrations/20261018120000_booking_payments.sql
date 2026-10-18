@@ -82,3 +82,21 @@ SELECT b.id, b.total_price,
 FROM public.bookings b
 WHERE b.payment_status = 'paid' AND b.total_price > 0
   AND NOT EXISTS (SELECT 1 FROM public.booking_payments p WHERE p.booking_id = b.id);
+
+-- Betragsänderung an der Buchung: Zahlungsstatus neu ableiten
+CREATE OR REPLACE FUNCTION public.trg_bookings_total_recalc()
+RETURNS trigger
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public
+AS $$
+BEGIN
+  IF NEW.total_price IS DISTINCT FROM OLD.total_price THEN
+    PERFORM public.recalc_booking_payment_status(NEW.id);
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS bookings_total_recalc ON public.bookings;
+CREATE TRIGGER bookings_total_recalc
+  AFTER UPDATE OF total_price ON public.bookings
+  FOR EACH ROW EXECUTE FUNCTION public.trg_bookings_total_recalc();
