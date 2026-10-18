@@ -453,7 +453,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
         )}
 
         <PaymentDialog
-          booking={payFor ? { id: payFor.booking_id, first_name: payFor.first_name, last_name: payFor.last_name, total_price: payFor.total_price, payment_method: payFor.payment_method } : null}
+          booking={payFor ? { id: payFor.booking_id, first_name: payFor.first_name, last_name: payFor.last_name, total_price: payFor.total_price, payment_method: payFor.payment_method, status: "confirmed" } : null}
           open={!!payFor}
           onClose={() => setPayFor(null)}
           onChanged={load}
