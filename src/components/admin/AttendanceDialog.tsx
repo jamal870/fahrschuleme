@@ -12,6 +12,8 @@ import { PenLine, FileDown, RefreshCw, Check, ChevronDown, ArrowRightLeft, Clock
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { dayNameFromDateStr } from "@/lib/utils";
 import SignaturePad from "./SignaturePad";
+import PaymentDialog from "./PaymentDialog";
+import { chf, paymentStatusLabel, type BookingPayment } from "@/lib/payments";
 import { generateParticipantList, downloadPdf, type Participant, type ParticipantFilter } from "@/lib/pdf-generator";
 import { Badge } from "@/components/ui/badge";
 import type { Tables } from "@/integrations/supabase/types";
@@ -28,6 +30,10 @@ interface AttendanceRow {
   fa_number: string;
   payment_method: string;
   payment_status: string;
+  /** Gesamtbetrag der Buchung (alle Teile) */
+  total_price: number;
+  /** Summe aller erfassten Zahlungen der Buchung */
+  paid_amount: number;
   signature_id?: string;
   signature_data?: string | null;
   present: boolean;
@@ -66,7 +72,7 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     setLoading(true);
     const { data: items, error } = await supabase
       .from("booking_items")
-      .select("booking_id, bookings!inner(id, first_name, last_name, phone, email, birth_date, fa_number, payment_method, payment_status, status)")
+      .select("booking_id, bookings!inner(id, first_name, last_name, phone, email, birth_date, fa_number, payment_method, payment_status, status, total_price)")
       .eq("course_date_id", course.id);
     if (error) { toast.error("Fehler beim Laden"); setLoading(false); return; }
 
@@ -100,6 +106,18 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
     }
     const sigMap = new Map(sigs.map((s) => [s.booking_id, s]));
 
+    // Erfasste Zahlungen (Teilzahlungen) je Buchung summieren
+    const paidMap = new Map<string, number>();
+    if (bookingIds.length > 0) {
+      const { data: pays } = await (supabase as any)
+        .from("booking_payments")
+        .select("booking_id, amount")
+        .in("booking_id", bookingIds);
+      ((pays as BookingPayment[]) || []).forEach((p) => {
+        paidMap.set(p.booking_id, (paidMap.get(p.booking_id) ?? 0) + Number(p.amount || 0));
+      });
+    }
+
     setRows(bookings.map((b: any) => {
       const s = sigMap.get(b.id);
       return {
@@ -109,6 +127,8 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
         birth_date: b.birth_date,
         fa_number: b.fa_number, payment_method: b.payment_method,
         payment_status: b.payment_status || "pending",
+        total_price: Number(b.total_price || 0),
+        paid_amount: paidMap.get(b.id) ?? 0,
         signature_id: s?.id, signature_data: s?.signature_data,
         present: s?.present ?? false,
       };
@@ -142,16 +162,9 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
 
   const togglePresent = (row: AttendanceRow, present: boolean) => upsert(row, { present });
 
-  const togglePayment = async (row: AttendanceRow) => {
-    const next = row.payment_status === "paid" ? "pending" : "paid";
-    const { error } = await supabase
-      .from("bookings")
-      .update({ payment_status: next })
-      .eq("id", row.booking_id);
-    if (error) { toast.error("Fehler: " + error.message); return; }
-    setRows((rs) => rs.map((r) => r.booking_id === row.booking_id ? { ...r, payment_status: next } : r));
-    toast.success(next === "paid" ? "Als bezahlt markiert" : "Zurück auf Pending");
-  };
+  // Zahlungen als Teilzahlungen erfassen (Dialog); Status wird in der DB per Trigger gesetzt
+  const [payFor, setPayFor] = useState<AttendanceRow | null>(null);
+  const togglePayment = (row: AttendanceRow) => setPayFor(row);
 
 
   const saveSig = async (dataUrl: string) => {
@@ -247,6 +260,8 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
       phone: r.phone, birth_date: r.birth_date,
       fa_number: r.fa_number, payment_method: r.payment_method,
       paid: r.payment_status === "paid",
+      paid_amount: r.paid_amount,
+      total_price: r.total_price,
       signature: r.signature_data,
       present: r.present,
     }));
@@ -399,12 +414,18 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
                         ? "h-7 px-2 bg-green-600 hover:bg-green-700 text-white font-body"
                         : "h-7 px-2 border-amber-500 text-amber-700 hover:bg-amber-50 font-body"}
                       onClick={() => togglePayment(r)}
-                      title={r.payment_status === "paid" ? "Klicken: zurück auf Pending" : "Klicken: Zahlung bestätigen"}
+                      title="Zahlungen anzeigen / Teilzahlung erfassen"
                     >
                       {r.payment_status === "paid"
                         ? <><BadgeCheck className="w-3.5 h-3.5 mr-1" /> Bezahlt</>
-                        : <><Clock className="w-3.5 h-3.5 mr-1" /> Pending</>}
+                        : <><Clock className="w-3.5 h-3.5 mr-1" /> {paymentStatusLabel(r.payment_status)}</>}
                     </Button>
+                    {r.payment_status !== "paid" && (
+                      <div className="text-xs mt-1 font-body">
+                        <span className="text-amber-700 font-medium">Offen {chf(Math.max(0, r.total_price - r.paid_amount))}</span>
+                        <span className="text-muted-foreground"> von {chf(r.total_price)}</span>
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell>
                     {r.signature_data ? (
@@ -430,6 +451,13 @@ const AttendanceDialog = ({ course, open, onClose }: Props) => {
             </TableBody>
           </Table>
         )}
+
+        <PaymentDialog
+          booking={payFor ? { id: payFor.booking_id, first_name: payFor.first_name, last_name: payFor.last_name, total_price: payFor.total_price, payment_method: payFor.payment_method } : null}
+          open={!!payFor}
+          onClose={() => setPayFor(null)}
+          onChanged={load}
+        />
 
         {/* Fahrlehrer sign sub-dialog */}
         <Dialog open={instrOpen} onOpenChange={setInstrOpen}>

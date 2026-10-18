@@ -82,6 +82,28 @@ serve(async (req) => {
         throw updateError;
       }
 
+      // Stripe-Zahlung als Zahlungseintrag erfassen (idempotent über stripe_session_id).
+      // Hinweis: Tabelle booking_payments muss existieren (Migration 20261018120000).
+      try {
+        const amountChf = session.amount_total != null ? Number(session.amount_total) / 100 : null;
+        if (amountChf && amountChf > 0) {
+          const { error: payErr } = await supabase.from("booking_payments").upsert(
+            {
+              booking_id: bookingId,
+              amount: amountChf,
+              method: "stripe",
+              paid_at: new Date().toISOString().slice(0, 10),
+              note: "Stripe Checkout",
+              stripe_session_id: session.id,
+            },
+            { onConflict: "stripe_session_id", ignoreDuplicates: true },
+          );
+          if (payErr) console.warn("[STRIPE-WEBHOOK] booking_payments insert failed", payErr.message);
+        }
+      } catch (e) {
+        console.warn("[STRIPE-WEBHOOK] booking_payments insert error", (e as Error).message);
+      }
+
       if (!updatedRows?.length) {
         // Entweder Webhook-Wiederholung (Buchung schon bestätigt) oder die
         // Zahlung kam an, nachdem die Reservierung bereits freigegeben wurde.

@@ -115,6 +115,47 @@ export type Database = {
           },
         ]
       }
+      booking_payments: {
+        Row: {
+          amount: number
+          booking_id: string
+          created_at: string
+          id: string
+          method: string
+          note: string | null
+          paid_at: string
+          stripe_session_id: string | null
+        }
+        Insert: {
+          amount: number
+          booking_id: string
+          created_at?: string
+          id?: string
+          method: string
+          note?: string | null
+          paid_at?: string
+          stripe_session_id?: string | null
+        }
+        Update: {
+          amount?: number
+          booking_id?: string
+          created_at?: string
+          id?: string
+          method?: string
+          note?: string | null
+          paid_at?: string
+          stripe_session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_payments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           address: string

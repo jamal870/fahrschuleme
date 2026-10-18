@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { RefreshCw, Eye, FileText, Receipt, AlertTriangle, CheckCircle, Pencil, Save, X, Clock, BadgeCheck, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import PaymentDialog from "./PaymentDialog";
+import { paymentStatusLabel } from "@/lib/payments";
 import { CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import {
@@ -213,16 +215,18 @@ const AdminBookings = () => {
     }
   };
 
-  const togglePaymentStatus = async (b: Booking) => {
-    const next = b.payment_status === "paid" ? "pending" : "paid";
-    const { error } = await supabase
-      .from("bookings")
-      .update({ payment_status: next })
-      .eq("id", b.id);
-    if (error) { toast.error("Fehler: " + error.message); return; }
-    toast.success(next === "paid" ? "Als bezahlt markiert" : "Zurück auf ausstehend");
-    setBookings((bs) => bs.map((x) => x.id === b.id ? { ...x, payment_status: next } : x));
-    if (selectedBooking?.id === b.id) setSelectedBooking({ ...selectedBooking, payment_status: next });
+  // Zahlungen werden als Teilzahlungen erfasst; der Status kommt aus der Datenbank (Trigger).
+  const [payFor, setPayFor] = useState<Booking | null>(null);
+  const togglePaymentStatus = (b: Booking) => setPayFor(b);
+  const refreshAfterPayment = async () => {
+    const { data } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
+    if (data) {
+      setBookings(data);
+      if (selectedBooking) {
+        const fresh = (data as Booking[]).find((x) => x.id === selectedBooking.id);
+        if (fresh) setSelectedBooking(fresh);
+      }
+    }
   };
 
   const [deleteTarget, setDeleteTarget] = useState<Booking | null>(null);
@@ -292,11 +296,11 @@ const AdminBookings = () => {
                           ? "h-7 px-2 bg-green-600 hover:bg-green-700 text-white"
                           : "h-7 px-2 border-amber-500 text-amber-700 hover:bg-amber-50"}
                         onClick={() => togglePaymentStatus(b)}
-                        title={b.payment_status === "paid" ? "Klicken: zurück auf Pending" : "Klicken: als bezahlt markieren"}
+                        title="Zahlungen anzeigen / Teilzahlung erfassen"
                       >
                         {b.payment_status === "paid"
                           ? <><BadgeCheck className="w-3.5 h-3.5 mr-1" /> Bezahlt</>
-                          : <><Clock className="w-3.5 h-3.5 mr-1" /> Pending</>}
+                          : <><Clock className="w-3.5 h-3.5 mr-1" /> {paymentStatusLabel(b.payment_status)}</>}
                       </Button>
                     </TableCell>
                     <TableCell><Badge variant={statusColor(b.status) as any}>{b.status}</Badge></TableCell>
@@ -388,10 +392,11 @@ const AdminBookings = () => {
                       ? "h-7 px-2 bg-green-600 hover:bg-green-700 text-white"
                       : "h-7 px-2 border-amber-500 text-amber-700 hover:bg-amber-50"}
                     onClick={() => togglePaymentStatus(selectedBooking)}
+                    title="Zahlungen anzeigen / Teilzahlung erfassen"
                   >
                     {selectedBooking.payment_status === "paid"
                       ? <><BadgeCheck className="w-3.5 h-3.5 mr-1" /> Bezahlt</>
-                      : <><Clock className="w-3.5 h-3.5 mr-1" /> Pending</>}
+                      : <><Clock className="w-3.5 h-3.5 mr-1" /> {paymentStatusLabel(selectedBooking.payment_status)}</>}
                   </Button>
                 </div>
                 <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusColor(selectedBooking.status) as any}>{selectedBooking.status}</Badge></div>
@@ -481,6 +486,7 @@ const AdminBookings = () => {
                       <SelectItem value="pending">pending</SelectItem>
                       <SelectItem value="pending_payment">pending_payment</SelectItem>
                       <SelectItem value="confirmed">confirmed</SelectItem>
+                      <SelectItem value="partial">partial</SelectItem>
                       <SelectItem value="paid">paid</SelectItem>
                       <SelectItem value="cancelled">cancelled</SelectItem>
                     </SelectContent>
@@ -521,6 +527,7 @@ const AdminBookings = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <PaymentDialog booking={payFor} open={!!payFor} onClose={() => setPayFor(null)} onChanged={refreshAfterPayment} />
     </div>
 
   );
