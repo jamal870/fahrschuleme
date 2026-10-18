@@ -510,6 +510,9 @@ export interface Participant {
   fa_number: string;
   payment_method: string;
   paid: boolean;
+  /** Summe erfasster Zahlungen (für "Teilbezahlt" / offener Betrag) */
+  paid_amount?: number;
+  total_price?: number;
   signature?: string | null;
   present?: boolean;
 }
@@ -608,7 +611,12 @@ export function generateParticipantList(
       3: wrap(p.birth_date || "–", cols[3].w),
       4: wrap(p.fa_number || "–", cols[4].w),
       5: wrap(formatPaymentMethod(p.payment_method), cols[5].w),
-      6: wrap(p.paid ? "Bezahlt" : "Offen", cols[6].w),
+      6: wrap(
+        p.paid ? "Bezahlt"
+        : (p.paid_amount ?? 0) > 0 && p.total_price != null
+          ? `Teilbez. – offen ${(p.total_price - (p.paid_amount ?? 0)).toFixed(2)}`
+          : "Offen",
+        cols[6].w),
     };
     const maxLines = Math.max(1, ...Object.values(wrapped).map((l) => l.length));
     const rowH = Math.max(MIN_ROW_H, 6 + maxLines * LINE_H + 4);

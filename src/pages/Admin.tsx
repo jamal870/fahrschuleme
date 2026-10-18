@@ -17,6 +17,7 @@ import AdminContent from "@/components/admin/AdminContent";
 import AdminAssistant from "@/components/admin/AdminAssistant";
 import AdminAiSettings from "@/components/admin/AdminAiSettings";
 import AdminPresentations from "@/components/admin/AdminPresentations";
+import AdminFinance from "@/components/admin/AdminFinance";
 
 import BrandLogo from "@/components/BrandLogo";
 import ChangePasswordDialog from "@/components/admin/ChangePasswordDialog";
@@ -124,6 +125,7 @@ const Admin = () => {
               ["courses", "Kurstermine"],
               ["photo", "Foto-Planung"],
               ["bookings", "Buchungen"],
+              ["finance", "Finanzen"],
               ["participants", "Teilnehmer"],
               ["team", "Team"],
               ["promotions", "Aktionen"],
@@ -147,6 +149,7 @@ const Admin = () => {
           <TabsContent value="courses"><AdminErrorBoundary label="Kurstermine"><AdminCourseDates /></AdminErrorBoundary></TabsContent>
           <TabsContent value="photo"><AdminErrorBoundary label="Foto-Planung"><AdminPhotoImport /></AdminErrorBoundary></TabsContent>
           <TabsContent value="bookings"><AdminErrorBoundary label="Buchungen"><AdminBookings /></AdminErrorBoundary></TabsContent>
+          <TabsContent value="finance"><AdminErrorBoundary label="Finanzen"><AdminFinance /></AdminErrorBoundary></TabsContent>
           <TabsContent value="participants"><AdminErrorBoundary label="Teilnehmer"><AdminParticipants /></AdminErrorBoundary></TabsContent>
           <TabsContent value="team"><AdminErrorBoundary label="Team"><AdminTeam /></AdminErrorBoundary></TabsContent>
           <TabsContent value="promotions"><AdminErrorBoundary label="Aktionen"><AdminPromotions /></AdminErrorBoundary></TabsContent>
