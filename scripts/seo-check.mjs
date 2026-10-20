@@ -54,13 +54,25 @@ async function loadSitemap() {
 const decode = (s) => s.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 const attr = (html, re) => { const m = html.match(re); return m ? decode(m[1]) : null; };
 
+// Attribut-Reihenfolge ist egal (react-helmet-async schreibt data-rh="true" zuerst).
+// Liefert den Wert von `valueAttr` des ersten Tags `tag`, das `matchAttr="matchValue"` trägt.
+function tagAttr(html, tag, matchAttr, matchValue, valueAttr) {
+  const re = new RegExp(`<${tag}\\b[^>]*\\b${matchAttr}="${matchValue}"[^>]*>`, "gi");
+  for (const m of html.matchAll(re)) {
+    const v = m[0].match(new RegExp(`\\b${valueAttr}="([^"]*)"`, "i"));
+    if (v) return decode(v[1]);
+  }
+  return null;
+}
+
 function analyse(html) {
-  const title = attr(html, /<title>([^<]*)<\/title>/);
-  const description = attr(html, /<meta name="description" content="([^"]*)"/);
-  const canonical = attr(html, /<link rel="canonical" href="([^"]*)"/);
-  const ogUrl = attr(html, /<meta property="og:url" content="([^"]*)"/);
-  const noindex = /<meta name="robots" content="[^"]*noindex/i.test(html);
+  const title = attr(html, /<title[^>]*>([^<]*)<\/title>/);
+  const description = tagAttr(html, "meta", "name", "description", "content");
+  const canonical = tagAttr(html, "link", "rel", "canonical", "href");
+  const ogUrl = tagAttr(html, "meta", "property", "og:url", "content");
+  const noindex = /<meta\b[^>]*name="robots"[^>]*content="[^"]*noindex/i.test(html);
   const h1Count = (html.match(/<h1[\s>]/gi) || []).length;
+  const titleCount = (html.match(/<title[\s>]/gi) || []).length;
   const ldBlocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
   const ldErrors = [];
   const ldTypes = [];
@@ -71,14 +83,20 @@ function analyse(html) {
       for (const o of list) ldTypes.push(o["@type"] ?? "?");
     } catch (e) { ldErrors.push(e.message); }
   }
-  return { title, description, canonical, ogUrl, noindex, h1Count, ldCount: ldBlocks.length, ldErrors, ldTypes };
+  return { title, description, canonical, ogUrl, noindex, h1Count, titleCount, ldCount: ldBlocks.length, ldErrors, ldTypes };
 }
 
 const problems = [];
 const rows = [];
 const note = (url, msg) => problems.push(`${url}  ${msg}`);
 
-const sitemapUrls = await loadSitemap();
+let sitemapUrls;
+try {
+  sitemapUrls = await loadSitemap();
+} catch (e) {
+  console.error(`Sitemap konnte nicht geladen werden (${useDist ? "dist/sitemap.xml" : BASE + "/sitemap.xml"}): ${e.cause?.message ?? e.message}`);
+  process.exit(2);
+}
 console.log(`${useDist ? "dist/" : BASE} – ${sitemapUrls.length} Sitemap-URLs\n`);
 
 for (const smUrl of sitemapUrls) {
@@ -95,6 +113,7 @@ for (const smUrl of sitemapUrls) {
   if (a.canonical !== smUrl) note(smUrl, `Canonical weicht ab: ${a.canonical}`);
   if (a.ogUrl && a.ogUrl !== smUrl) note(smUrl, `og:url weicht ab: ${a.ogUrl}`);
   if (a.h1Count !== 1) note(smUrl, `${a.h1Count} H1 (erwartet 1)`);
+  if (a.titleCount !== 1) note(smUrl, `${a.titleCount} <title>-Tags (erwartet 1)`);
   if (a.ldCount === 0) note(smUrl, "kein JSON-LD");
   for (const e of a.ldErrors) note(smUrl, `JSON-LD nicht parsebar: ${e}`);
   if (!a.title) note(smUrl, "kein Title");
