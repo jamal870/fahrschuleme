@@ -13,12 +13,23 @@ const SITE_URL = "https://www.fahrschule-me.ch";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 /**
+ * Kanonische URL einer Route. Netlify liefert die vorgerenderten Seiten
+ * als /<route>/index.html aus und leitet /<route> per 301 auf /<route>/
+ * um ("Pretty URLs"). Canonical, og:url, Sitemap und JSON-LD nennen
+ * deshalb einheitlich die Variante mit Schrägstrich am Ende.
+ */
+export const canonicalUrl = (path: string): string => {
+  const clean = path.replace(/\/+$/, "");
+  return clean === "" ? `${SITE_URL}/` : `${SITE_URL}${clean}/`;
+};
+
+/**
  * Setzt per-Seite SEO-Tags (title, description, canonical, og:*, twitter:*, JSON-LD).
  * Funktioniert für JS-Crawler (Google). Social-Crawler (LinkedIn, WhatsApp, FB)
  * sehen die Fallback-Tags aus index.html, da sie kein JavaScript ausführen.
  */
 const Seo = ({ title, description, path, jsonLd, image = DEFAULT_IMAGE, noindex }: SeoProps) => {
-  const url = `${SITE_URL}${path}`;
+  const url = canonicalUrl(path);
   return (
     <Helmet>
       <title>{title}</title>

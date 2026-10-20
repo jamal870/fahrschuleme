@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { MapPin, Clock, Phone, ArrowRight, CheckCircle2 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import Seo from "@/components/Seo";
+import Seo, { canonicalUrl } from "@/components/Seo";
 import GoogleReviews from "@/components/GoogleReviews";
 import Breadcrumbs, { type BreadcrumbItem } from "@/components/Breadcrumbs";
 import RelatedLinks, { type RelatedLink } from "@/components/RelatedLinks";
@@ -29,15 +29,13 @@ export interface LocalLandingProps {
   relatedLinks?: RelatedLink[];
 }
 
-const SITE_URL = "https://www.fahrschule-me.ch";
-
 const LocalLandingPage = (p: LocalLandingProps) => {
   const jsonLd: Record<string, unknown>[] = [
     {
       "@context": "https://schema.org",
       "@type": p.serviceType,
       name: `${tenantConfig.brand.name} – ${p.serviceName}`,
-      url: `${SITE_URL}${p.path}`,
+      url: canonicalUrl(p.path),
       telephone: tenantConfig.contact.phone,
       email: tenantConfig.contact.email,
       address: {

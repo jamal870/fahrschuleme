@@ -40,16 +40,16 @@ const MotorradFuehrerscheinBaden = () => (
       { q: "Wo findet der MGK statt?", a: "In Wettingen, an der Bahnhofstrasse 56 – wenige Minuten von Baden entfernt." },
       { q: "Was kostet das Gesamtpaket?", a: "MGK: 3× 160 CHF, Motorrad-Lektion: 130 CHF (60 Min). Genaue Pakete besprechen wir individuell." },
     ]}
-    primaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine" }}
-    secondaryCta={{ label: "Preise ansehen", to: "/preise" }}
+    primaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine/" }}
+    secondaryCta={{ label: "Preise ansehen", to: "/preise/" }}
     breadcrumbs={[
-      { label: "Motorrad", to: "/motorrad" },
+      { label: "Motorrad", to: "/motorrad/" },
       { label: "Motorrad-Führerschein Baden" },
     ]}
     relatedLinks={[
-      { to: "/motorrad-grundkurs-wettingen", title: "MGK Wettingen", desc: "Der obligatorische 12h-Grundkurs für A1/A2/A." },
-      { to: "/fahrschule-baden", title: "Fahrschule Baden", desc: "Auto- und Motorrad-Fahrstunden mit Treffpunkt Bahnhof Baden." },
-      { to: "/strassenverkehrsamt-aargau", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung, Lernfahrausweis und Prüfung beim StVA." },
+      { to: "/motorrad-grundkurs-wettingen/", title: "MGK Wettingen", desc: "Der obligatorische 12h-Grundkurs für A1/A2/A." },
+      { to: "/fahrschule-baden/", title: "Fahrschule Baden", desc: "Auto- und Motorrad-Fahrstunden mit Treffpunkt Bahnhof Baden." },
+      { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung, Lernfahrausweis und Prüfung beim StVA." },
     ]}
   />
 );

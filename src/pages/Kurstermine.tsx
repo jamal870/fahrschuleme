@@ -67,7 +67,7 @@ const buildEventJsonLd = (rows: CourseRow[]) =>
           r.spots_available > 0
             ? "https://schema.org/InStock"
             : "https://schema.org/SoldOut",
-        url: `${SITE_URL}/grundkurs`,
+        url: `${SITE_URL}/grundkurs/`,
         validFrom: new Date().toISOString(),
       },
       description: `Motorrad-Grundkurs Teil ${r.part} (4h) in ${r.location}. Kategorien A1, A2, A.`,
@@ -135,7 +135,7 @@ const Kurstermine = () => {
                   </div>
                 </div>
                 <Link
-                  to="/grundkurs"
+                  to="/grundkurs/"
                   className="inline-flex items-center px-3 py-2 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90"
                   style={{ borderRadius: "3px" }}
                 >

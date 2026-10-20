@@ -33,7 +33,7 @@ const Motorrad = () => (
         <h2 className="text-2xl font-heading font-bold text-foreground mb-6">Kategorien</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {tenantConfig.categories.map((cat, i) => (
-            <Link key={i} to="/grundkurs" className="bg-card border border-border p-5 hover:border-primary/50 hover:shadow-md transition-all block" style={{ borderRadius: "3px" }}>
+            <Link key={i} to="/grundkurs/" className="bg-card border border-border p-5 hover:border-primary/50 hover:shadow-md transition-all block" style={{ borderRadius: "3px" }}>
               <h3 className="font-heading font-bold text-foreground text-lg mb-1">{cat.title}</h3>
               <p className="text-primary text-xs font-heading font-bold mb-2">{cat.age}</p>
               <p className="text-xs text-muted-foreground font-body">{cat.desc}</p>
@@ -49,7 +49,7 @@ const Motorrad = () => (
         <p className="text-muted-foreground font-body mb-8">Der obligatorische 12-Stunden-Grundkurs in 3 Teilen.</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[1, 2, 3].map((part) => (
-            <Link key={part} to="/grundkurs" className="bg-section-alt border border-border p-6 text-center hover:border-primary/50 hover:shadow-md transition-all block" style={{ borderRadius: "3px" }}>
+            <Link key={part} to="/grundkurs/" className="bg-section-alt border border-border p-6 text-center hover:border-primary/50 hover:shadow-md transition-all block" style={{ borderRadius: "3px" }}>
               <img src={images[part - 1]} alt={`Grundkurs ${part}`} className="w-32 h-32 mx-auto mb-3 object-contain" loading="lazy" />
               <div className="w-10 h-10 mx-auto mb-3 bg-primary/10 text-primary font-heading font-bold flex items-center justify-center" style={{ borderRadius: "3px" }}>{part}</div>
               <h3 className="font-heading font-bold text-foreground mb-1">Grundkurs {part}</h3>

@@ -41,16 +41,16 @@ const MotorradGrundkursWettingen = () => (
       { q: "Was kostet der MGK?", a: "Pro Kursteil 160 CHF (M1, M2, M3). Aktuelle Aktionen findest du auf der Angebote-Seite." },
       { q: "Wie lange ist der MGK gültig?", a: "Nach dem MGK hast du zwei Jahre Zeit, die praktische Führerprüfung zu bestehen." },
     ]}
-    primaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine" }}
-    secondaryCta={{ label: "Aktionen ansehen", to: "/angebote" }}
+    primaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine/" }}
+    secondaryCta={{ label: "Aktionen ansehen", to: "/angebote/" }}
     breadcrumbs={[
-      { label: "Motorrad", to: "/motorrad" },
+      { label: "Motorrad", to: "/motorrad/" },
       { label: "MGK Wettingen" },
     ]}
     relatedLinks={[
-      { to: "/motorrad-fuehrerschein-wettingen", title: "Motorrad-Führerschein Wettingen", desc: "Alles zum Ablauf – von Lernfahrausweis bis Prüfung." },
-      { to: "/kurstermine", title: "Aktuelle MGK-Termine", desc: "Freie Plätze für M1, M2 und M3 – direkt online buchen." },
-      { to: "/fahrschule-baden", title: "Aus Baden anreisen?", desc: "Treffpunkt Bahnhof Baden – wir holen dich für die Fahrstunden ab." },
+      { to: "/motorrad-fuehrerschein-wettingen/", title: "Motorrad-Führerschein Wettingen", desc: "Alles zum Ablauf – von Lernfahrausweis bis Prüfung." },
+      { to: "/kurstermine/", title: "Aktuelle MGK-Termine", desc: "Freie Plätze für M1, M2 und M3 – direkt online buchen." },
+      { to: "/fahrschule-baden/", title: "Aus Baden anreisen?", desc: "Treffpunkt Bahnhof Baden – wir holen dich für die Fahrstunden ab." },
     ]}
   />
 );

@@ -48,7 +48,7 @@ const Angebote = () => {
           "@type": "Offer",
           name: p.title,
           description: p.description || undefined,
-          url: `${SITE_URL}/angebote`,
+          url: `${SITE_URL}/angebote/`,
           priceCurrency: "CHF",
           price: p.discount_price ?? undefined,
           priceValidUntil: p.ends_at ? p.ends_at.slice(0, 10) : undefined,
@@ -101,7 +101,7 @@ const Angebote = () => {
             <div className="bg-card border border-border p-10 text-center" style={{ borderRadius: "3px" }}>
               <h2 className="font-heading font-bold text-xl text-foreground mb-2">Aktuell keine laufenden Aktionen</h2>
               <p className="text-muted-foreground font-body mb-6">Schau bald wieder vorbei – oder buche direkt einen Kurs zum regulären Preis.</p>
-              <Link to="/kurstermine" className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>
+              <Link to="/kurstermine/" className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>
                 Kurstermine ansehen <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -141,7 +141,7 @@ const Angebote = () => {
                     />
                   ) : (
                     <TrackedCta
-                      to={p.category === "mgk" || p.category === "grundkurs" ? "/kurstermine" : "/kontakt"}
+                      to={p.category === "mgk" || p.category === "grundkurs" ? "/kurstermine/" : "/kontakt/"}
                       label="Jetzt buchen"
                       className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 transition-opacity"
                       icon="arrow"

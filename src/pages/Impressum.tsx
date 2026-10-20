@@ -53,11 +53,11 @@ const Impressum = () => {
         </section>
 
         <footer className="mt-12 pt-6 border-t border-border text-sm text-muted-foreground space-x-2">
-          <Link to="/impressum" className="hover:text-primary">Impressum</Link>
+          <Link to="/impressum/" className="hover:text-primary">Impressum</Link>
           <span>·</span>
-          <Link to="/datenschutz" className="hover:text-primary">Datenschutz</Link>
+          <Link to="/datenschutz/" className="hover:text-primary">Datenschutz</Link>
           <span>·</span>
-          <Link to="/agb" className="hover:text-primary">AGB</Link>
+          <Link to="/agb/" className="hover:text-primary">AGB</Link>
         </footer>
       </main>
     </div>

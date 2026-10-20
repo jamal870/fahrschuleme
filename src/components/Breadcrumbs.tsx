@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import { ChevronRight, Home } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { canonicalUrl } from "@/components/Seo";
 
 export interface BreadcrumbItem {
   label: string;
   to?: string; // wenn leer → aktuelle Seite
 }
-
-const SITE_URL = "https://www.fahrschule-me.ch";
 
 const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
   const all: BreadcrumbItem[] = [{ label: "Start", to: "/" }, ...items];
@@ -19,7 +18,7 @@ const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
       "@type": "ListItem",
       position: i + 1,
       name: it.label,
-      item: it.to ? `${SITE_URL}${it.to}` : undefined,
+      item: it.to ? canonicalUrl(it.to) : undefined,
     })),
   };
 

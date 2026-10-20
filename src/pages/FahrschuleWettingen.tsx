@@ -40,13 +40,13 @@ const FahrschuleWettingen = () => (
       { q: "Bietet ihr auch Motorrad-Fahrstunden an?", a: "Ja. Motorrad-Einzellektion (60 Min) kostet 130 CHF. Wir bieten Vorschulung, Grundschulung und Vor-Prüfungsfahrt an." },
       { q: "Wie melde ich mich an?", a: "Am einfachsten online über die Kontakt- oder Kurstermin-Seite. Du kannst uns auch direkt anrufen oder per WhatsApp schreiben." },
     ]}
-    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs" }}
-    secondaryCta={{ label: "Preise ansehen", to: "/preise" }}
+    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs/" }}
+    secondaryCta={{ label: "Preise ansehen", to: "/preise/" }}
     breadcrumbs={[{ label: "Fahrschule Wettingen" }]}
     relatedLinks={[
-      { to: "/motorrad-grundkurs-wettingen", title: "Motorrad-Grundkurs Wettingen", desc: "Der obligatorische 12h-MGK für A1, A2 und A – direkt in Wettingen." },
-      { to: "/fahrschule-baden", title: "Fahrschule Baden", desc: "Treffpunkt direkt am Bahnhof Baden – ideal für Pendler." },
-      { to: "/preise", title: "Alle Preise im Überblick", desc: "Auto, Motorrad, MGK, Nothelfer und VKU – transparent aufgelistet." },
+      { to: "/motorrad-grundkurs-wettingen/", title: "Motorrad-Grundkurs Wettingen", desc: "Der obligatorische 12h-MGK für A1, A2 und A – direkt in Wettingen." },
+      { to: "/fahrschule-baden/", title: "Fahrschule Baden", desc: "Treffpunkt direkt am Bahnhof Baden – ideal für Pendler." },
+      { to: "/preise/", title: "Alle Preise im Überblick", desc: "Auto, Motorrad, MGK, Nothelfer und VKU – transparent aufgelistet." },
     ]}
   />
 );

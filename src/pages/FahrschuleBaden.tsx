@@ -40,13 +40,13 @@ const FahrschuleBaden = () => (
       { q: "Findet der MGK auch in Baden statt?", a: "Der Motorrad-Grundkurs wird am Standort Wettingen durchgeführt – nur wenige Minuten von Baden entfernt und mit dem ÖV gut erreichbar." },
       { q: "Welche Kategorien werden ausgebildet?", a: "Auto (Kategorie B) sowie Motorrad AM, A1, A2 und A." },
     ]}
-    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs" }}
-    secondaryCta={{ label: "Preise ansehen", to: "/preise" }}
+    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs/" }}
+    secondaryCta={{ label: "Preise ansehen", to: "/preise/" }}
     breadcrumbs={[{ label: "Fahrschule Baden" }]}
     relatedLinks={[
-      { to: "/fahrschule-wettingen", title: "Fahrschule Wettingen", desc: "Unser Hauptstandort in Wettingen – Auto und Motorrad aus einer Hand." },
-      { to: "/motorrad-grundkurs-wettingen", title: "Motorrad-Grundkurs", desc: "MGK A1/A2/A in Wettingen – nur wenige Minuten von Baden." },
-      { to: "/strassenverkehrsamt-aargau", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung, Prüfung, Lernfahrausweis – alles Wichtige zum StVA." },
+      { to: "/fahrschule-wettingen/", title: "Fahrschule Wettingen", desc: "Unser Hauptstandort in Wettingen – Auto und Motorrad aus einer Hand." },
+      { to: "/motorrad-grundkurs-wettingen/", title: "Motorrad-Grundkurs", desc: "MGK A1/A2/A in Wettingen – nur wenige Minuten von Baden." },
+      { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung, Prüfung, Lernfahrausweis – alles Wichtige zum StVA." },
     ]}
   />
 );

@@ -373,7 +373,7 @@ export default function GrundkursBuchen() {
           {!a1Only && (
             <div className="mt-4 flex justify-center">
               <Link
-                to="/grundkurs-buchen?a1=1"
+                to="/grundkurs-buchen/?a1=1"
                 className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 rounded-md font-semibold shadow-md hover:bg-primary/90 transition-colors"
               >
                 🏍️ Bereits im Besitz von A1? Nur Teil 3 buchen – CHF 250
@@ -676,15 +676,15 @@ export default function GrundkursBuchen() {
                       aria-required="true"
                     />
                     <span className="text-sm text-foreground">
-                      Ich habe die <Link to="/agb" target="_blank" className="text-primary underline hover:no-underline">AGB</Link> und die{" "}
-                      <Link to="/datenschutz" target="_blank" className="text-primary underline hover:no-underline">Datenschutzerklärung</Link>{" "}
+                      Ich habe die <Link to="/agb/" target="_blank" className="text-primary underline hover:no-underline">AGB</Link> und die{" "}
+                      <Link to="/datenschutz/" target="_blank" className="text-primary underline hover:no-underline">Datenschutzerklärung</Link>{" "}
                       gelesen und akzeptiere sie. <span className="text-destructive">*</span>
                     </span>
                   </label>
                   <p className="text-xs text-muted-foreground mt-3">
                     Deine Daten (Name, Adresse, E-Mail, Telefon, Geburtsdatum) werden ausschliesslich zur Abwicklung
                     deiner Kursbuchung verarbeitet – gemäss unserer{" "}
-                    <Link to="/datenschutz" target="_blank" className="text-primary underline hover:no-underline">Datenschutzerklärung</Link>.
+                    <Link to="/datenschutz/" target="_blank" className="text-primary underline hover:no-underline">Datenschutzerklärung</Link>.
                   </p>
                 </div>
 

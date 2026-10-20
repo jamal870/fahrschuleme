@@ -237,14 +237,14 @@ const StrassenverkehrsamtAargau = () => {
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
-              to="/fahrstunden"
+              to="/fahrstunden/"
               className="inline-flex items-center gap-2 px-6 py-3 bg-background text-primary font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
               style={{ borderRadius: "3px" }}
             >
               Autofahrstunden
             </Link>
             <Link
-              to="/grundkurs"
+              to="/grundkurs/"
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary-foreground text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary-foreground hover:text-primary transition-colors"
               style={{ borderRadius: "3px" }}
             >

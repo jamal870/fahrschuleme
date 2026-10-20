@@ -22,45 +22,45 @@ const SiteHeader = () => {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
-          <NavLink to="/fuer-fahrlehrer" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
+          <NavLink to="/fuer-fahrlehrer/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Für Fahrlehrer
           </NavLink>
           <span className="text-border">|</span>
 
-          <NavLink to="/grundkurs" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
+          <NavLink to="/grundkurs/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Grundkurs
           </NavLink>
-          <NavLink to="/fahrstunden" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
+          <NavLink to="/fahrstunden/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Fahrstunden
           </NavLink>
           <div className="relative group">
-            <NavLink to="/motorrad" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""} inline-flex items-center gap-1`}>
+            <NavLink to="/motorrad/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""} inline-flex items-center gap-1`}>
               Motorrad <ChevronDown className="w-3 h-3" />
             </NavLink>
             <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               <div className="bg-card border border-border shadow-md min-w-[220px] py-2" style={{ borderRadius: "3px" }}>
-                <Link to="/motorrad" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Übersicht</Link>
-                <Link to="/motorrad-grundkurs-wettingen" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Grundkurs Wettingen</Link>
-                <Link to="/grundkurs" onClick={() => trackBookingClick("Grundkurs buchen (Menü)")} className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Grundkurs buchen</Link>
-                <Link to="/preise" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Preise Motorrad</Link>
+                <Link to="/motorrad/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Übersicht</Link>
+                <Link to="/motorrad-grundkurs-wettingen/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Grundkurs Wettingen</Link>
+                <Link to="/grundkurs/" onClick={() => trackBookingClick("Grundkurs buchen (Menü)")} className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Grundkurs buchen</Link>
+                <Link to="/preise/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Preise Motorrad</Link>
               </div>
             </div>
           </div>
           <div className="relative group">
-            <NavLink to="/fahrschule-wettingen" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""} inline-flex items-center gap-1`}>
+            <NavLink to="/fahrschule-wettingen/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""} inline-flex items-center gap-1`}>
               Standorte <ChevronDown className="w-3 h-3" />
             </NavLink>
             <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               <div className="bg-card border border-border shadow-md min-w-[200px] py-2" style={{ borderRadius: "3px" }}>
-                <Link to="/fahrschule-wettingen" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Fahrschule Wettingen</Link>
-                <Link to="/fahrschule-baden" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Fahrschule Baden</Link>
+                <Link to="/fahrschule-wettingen/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Fahrschule Wettingen</Link>
+                <Link to="/fahrschule-baden/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Fahrschule Baden</Link>
               </div>
             </div>
           </div>
-          <NavLink to="/preise" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
+          <NavLink to="/preise/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Preise
           </NavLink>
-          <NavLink to="/kontakt" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
+          <NavLink to="/kontakt/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Kontakt
           </NavLink>
           <a
@@ -90,32 +90,32 @@ const SiteHeader = () => {
       {open && (
         <div className="md:hidden border-t border-border bg-card">
           <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1 text-sm font-medium font-body text-muted-foreground">
-            <NavLink to="/fuer-fahrlehrer" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+            <NavLink to="/fuer-fahrlehrer/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Für Fahrlehrer
             </NavLink>
             <div className="h-px bg-border my-1" />
-            <NavLink to="/grundkurs" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+            <NavLink to="/grundkurs/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Grundkurs
             </NavLink>
-            <NavLink to="/fahrstunden" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+            <NavLink to="/fahrstunden/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Fahrstunden
             </NavLink>
-            <NavLink to="/motorrad" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+            <NavLink to="/motorrad/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Motorrad
             </NavLink>
-            <NavLink to="/motorrad-grundkurs-wettingen" onClick={close} className={({ isActive }) => `py-2 pl-4 text-xs ${isActive ? "text-primary" : ""}`}>
+            <NavLink to="/motorrad-grundkurs-wettingen/" onClick={close} className={({ isActive }) => `py-2 pl-4 text-xs ${isActive ? "text-primary" : ""}`}>
               · MGK Wettingen
             </NavLink>
-            <NavLink to="/fahrschule-wettingen" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+            <NavLink to="/fahrschule-wettingen/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Fahrschule Wettingen
             </NavLink>
-            <NavLink to="/fahrschule-baden" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+            <NavLink to="/fahrschule-baden/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Fahrschule Baden
             </NavLink>
-            <NavLink to="/preise" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+            <NavLink to="/preise/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Preise
             </NavLink>
-            <NavLink to="/kontakt" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+            <NavLink to="/kontakt/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Kontakt
             </NavLink>
             <a
