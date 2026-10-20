@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Clock, Users, MapPin, Bike, ChevronRight, ShieldCheck, GraduationCap, Calendar } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
-import Seo from "@/components/Seo";
+import Seo, { BUSINESS_ID } from "@/components/Seo";
 import TrackedCta from "@/components/TrackedCta";
 
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  about: { "@id": BUSINESS_ID },
   mainEntity: [
     {
       "@type": "Question",

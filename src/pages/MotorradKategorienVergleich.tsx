@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronRight, Info } from "lucide-react";
-import Seo from "@/components/Seo";
+import Seo, { BUSINESS_ID } from "@/components/Seo";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -106,7 +106,7 @@ const faq = [
 ];
 
 const jsonLd = [
-  { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq },
+  { "@context": "https://schema.org", "@type": "FAQPage", about: { "@id": BUSINESS_ID }, mainEntity: faq },
   {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -114,8 +114,8 @@ const jsonLd = [
     inLanguage: "de-CH",
     datePublished: "2026-08-18",
     dateModified: "2026-08-18",
-    author: { "@type": "Organization", name: "Fahrschule me" },
-    publisher: { "@type": "Organization", name: "Fahrschule me" },
+    author: { "@id": BUSINESS_ID },
+    publisher: { "@id": BUSINESS_ID },
   },
 ];
 

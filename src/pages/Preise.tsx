@@ -39,15 +39,15 @@ const Preise = () => {
       <section className="bg-section-alt py-16">
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
-            <h3 className="text-xl font-heading font-bold text-primary mb-4">Auto</h3>
+            <h2 className="text-xl font-heading font-bold text-primary mb-4">Auto</h2>
             <PriceBlock items={content.pricing_auto} />
-            <h4 className="text-lg font-heading font-bold text-primary mt-6 mb-3">Auto Abonnements</h4>
+            <h3 className="text-lg font-heading font-bold text-primary mt-6 mb-3">Auto Abonnements</h3>
             <PriceBlock items={content.pricing_auto_abos} />
           </div>
           <div className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
-            <h3 className="text-xl font-heading font-bold text-primary mb-4">Motorrad</h3>
+            <h2 className="text-xl font-heading font-bold text-primary mb-4">Motorrad</h2>
             <PriceBlock items={content.pricing_motorrad} />
-            <h4 className="text-lg font-heading font-bold text-foreground mt-6 mb-3">Motorrad Grundkurs</h4>
+            <h3 className="text-lg font-heading font-bold text-foreground mt-6 mb-3">Motorrad Grundkurs</h3>
             <PriceBlock items={content.pricing_motorrad_grundkurs} />
           </div>
         </div>
@@ -55,7 +55,7 @@ const Preise = () => {
         <div className="max-w-5xl mx-auto px-6 mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
           {content.pricing_extras.map((extra, i) => (
             <div key={i} className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
-              <h3 className="text-xl font-heading font-bold text-primary mb-3">{extra.title}</h3>
+              <h2 className="text-xl font-heading font-bold text-primary mb-3">{extra.title}</h2>
               <div className="flex items-center justify-between">
                 <span className="font-body font-medium text-foreground text-sm">{extra.name}</span>
                 <span className="text-sm font-heading font-bold text-foreground">{extra.price}</span>

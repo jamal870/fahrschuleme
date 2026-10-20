@@ -10,6 +10,13 @@ interface SeoProps {
 }
 
 const SITE_URL = "https://www.fahrschule-me.ch";
+/**
+ * @id der Firma. Die Firma (DrivingSchool) ist genau einmal in index.html
+ * definiert und wird in jede Seite kopiert; seitenspezifische Blöcke
+ * (FAQPage, Breadcrumbs, Events, Offers) verweisen per @id darauf, statt
+ * die Firma erneut zu beschreiben.
+ */
+export const BUSINESS_ID = "https://www.fahrschule-me.ch/#business";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 /**

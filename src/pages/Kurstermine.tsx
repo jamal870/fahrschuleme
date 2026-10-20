@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import Seo from "@/components/Seo";
+import Seo, { BUSINESS_ID } from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
 import { dedupeCourses } from "@/lib/course-dedupe";
 
@@ -54,11 +54,7 @@ const buildEventJsonLd = (rows: CourseRow[]) =>
           addressCountry: "CH",
         },
       },
-      organizer: {
-        "@type": "Organization",
-        name: tenantConfig.brand.name,
-        url: SITE_URL,
-      },
+      organizer: { "@id": BUSINESS_ID },
       offers: {
         "@type": "Offer",
         price: r.price,
