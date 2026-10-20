@@ -22,7 +22,7 @@ const SiteFooter = () => {
           <span>·</span>
           <Link to="/agb/" className="hover:text-primary">AGB</Link>
           <span>·</span>
-          <Link to="/admin/login" aria-label="Admin Login" title="Admin Login" className="inline-flex items-center text-muted-foreground/60 hover:text-primary transition-colors">
+          <Link to="/admin/login" rel="nofollow" aria-label="Admin Login" title="Admin Login" className="inline-flex items-center text-muted-foreground/60 hover:text-primary transition-colors">
             <UserCircle2 className="w-4 h-4" />
           </Link>
         </div>
