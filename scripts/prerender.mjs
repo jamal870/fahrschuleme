@@ -52,19 +52,28 @@ function canonicalUrl(path) {
   return clean === "" ? `${SITE_URL}/` : `${SITE_URL}${clean}/`;
 }
 
-// <lastmod> for the sitemap = date of the last git commit touching the
-// route's page file. Returns null when git is unavailable (e.g. a build
-// without .git) or the file has no history, so the entry simply has no
-// <lastmod> rather than a made-up date.
+// <lastmod> for the sitemap = date of the last git commit that changed the
+// route's page file *content*. Commits whose subject starts with "SEO " are
+// skipped: those only touch meta tags, canonical links or internal link
+// targets, which is not a content change a crawler should re-fetch for.
+// Returns null when git is unavailable (e.g. a build without .git) or the
+// file has no history, so the entry simply has no <lastmod> rather than a
+// made-up date.
 function gitLastModified(relPath) {
   if (!relPath) return null;
   try {
-    const out = execFileSync("git", ["log", "-1", "--format=%cs", "--", relPath], {
+    const out = execFileSync("git", ["log", "-20", "--format=%cs %s", "--", relPath], {
       cwd: ROOT_DIR,
       encoding: "utf-8",
       stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
-    return /^\d{4}-\d{2}-\d{2}$/.test(out) ? out : null;
+    });
+    for (const line of out.split("\n")) {
+      const m = line.match(/^(\d{4}-\d{2}-\d{2}) (.*)$/);
+      if (!m) continue;
+      if (/^SEO /.test(m[2])) continue;
+      return m[1];
+    }
+    return null;
   } catch {
     return null;
   }

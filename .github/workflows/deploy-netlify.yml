@@ -15,6 +15,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Volle Historie: scripts/prerender.mjs liest das letzte Commit-Datum
+          # je Seitendatei für <lastmod> in der Sitemap (git log). Mit dem
+          # Standard-Depth 1 gäbe es keine Historie und damit kein lastmod.
+          fetch-depth: 0
 
       # Deploy-Guard: Dieser Workflow ist der EINZIGE Hosting-Deploy (Netlify).
       # Schlaegt fehl, wenn ein zweiter Hosting-Deploy-Pfad auftaucht.
