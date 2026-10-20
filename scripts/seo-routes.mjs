@@ -70,7 +70,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.9 },
     source: "src/pages/MotorradFuehrerscheinWettingen.tsx",
     aliases: ["/motorrad-fuhrerschein-wettingen"],
-    title: "Motorrad Führerschein Wettingen – MGK & A1/A2 | Fahrschule me",
+    title: "Motorrad Führerschein Wettingen – MGK & A1 | Fahrschule me",
     description:
       "Motorradführerschein in Wettingen (Bezirk Baden): Grundkurs MGK, Kategorien AM, A1, A2 und A. Kleine Gruppen, Termine nach Vereinbarung.",
   },
@@ -177,7 +177,7 @@ export const SEO_ROUTES = [
     source: "src/pages/Kurstermine.tsx",
     title: "Motorrad-Grundkurs Termine 2026 Wettingen | Fahrschule me",
     description:
-      "Alle aktuellen MGK-Termine in Wettingen. Teil 1, 2 und 3 – freie Plätze, Preise und direkte Buchung bei Fahrschule me.",
+      "Alle aktuellen MGK-Termine in Wettingen: Teil 1, 2 und 3 mit freien Plätzen, Preisen und direkter Online-Buchung bei Fahrschule me.",
   },
   {
     path: "/angebote",
