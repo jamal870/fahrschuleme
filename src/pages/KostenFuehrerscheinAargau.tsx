@@ -149,7 +149,7 @@ const KostenFuehrerscheinAargau = () => (
   <div className="min-h-screen bg-background">
     <Seo
       title="Kosten Führerschein Aargau 2026 – alle Preise im Überblick"
-      description="Was kostet der Führerschein im Kanton Aargau? Alle Gebühren 2026: Lernfahrausweis, Theorie- und Führerprüfung Schafisheim, VKU, Fahrstunden und Motorrad-Grundkurs."
+      description="Was kostet der Führerschein im Kanton Aargau? Alle Gebühren 2026: Lernfahrausweis, Theorie- und Führerprüfung, VKU, Fahrstunden und Motorrad-Grundkurs."
       path="/kosten-fuehrerschein-aargau"
       jsonLd={jsonLd}
     />

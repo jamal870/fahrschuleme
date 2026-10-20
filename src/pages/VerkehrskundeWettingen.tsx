@@ -3,7 +3,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 const VerkehrskundeWettingen = () => (
   <LocalLandingPage
     path="/verkehrskunde-wettingen"
-    seoTitle="Verkehrskunde Wettingen (VKU) – obligatorischer Kurs | Fahrschule me"
+    seoTitle="Verkehrskunde Wettingen (VKU) – Pflichtkurs | Fahrschule me"
     seoDescription="Verkehrskundeunterricht (VKU) in Wettingen – 8 Lektionen, Pflicht vor der praktischen Führerprüfung. Anerkannt vom StVA Aargau. Online buchen bei Fahrschule me."
     badge="VKU Wettingen"
     h1="Verkehrskunde (VKU) in"

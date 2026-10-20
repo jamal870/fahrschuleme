@@ -70,7 +70,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.9 },
     source: "src/pages/MotorradFuehrerscheinWettingen.tsx",
     aliases: ["/motorrad-fuhrerschein-wettingen"],
-    title: "Motorrad Führerschein Wettingen – MGK & Kategorien A/A1/A2 | Fahrschule me",
+    title: "Motorrad Führerschein Wettingen – MGK & A1/A2 | Fahrschule me",
     description:
       "Motorradführerschein in Wettingen (Bezirk Baden): Grundkurs MGK, Kategorien AM, A1, A2 und A. Kleine Gruppen, Termine nach Vereinbarung.",
   },
@@ -88,7 +88,7 @@ export const SEO_ROUTES = [
     source: "src/pages/FahrschuleWettingen.tsx",
     title: "Fahrschule Wettingen – Auto & Motorrad | Fahrschule me",
     description:
-      "Fahrschule in Wettingen für Auto- und Motorrad-Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung. Direkt online buchen bei Fahrschule me.",
+      "Fahrschule in Wettingen für Auto- und Motorrad-Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung. Online buchen bei Fahrschule me.",
   },
   {
     path: "/fahrschule-baden",
@@ -112,7 +112,7 @@ export const SEO_ROUTES = [
     source: "src/pages/FahrschuleSpreitenbach.tsx",
     title: "Fahrschule Spreitenbach – Auto & Motorrad | Fahrschule me",
     description:
-      "Fahrschule für Spreitenbach mit Treffpunkt Wettingen. Auto- & Motorrad-Fahrstunden, MGK, faire Preise. Termine nach Vereinbarung. Online buchen bei Fahrschule me.",
+      "Fahrschule für Spreitenbach mit Treffpunkt Wettingen. Auto- & Motorrad-Fahrstunden, MGK, faire Preise, Termine nach Vereinbarung. Online buchen.",
   },
   {
     path: "/motorrad-fuehrerschein-baden",
@@ -127,7 +127,7 @@ export const SEO_ROUTES = [
     path: "/nothelferkurs-wettingen",
     sitemap: { changefreq: "weekly", priority: 0.8 },
     source: "src/pages/NothelferkursWettingen.tsx",
-    title: "Nothelferkurs Wettingen – obligatorisch für Lernfahrausweis | Fahrschule me",
+    title: "Nothelferkurs Wettingen – Lernfahrausweis | Fahrschule me",
     description:
       "Nothelferkurs in Wettingen für den Lernfahrausweis (Auto/Motorrad). 10 Stunden, anerkannt vom Strassenverkehrsamt Aargau. Online buchen bei Fahrschule me.",
   },
@@ -135,7 +135,7 @@ export const SEO_ROUTES = [
     path: "/verkehrskunde-wettingen",
     sitemap: { changefreq: "weekly", priority: 0.8 },
     source: "src/pages/VerkehrskundeWettingen.tsx",
-    title: "Verkehrskunde Wettingen (VKU) – obligatorischer Kurs | Fahrschule me",
+    title: "Verkehrskunde Wettingen (VKU) – Pflichtkurs | Fahrschule me",
     description:
       "Verkehrskundeunterricht (VKU) in Wettingen – 8 Lektionen, Pflicht vor der praktischen Führerprüfung. Anerkannt vom StVA Aargau. Online buchen bei Fahrschule me.",
   },
@@ -167,7 +167,7 @@ export const SEO_ROUTES = [
     path: "/kontakt",
     sitemap: { changefreq: "monthly", priority: 0.6 },
     source: "src/pages/Kontakt.tsx",
-    title: "Kontakt – Fahrschule me Wettingen | Telefon, WhatsApp, E-Mail",
+    title: "Kontakt – Telefon, WhatsApp, E-Mail | Fahrschule me",
     description:
       "So erreichst du Fahrschule me: Telefon, WhatsApp und E-Mail. Bahnhofstrasse 56, 5430 Wettingen. Termine nach Vereinbarung.",
   },
@@ -192,7 +192,7 @@ export const SEO_ROUTES = [
     path: "/strassenverkehrsamt-aargau",
     sitemap: { changefreq: "monthly", priority: 0.7 },
     source: "src/pages/StrassenverkehrsamtAargau.tsx",
-    title: "Strassenverkehrsamt Aargau – Lernfahrausweis & Prüfung in Schafisheim",
+    title: "Strassenverkehrsamt Aargau – Lernfahrausweis & Prüfung",
     description:
       "Kompletter Ratgeber zum Strassenverkehrsamt Aargau (Schafisheim): Lernfahrausweis beantragen, Theorie- und praktische Prüfung, Dokumente, Kosten und Tipps.",
   },
@@ -202,13 +202,13 @@ export const SEO_ROUTES = [
     source: "src/pages/KostenFuehrerscheinAargau.tsx",
     title: "Kosten Führerschein Aargau 2026 – alle Preise im Überblick",
     description:
-      "Was kostet der Führerschein im Kanton Aargau? Alle Gebühren 2026: Lernfahrausweis, Theorie- und Führerprüfung Schafisheim, VKU, Fahrstunden und Motorrad-Grundkurs.",
+      "Was kostet der Führerschein im Kanton Aargau? Alle Gebühren 2026: Lernfahrausweis, Theorie- und Führerprüfung, VKU, Fahrstunden und Motorrad-Grundkurs.",
   },
   {
     path: "/motorrad-kategorien-vergleich",
     sitemap: { changefreq: "monthly", priority: 0.8 },
     source: "src/pages/MotorradKategorienVergleich.tsx",
-    title: "Motorrad-Kategorien AM, A1, A2, A im Vergleich (Schweiz 2026)",
+    title: "Motorrad-Kategorien AM, A1, A2, A im Vergleich – Schweiz",
     description:
       "AM, A1, A2 oder A? Vergleichstabelle mit Mindestalter, Leistung, Voraussetzungen, Grundkurs und Kosten für den Motorradführerschein in der Schweiz.",
   },
@@ -225,7 +225,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.8 },
     source: "src/pages/FuerFahrlehrer.tsx",
     aliases: ["/app"],
-    title: "Fahrschule Software & App für Schweizer Fahrlehrer | fahrschule me",
+    title: "Fahrschule Software & App für Fahrlehrer | Fahrschule me",
     description:
       "Fahrschule Software mit Buchhaltung, Kalender, Schülerverwaltung und Rechnungen. Die Fahrlehrer App für iOS & Android. 30 Tage gratis testen.",
   },

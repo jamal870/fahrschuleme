@@ -122,7 +122,7 @@ const jsonLd = [
 const MotorradKategorienVergleich = () => (
   <div className="min-h-screen bg-background">
     <Seo
-      title="Motorrad-Kategorien AM, A1, A2, A im Vergleich (Schweiz 2026)"
+      title="Motorrad-Kategorien AM, A1, A2, A im Vergleich – Schweiz"
       description="AM, A1, A2 oder A? Vergleichstabelle mit Mindestalter, Leistung, Voraussetzungen, Grundkurs und Kosten für den Motorradführerschein in der Schweiz."
       path="/motorrad-kategorien-vergleich"
       jsonLd={jsonLd}
