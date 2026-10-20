@@ -36,7 +36,6 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { execFileSync } from "node:child_process";
 import { SEO_ROUTES } from "./seo-routes.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -44,39 +43,11 @@ const DIST_DIR = join(__dirname, "..", "dist");
 const SSR_ENTRY = join(__dirname, "..", "dist-ssr", "entry-server.js");
 const TEMPLATE_PATH = join(DIST_DIR, "index.html");
 const SITE_URL = "https://www.fahrschule-me.ch";
-const ROOT_DIR = join(__dirname, "..");
 
 // Canonical URL form: trailing slash (see src/components/Seo.tsx).
 function canonicalUrl(path) {
   const clean = path.replace(/\/+$/, "");
   return clean === "" ? `${SITE_URL}/` : `${SITE_URL}${clean}/`;
-}
-
-// <lastmod> for the sitemap = date of the last git commit that changed the
-// route's page file *content*. Commits whose subject starts with "SEO " are
-// skipped: those only touch meta tags, canonical links or internal link
-// targets, which is not a content change a crawler should re-fetch for.
-// Returns null when git is unavailable (e.g. a build without .git) or the
-// file has no history, so the entry simply has no <lastmod> rather than a
-// made-up date.
-function gitLastModified(relPath) {
-  if (!relPath) return null;
-  try {
-    const out = execFileSync("git", ["log", "-20", "--format=%cs %s", "--", relPath], {
-      cwd: ROOT_DIR,
-      encoding: "utf-8",
-      stdio: ["ignore", "pipe", "ignore"],
-    });
-    for (const line of out.split("\n")) {
-      const m = line.match(/^(\d{4}-\d{2}-\d{2}) (.*)$/);
-      if (!m) continue;
-      if (/^SEO /.test(m[2])) continue;
-      return m[1];
-    }
-    return null;
-  } catch {
-    return null;
-  }
 }
 
 // Generates dist/sitemap.xml from SEO_ROUTES. Only primary routes with
@@ -86,17 +57,13 @@ function gitLastModified(relPath) {
 function buildSitemapXml() {
   const entries = SEO_ROUTES
     .filter((r) => r.sitemap !== false && r.sitemap)
-    .map((r) => {
-      const lastmod = gitLastModified(r.source);
-      return [
-        "  <url>",
-        `    <loc>${canonicalUrl(r.path)}</loc>`,
-        lastmod ? `    <lastmod>${lastmod}</lastmod>` : null,
-        `    <changefreq>${r.sitemap.changefreq}</changefreq>`,
-        `    <priority>${r.sitemap.priority.toFixed(1)}</priority>`,
-        "  </url>",
-      ].filter(Boolean).join("\n");
-    });
+    .map((r) => [
+      "  <url>",
+      `    <loc>${canonicalUrl(r.path)}</loc>`,
+      `    <changefreq>${r.sitemap.changefreq}</changefreq>`,
+      `    <priority>${r.sitemap.priority.toFixed(1)}</priority>`,
+      "  </url>",
+    ].join("\n"));
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join("\n")}\n</urlset>\n`;
 }
 
