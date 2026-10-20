@@ -77,7 +77,6 @@ function gitLastModified(relPath) {
 function buildSitemapXml() {
   const entries = SEO_ROUTES
     .filter((r) => r.sitemap !== false && r.sitemap)
-    .flatMap((r) => [r.path, ...(r.sitemapAliases ?? [])].map((path) => ({ ...r, path })))
     .map((r) => {
       const lastmod = gitLastModified(r.source);
       return [

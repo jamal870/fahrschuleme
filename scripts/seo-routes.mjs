@@ -32,7 +32,6 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.9 },
     source: "src/pages/GrundkursBuchen.tsx",
     aliases: ["/grundkurs-buchen"],
-    sitemapAliases: ["/grundkurs-buchen"],
     title: "Motorrad-Grundkurs buchen Wettingen | Fahrschule me",
     description:
       "Motorrad-Grundkurs (MGK) Teil 1, 2 und 3 direkt online buchen. Freie Plätze in Wettingen anzeigen und sofort reservieren.",
@@ -226,7 +225,6 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.8 },
     source: "src/pages/FuerFahrlehrer.tsx",
     aliases: ["/app"],
-    sitemapAliases: ["/app"],
     title: "Fahrschule Software & App für Schweizer Fahrlehrer | fahrschule me",
     description:
       "Fahrschule Software mit Buchhaltung, Kalender, Schülerverwaltung und Rechnungen. Die Fahrlehrer App für iOS & Android. 30 Tage gratis testen.",
