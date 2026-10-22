@@ -85,7 +85,7 @@ const StrassenverkehrsamtAargau = () => {
       <Seo
         title="Strassenverkehrsamt Aargau – Lernfahrausweis & Prüfung"
         description="Kompletter Ratgeber zum Strassenverkehrsamt Aargau (Schafisheim): Lernfahrausweis beantragen, Theorie- und praktische Prüfung, Dokumente, Kosten und Tipps."
-        path="/strassenverkehrsamt-aargau"
+        path="/strassenverkehrsamt-aargau/"
         jsonLd={faqJsonLd}
       />
       <SiteHeader />

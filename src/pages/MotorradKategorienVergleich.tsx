@@ -265,7 +265,7 @@ const MotorradKategorienVergleich = () => (
         <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">Motorrad-Grundkurs buchen</h2>
         <p className="opacity-95 mb-6 max-w-2xl mx-auto">M1 Freitag 17:00, M2 Samstag 08:00, M3 Sonntag 08:00 – ein Durchgang pro Woche in Wettingen.</p>
         <div className="flex flex-wrap gap-3 justify-center">
-          <Link to="/grundkurs-buchen/" className="px-6 py-3 bg-background text-primary font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Grundkurs buchen</Link>
+          <Link to="/grundkurs/" className="px-6 py-3 bg-background text-primary font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Grundkurs buchen</Link>
           <Link to="/kurstermine/" className="px-6 py-3 border-2 border-primary-foreground font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Kurstermine</Link>
         </div>
       </section>

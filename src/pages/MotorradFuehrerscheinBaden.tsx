@@ -2,7 +2,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const MotorradFuehrerscheinBaden = () => (
   <LocalLandingPage
-    path="/motorrad-fuehrerschein-baden"
+    path="/motorrad-fuehrerschein-baden/"
     seoTitle="Motorrad-Führerschein Baden – A1/A2/A | Fahrschule me"
     seoDescription="Motorrad-Führerschein für Baden: MGK, Fahrstunden und Vor-Prüfungsfahrt für A1, A2 und A. Treffpunkt Bahnhof Baden. Online buchen bei Fahrschule me."
     badge="Motorrad-Führerschein Baden"

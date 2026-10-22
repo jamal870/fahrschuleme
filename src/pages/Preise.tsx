@@ -25,7 +25,7 @@ const Preise = () => {
       <Seo
         title="Preise Auto & Motorrad – Fahrschule me Wettingen"
         description="Transparente Preise für Fahrstunden, Motorrad-Grundkurs, Verkehrskunde und Nothelfer in Wettingen. Faire Abos verfügbar."
-        path="/preise"
+        path="/preise/"
       />
       <SiteHeader />
       <header className="bg-card border-b border-border">

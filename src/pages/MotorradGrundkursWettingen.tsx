@@ -2,7 +2,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const MotorradGrundkursWettingen = () => (
   <LocalLandingPage
-    path="/motorrad-grundkurs-wettingen"
+    path="/motorrad-grundkurs-wettingen/"
     seoTitle="Motorrad Grundkurs Wettingen – MGK A1/A2/A | Fahrschule me"
     seoDescription="Motorrad-Grundkurs (MGK) in Wettingen für A1, A2 und A. 12 Stunden in 3 Teilen, kleine Gruppen, Termine nach Vereinbarung. Online buchen bei Fahrschule me."
     badge="MGK Wettingen"

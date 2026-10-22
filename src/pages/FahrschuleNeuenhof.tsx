@@ -2,7 +2,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const FahrschuleNeuenhof = () => (
   <LocalLandingPage
-    path="/fahrschule-neuenhof"
+    path="/fahrschule-neuenhof/"
     seoTitle="Fahrschule Neuenhof – Auto & Motorrad | Fahrschule me"
     seoDescription="Fahrschule für Neuenhof: Auto- und Motorrad-Fahrstunden mit Treffpunkt Wettingen. Termine nach Vereinbarung, faire Preise. Online buchen bei Fahrschule me."
     badge="Fahrschule Neuenhof"

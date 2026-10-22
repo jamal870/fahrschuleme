@@ -76,7 +76,7 @@ const FuerFahrlehrer = () => {
       <Seo
         title="Fahrschule Software & App für Fahrlehrer | Fahrschule me"
         description="Fahrschule Software mit Buchhaltung, Kalender, Schülerverwaltung und Rechnungen. Die Fahrlehrer App für iOS & Android. 30 Tage gratis testen."
-        path="/fuer-fahrlehrer"
+        path="/fuer-fahrlehrer/"
       />
       <SiteHeader />
 

@@ -52,7 +52,7 @@ const MotorradFuehrerscheinWettingen = () => {
       <Seo
         title="Motorrad Führerschein Wettingen – A1/A2/A | Fahrschule me"
         description="Motorradführerschein in Wettingen (Bezirk Baden): Grundkurs MGK, Kategorien AM, A1, A2 und A. Kleine Gruppen, Termine nach Vereinbarung."
-        path="/motorrad-fuehrerschein-wettingen"
+        path="/motorrad-fuehrerschein-wettingen/"
         jsonLd={faqJsonLd}
       />
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">

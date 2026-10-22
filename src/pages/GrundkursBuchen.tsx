@@ -373,7 +373,7 @@ export default function GrundkursBuchen() {
           {!a1Only && (
             <div className="mt-4 flex justify-center">
               <Link
-                to="/grundkurs-buchen/?a1=1"
+                to="/grundkurs/?a1=1"
                 className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 rounded-md font-semibold shadow-md hover:bg-primary/90 transition-colors"
               >
                 🏍️ Bereits im Besitz von A1? Nur Teil 3 buchen – CHF 250

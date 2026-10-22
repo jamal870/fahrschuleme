@@ -15,7 +15,7 @@ const Motorrad = () => (
     <Seo
       title="Motorrad Führerschein Wettingen – A1, A2, A | Fahrschule me"
       description="Motorrad-Ausbildung in Wettingen: Grundkurs (MGK), Vorprüfungsfahrt, individuelle Fahrstunden für Kategorien A1, A2 und A. Jetzt informieren."
-      path="/motorrad"
+      path="/motorrad/"
     />
     <SiteHeader />
     <header className="bg-card border-b border-border">

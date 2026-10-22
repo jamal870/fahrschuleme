@@ -2,7 +2,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const FahrschuleWettingen = () => (
   <LocalLandingPage
-    path="/fahrschule-wettingen"
+    path="/fahrschule-wettingen/"
     seoTitle="Fahrschule Wettingen – Auto & Motorrad | Fahrschule me"
     seoDescription="Fahrschule in Wettingen für Auto- und Motorrad-Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung. Online buchen bei Fahrschule me."
     badge="Fahrschule Wettingen"

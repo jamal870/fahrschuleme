@@ -63,7 +63,7 @@ const Angebote = () => {
       <Seo
         title="Aktionen & Angebote – Fahrschule me Wettingen & Baden"
         description="Aktuelle Aktionen für Motorrad-Grundkurs, Auto-Fahrstunden und Kurse in Wettingen, Baden und Umgebung. Online buchen, faire Preise, limitierte Aktionen."
-        path="/angebote"
+        path="/angebote/"
         jsonLd={offerJsonLd}
       />
       <SiteHeader />

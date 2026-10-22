@@ -138,7 +138,7 @@ const Fahrstunden = () => (
     <Seo
       title="Fahrstunden Auto & Motorrad in Wettingen | Fahrschule me"
       description="Individuelle Auto- und Motorrad-Fahrstunden in Wettingen. Einzel- und Doppellektionen, 10er- und 20er-Abos. Jetzt Termin buchen bei Fahrschule me."
-      path="/fahrstunden"
+      path="/fahrstunden/"
     />
     <SiteHeader />
     <header className="bg-card border-b border-border">

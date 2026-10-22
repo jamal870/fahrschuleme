@@ -2,7 +2,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const FahrschuleSpreitenbach = () => (
   <LocalLandingPage
-    path="/fahrschule-spreitenbach"
+    path="/fahrschule-spreitenbach/"
     seoTitle="Fahrschule Spreitenbach – Auto & Motorrad | Fahrschule me"
     seoDescription="Fahrschule für Spreitenbach mit Treffpunkt Wettingen. Auto- & Motorrad-Fahrstunden, MGK, faire Preise, Termine nach Vereinbarung. Online buchen."
     badge="Fahrschule Spreitenbach"

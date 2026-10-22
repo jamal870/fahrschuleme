@@ -22,7 +22,7 @@ const AGB = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Seo title={`AGB – Allgemeine Geschäftsbedingungen | ${b.name}`} description={`Allgemeine Geschäftsbedingungen der ${b.name}.`} path="/agb" />
+      <Seo title={`AGB – Allgemeine Geschäftsbedingungen | ${b.name}`} description={`Allgemeine Geschäftsbedingungen der ${b.name}.`} path="/agb/" />
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-sm font-heading font-bold text-foreground hover:text-primary transition-colors">
