@@ -169,6 +169,23 @@ const Fahrstunden = () => (
 
     <FahrstundenPromotions />
 
+      <section className="bg-card py-10">
+        <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
+          <h2 className="text-2xl font-heading font-bold text-foreground">Erfolgreich mit unseren Motorradfahrlektionen</h2>
+          <p>Eine gute Fahrzeugbedienung genügt schon lange nicht mehr für das Bestehen der praktischen Führerprüfung. Deshalb lohnt es sich, mindestens zwei Wochen vor deiner Motorrad-Führerprüfung die Meinung eines Experten einzuholen.</p>
+          <p>Unsere Motorradfahrlehrer und ehemaligen Führerprüfungsexperten wissen genau, welche Voraussetzungen bei der Führerprüfung erfüllt sein müssen. Mit ihren Tipps und Tricks aus jahrzehntelanger Erfahrung bestehst du die Prüfung mit möglichst wenig Aufwand. Eine Prüfungssimulation kannst du direkt bei uns anfragen.</p>
+
+          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Das erwartet dich</h3>
+          <p>Die Motorrad-Führerprüfungen der Kategorie A1 nehmen die Prüfungsexperten nicht als Sozius ab, sondern mit einem Fahrzeug der Kategorie B (Auto) mit Funk. Die Führerprüfungen der Kategorie A nehmen die Experten dagegen als Beifahrer (Sozius) ab.</p>
+
+          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Besonders sicher</h3>
+          <p>Sicherheit ist beim Motorradfahren besonders wichtig. Wir legen grossen Wert darauf, dass du nach einer Fahrlektion oder Prüfungssimulation die Risiken kennst und sicher und selbstbewusst mit deinem Motorrad fährst.</p>
+
+          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Darauf musst du achten</h3>
+          <p>Für die Sicherheitsausrüstung (inklusive Helm) bist du als Fahrschüler selbst verantwortlich. Dein Motorrad muss die gesetzlichen Anforderungen erfüllen (Reifen, Bremsen, Beleuchtung usw.) und für die Fahrt mit zwei Personen (Kategorie A) vorbereitet sein.</p>
+        </div>
+      </section>
+
     <section className="bg-section-alt py-16">
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
