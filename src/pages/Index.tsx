@@ -58,9 +58,9 @@ const Index = () => {
       <header className="bg-card">
         <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
           <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground leading-none mb-4">
-              Motorradführerschein<br />
-              <span className="text-primary">in {tenantConfig.location.city}</span>
+            <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground leading-tight mb-4">
+              {tenantConfig.brand.name} –<br />
+              <span className="text-primary">Auto &amp; Motorrad im Raum Wettingen und Baden</span>
             </h1>
             <p className="text-lg font-body text-muted-foreground leading-relaxed mb-8 max-w-lg">
               {tenantConfig.brand.name} – {tenantConfig.brand.tagline} · {tenantConfig.contact.openingHours}
