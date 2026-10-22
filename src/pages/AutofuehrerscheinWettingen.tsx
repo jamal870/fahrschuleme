@@ -4,18 +4,18 @@ const AutofuehrerscheinWettingen = () => (
   <LocalLandingPage
     path="/autofuehrerschein-wettingen/"
     seoTitle="Autoführerschein Wettingen – Fahrstunden | Fahrschule me"
-    seoDescription="Autoführerschein (Kat. B) in Wettingen: Ablauf, Fahrstunden, Abos und Kosten. Treffpunkt Bahnhofstrasse 56, Termine nach Vereinbarung. Jetzt anfragen."
+    seoDescription="Autoführerschein (Kat. B) in Wettingen: Ablauf, Fahrstunden, Abos und Kosten. Treffpunkt Bahnhof Wettingen, Termine nach Vereinbarung. Jetzt anfragen."
     badge="Autoführerschein Wettingen"
     h1="Autoführerschein in"
     h1Accent="Wettingen"
-    intro="Von der ersten Fahrstunde bis zur praktischen Prüfung: Bei Fahrschule me lernst du Auto fahren mit persönlicher Betreuung, transparenten Preisen und Terminen nach Vereinbarung. Treffpunkt ist die Bahnhofstrasse 56 in Wettingen."
-    meetingPoint={{ label: "Wettingen", address: "Bahnhofstrasse 56, 5430 Wettingen" }}
+    intro="Von der ersten Fahrstunde bis zur praktischen Prüfung: Bei Fahrschule me lernst du Auto fahren mit persönlicher Betreuung, transparenten Preisen und Terminen nach Vereinbarung. Treffpunkt ist der Bahnhof Wettingen."
+    meetingPoint={{ label: "Bahnhof Wettingen", address: "5430 Wettingen" }}
     serviceName="Autofahrstunden Wettingen"
     benefits={[
       { title: "Klare Preise", desc: "Einzellektion 95 CHF (45 Min.), Doppellektion 190 CHF. Mit dem 10er- oder 20er-Abo sparst du 50 bzw. 150 CHF." },
       { title: "Termine nach Vereinbarung", desc: "Du planst deine Fahrstunden mit deinem Fahrlehrer, auch nach Feierabend." },
       { title: "Vollkasko inklusive", desc: "Im einmaligen Administrationsbeitrag von 130 CHF sind die Administration und die Vollkaskoversicherung enthalten." },
-      { title: "Zentraler Treffpunkt", desc: "Bahnhofstrasse 56 in Wettingen, gut mit ÖV und Auto erreichbar." },
+      { title: "Zentraler Treffpunkt", desc: "Wir treffen uns am Bahnhof Wettingen, ideal mit dem ÖV erreichbar." },
       { title: "Online buchen und bezahlen", desc: "Zahlung per Twint, Karte oder auf Rechnung." },
       { title: "Persönliche Betreuung", desc: "Du wirst von der ersten Lektion bis zur Prüfung vom selben Fahrlehrer begleitet." },
     ]}
@@ -45,7 +45,7 @@ const AutofuehrerscheinWettingen = () => (
       { q: "Was kostet der Autoführerschein im Kanton Aargau?", a: "Das hängt von der Anzahl Fahrstunden ab. Bei etwa 30 Fahrstunden rechnen wir mit rund CHF 3'600 bis 4'100 inklusive amtlicher Gebühren, VKU und Nothelferkurs. Die Aufstellung findest du auf der Seite Kosten Führerschein Aargau." },
       { q: "Was kostet eine Autofahrstunde?", a: "Eine Einzellektion (45 Minuten) kostet 95 CHF, eine Doppellektion (2 × 45 Minuten) 190 CHF. Mit dem 10er-Abo für 900 CHF sparst du 50 CHF, mit dem 20er-Abo für 1'760 CHF sparst du 150 CHF." },
       { q: "Brauche ich Fahrstunden, um die Prüfung zu bestehen?", a: "Fahrstunden sind in der Schweiz nicht vorgeschrieben. Die praktische Prüfung stellt aber hohe Anforderungen, deshalb ist Unterricht bei einem Fahrlehrer für die meisten sinnvoll." },
-      { q: "Wo ist der Treffpunkt?", a: "Der Treffpunkt ist die Bahnhofstrasse 56 in 5430 Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
+      { q: "Wo ist der Treffpunkt?", a: "Der Treffpunkt ist der Bahnhof Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
       { q: "Wie melde ich mich an?", a: "Am einfachsten über die Kontaktseite. Du kannst uns auch anrufen oder per WhatsApp schreiben. Die Termine vereinbaren wir mit dir." },
     ]}
     primaryCta={{ label: "Fahrstunde anfragen", to: "/kontakt/" }}
