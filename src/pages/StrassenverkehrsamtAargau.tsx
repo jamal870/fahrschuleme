@@ -124,7 +124,7 @@ const StrassenverkehrsamtAargau = () => {
             </div>
           </div>
           <a
-            href="https://www.ag.ch/de/verwaltung/dvi/strassenverkehrsamt"
+            href="https://www.ag.ch/de/themen/mobilitaet-verkehr/strassenverkehr"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 mt-5 text-sm font-heading font-bold text-primary hover:underline"

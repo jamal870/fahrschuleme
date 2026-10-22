@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ChatBot from "@/components/ChatBot";
@@ -68,6 +69,12 @@ const Motorrad = () => (
         </div>
       </div>
     </section>
+
+    <div className="max-w-6xl mx-auto px-6 py-10">
+      <RelatedLinks links={[
+        { to: "/motorrad-fuehrerschein-baden/", title: "Motorradführerschein für Baden", desc: "Ausbildung, Grundkurs und Fahrstunden für Motorradfahrer aus Baden." },
+      ]} />
+    </div>
 
     <SiteFooter />
     <ChatBot />

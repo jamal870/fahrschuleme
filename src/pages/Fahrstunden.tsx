@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import { useEffect, useState } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -210,6 +211,13 @@ const Fahrstunden = () => (
         </div>
       </div>
     </section>
+
+    <div className="max-w-6xl mx-auto px-6 py-10">
+      <RelatedLinks links={[
+        { to: "/nothelferkurs-wettingen/", title: "Nothelferkurs in Wettingen", desc: "Informationen zu Kursinhalten, Ablauf und Anmeldung." },
+        { to: "/verkehrskunde-wettingen/", title: "Verkehrskunde in Wettingen", desc: "Informationen zum VKU und zur Kursanmeldung." },
+      ]} />
+    </div>
 
     <SiteFooter />
     <ChatBot />
