@@ -35,8 +35,6 @@ import FahrschuleBaden from "@/pages/FahrschuleBaden";
 import FahrschuleNeuenhof from "@/pages/FahrschuleNeuenhof";
 import FahrschuleSpreitenbach from "@/pages/FahrschuleSpreitenbach";
 import MotorradFuehrerscheinBaden from "@/pages/MotorradFuehrerscheinBaden";
-import NothelferkursWettingen from "@/pages/NothelferkursWettingen";
-import VerkehrskundeWettingen from "@/pages/VerkehrskundeWettingen";
 import Fahrstunden from "@/pages/Fahrstunden";
 import Motorrad from "@/pages/Motorrad";
 import Preise from "@/pages/Preise";
@@ -80,8 +78,6 @@ const SsrRoutes = () => (
     <Route path="/fahrschule-spreitenbach" element={<FahrschuleSpreitenbach />} />
     <Route path="/motorrad-fuehrerschein-baden" element={<MotorradFuehrerscheinBaden />} />
     <Route path="/motorrad-fuhrerschein-baden" element={<MotorradFuehrerscheinBaden />} />
-    <Route path="/nothelferkurs-wettingen" element={<NothelferkursWettingen />} />
-    <Route path="/verkehrskunde-wettingen" element={<VerkehrskundeWettingen />} />
     <Route path="/fahrstunden" element={<Fahrstunden />} />
     <Route path="/motorrad" element={<Motorrad />} />
     <Route path="/preise" element={<Preise />} />

@@ -164,6 +164,28 @@
 
 # SPA fallback — auch wenn wir HashRouter nutzen,
 # sorgt das dafür, dass direkte URL-Aufrufe immer index.html laden
+# Nothelferkurs und VKU werden nicht mehr angeboten → Auto-Seite
+[[redirects]]
+  from = "/nothelferkurs-wettingen"
+  to = "/autofuehrerschein-wettingen/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/nothelferkurs-wettingen/"
+  to = "/autofuehrerschein-wettingen/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/verkehrskunde-wettingen"
+  to = "/autofuehrerschein-wettingen/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/verkehrskunde-wettingen/"
+  to = "/autofuehrerschein-wettingen/"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

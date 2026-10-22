@@ -27,7 +27,7 @@ const FahrschuleSpreitenbach = () => (
       },
       {
         heading: "Was bieten wir?",
-        body: "• Auto-Fahrstunden (Kategorie B) – Einzel-, Doppellektionen und Abos\n• Motorrad-Fahrstunden für A1, A2 und A\n• Motorrad-Grundkurs (MGK) in Wettingen\n• Vor-Prüfungsfahrt inklusive Prüfungsanmeldung\n• Beratung zu Lernfahrausweis, VKU und Nothelferkurs",
+        body: "• Auto-Fahrstunden (Kategorie B) – Einzel-, Doppellektionen und Abos\n• Motorrad-Fahrstunden für A1, A2 und A\n• Motorrad-Grundkurs (MGK) in Wettingen\n• Vor-Prüfungsfahrt inklusive Prüfungsanmeldung\n• Beratung zum Lernfahrausweis",
       },
       {
         heading: "Treffpunkt und Anfahrt",
