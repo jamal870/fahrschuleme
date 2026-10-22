@@ -68,6 +68,39 @@ const bookingSchema = z.object({
 
 const A1_TEIL3_PRICE = 250;
 
+const GRUNDKURS_KATEGORIEN: { title: string; meta: string; text: string }[] = [
+  {
+    title: "Kategorie A1 (45 km/h)",
+    meta: "Ab 15–16 Jahren · 12 Stunden",
+    text: "Die Kursteilnahme ist nur mit einem gültigen Lernfahrausweis Kategorie A1 (50 cm³) und einem Roller, Motorrad oder Elektrofahrzeug mit höchstens 50 cm³ und einer Höchstgeschwindigkeit von 45 km/h möglich.",
+  },
+  {
+    title: "Kategorie A1 (125 cm³)",
+    meta: "Ab 16 Jahren · 12 Stunden",
+    text: "Die Kursteilnahme ist nur mit einem gültigen Lernfahrausweis Kategorie A1 (125 cm³) und einem Roller, Motorrad oder Elektrofahrzeug mit höchstens 125 cm³ und 11 kW Leistung möglich.",
+  },
+  {
+    title: "Kategorie A (35 kW)",
+    meta: "Ab 18 Jahren · 12 Stunden",
+    text: "Die Kursteilnahme ist nur mit einem gültigen Lernfahrausweis Kategorie A (35 kW) und einem Roller, Motorrad oder Elektrofahrzeug mit mehr als 125 cm³ und höchstens 35 kW Leistung möglich. Fahrzeuge der Kategorie A1 sind nicht zugelassen.",
+  },
+  {
+    title: "Kategorie A (4 Stunden)",
+    meta: "Ab 18 Jahren · 4 Stunden",
+    text: "Du hast bereits einen Führerausweis der Kategorie A1 und möchtest die Führerprüfung der Kategorie A (35 kW) absolvieren. Dafür brauchst du einen gültigen Lernfahrausweis und das passende Fahrzeug. Fahrzeuge der Kategorie A1 sind nicht zugelassen.",
+  },
+  {
+    title: "Kategorie A (offen)",
+    meta: "Direkteinstieg · 12 Stunden",
+    text: "Die Kursteilnahme ist nur für Polizeibeamte, Motorradmechaniker und Verkehrsexperten mit einem Lernfahrausweis der Kategorie A und einem Roller, Motorrad oder Elektrofahrzeug mit mehr als 125 cm³ möglich. Fahrzeuge der Kategorie A1 sind nicht zugelassen.",
+  },
+  {
+    title: "Schnupperkurs",
+    meta: "Für Einsteiger ohne Lernfahrausweis",
+    text: "Du hast noch keinen Lernfahrausweis, aber das Töff-Fieber hat dich schon gepackt? Im Schnupperkurs erfährst du, wie sich Motorradfahren ohne Druck und Stress anfühlt, und hörst vom Profi, worauf du beim Kauf von Motorrad und Ausrüstung achten solltest.",
+  },
+];
+
 export default function GrundkursBuchen() {
   const [searchParams] = useSearchParams();
   const a1Only = searchParams.get("a1") === "1";
@@ -394,6 +427,39 @@ export default function GrundkursBuchen() {
         <section className="font-body text-muted-foreground space-y-3 my-8">
           <h2 className="text-xl font-heading font-bold text-foreground">Welche Kursteile sind aufgeführt?</h2>
           <p>Die reguläre Kursübersicht gliedert den Motorrad-Grundkurs in Teil 1, Teil 2 und Teil 3. Die auf der Website aufgeführten Teile umfassen jeweils vier Stunden. Die Anmeldung zeigt die dazugehörigen Termine und Preise. Prüfe deine Auswahl vor dem Abschluss und nutze bei Fragen zu bereits absolvierten Kursteilen den Kontakt zur Fahrschule.</p>
+        </section>
+
+        <section className="font-body text-muted-foreground space-y-4 my-8">
+          <h2 className="text-xl font-heading font-bold text-foreground">Günstige und sichere Motorrad-Grundkurse</h2>
+          <p>Unsere Motorradfahrlehrer und ehemaligen Führerprüfungsexperten wissen aus eigener Erfahrung, wie wichtig eine gründliche Grundausbildung ist. In den obligatorischen Grundkursen profitierst du nicht nur vom Rahmenprogramm, sondern auch von Tipps und Tricks aus jahrzehntelanger Erfahrung.</p>
+          <p>Die Gruppengrösse beträgt maximal 5 Personen. Nach der Grundausbildung nehmen wir uns Zeit für eine Prüfungssimulation. Danach können wir dir genau sagen, wie deine Chancen bei der Führerprüfung stehen.</p>
+
+          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Das erwartet dich</h3>
+          <p>Wir zeigen dir, wie du dein Motorrad korrekt im Verkehr bedienst, und geben dir Tipps für deine Führerprüfung. Ob vormittags, nachmittags oder abends: Die Kurse finden zu unterschiedlichen Tageszeiten statt, die Termine siehst du in der Anmeldung weiter unten.</p>
+
+          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Besonders sicher</h3>
+          <p>Sicherheit ist beim Motorradfahren besonders wichtig. Wir legen grossen Wert darauf, dass du die fahrzeugspezifischen Gefahren kennst, damit du auch nach dem Grundkurs und der praktischen Führerprüfung langfristig sicher unterwegs bist.</p>
+
+          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Darauf musst du achten</h3>
+          <p>Für die Sicherheitsausrüstung (inklusive Helm) bist du als Kursteilnehmer selbst verantwortlich. Die Grundkurse sind keine Fahrlektionen. Du musst dein Fahrzeug bereits vor Kursbeginn bedienen und dich im Strassenverkehr sicher fortbewegen können (siehe <Link to="/agb/" className="text-primary underline">AGB</Link>).</p>
+        </section>
+
+        <section className="font-body text-muted-foreground space-y-4 my-8">
+          <h2 className="text-xl font-heading font-bold text-foreground">Obligatorische Grundkurse nach Kategorie</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {GRUNDKURS_KATEGORIEN.map((k) => (
+              <article key={k.title} className="bg-card border border-border p-5" style={{ borderRadius: "3px" }}>
+                <h3 className="text-lg font-heading font-bold text-foreground">{k.title}</h3>
+                <p className="text-primary text-xs font-semibold uppercase tracking-wider mb-2">{k.meta}</p>
+                <p className="text-sm">{k.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="font-body text-muted-foreground space-y-3 my-8">
+          <h2 className="text-xl font-heading font-bold text-foreground">Kein eigenes Motorrad? Roller mieten</h2>
+          <p>Für unsere Grundkurse vermieten wir Roller. Die Miete kostet CHF 40.00 pro Kursteil für Kategorie A1 und CHF 60.00 pro Kursteil für Kategorie A. Die Sicherheitsausrüstung inklusive Helm bringst du selbst mit (ausgenommen Schnupperkurs).</p>
         </section>
 
         {isPromotionActive(promotion) && (
