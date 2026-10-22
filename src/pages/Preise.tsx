@@ -39,8 +39,10 @@ const Preise = () => {
       <section className="bg-card py-10">
         <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
           <h2 className="text-2xl font-heading font-bold text-foreground">So planst du die Kosten deiner Fahrausbildung</h2>
-          <p>Die Preise auf dieser Seite helfen dir, Auto- und Motorrad-Fahrstunden sowie die angebotenen Kurse zu vergleichen. Einzelne Fahrstunden und Abonnements haben unterschiedliche Umfänge. Achte deshalb neben dem Betrag auch auf die jeweilige Leistungsbeschreibung und die Hinweise beim Angebot. So kannst du einschätzen, welche Variante zu deinem Lernstand und deiner Terminplanung passt.</p>
-          <p>Die Gesamtkosten bis zum Führerausweis hängen von deinem persönlichen Ausbildungsweg ab. Zur Fahrpraxis können je nach Situation Kurse und amtliche Gebühren hinzukommen. Die hier aufgeführten Unterrichtspreise sind deshalb nicht automatisch ein Gesamtpreis für den Führerausweis. Wenn du ein bestimmtes Paket oder eine Motorrad-Ausbildung planst, frage vor der Buchung nach den enthaltenen Leistungen und den für dich passenden nächsten Schritten.</p>
+          <p>Die Preise auf dieser Seite helfen dir, Auto- und Motorrad-Fahrstunden sowie die angebotenen Kurse zu vergleichen. Einzelne Fahrstunden und Abonnements haben unterschiedliche Umfänge.</p>
+          <p>Achte deshalb neben dem Betrag auch auf die jeweilige Leistungsbeschreibung und die Hinweise beim Angebot. So kannst du einschätzen, welche Variante zu deinem Lernstand und deiner Terminplanung passt.</p>
+          <p>Die Gesamtkosten bis zum Führerausweis hängen von deinem persönlichen Ausbildungsweg ab. Zur Fahrpraxis können je nach Situation Kurse und amtliche Gebühren hinzukommen.</p>
+          <p>Die hier aufgeführten Unterrichtspreise sind deshalb nicht automatisch ein Gesamtpreis für den Führerausweis. Wenn du ein bestimmtes Paket oder eine Motorrad-Ausbildung planst, frage vor der Buchung nach den enthaltenen Leistungen und den für dich passenden nächsten Schritten.</p>
         </div>
       </section>
 

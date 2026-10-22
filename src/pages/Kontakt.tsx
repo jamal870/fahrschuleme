@@ -28,7 +28,8 @@ const Kontakt = () => {
         <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
           <h2 className="text-2xl font-heading font-bold text-foreground">Deine Anfrage an die Fahrschule</h2>
           <p>Du möchtest Fahrstunden vereinbaren, hast Fragen zum Motorrad-Grundkurs oder möchtest wissen, welches Angebot zu dir passt? Über die angegebenen Kontaktdaten erreichst du die Fahrschule me in Wettingen. Telefon, E-Mail und der WhatsApp-Kontakt auf der Website geben dir verschiedene Möglichkeiten, deine Anfrage zu stellen.</p>
-          <p>Nenne uns am besten die gewünschte Ausbildung, deine bisherige Fahrerfahrung und mögliche Zeitfenster. Bei einer Frage zu einer bestehenden Kursbuchung helfen auch das Kursdatum und der betreffende Kursteil. Bitte sende keine unnötigen Ausweiskopien oder sensiblen Unterlagen über eine allgemeine Anfrage. Den Standort findest du in der Karte; den genauen Treffpunkt für deine Fahrstunde solltest du bei der Terminvereinbarung bestätigen.</p>
+          <p>Nenne uns am besten die gewünschte Ausbildung, deine bisherige Fahrerfahrung und mögliche Zeitfenster. Bei einer Frage zu einer bestehenden Kursbuchung helfen auch das Kursdatum und der betreffende Kursteil.</p>
+          <p>Bitte sende keine unnötigen Ausweiskopien oder sensiblen Unterlagen über eine allgemeine Anfrage. Den Standort findest du in der Karte; den genauen Treffpunkt für deine Fahrstunde solltest du bei der Terminvereinbarung bestätigen.</p>
         </div>
       </section>
 

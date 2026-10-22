@@ -55,10 +55,10 @@ const Team = () => {
             Erfolgreich durch Zusammenarbeit
           </p>
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">
-            Zusammenarbeit führt zum Erfolg
+            Unser Team – Fahrlehrer in Wettingen und Baden
           </h1>
           <p className="text-muted-foreground font-body max-w-2xl mx-auto leading-relaxed">
-            Unser engagiertes Team erfahrener Fahrlehrer begleitet dich auf jedem Schritt deines Weges.
+            Unser Team begleitet deine Fahrausbildung in Wettingen und im Raum Baden.
             Mit Fachwissen, Geduld und Leidenschaft fürs Unterrichten sorgen wir dafür, dass du das nötige
             Selbstvertrauen und die Fähigkeiten erlangst, um sicher und erfolgreich zu fahren.
           </p>
@@ -77,7 +77,8 @@ const Team = () => {
         <section className="font-body text-muted-foreground space-y-4 my-8">
           <h2 className="text-xl font-heading font-bold text-foreground">Mit deinem Fahrlehrer den nächsten Schritt besprechen</h2>
           <p>Das Team der Fahrschule me begleitet die Ausbildung in Wettingen und im Raum Baden. Die Zusammenarbeit beginnt damit, deine Vorerfahrung und deine Ziele zu besprechen. Erzähle deinem Fahrlehrer, was du bereits geübt hast und welche Situationen dich noch verunsichern. Das hilft, Fragen gezielt aufzugreifen und den nächsten Unterrichtsschritt zu planen.</p>
-          <p>Bei den Teamprofilen findest du die veröffentlichten Angaben zu den einzelnen Fahrlehrern. Für Fragen zur passenden Ansprechperson oder zur Terminvereinbarung kannst du die Kontaktdaten der Fahrschule nutzen. Wenn du nach einer Pause weiterlernen oder gezielt vor einer Prüfung üben möchtest, erwähne dies bei deiner Anfrage.</p>
+          <p>Bei den Teamprofilen findest du die veröffentlichten Angaben zu den einzelnen Fahrlehrern. Für Fragen zur passenden Ansprechperson oder zur Terminvereinbarung kannst du <Link to="/kontakt/" className="text-primary underline">Kontakt mit der Fahrschule aufnehmen</Link>. Wenn du nach einer Pause weiterlernen oder gezielt vor einer Prüfung üben möchtest, erwähne dies bei deiner Anfrage.</p>
+          <p>Informiere dich über unsere <Link to="/fahrstunden/" className="text-primary underline">Auto- und Motorrad-Fahrstunden</Link> oder finde auf der <Link to="/motorrad/" className="text-primary underline">Motorrad-Übersicht</Link> den Einstieg in die Ausbildung.</p>
         </section>
 
         {loading ? (
