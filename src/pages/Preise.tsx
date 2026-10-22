@@ -31,10 +31,18 @@ const Preise = () => {
       <header className="bg-card border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-16 text-center">
           <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Unsere Preise</p>
-          <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">Preise & Kosten</h1>
+          <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">Preise für Auto- und Motorrad-Fahrstunden in Wettingen</h1>
           <p className="text-muted-foreground font-body max-w-2xl mx-auto">Finde das perfekte Fahrstundenpaket, das zu deinen Bedürfnissen passt.</p>
         </div>
       </header>
+
+      <section className="bg-card py-10">
+        <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
+          <h2 className="text-2xl font-heading font-bold text-foreground">So planst du die Kosten deiner Fahrausbildung</h2>
+          <p>Die Preise auf dieser Seite helfen dir, Auto- und Motorrad-Fahrstunden sowie die angebotenen Kurse zu vergleichen. Einzelne Fahrstunden und Abonnements haben unterschiedliche Umfänge. Achte deshalb neben dem Betrag auch auf die jeweilige Leistungsbeschreibung und die Hinweise beim Angebot. So kannst du einschätzen, welche Variante zu deinem Lernstand und deiner Terminplanung passt.</p>
+          <p>Die Gesamtkosten bis zum Führerausweis hängen von deinem persönlichen Ausbildungsweg ab. Zur Fahrpraxis können je nach Situation Kurse und amtliche Gebühren hinzukommen. Die hier aufgeführten Unterrichtspreise sind deshalb nicht automatisch ein Gesamtpreis für den Führerausweis. Wenn du ein bestimmtes Paket oder eine Motorrad-Ausbildung planst, frage vor der Buchung nach den enthaltenen Leistungen und den für dich passenden nächsten Schritten.</p>
+        </div>
+      </section>
 
       <section className="bg-section-alt py-16">
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">

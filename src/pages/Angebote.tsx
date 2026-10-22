@@ -83,6 +83,14 @@ const Angebote = () => {
         </div>
       </header>
 
+      <section className="bg-card py-10">
+        <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
+          <h2 className="text-2xl font-heading font-bold text-foreground">Angebote vergleichen und passend auswählen</h2>
+          <p>Die Angebote für Fahrschüler richten sich an unterschiedliche Ausbildungswege. Prüfe bei jeder Aktion, ob sie Auto-Fahrstunden, Motorrad-Fahrstunden oder einen Motorrad-Grundkurs betrifft. Wichtig sind die enthaltenen Leistungen, ein gegebenenfalls angegebener Aktionszeitraum und die Hinweise zur Buchung. Ein günstiger Preis ist vor allem dann hilfreich, wenn das Angebot zu deinem tatsächlichen Lernbedarf passt.</p>
+          <p>Aktuelle Aktionen werden auf dieser Seite angezeigt. Wenn gerade keine Aktion verfügbar ist, kannst du dich über die regulären Preise und Kurstermine informieren. Hast du Fragen zu einem Angebot oder bereits eine Buchung, kläre vor einer weiteren Anmeldung, welche Leistungen für dich infrage kommen. Über die Kontaktseite erreichst du die Fahrschule für eine persönliche Rückfrage.</p>
+        </div>
+      </section>
+
       <section className="bg-section-alt py-16">
         <div className="max-w-6xl mx-auto px-6">
           {loading ? (

@@ -127,7 +127,7 @@ const WieVieleFahrstunden = () => (
   <div className="min-h-screen bg-background">
     <Seo
       title="Wie viele Fahrstunden brauche ich? Richtwerte Schweiz 2026"
-      description="Realistische Anzahl Fahrstunden bis zur Führerprüfung: Richtwerte nach Vorerfahrung, Dauer und Kosten für Auto und Motorrad – aus der Praxis in Wettingen/Baden."
+      description="Wie viele Fahrstunden brauchst du? Richtwerte für Auto und Motorrad, Einfluss deiner Vorerfahrung und Tipps zur Planung von Dauer und Kosten."
       path="/wie-viele-fahrstunden/"
       jsonLd={jsonLd}
     />

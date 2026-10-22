@@ -122,7 +122,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.8 },
     title: "Verkehrskunde Wettingen (VKU) – Pflichtkurs | Fahrschule me",
     description:
-      "Verkehrskundeunterricht (VKU) in Wettingen – 8 Lektionen, Pflicht vor der praktischen Führerprüfung. Anerkannt vom StVA Aargau. Online buchen bei Fahrschule me.",
+      "Verkehrskunde (VKU) in Wettingen: Informiere dich über Kursinhalte, Ablauf und Anmeldung und frage deinen passenden Termin bei Fahrschule me an.",
   },
   {
     path: "/fahrstunden",
@@ -193,7 +193,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "monthly", priority: 0.8 },
     title: "Wie viele Fahrstunden brauche ich? Richtwerte Schweiz 2026",
     description:
-      "Realistische Anzahl Fahrstunden bis zur Führerprüfung: Richtwerte nach Vorerfahrung, Dauer und Kosten für Auto und Motorrad – aus der Praxis in Wettingen/Baden.",
+      "Wie viele Fahrstunden brauchst du? Richtwerte für Auto und Motorrad, Einfluss deiner Vorerfahrung und Tipps zur Planung von Dauer und Kosten.",
   },
   {
     path: "/fuer-fahrlehrer",

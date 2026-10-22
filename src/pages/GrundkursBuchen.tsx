@@ -383,6 +383,12 @@ export default function GrundkursBuchen() {
 
         </div>
 
+        <section className="font-body text-muted-foreground space-y-4 my-8">
+          <h2 className="text-xl font-heading font-bold text-foreground">Motorrad-Grundkurs: vor der Anmeldung</h2>
+          <p>Den Motorrad-Grundkurs in Wettingen buchst du über die Auswahl der Kursteile und Termine auf dieser Seite. Prüfe zuerst, welche Teile du für deine Ausbildung benötigst. Die Kursteile müssen in der richtigen Reihenfolge absolviert werden. Plane deine Termine deshalb zusammen und achte darauf, dass du an allen ausgewählten Tagen teilnehmen kannst.</p>
+          <p>Für die Anmeldung hältst du deine persönlichen Angaben bereit und kontrollierst vor dem Abschluss die ausgewählten Kursteile und Kursdaten. Lies auch die Buchungs- und Absagebedingungen. Wenn du bereits einen Führerausweis besitzt oder dir bei der Auswahl unsicher bist, kläre die passenden Kursteile vorab mit der Fahrschule. Der gesonderte Buchungsweg für A1-Inhaber ist auf dieser Seite gekennzeichnet.</p>
+        </section>
+
         {isPromotionActive(promotion) && (
           <div
             className="relative overflow-hidden border border-primary/30 bg-primary/5 p-4 text-center mb-6"
