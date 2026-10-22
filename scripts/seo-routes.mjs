@@ -86,7 +86,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.9 },
     title: "Autoführerschein Wettingen – Fahrstunden | Fahrschule me",
     description:
-      "Autoführerschein (Kat. B) in Wettingen: Ablauf, Fahrstunden, Abos und Kosten. Treffpunkt Bahnhofstrasse 56, Termine nach Vereinbarung. Jetzt anfragen.",
+      "Autoführerschein (Kat. B) in Wettingen: Ablauf, Fahrstunden, Abos und Kosten. Treffpunkt Bahnhof Wettingen, Termine nach Vereinbarung. Jetzt anfragen.",
   },
   {
     path: "/fahrschule-baden",

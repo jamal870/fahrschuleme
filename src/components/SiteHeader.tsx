@@ -33,6 +33,9 @@ const SiteHeader = () => {
           <NavLink to="/fahrstunden/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Fahrstunden
           </NavLink>
+          <NavLink to="/autofuehrerschein-wettingen/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
+            Auto
+          </NavLink>
           <div className="relative group">
             <NavLink to="/motorrad/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""} inline-flex items-center gap-1`}>
               Motorrad <ChevronDown className="w-3 h-3" />
@@ -100,6 +103,9 @@ const SiteHeader = () => {
             </NavLink>
             <NavLink to="/fahrstunden/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Fahrstunden
+            </NavLink>
+            <NavLink to="/autofuehrerschein-wettingen/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Auto
             </NavLink>
             <NavLink to="/motorrad/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Motorrad
