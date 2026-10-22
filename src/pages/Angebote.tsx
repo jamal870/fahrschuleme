@@ -3,11 +3,10 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import Seo from "@/components/Seo";
+import Seo, { BUSINESS_ID } from "@/components/Seo";
 import TrackedCta from "@/components/TrackedCta";
 import PromoPrice from "@/components/PromoPrice";
 import { Sparkles, Tag, ArrowRight } from "lucide-react";
-import { tenantConfig } from "@/config/tenant";
 
 interface Promotion {
   id: string;
@@ -48,21 +47,12 @@ const Angebote = () => {
           "@type": "Offer",
           name: p.title,
           description: p.description || undefined,
-          url: `${SITE_URL}/angebote`,
+          url: `${SITE_URL}/angebote/`,
           priceCurrency: "CHF",
           price: p.discount_price ?? undefined,
           priceValidUntil: p.ends_at ? p.ends_at.slice(0, 10) : undefined,
           availability: "https://schema.org/InStock",
-          seller: {
-            "@type": "LocalBusiness",
-            name: tenantConfig.brand.name,
-            address: {
-              "@type": "PostalAddress",
-              streetAddress: tenantConfig.contact.address.street,
-              addressLocality: tenantConfig.location.city,
-              addressCountry: "CH",
-            },
-          },
+          seller: { "@id": BUSINESS_ID },
         })),
       };
 

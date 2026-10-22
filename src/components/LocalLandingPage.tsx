@@ -2,16 +2,15 @@ import { Link } from "react-router-dom";
 import { MapPin, Clock, Phone, ArrowRight, CheckCircle2 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import Seo from "@/components/Seo";
+import Seo, { canonicalUrl, BUSINESS_ID } from "@/components/Seo";
 import GoogleReviews from "@/components/GoogleReviews";
 import Breadcrumbs, { type BreadcrumbItem } from "@/components/Breadcrumbs";
 import RelatedLinks, { type RelatedLink } from "@/components/RelatedLinks";
 import TrackedCta from "@/components/TrackedCta";
 import { tenantConfig } from "@/config/tenant";
-import { canonicalUrl } from "@/lib/seo-url";
 
 export interface LocalLandingProps {
-  path: string;                 // z.B. "/fahrschule-wettingen/"
+  path: string;                 // z.B. "/fahrschule-wettingen"
   seoTitle: string;
   seoDescription: string;
   badge: string;                // kleines Label oben
@@ -20,7 +19,8 @@ export interface LocalLandingProps {
   intro: string;                // Lead-Paragraph
   meetingPoint: { label: string; address: string };
   serviceName: string;          // für JSON-LD Service
-  serviceType: "MotorcycleSchool" | "DrivingSchool";
+  /** @deprecated nur noch kompatibel gehalten; das Schema nutzt die sitewide Firma (@id #business). */
+  serviceType?: "MotorcycleSchool" | "DrivingSchool";
   benefits: { title: string; desc: string }[];
   faqs?: { q: string; a: string }[];
   primaryCta: { label: string; to: string };
@@ -30,26 +30,21 @@ export interface LocalLandingProps {
   relatedLinks?: RelatedLink[];
 }
 
-
 const LocalLandingPage = (p: LocalLandingProps) => {
+  // Die Firma selbst steht einmal sitewide in index.html (@id #business).
+  // Hier nur die Seite als WebPage, die auf die Firma verweist – keine
+  // zweite DrivingSchool/MotorcycleSchool-Definition mehr.
   const jsonLd: Record<string, unknown>[] = [
     {
       "@context": "https://schema.org",
-      "@type": p.serviceType,
-      name: `${tenantConfig.brand.name} – ${p.serviceName}`,
+      "@type": "WebPage",
+      "@id": `${canonicalUrl(p.path)}#webpage`,
       url: canonicalUrl(p.path),
-      telephone: tenantConfig.contact.phone,
-      email: tenantConfig.contact.email,
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: tenantConfig.contact.address.detail,
-        addressLocality: tenantConfig.location.city,
-        postalCode: "5430",
-        addressCountry: "CH",
-      },
-      areaServed: ["Wettingen", "Baden", "Neuenhof", "Würenlos", "Spreitenbach", "Aargau"],
-      // Termine nach Vereinbarung — keine festen Öffnungszeiten, daher kein
-      // openingHours-Feld (schema.org kennt kein "nach Vereinbarung").
+      name: p.seoTitle,
+      description: p.seoDescription,
+      inLanguage: "de-CH",
+      about: { "@id": BUSINESS_ID },
+      isPartOf: { "@id": BUSINESS_ID },
     },
   ];
 
@@ -57,6 +52,7 @@ const LocalLandingPage = (p: LocalLandingProps) => {
     jsonLd.push({
       "@context": "https://schema.org",
       "@type": "FAQPage",
+      about: { "@id": BUSINESS_ID },
       mainEntity: p.faqs.map((f) => ({
         "@type": "Question",
         name: f.q,

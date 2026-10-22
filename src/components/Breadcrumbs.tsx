@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import { ChevronRight, Home } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import { canonicalUrl } from "@/lib/seo-url";
+import { canonicalUrl } from "@/components/Seo";
 
 export interface BreadcrumbItem {
   label: string;
   to?: string; // wenn leer → aktuelle Seite
 }
-
 
 const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
   const all: BreadcrumbItem[] = [{ label: "Start", to: "/" }, ...items];

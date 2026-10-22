@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Clock, Users, MapPin, Bike, ChevronRight, ShieldCheck, GraduationCap, Calendar } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
-import Seo from "@/components/Seo";
+import Seo, { BUSINESS_ID } from "@/components/Seo";
 import TrackedCta from "@/components/TrackedCta";
 
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  about: { "@id": BUSINESS_ID },
   mainEntity: [
     {
       "@type": "Question",
@@ -49,7 +50,7 @@ const MotorradFuehrerscheinWettingen = () => {
   return (
     <div className="min-h-screen bg-background">
       <Seo
-        title="Motorrad Führerschein Wettingen – MGK & Kategorien A/A1/A2 | Fahrschule me"
+        title="Motorrad Führerschein Wettingen – A1/A2/A | Fahrschule me"
         description="Motorradführerschein in Wettingen (Bezirk Baden): Grundkurs MGK, Kategorien AM, A1, A2 und A. Kleine Gruppen, Termine nach Vereinbarung."
         path="/motorrad-fuehrerschein-wettingen/"
         jsonLd={faqJsonLd}

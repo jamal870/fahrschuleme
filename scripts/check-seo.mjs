@@ -35,7 +35,7 @@ for (const route of SEO_ROUTES) {
     count++;
   }
 }
-const sitemap = readFileSync('public/sitemap.xml', 'utf8');
+const sitemap = readFileSync('dist/sitemap.xml', 'utf8');
 const locs = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(([, url]) => url);
 assert.deepEqual(new Set(locs), new Set(SEO_ROUTES.map(route => base + canonicalPath(route.path))), 'Sitemap must contain exactly the canonical public routes, without aliases');
 console.log(`SEO checks passed: ${count} HTML files, ${locs.length} canonical sitemap URLs, direct public links.`);

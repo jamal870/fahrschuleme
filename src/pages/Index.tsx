@@ -5,7 +5,7 @@ import PromotionsSection from "@/components/PromotionsSection";
 import GoogleReviews from "@/components/GoogleReviews";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import Seo from "@/components/Seo";
+import Seo, { BUSINESS_ID } from "@/components/Seo";
 import TrackedCta from "@/components/TrackedCta";
 import { trackBookingClick } from "@/lib/analytics";
 import { tenantConfig } from "@/config/tenant";
@@ -18,6 +18,7 @@ const grundkursImages = [grundkurs1, grundkurs2, grundkurs3];
 const homeFaqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  about: { "@id": BUSINESS_ID },
   mainEntity: [
     {
       "@type": "Question",

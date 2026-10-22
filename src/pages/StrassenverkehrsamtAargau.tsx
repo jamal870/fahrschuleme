@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, MapPin, Clock, FileText, Eye, Heart, BookOpen, Car, CheckCircle2, ExternalLink, ChevronRight } from "lucide-react";
-import Seo from "@/components/Seo";
+import Seo, { BUSINESS_ID } from "@/components/Seo";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { tenantConfig } from "@/config/tenant";
@@ -8,6 +8,7 @@ import { tenantConfig } from "@/config/tenant";
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  about: { "@id": BUSINESS_ID },
   mainEntity: [
     {
       "@type": "Question",
@@ -82,7 +83,7 @@ const StrassenverkehrsamtAargau = () => {
   return (
     <div className="min-h-screen bg-background">
       <Seo
-        title="Strassenverkehrsamt Aargau – Lernfahrausweis & Prüfung in Schafisheim"
+        title="Strassenverkehrsamt Aargau – Lernfahrausweis & Prüfung"
         description="Kompletter Ratgeber zum Strassenverkehrsamt Aargau (Schafisheim): Lernfahrausweis beantragen, Theorie- und praktische Prüfung, Dokumente, Kosten und Tipps."
         path="/strassenverkehrsamt-aargau/"
         jsonLd={faqJsonLd}

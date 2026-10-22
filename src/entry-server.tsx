@@ -19,6 +19,7 @@ import { StaticRouter } from "react-router-dom/server";
 import { Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { PrerenderDataContext, type PrerenderData } from "@/lib/prerender-data";
 import { SiteContentProvider } from "@/hooks/useSiteContent";
 import Index from "@/pages/Index";
 import GrundkursBuchen from "@/pages/GrundkursBuchen";
@@ -97,22 +98,24 @@ const SsrRoutes = () => (
 
 const emptyHead: SsrHead = { title: "", meta: "", link: "", script: "" };
 
-export function renderRoute(path: string): SsrResult {
+export function renderRoute(path: string, data: PrerenderData | null = null): SsrResult {
   const helmetContext: { helmet?: HelmetServerState } = {};
   const queryClient = new QueryClient();
 
   const bodyHtml = renderToStaticMarkup(
     <HelmetProvider context={helmetContext}>
       <QueryClientProvider client={queryClient}>
-        <SiteContentProvider>
-          <TooltipProvider>
-            <StaticRouter location={path}>
-              <main>
-                <SsrRoutes />
-              </main>
-            </StaticRouter>
-          </TooltipProvider>
-        </SiteContentProvider>
+        <PrerenderDataContext.Provider value={data}>
+          <SiteContentProvider>
+            <TooltipProvider>
+              <StaticRouter location={path}>
+                <main>
+                  <SsrRoutes />
+                </main>
+              </StaticRouter>
+            </TooltipProvider>
+          </SiteContentProvider>
+        </PrerenderDataContext.Provider>
       </QueryClientProvider>
     </HelmetProvider>,
   );

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import Seo from "@/components/Seo";
+import Seo, { BUSINESS_ID } from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
 import { dedupeCourses } from "@/lib/course-dedupe";
 
@@ -54,11 +54,7 @@ const buildEventJsonLd = (rows: CourseRow[]) =>
           addressCountry: "CH",
         },
       },
-      organizer: {
-        "@type": "Organization",
-        name: tenantConfig.brand.name,
-        url: SITE_URL,
-      },
+      organizer: { "@id": BUSINESS_ID },
       offers: {
         "@type": "Offer",
         price: r.price,
@@ -67,7 +63,7 @@ const buildEventJsonLd = (rows: CourseRow[]) =>
           r.spots_available > 0
             ? "https://schema.org/InStock"
             : "https://schema.org/SoldOut",
-        url: `${SITE_URL}/grundkurs`,
+        url: `${SITE_URL}/grundkurs/`,
         validFrom: new Date().toISOString(),
       },
       description: `Motorrad-Grundkurs Teil ${r.part} (4h) in ${r.location}. Kategorien A1, A2, A.`,
@@ -153,8 +149,8 @@ const Kurstermine = () => {
     <div className="min-h-screen bg-background">
       <Seo
         title="Motorrad-Grundkurs Termine 2026 Wettingen | Fahrschule me"
-        description="Alle aktuellen MGK-Termine in Wettingen. Teil 1, 2 und 3 – freie Plätze, Preise und direkte Buchung bei Fahrschule me."
-        path="/kurstermine/"
+        description="Alle aktuellen MGK-Termine in Wettingen: Teil 1, 2 und 3 mit freien Plätzen, Preisen und direkter Online-Buchung bei Fahrschule me."
+        path="/kurstermine"
         jsonLd={rows.length ? buildEventJsonLd(rows) : undefined}
       />
       <SiteHeader />

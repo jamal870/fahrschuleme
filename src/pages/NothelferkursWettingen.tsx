@@ -2,8 +2,8 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const NothelferkursWettingen = () => (
   <LocalLandingPage
-    path="/nothelferkurs-wettingen/"
-    seoTitle="Nothelferkurs Wettingen – obligatorisch für Lernfahrausweis | Fahrschule me"
+    path="/nothelferkurs-wettingen"
+    seoTitle="Nothelferkurs Wettingen – Lernfahrausweis | Fahrschule me"
     seoDescription="Nothelferkurs in Wettingen für den Lernfahrausweis (Auto/Motorrad). 10 Stunden, anerkannt vom Strassenverkehrsamt Aargau. Online buchen bei Fahrschule me."
     badge="Nothelferkurs Wettingen"
     h1="Nothelferkurs in"

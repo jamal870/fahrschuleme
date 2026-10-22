@@ -1,16 +1,34 @@
 import { Helmet } from "react-helmet-async";
-import { canonicalUrl, SITE_URL } from "@/lib/seo-url";
 
 interface SeoProps {
   title: string;
   description: string;
-  path: string; // e.g. "/kurstermine/" — appended to https://www.fahrschule-me.ch
+  path: string; // e.g. "/kurstermine" — appended to https://www.fahrschule-me.ch
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   image?: string;
   noindex?: boolean;
 }
 
+const SITE_URL = "https://www.fahrschule-me.ch";
+/**
+ * @id der Firma. Die Firma (DrivingSchool) ist genau einmal in index.html
+ * definiert und wird in jede Seite kopiert; seitenspezifische Blöcke
+ * (FAQPage, Breadcrumbs, Events, Offers) verweisen per @id darauf, statt
+ * die Firma erneut zu beschreiben.
+ */
+export const BUSINESS_ID = "https://www.fahrschule-me.ch/#business";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`;
+
+/**
+ * Kanonische URL einer Route. Netlify liefert die vorgerenderten Seiten
+ * als /<route>/index.html aus und leitet /<route> per 301 auf /<route>/
+ * um ("Pretty URLs"). Canonical, og:url, Sitemap und JSON-LD nennen
+ * deshalb einheitlich die Variante mit Schrägstrich am Ende.
+ */
+export const canonicalUrl = (path: string): string => {
+  const clean = path.replace(/\/+$/, "");
+  return clean === "" ? `${SITE_URL}/` : `${SITE_URL}${clean}/`;
+};
 
 /**
  * Setzt per-Seite SEO-Tags (title, description, canonical, og:*, twitter:*, JSON-LD).

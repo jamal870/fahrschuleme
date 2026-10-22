@@ -44,6 +44,29 @@ const SSR_ENTRY = join(__dirname, "..", "dist-ssr", "entry-server.js");
 const TEMPLATE_PATH = join(DIST_DIR, "index.html");
 const SITE_URL = "https://www.fahrschule-me.ch";
 
+// Canonical URL form: trailing slash (see src/components/Seo.tsx).
+function canonicalUrl(path) {
+  const clean = path.replace(/\/+$/, "");
+  return clean === "" ? `${SITE_URL}/` : `${SITE_URL}${clean}/`;
+}
+
+// Generates dist/sitemap.xml from SEO_ROUTES. Only primary routes with
+// `sitemap` metadata are listed — aliases (same content, canonical points
+// at the primary path) and routes flagged `sitemap: false` are left out,
+// so the sitemap never contains a URL whose canonical points elsewhere.
+function buildSitemapXml() {
+  const entries = SEO_ROUTES
+    .filter((r) => r.sitemap !== false && r.sitemap)
+    .map((r) => [
+      "  <url>",
+      `    <loc>${canonicalUrl(r.path)}</loc>`,
+      `    <changefreq>${r.sitemap.changefreq}</changefreq>`,
+      `    <priority>${r.sitemap.priority.toFixed(1)}</priority>`,
+      "  </url>",
+    ].join("\n"));
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join("\n")}\n</urlset>\n`;
+}
+
 // Tags that <Seo>/Helmet re-supplies per route. Stripped from the sitewide
 // template before inserting the route-specific versions, so we don't end
 // up with two <title> tags, two og:title tags, etc. Everything else in
@@ -162,7 +185,7 @@ function applyLiveReviewDataToTextFile(path, live) {
 function buildMetaOnlyHtml(template, route) {
   const title = escapeHtml(route.title);
   const description = escapeHtml(route.description);
-  const url = `${SITE_URL}${route.path === "/" ? "/" : route.path.replace(/\/+$/, "") + "/"}`;
+  const url = canonicalUrl(route.path);
 
   let html = template;
   html = replaceOrThrow(html, /<title>[^<]*<\/title>/, `<title>${title}</title>`, "<title>");
@@ -250,12 +273,43 @@ async function loadRenderRoute() {
   }
 }
 
+// Team members for /team: the page loads them from Supabase in the browser,
+// so without this the static HTML only has the intro text. Public read via
+// the same anon REST call the page makes. Best-effort: on any failure the
+// page falls back to its client-side loading state.
+async function fetchTeamMembers() {
+  const supabaseUrl = process.env.VITE_SUPABASE_URL;
+  const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!supabaseUrl || !supabaseKey) return null;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const query = "select=id,name,role,qualification,hobbies,character,motto,phone&is_visible=eq.true&order=sort_order.asc";
+    const res = await fetch(`${supabaseUrl}/rest/v1/team_members?${query}`, {
+      headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      console.warn(`prerender: team_members returned HTTP ${res.status} — /team keeps its client-side loading state.`);
+      return null;
+    }
+    const rows = await res.json();
+    return Array.isArray(rows) && rows.length > 0 ? rows : null;
+  } catch (err) {
+    console.warn(`prerender: could not fetch team members (${err.message}) — /team keeps its client-side loading state.`);
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function main() {
   if (!existsSync(TEMPLATE_PATH)) {
     throw new Error(`prerender: ${TEMPLATE_PATH} not found — run "vite build" first.`);
   }
   const rawTemplate = readFileSync(TEMPLATE_PATH, "utf-8");
-  const [renderRoute, liveReviewData] = await Promise.all([loadRenderRoute(), fetchLiveReviewData()]);
+  const [renderRoute, liveReviewData, team] = await Promise.all([loadRenderRoute(), fetchLiveReviewData(), fetchTeamMembers()]);
+  const prerenderData = team ? { team } : null;
   const template = applyLiveReviewDataToTemplate(rawTemplate, liveReviewData);
   applyLiveReviewDataToTextFile(join(DIST_DIR, "llms.txt"), liveReviewData);
   applyLiveReviewDataToTextFile(join(DIST_DIR, "llms-full.txt"), liveReviewData);
@@ -270,7 +324,7 @@ async function main() {
         try {
           // Always render the canonical path, even for alias output files —
           // aliases share the same content and canonical URL (see below).
-          const ssr = renderRoute(route.path);
+          const ssr = renderRoute(route.path, prerenderData);
           html = buildSsrHtml(template, route, ssr);
           ssrCount += 1;
         } catch (err) {
@@ -284,6 +338,11 @@ async function main() {
       written += 1;
     }
   }
+
+  const sitemapXml = buildSitemapXml();
+  writeFileSync(join(DIST_DIR, "sitemap.xml"), sitemapXml);
+  const sitemapCount = (sitemapXml.match(/<loc>/g) || []).length;
+  console.log(`prerender: wrote sitemap.xml with ${sitemapCount} URLs.`);
 
   console.log(
     `prerender: wrote ${written} static HTML files (${SEO_ROUTES.length} routes + aliases), ${ssrCount} with real SSR content.`,
