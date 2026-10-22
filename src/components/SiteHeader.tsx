@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { ChevronDown, Menu, X, UserCircle2 } from "lucide-react";
+import { ChevronDown, Menu, X, UserCircle2, Phone, MessageCircle } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import { tenantConfig } from "@/config/tenant";
 import { trackBookingClick } from "@/lib/analytics";
@@ -67,6 +67,26 @@ const SiteHeader = () => {
           <NavLink to="/kontakt/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Kontakt
           </NavLink>
+          <a
+            href={`tel:${tenantConfig.contact.phone.replace(/\s/g, "")}`}
+            aria-label="Anrufen"
+            title="Anrufen"
+            className="inline-flex items-center justify-center w-9 h-9 border border-border text-foreground hover:border-primary hover:text-primary transition-colors"
+            style={{ borderRadius: "3px" }}
+          >
+            <Phone className="w-4 h-4" />
+          </a>
+          <a
+            href={tenantConfig.contact.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="WhatsApp schreiben"
+            title="WhatsApp schreiben"
+            className="inline-flex items-center justify-center w-9 h-9 border border-border text-foreground hover:border-primary hover:text-primary transition-colors"
+            style={{ borderRadius: "3px" }}
+          >
+            <MessageCircle className="w-4 h-4" />
+          </a>
           <a
             href={tenantConfig.booking.externalBookingUrl || "/grundkurs/"}
             target={tenantConfig.booking.externalBookingUrl ? "_blank" : undefined}
