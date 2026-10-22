@@ -81,7 +81,7 @@ export default function Unsubscribe() {
         {status === "valid" && (
           <>
             <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold font-[Outfit] text-foreground mb-2">E-Mail-Abmeldung</h1>
+            <h1 className="text-2xl font-bold font-heading text-foreground mb-2">E-Mail-Abmeldung</h1>
             <p className="text-muted-foreground mb-6">Möchtest du dich wirklich von unseren E-Mails abmelden?</p>
             <Button onClick={handleUnsubscribe} variant="destructive">Abmeldung bestätigen</Button>
           </>
@@ -90,7 +90,7 @@ export default function Unsubscribe() {
         {status === "success" && (
           <>
             <CheckCircle className="w-16 h-16 text-accent mx-auto mb-4" />
-            <h1 className="text-2xl font-bold font-[Outfit] text-foreground mb-2">Erfolgreich abgemeldet</h1>
+            <h1 className="text-2xl font-bold font-heading text-foreground mb-2">Erfolgreich abgemeldet</h1>
             <p className="text-muted-foreground mb-6">Du erhältst keine weiteren E-Mails von uns.</p>
             <Button asChild><Link to="/">Zur Startseite</Link></Button>
           </>
@@ -99,7 +99,7 @@ export default function Unsubscribe() {
         {status === "already_unsubscribed" && (
           <>
             <CheckCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h1 className="text-2xl font-bold font-[Outfit] text-foreground mb-2">Bereits abgemeldet</h1>
+            <h1 className="text-2xl font-bold font-heading text-foreground mb-2">Bereits abgemeldet</h1>
             <p className="text-muted-foreground mb-6">Du bist bereits von unseren E-Mails abgemeldet.</p>
             <Button asChild><Link to="/">Zur Startseite</Link></Button>
           </>
@@ -108,7 +108,7 @@ export default function Unsubscribe() {
         {status === "invalid" && (
           <>
             <XCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
-            <h1 className="text-2xl font-bold font-[Outfit] text-foreground mb-2">Ungültiger Link</h1>
+            <h1 className="text-2xl font-bold font-heading text-foreground mb-2">Ungültiger Link</h1>
             <p className="text-muted-foreground mb-6">Dieser Abmeldelink ist ungültig oder abgelaufen.</p>
             <Button asChild><Link to="/">Zur Startseite</Link></Button>
           </>
@@ -117,7 +117,7 @@ export default function Unsubscribe() {
         {status === "error" && (
           <>
             <XCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
-            <h1 className="text-2xl font-bold font-[Outfit] text-foreground mb-2">Fehler</h1>
+            <h1 className="text-2xl font-bold font-heading text-foreground mb-2">Fehler</h1>
             <p className="text-muted-foreground mb-6">Etwas ist schiefgelaufen. Bitte versuche es später erneut.</p>
             <Button asChild><Link to="/">Zur Startseite</Link></Button>
           </>

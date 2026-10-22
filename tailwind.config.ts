@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["Sora", "sans-serif"],
+        heading: ["Manrope", "sans-serif"],
         body: ["Manrope", "sans-serif"],
       },
       backgroundImage: {

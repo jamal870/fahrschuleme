@@ -71,7 +71,7 @@ const AdminWaitlist = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <CardTitle className="text-xl font-[Outfit]">Warteliste</CardTitle>
+        <CardTitle className="text-xl font-heading">Warteliste</CardTitle>
         <Button variant="outline" size="sm" onClick={fetchRows}>
           <RefreshCw className="w-4 h-4 mr-1" /> Aktualisieren
         </Button>
