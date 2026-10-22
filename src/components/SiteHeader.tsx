@@ -6,7 +6,7 @@ import { tenantConfig } from "@/config/tenant";
 import { trackBookingClick } from "@/lib/analytics";
 
 const navItem =
-  "hover:text-primary transition-colors py-1 border-b-2 border-transparent";
+  "hover:text-primary transition-colors py-1.5 border-b-2 border-transparent";
 const activeItem = "text-primary border-primary";
 
 const SiteHeader = () => {
@@ -21,11 +21,11 @@ const SiteHeader = () => {
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium font-body text-muted-foreground">
+        <div className="hidden md:flex items-center gap-7 text-[15px] font-semibold font-body text-foreground/80 tracking-[0.005em]">
           <NavLink to="/fuer-fahrlehrer/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Für Fahrlehrer
           </NavLink>
-          <span className="text-border">|</span>
+          <span className="text-border/80 font-normal">|</span>
 
           <NavLink to="/grundkurs/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Grundkurs
@@ -93,7 +93,7 @@ const SiteHeader = () => {
       {/* Mobile nav */}
       {open && (
         <div className="md:hidden border-t border-border bg-card">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1 text-sm font-medium font-body text-muted-foreground">
+          <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1 text-[15px] font-semibold font-body text-foreground/80">
             <NavLink to="/fuer-fahrlehrer/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Für Fahrlehrer
             </NavLink>
