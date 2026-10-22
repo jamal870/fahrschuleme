@@ -273,12 +273,43 @@ async function loadRenderRoute() {
   }
 }
 
+// Team members for /team: the page loads them from Supabase in the browser,
+// so without this the static HTML only has the intro text. Public read via
+// the same anon REST call the page makes. Best-effort: on any failure the
+// page falls back to its client-side loading state.
+async function fetchTeamMembers() {
+  const supabaseUrl = process.env.VITE_SUPABASE_URL;
+  const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!supabaseUrl || !supabaseKey) return null;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const query = "select=id,name,role,qualification,hobbies,character,motto,phone&is_visible=eq.true&order=sort_order.asc";
+    const res = await fetch(`${supabaseUrl}/rest/v1/team_members?${query}`, {
+      headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      console.warn(`prerender: team_members returned HTTP ${res.status} — /team keeps its client-side loading state.`);
+      return null;
+    }
+    const rows = await res.json();
+    return Array.isArray(rows) && rows.length > 0 ? rows : null;
+  } catch (err) {
+    console.warn(`prerender: could not fetch team members (${err.message}) — /team keeps its client-side loading state.`);
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function main() {
   if (!existsSync(TEMPLATE_PATH)) {
     throw new Error(`prerender: ${TEMPLATE_PATH} not found — run "vite build" first.`);
   }
   const rawTemplate = readFileSync(TEMPLATE_PATH, "utf-8");
-  const [renderRoute, liveReviewData] = await Promise.all([loadRenderRoute(), fetchLiveReviewData()]);
+  const [renderRoute, liveReviewData, team] = await Promise.all([loadRenderRoute(), fetchLiveReviewData(), fetchTeamMembers()]);
+  const prerenderData = team ? { team } : null;
   const template = applyLiveReviewDataToTemplate(rawTemplate, liveReviewData);
   applyLiveReviewDataToTextFile(join(DIST_DIR, "llms.txt"), liveReviewData);
   applyLiveReviewDataToTextFile(join(DIST_DIR, "llms-full.txt"), liveReviewData);
@@ -293,7 +324,7 @@ async function main() {
         try {
           // Always render the canonical path, even for alias output files —
           // aliases share the same content and canonical URL (see below).
-          const ssr = renderRoute(route.path);
+          const ssr = renderRoute(route.path, prerenderData);
           html = buildSsrHtml(template, route, ssr);
           ssrCount += 1;
         } catch (err) {

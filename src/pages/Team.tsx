@@ -4,6 +4,7 @@ import { ArrowLeft, Phone } from "lucide-react";
 import { tenantConfig } from "@/config/tenant";
 import { supabase } from "@/integrations/supabase/client";
 import Seo from "@/components/Seo";
+import { usePrerenderData } from "@/lib/prerender-data";
 
 type TeamMember = {
   id: string;
@@ -17,8 +18,9 @@ type TeamMember = {
 };
 
 const Team = () => {
-  const [team, setTeam] = useState<TeamMember[]>([]);
-  const [loading, setLoading] = useState(true);
+  const prerendered = usePrerenderData()?.team as TeamMember[] | undefined;
+  const [team, setTeam] = useState<TeamMember[]>(prerendered ?? []);
+  const [loading, setLoading] = useState(!prerendered);
 
   useEffect(() => {
     (async () => {
