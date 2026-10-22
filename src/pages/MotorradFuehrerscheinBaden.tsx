@@ -30,7 +30,7 @@ const MotorradFuehrerscheinBaden = () => (
         body: "• A1 (ab 16 Jahren): bis 125 cc / 11 kW – ideal für Pendler.\n• A2 (ab 18 Jahren): bis 35 kW – Einstieg auf grössere Maschinen.\n• A (ab 25 Jahren, oder 2 Jahre nach A2): unbegrenzte Leistung.\n\nNach 2 Jahren Praxis auf A2 kannst du direkt auf Kategorie A umsteigen (ohne Grundkurs).",
       },
       {
-        heading: "Warum Fahrschule me?",
+        heading: "Strecken und Schulungsmotorräder rund um Baden",
         body: "Wir kennen die Strecken rund um Baden, den Verkehr in Wettingen, Neuenhof und auf der Limmattalbrücke wie unsere Westentasche. Unsere Schulungsmotorräder sind modern und gepflegt, der Unterricht ist persönlich und prüfungsnah.",
       },
     ]}
