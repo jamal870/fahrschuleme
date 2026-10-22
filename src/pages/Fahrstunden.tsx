@@ -171,18 +171,12 @@ const Fahrstunden = () => (
 
       <section className="bg-card py-10">
         <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
-          <h2 className="text-2xl font-heading font-bold text-foreground">Erfolgreich mit unseren Motorradfahrlektionen</h2>
-          <p>Eine gute Fahrzeugbedienung genügt schon lange nicht mehr für das Bestehen der praktischen Führerprüfung. Deshalb lohnt es sich, mindestens zwei Wochen vor deiner Motorrad-Führerprüfung die Meinung eines Experten einzuholen.</p>
-          <p>Unsere Motorradfahrlehrer und ehemaligen Führerprüfungsexperten wissen genau, welche Voraussetzungen bei der Führerprüfung erfüllt sein müssen. Mit ihren Tipps und Tricks aus jahrzehntelanger Erfahrung bestehst du die Prüfung mit möglichst wenig Aufwand. Eine Prüfungssimulation kannst du direkt bei uns anfragen.</p>
+          <h2 className="text-2xl font-heading font-bold text-foreground">Gezielt auf die Motorrad-Prüfung vorbereiten</h2>
+          <p>Sicher fahren zu können reicht für die praktische Prüfung nicht allein. Es kommt auch darauf an, vorausschauend zu fahren, Verkehrssituationen richtig einzuschätzen und ruhig zu bleiben. Genau das trainierst du in gezielten Motorrad-Lektionen.</p>
+          <p>Kurz vor der Prüfung bietet sich eine Vor-Prüfungsfahrt an. Du fährst unter Prüfungsbedingungen, bekommst direkte Rückmeldung und weisst, woran du noch arbeiten solltest.</p>
 
-          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Das erwartet dich</h3>
-          <p>Die Motorrad-Führerprüfungen der Kategorie A1 nehmen die Prüfungsexperten nicht als Sozius ab, sondern mit einem Fahrzeug der Kategorie B (Auto) mit Funk. Die Führerprüfungen der Kategorie A nehmen die Experten dagegen als Beifahrer (Sozius) ab.</p>
-
-          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Besonders sicher</h3>
-          <p>Sicherheit ist beim Motorradfahren besonders wichtig. Wir legen grossen Wert darauf, dass du nach einer Fahrlektion oder Prüfungssimulation die Risiken kennst und sicher und selbstbewusst mit deinem Motorrad fährst.</p>
-
-          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Darauf musst du achten</h3>
-          <p>Für die Sicherheitsausrüstung (inklusive Helm) bist du als Fahrschüler selbst verantwortlich. Dein Motorrad muss die gesetzlichen Anforderungen erfüllen (Reifen, Bremsen, Beleuchtung usw.) und für die Fahrt mit zwei Personen (Kategorie A) vorbereitet sein.</p>
+          <h3 className="text-lg font-heading font-bold text-foreground pt-2">Dein Motorrad und deine Ausrüstung</h3>
+          <p>Übst du auf deinem eigenen Motorrad, muss es verkehrstüchtig sein. Kontrolliere vor der Fahrt Reifen, Bremsen und Beleuchtung und denke an Helm und passende Schutzausrüstung.</p>
         </div>
       </section>
 
