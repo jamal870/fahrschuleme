@@ -281,25 +281,24 @@ async function fetchTeamMembers() {
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
   const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
   if (!supabaseUrl || !supabaseKey) return null;
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
   try {
-    const query = "select=id,name,role,qualification,hobbies,character,motto,phone&is_visible=eq.true&order=sort_order.asc";
-    const res = await fetch(`${supabaseUrl}/rest/v1/team_members?${query}`, {
-      headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
-      signal: controller.signal,
-    });
-    if (!res.ok) {
-      console.warn(`prerender: team_members returned HTTP ${res.status} — /team keeps its client-side loading state.`);
+    // Same client the browser uses, so key/header handling is identical.
+    const { createClient } = await import("@supabase/supabase-js");
+    const client = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false, autoRefreshToken: false } });
+    const { data, error } = await client
+      .from("team_members")
+      .select("id, name, role, qualification, hobbies, character, motto, phone")
+      .eq("is_visible", true)
+      .order("sort_order", { ascending: true })
+      .abortSignal(AbortSignal.timeout(8000));
+    if (error) {
+      console.warn(`prerender: team_members failed (${error.code ?? "?"}: ${error.message}) — /team keeps its client-side loading state.`);
       return null;
     }
-    const rows = await res.json();
-    return Array.isArray(rows) && rows.length > 0 ? rows : null;
+    return Array.isArray(data) && data.length > 0 ? data : null;
   } catch (err) {
     console.warn(`prerender: could not fetch team members (${err.message}) — /team keeps its client-side loading state.`);
     return null;
-  } finally {
-    clearTimeout(timeout);
   }
 }
 
