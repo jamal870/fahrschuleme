@@ -30,6 +30,7 @@ import Team from "@/pages/Team";
 import MotorradFuehrerscheinWettingen from "@/pages/MotorradFuehrerscheinWettingen";
 import MotorradGrundkursWettingen from "@/pages/MotorradGrundkursWettingen";
 import FahrschuleWettingen from "@/pages/FahrschuleWettingen";
+import AutofuehrerscheinWettingen from "@/pages/AutofuehrerscheinWettingen";
 import FahrschuleBaden from "@/pages/FahrschuleBaden";
 import FahrschuleNeuenhof from "@/pages/FahrschuleNeuenhof";
 import FahrschuleSpreitenbach from "@/pages/FahrschuleSpreitenbach";
@@ -73,6 +74,7 @@ const SsrRoutes = () => (
     <Route path="/motorrad-fuhrerschein-wettingen" element={<MotorradFuehrerscheinWettingen />} />
     <Route path="/motorrad-grundkurs-wettingen" element={<MotorradGrundkursWettingen />} />
     <Route path="/fahrschule-wettingen" element={<FahrschuleWettingen />} />
+    <Route path="/autofuehrerschein-wettingen" element={<AutofuehrerscheinWettingen />} />
     <Route path="/fahrschule-baden" element={<FahrschuleBaden />} />
     <Route path="/fahrschule-neuenhof" element={<FahrschuleNeuenhof />} />
     <Route path="/fahrschule-spreitenbach" element={<FahrschuleSpreitenbach />} />

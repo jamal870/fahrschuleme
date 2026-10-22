@@ -252,6 +252,7 @@ const WieVieleFahrstunden = () => (
 
     <RelatedLinks
       links={[
+        { to: "/autofuehrerschein-wettingen/", title: "Autoführerschein in Wettingen", desc: "Ablauf, Fahrstunden, Abos und Kosten für die Kategorie B." },
         { to: "/kosten-fuehrerschein-aargau/", title: "Kosten Führerschein Aargau 2026", desc: "Alle Gebühren und Preise vom Sehtest bis zum Führerausweis auf Probe." },
         { to: "/motorrad-kategorien-vergleich/", title: "Motorrad-Kategorien im Vergleich", desc: "AM, A1, A2 und A: Alter, Leistung und Voraussetzungen in einer Tabelle." },
         { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Der Weg zum Lernfahrausweis und zur Prüfung in Schafisheim." },

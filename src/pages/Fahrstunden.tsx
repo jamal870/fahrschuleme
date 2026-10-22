@@ -225,6 +225,7 @@ const Fahrstunden = () => (
 
     <div className="max-w-6xl mx-auto px-6 py-10">
       <RelatedLinks links={[
+        { to: "/autofuehrerschein-wettingen/", title: "Autoführerschein in Wettingen", desc: "Ablauf, Fahrstunden, Abos und Kosten für die Kategorie B." },
         { to: "/nothelferkurs-wettingen/", title: "Nothelferkurs in Wettingen", desc: "Informationen zu Kursinhalten, Ablauf und Anmeldung." },
         { to: "/verkehrskunde-wettingen/", title: "Verkehrskunde in Wettingen", desc: "Informationen zum VKU und zur Kursanmeldung." },
       ]} />

@@ -82,6 +82,13 @@ export const SEO_ROUTES = [
       "Fahrschule in Wettingen für Auto- und Motorrad-Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung. Online buchen bei Fahrschule me.",
   },
   {
+    path: "/autofuehrerschein-wettingen",
+    sitemap: { changefreq: "weekly", priority: 0.9 },
+    title: "Autoführerschein Wettingen – Fahrstunden | Fahrschule me",
+    description:
+      "Autoführerschein (Kat. B) in Wettingen: Ablauf, Fahrstunden, Abos und Kosten. Treffpunkt Bahnhofstrasse 56, Termine nach Vereinbarung. Jetzt anfragen.",
+  },
+  {
     path: "/fahrschule-baden",
     sitemap: { changefreq: "weekly", priority: 0.9 },
     title: "Fahrschule Baden – Treffpunkt Bahnhof | Fahrschule me",
