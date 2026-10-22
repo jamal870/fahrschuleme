@@ -44,6 +44,7 @@ const FahrschuleWettingen = () => (
     secondaryCta={{ label: "Preise ansehen", to: "/preise/" }}
     breadcrumbs={[{ label: "Fahrschule Wettingen" }]}
     relatedLinks={[
+      { to: "/autofuehrerschein-wettingen/", title: "Autoführerschein Wettingen", desc: "Ablauf, Fahrstunden, Abos und Kosten für die Kategorie B." },
       { to: "/fahrschule-neuenhof/", title: "Fahrschule für Neuenhof", desc: "Auto- und Motorrad-Ausbildung für Neuenhof mit Treffpunkt in Wettingen." },
       { to: "/fahrschule-spreitenbach/", title: "Fahrschule für Spreitenbach", desc: "Informationen zur Fahrausbildung für Spreitenbach und zum Treffpunkt in Wettingen." },
       { to: "/motorrad-grundkurs-wettingen/", title: "Motorrad-Grundkurs Wettingen", desc: "Der obligatorische 12h-MGK für A1, A2 und A – direkt in Wettingen." },

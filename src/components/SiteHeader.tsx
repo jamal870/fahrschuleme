@@ -53,6 +53,7 @@ const SiteHeader = () => {
             <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               <div className="bg-card border border-border shadow-md min-w-[200px] py-2" style={{ borderRadius: "3px" }}>
                 <Link to="/fahrschule-wettingen/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Fahrschule Wettingen</Link>
+                <Link to="/autofuehrerschein-wettingen/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Autoführerschein Wettingen</Link>
                 <Link to="/fahrschule-baden/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Fahrschule Baden</Link>
               </div>
             </div>
@@ -108,6 +109,9 @@ const SiteHeader = () => {
             </NavLink>
             <NavLink to="/fahrschule-wettingen/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Fahrschule Wettingen
+            </NavLink>
+            <NavLink to="/autofuehrerschein-wettingen/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
+              Autoführerschein Wettingen
             </NavLink>
             <NavLink to="/fahrschule-baden/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Fahrschule Baden
