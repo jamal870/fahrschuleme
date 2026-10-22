@@ -9,14 +9,14 @@ const FahrschuleWettingen = () => (
     h1="Deine Fahrschule in"
     h1Accent="Wettingen"
     intro="Auto- und Motorrad-Fahrstunden direkt in Wettingen – mit erfahrenen, eidgenössisch geprüften Fahrlehrern. Flexible Termine nach Vereinbarung, transparente Preise und persönliche Betreuung bis zur Prüfung."
-    meetingPoint={{ label: "Wettingen", address: "Bahnhofstrasse 56, 5430 Wettingen" }}
+    meetingPoint={{ label: "Wettingen", address: "Auto: Bahnhof Wettingen · Motorrad: Bahnhofstrasse 56, 5430 Wettingen" }}
     serviceName="Fahrschule Wettingen"
     serviceType="DrivingSchool"
     benefits={[
       { title: "Auto & Motorrad", desc: "Kategorie B (Auto), AM, A1, A2 und A (Motorrad) – alles aus einer Hand." },
       { title: "Faire Preise", desc: "Einzellektion Auto 95 CHF, Motorrad 130 CHF. Mit Abo sparst du bis zu 150 CHF." },
       { title: "Flexible Zeiten", desc: "Termine nach Vereinbarung – Lektionen auch nach Feierabend." },
-      { title: "Treffpunkt zentral", desc: "Bahnhofstrasse 56, gut erreichbar mit dem ÖV und Auto." },
+      { title: "Treffpunkt zentral", desc: "Auto-Fahrstunden starten am Bahnhof Wettingen, Motorrad-Fahrstunden an der Bahnhofstrasse 56." },
       { title: "Online-Buchung", desc: "Termine direkt online buchen und bezahlen – Twint, Karte oder Rechnung." },
       { title: "Persönliche Betreuung", desc: "Du wirst von der ersten Lektion bis zur Prüfung vom selben Fahrlehrer betreut." },
     ]}
@@ -35,7 +35,7 @@ const FahrschuleWettingen = () => (
       },
     ]}
     faqs={[
-      { q: "Wo finden die Fahrstunden statt?", a: "Treffpunkt ist die Bahnhofstrasse 56 in 5430 Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
+      { q: "Wo finden die Fahrstunden statt?", a: "Auto-Fahrstunden starten am Bahnhof Wettingen, Motorrad-Fahrstunden an der Bahnhofstrasse 56 in 5430 Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
       { q: "Was kostet eine Autofahrstunde?", a: "Eine Einzellektion (45 Min) kostet 95 CHF. Mit dem 10er-Abo sparst du 50 CHF, mit dem 20er-Abo 150 CHF." },
       { q: "Bietet ihr auch Motorrad-Fahrstunden an?", a: "Ja. Motorrad-Einzellektion (60 Min) kostet 130 CHF. Wir bieten Vorschulung, Grundschulung und Vor-Prüfungsfahrt an." },
       { q: "Wie melde ich mich an?", a: "Am einfachsten online über die Kontakt- oder Kurstermin-Seite. Du kannst uns auch direkt anrufen oder per WhatsApp schreiben." },

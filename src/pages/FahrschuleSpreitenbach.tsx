@@ -9,7 +9,7 @@ const FahrschuleSpreitenbach = () => (
     h1="Fahrschule für"
     h1Accent="Spreitenbach"
     intro="Aus Spreitenbach erreichst du unsere Fahrschule in Wettingen in wenigen Minuten. Wir bilden dich für Auto (Kategorie B) und Motorrad (A1/A2/A) aus – flexibel, persönlich und zu fairen Preisen."
-    meetingPoint={{ label: "Wettingen (für Spreitenbach)", address: "Bahnhofstrasse 56, 5430 Wettingen" }}
+    meetingPoint={{ label: "Wettingen (für Spreitenbach)", address: "Auto: Bahnhof Wettingen · Motorrad: Bahnhofstrasse 56, 5430 Wettingen" }}
     serviceName="Fahrschule Spreitenbach"
     serviceType="DrivingSchool"
     benefits={[
@@ -31,7 +31,7 @@ const FahrschuleSpreitenbach = () => (
       },
       {
         heading: "Treffpunkt und Anfahrt",
-        body: "Bahnhofstrasse 56, 5430 Wettingen. Mit der Limmattalbahn (Haltestelle Wettingen) oder dem Auto über die A1/Tivoli-Ausfahrt schnell erreichbar. Auf Wunsch holen wir dich auch in Spreitenbach ab.",
+        body: "Autofahrstunden starten am Bahnhof Wettingen, Motorrad-Fahrstunden und Kurse an der Bahnhofstrasse 56, 5430 Wettingen. Mit der Limmattalbahn (Haltestelle Wettingen) oder dem Auto über die A1/Tivoli-Ausfahrt schnell erreichbar. Auf Wunsch holen wir dich auch in Spreitenbach ab.",
       },
     ]}
     faqs={[
