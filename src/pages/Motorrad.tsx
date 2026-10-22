@@ -56,8 +56,11 @@ const Motorrad = () => (
 
     <section className="bg-card py-16">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-2xl font-heading font-bold text-foreground mb-2">Motorrad Grundkurse</h2>
-        <p className="text-muted-foreground font-body mb-8">Der obligatorische 12-Stunden-Grundkurs in 3 Teilen.</p>
+        <h2 className="text-2xl font-heading font-bold text-foreground mb-2">Motorrad-Grundkurs in Wettingen</h2>
+        <div className="max-w-3xl text-muted-foreground font-body space-y-4 mb-8">
+          <p>Der Motorrad-Grundkurs in Wettingen ist auf dieser Seite in drei Teile mit jeweils vier Stunden Praxis gegliedert. Die Übersicht hilft dir, die Kursteile zu finden und von hier zur Anmeldung zu wechseln.</p>
+          <p>Welche Kursteile du benötigst, hängt von deiner gewünschten Kategorie und deinem bisherigen Führerausweis ab. Kläre offene Fragen vor der Anmeldung mit der Fahrschule. Bei der Buchung wählst du die passenden Termine aus und absolvierst die benötigten Kursteile in der richtigen Reihenfolge.</p>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[1, 2, 3].map((part) => (
             <Link key={part} to="/grundkurs/" className="bg-section-alt border border-border p-6 text-center hover:border-primary/50 hover:shadow-md transition-all block" style={{ borderRadius: "3px" }}>
@@ -68,6 +71,14 @@ const Motorrad = () => (
               <p className="text-lg font-heading font-bold text-primary">CHF 160.00</p>
             </Link>
           ))}
+        </div>
+        <div className="flex flex-wrap gap-4 mt-8">
+          <Link to="/kurstermine/" className="inline-flex items-center justify-center px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm hover:bg-primary/10 transition-colors">
+            Grundkurs-Termine in Wettingen ansehen
+          </Link>
+          <Link to="/grundkurs/" className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm hover:opacity-90 transition-opacity">
+            Motorrad-Grundkurs buchen
+          </Link>
         </div>
       </div>
     </section>
