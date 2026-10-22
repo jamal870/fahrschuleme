@@ -22,7 +22,7 @@ const AutofuehrerscheinWettingen = () => (
     longText={[
       {
         heading: "Der Weg zum Autoführerschein (Kategorie B)",
-        body: "1. Sehtest beim Optiker und Nothelferkurs absolvieren.\n2. Lernfahrausweis beantragen und die Theorieprüfung beim Strassenverkehrsamt Aargau in Schafisheim bestehen.\n3. Fahrstunden bei Fahrschule me besuchen.\n4. Verkehrskundeunterricht (VKU) abschliessen.\n5. Praktische Führerprüfung beim Strassenverkehrsamt ablegen.\n6. Den Führerausweis auf Probe erhalten, die Probezeit dauert drei Jahre.",
+        body: "1. Sehtest beim Optiker machen und den Nothelferkurs bei einem anerkannten Anbieter absolvieren.\n2. Lernfahrausweis beantragen und die Theorieprüfung beim Strassenverkehrsamt Aargau in Schafisheim bestehen.\n3. Fahrstunden bei Fahrschule me besuchen.\n4. Den Verkehrskundeunterricht (VKU) bei einem anerkannten Anbieter abschliessen.\n5. Praktische Führerprüfung beim Strassenverkehrsamt ablegen.\n6. Den Führerausweis auf Probe erhalten, die Probezeit dauert drei Jahre.",
       },
       {
         heading: "Fahrstunden bei Fahrschule me",
@@ -30,7 +30,7 @@ const AutofuehrerscheinWettingen = () => (
       },
       {
         heading: "Preise im Überblick",
-        body: "• Einzellektion (45 Min.): 95 CHF, auch auf Rechnung möglich\n• Doppellektion (2 × 45 Min.): 190 CHF\n• 10er-Abo: 900 CHF\n• 20er-Abo: 1'760 CHF\n• Administrationsbeitrag einmalig: 130 CHF, inklusive Vollkaskoversicherung\n• Verkehrskunde (VKU): 180 CHF\n• Nothelferkurs: 120 CHF\n\nAlle weiteren Kosten wie amtliche Gebühren findest du in der Übersicht der Kosten im Kanton Aargau.",
+        body: "• Einzellektion (45 Min.): 95 CHF, auch auf Rechnung möglich\n• Doppellektion (2 × 45 Min.): 190 CHF\n• 10er-Abo: 900 CHF\n• 20er-Abo: 1'760 CHF\n• Administrationsbeitrag einmalig: 130 CHF, inklusive Vollkaskoversicherung\n\nNothelferkurs und Verkehrskundeunterricht bieten wir nicht an, beide absolvierst du bei einem anerkannten Anbieter. Alle weiteren Kosten wie amtliche Gebühren findest du in der Übersicht der Kosten im Kanton Aargau.",
       },
       {
         heading: "Wie viele Fahrstunden brauchst du?",
@@ -42,7 +42,7 @@ const AutofuehrerscheinWettingen = () => (
       },
     ]}
     faqs={[
-      { q: "Was kostet der Autoführerschein im Kanton Aargau?", a: "Das hängt von der Anzahl Fahrstunden ab. Bei etwa 30 Fahrstunden rechnen wir mit rund CHF 3'600 bis 4'100 inklusive amtlicher Gebühren, VKU und Nothelferkurs. Die Aufstellung findest du auf der Seite Kosten Führerschein Aargau." },
+      { q: "Was kostet der Autoführerschein im Kanton Aargau?", a: "Das hängt von der Anzahl Fahrstunden ab. Bei etwa 30 Fahrstunden rechnen wir mit rund CHF 3'600 bis 4'100 inklusive amtlicher Gebühren sowie VKU und Nothelferkurs bei externen Anbietern (Preise je nach Anbieter). Die Aufstellung findest du auf der Seite Kosten Führerschein Aargau." },
       { q: "Was kostet eine Autofahrstunde?", a: "Eine Einzellektion (45 Minuten) kostet 95 CHF, eine Doppellektion (2 × 45 Minuten) 190 CHF. Mit dem 10er-Abo für 900 CHF sparst du 50 CHF, mit dem 20er-Abo für 1'760 CHF sparst du 150 CHF." },
       { q: "Brauche ich Fahrstunden, um die Prüfung zu bestehen?", a: "Fahrstunden sind in der Schweiz nicht vorgeschrieben. Die praktische Prüfung stellt aber hohe Anforderungen, deshalb ist Unterricht bei einem Fahrlehrer für die meisten sinnvoll." },
       { q: "Wo ist der Treffpunkt?", a: "Der Treffpunkt ist der Bahnhof Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
@@ -55,8 +55,6 @@ const AutofuehrerscheinWettingen = () => (
       { to: "/kosten-fuehrerschein-aargau/", title: "Kosten Führerschein Aargau", desc: "Alle Gebühren und Preise vom Sehtest bis zum Führerausweis auf Probe." },
       { to: "/wie-viele-fahrstunden/", title: "Wie viele Fahrstunden brauche ich?", desc: "Orientierungswerte nach Vorerfahrung, Alter und Fahrpraxis." },
       { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Lernfahrausweis, Theorie und praktische Prüfung in Schafisheim." },
-      { to: "/verkehrskunde-wettingen/", title: "Verkehrskunde in Wettingen", desc: "Informationen zum VKU und zur Kursanmeldung." },
-      { to: "/nothelferkurs-wettingen/", title: "Nothelferkurs in Wettingen", desc: "Kursinhalt, Ablauf und Anmeldung." },
     ]}
   />
 );

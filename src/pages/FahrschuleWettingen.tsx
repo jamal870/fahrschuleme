@@ -49,7 +49,7 @@ const FahrschuleWettingen = () => (
       { to: "/fahrschule-spreitenbach/", title: "Fahrschule für Spreitenbach", desc: "Informationen zur Fahrausbildung für Spreitenbach und zum Treffpunkt in Wettingen." },
       { to: "/motorrad-grundkurs-wettingen/", title: "Motorrad-Grundkurs Wettingen", desc: "Der obligatorische 12h-MGK für A1, A2 und A – direkt in Wettingen." },
       { to: "/fahrschule-baden/", title: "Fahrschule Baden", desc: "Treffpunkt direkt am Bahnhof Baden – ideal für Pendler." },
-      { to: "/preise/", title: "Alle Preise im Überblick", desc: "Auto, Motorrad, MGK, Nothelfer und VKU – transparent aufgelistet." },
+      { to: "/preise/", title: "Alle Preise im Überblick", desc: "Auto, Motorrad und Motorrad-Grundkurs – transparent aufgelistet." },
     ]}
   />
 );

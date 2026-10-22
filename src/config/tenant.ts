@@ -180,10 +180,7 @@ export const tenantConfig: TenantConfig = {
       { name: "M3 (4h)", price: "160.-" },
       { name: "Motorrad Tageskurs (4h)", price: "200.-" },
     ],
-    extras: [
-      { title: "Verkehrskunde", name: "Verkehrskunde", price: "180.-", note: "Inkl. der obligatorischen VKU-Unterlagen" },
-      { title: "Nothelfer", name: "Nothelfer", price: "120.-", note: "Inkl. Kursdokumentation und Nothelferausweis (6 Jahre gültig)" },
-    ],
+    extras: [],
   },
 
   safetyPoints: [

@@ -24,7 +24,7 @@ const Preise = () => {
     <div className="min-h-screen bg-background">
       <Seo
         title="Preise Auto & Motorrad – Fahrschule me Wettingen"
-        description="Transparente Preise für Fahrstunden, Motorrad-Grundkurs, Verkehrskunde und Nothelfer in Wettingen. Faire Abos verfügbar."
+        description="Transparente Preise für Auto- und Motorrad-Fahrstunden, Motorrad-Grundkurs und Abos in Wettingen. Alle Preise von Fahrschule me im Überblick."
         path="/preise/"
       />
       <SiteHeader />
@@ -62,6 +62,7 @@ const Preise = () => {
           </div>
         </div>
 
+        {content.pricing_extras.length > 0 && (
         <div className="max-w-5xl mx-auto px-6 mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
           {content.pricing_extras.map((extra, i) => (
             <div key={i} className="bg-card border border-border p-6" style={{ borderRadius: "3px" }}>
@@ -74,6 +75,7 @@ const Preise = () => {
             </div>
           ))}
         </div>
+        )}
       </section>
 
       <SiteFooter />

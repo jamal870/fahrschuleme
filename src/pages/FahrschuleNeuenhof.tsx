@@ -27,7 +27,7 @@ const FahrschuleNeuenhof = () => (
       },
       {
         heading: "Unser Angebot für Neuenhof",
-        body: "• Auto-Fahrstunden (Kategorie B) – Einzel- und Doppellektionen, 10er-/20er-Abos\n• Motorrad-Fahrstunden für A1, A2 und A\n• Motorrad-Grundkurs (MGK) in Wettingen\n• Vor-Prüfungsfahrt inkl. Anmeldung beim Strassenverkehrsamt Aargau\n• Beratung zu VKU, Nothelferkurs und Lernfahrausweis",
+        body: "• Auto-Fahrstunden (Kategorie B) – Einzel- und Doppellektionen, 10er-/20er-Abos\n• Motorrad-Fahrstunden für A1, A2 und A\n• Motorrad-Grundkurs (MGK) in Wettingen\n• Vor-Prüfungsfahrt inkl. Anmeldung beim Strassenverkehrsamt Aargau\n• Beratung zum Lernfahrausweis",
       },
       {
         heading: "Treffpunkt und Anfahrt",

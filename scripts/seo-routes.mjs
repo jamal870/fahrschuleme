@@ -118,20 +118,6 @@ export const SEO_ROUTES = [
       "Motorrad-Führerschein für Baden: MGK, Fahrstunden und Vor-Prüfungsfahrt für A1, A2 und A. Treffpunkt Bahnhof Baden. Online buchen bei Fahrschule me.",
   },
   {
-    path: "/nothelferkurs-wettingen",
-    sitemap: { changefreq: "weekly", priority: 0.8 },
-    title: "Nothelferkurs Wettingen – Lernfahrausweis | Fahrschule me",
-    description:
-      "Nothelferkurs in Wettingen für den Lernfahrausweis (Auto/Motorrad). 10 Stunden, anerkannt vom Strassenverkehrsamt Aargau. Online buchen bei Fahrschule me.",
-  },
-  {
-    path: "/verkehrskunde-wettingen",
-    sitemap: { changefreq: "weekly", priority: 0.8 },
-    title: "Verkehrskunde Wettingen (VKU) – Pflichtkurs | Fahrschule me",
-    description:
-      "Verkehrskunde (VKU) in Wettingen: Informiere dich über Kursinhalte, Ablauf und Anmeldung und frage deinen passenden Termin bei Fahrschule me an.",
-  },
-  {
     path: "/fahrstunden",
     sitemap: { changefreq: "weekly", priority: 0.8 },
     title: "Fahrstunden Auto & Motorrad in Wettingen | Fahrschule me",
@@ -150,7 +136,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "monthly", priority: 0.7 },
     title: "Preise Auto & Motorrad – Fahrschule me Wettingen",
     description:
-      "Transparente Preise für Fahrstunden, Motorrad-Grundkurs, Verkehrskunde und Nothelfer in Wettingen. Faire Abos verfügbar.",
+      "Transparente Preise für Auto- und Motorrad-Fahrstunden, Motorrad-Grundkurs und Abos in Wettingen. Alle Preise von Fahrschule me im Überblick.",
   },
   {
     path: "/kontakt",

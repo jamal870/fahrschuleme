@@ -27,7 +27,7 @@ const FahrschuleBaden = () => (
       },
       {
         heading: "Unser Angebot für Baden",
-        body: "• Auto-Fahrstunden (Kategorie B) – Einzel- und Doppellektionen, Abos\n• Motorrad-Fahrstunden für A1, A2 und A\n• Motorrad-Grundkurs (MGK) – Durchführung in Wettingen, nur wenige Minuten entfernt\n• Vor-Prüfungsfahrt inklusive Prüfungsanmeldung beim Strassenverkehrsamt Aargau\n• Beratung zu Lernfahrausweis, VKU und Nothelferkurs",
+        body: "• Auto-Fahrstunden (Kategorie B) – Einzel- und Doppellektionen, Abos\n• Motorrad-Fahrstunden für A1, A2 und A\n• Motorrad-Grundkurs (MGK) – Durchführung in Wettingen, nur wenige Minuten entfernt\n• Vor-Prüfungsfahrt inklusive Prüfungsanmeldung beim Strassenverkehrsamt Aargau\n• Beratung zum Lernfahrausweis",
       },
       {
         heading: "Warum Fahrschule me in Baden?",
