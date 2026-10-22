@@ -74,6 +74,12 @@ const Team = () => {
           </p>
         </div>
 
+        <section className="font-body text-muted-foreground space-y-4 my-8">
+          <h2 className="text-xl font-heading font-bold text-foreground">Mit deinem Fahrlehrer den nächsten Schritt besprechen</h2>
+          <p>Das Team der Fahrschule me begleitet die Ausbildung in Wettingen und im Raum Baden. Die Zusammenarbeit beginnt damit, deine Vorerfahrung und deine Ziele zu besprechen. Erzähle deinem Fahrlehrer, was du bereits geübt hast und welche Situationen dich noch verunsichern. Das hilft, Fragen gezielt aufzugreifen und den nächsten Unterrichtsschritt zu planen.</p>
+          <p>Bei den Teamprofilen findest du die veröffentlichten Angaben zu den einzelnen Fahrlehrern. Für Fragen zur passenden Ansprechperson oder zur Terminvereinbarung kannst du die Kontaktdaten der Fahrschule nutzen. Wenn du nach einer Pause weiterlernen oder gezielt vor einer Prüfung üben möchtest, erwähne dies bei deiner Anfrage.</p>
+        </section>
+
         {loading ? (
           <div className="text-center text-muted-foreground font-body">Laden...</div>
         ) : (

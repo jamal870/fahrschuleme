@@ -162,6 +162,12 @@ const Kurstermine = () => {
           Alle freien MGK-Termine 2026 bei {tenantConfig.brand.name}. Der Kurs besteht aus 3 Teilen
           (je 4h) und ist für die Kategorien A1, A2 und A gesetzlich vorgeschrieben.
         </p>
+        <section className="font-body text-muted-foreground space-y-4 my-8">
+          <h2 className="text-xl font-heading font-bold text-foreground">Motorrad-Grundkurs Termine sinnvoll planen</h2>
+          <p>Die Motorrad-Grundkurs Termine sind nach Kursteilen gegliedert. Vergleiche die angebotenen Tage und Uhrzeiten mit deinem Kalender und prüfe, welche Teile du für deine Ausbildung benötigst. Bei mehreren Kursteilen ist die richtige Reihenfolge wichtig. Plane auch die Anfahrt ein und kontrolliere den angegebenen Kursort.</p>
+          <p>Die Terminübersicht hilft dir bei der Planung deiner Kursteile. Vergleiche die Termine und berücksichtige dabei auch mögliche Überschneidungen mit Arbeit, Schule oder Ferien. Ob ein Termin für deine Buchung verfügbar ist, prüfst du bei der Anmeldung. Wenn du keinen passenden Termin findest oder Fragen zu deiner Kategorie hast, wende dich an die Fahrschule, bevor du einen Kursteil auswählst.</p>
+        </section>
+
         {loading ? (
           <p className="font-body">Termine werden geladen…</p>
         ) : (

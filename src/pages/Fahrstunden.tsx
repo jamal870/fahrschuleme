@@ -158,6 +158,14 @@ const Fahrstunden = () => (
       </div>
     </header>
 
+      <section className="bg-card py-10">
+        <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
+          <h2 className="text-2xl font-heading font-bold text-foreground">Auto und Motorrad: Unterricht passend zu deinem Lernstand</h2>
+          <p>Bei den Auto- und Motorrad-Fahrstunden in Wettingen steht dein aktueller Lernstand im Mittelpunkt. Ob du zum ersten Mal am Steuer sitzt, nach einer Pause wieder einsteigst oder einzelne Situationen vor der Prüfung üben möchtest: Besprich deine Vorerfahrung und deine Ziele mit deinem Fahrlehrer. So lässt sich klären, welche Übungen für deinen nächsten Schritt sinnvoll sind.</p>
+          <p>Zur Vorbereitung auf die Fahrstunde helfen konkrete Fragen: Möchtest du das Anfahren sicherer beherrschen, den Blick im Verkehr schulen oder anspruchsvolle Verkehrssituationen üben? Notiere, was dir noch Schwierigkeiten macht. Die Preise und verfügbaren Pakete findest du auf unserer Preisseite. Für die Terminvereinbarung kannst du die verlinkte Fahrschul-App nutzen oder direkt Kontakt aufnehmen.</p>
+        </div>
+      </section>
+
     <FahrstundenPromotions />
 
     <section className="bg-section-alt py-16">

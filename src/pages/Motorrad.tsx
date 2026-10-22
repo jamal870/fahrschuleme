@@ -28,6 +28,14 @@ const Motorrad = () => (
       </div>
     </header>
 
+      <section className="bg-card py-10">
+        <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
+          <h2 className="text-2xl font-heading font-bold text-foreground">Dein Weg zum Motorradführerschein</h2>
+          <p>Der Motorradführerschein umfasst mehr als das sichere Bedienen der Maschine. Zum Lernen gehören auch Blickführung, Bremsen, Kurvenfahren und das Einschätzen von Verkehrssituationen. Auf dieser Seite findest du einen Einstieg in die Motorrad-Ausbildung in Wettingen und die dazugehörigen Grundkurse. Welche Ausbildung zu dir passt, hängt unter anderem von deinem bisherigen Führerausweis und der gewünschten Kategorie ab.</p>
+          <p>Informiere dich vor der Buchung über die Voraussetzungen deiner Kategorie. Wenn du bereits Erfahrung mitbringst oder unsicher bist, welche Kursteile du benötigst, kläre dies zuerst mit der Fahrschule. Für zusätzliche Übung kannst du dich über individuelle Motorrad-Fahrstunden informieren. Aktuelle Kursangebote und die Buchungsmöglichkeiten erreichst du über die verlinkten Grundkursseiten.</p>
+        </div>
+      </section>
+
     <section className="bg-section-alt py-16">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-2xl font-heading font-bold text-foreground mb-6">Kategorien</h2>
