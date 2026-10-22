@@ -385,8 +385,15 @@ export default function GrundkursBuchen() {
 
         <section className="font-body text-muted-foreground space-y-4 my-8">
           <h2 className="text-xl font-heading font-bold text-foreground">Motorrad-Grundkurs: vor der Anmeldung</h2>
-          <p>Den Motorrad-Grundkurs in Wettingen buchst du über die Auswahl der Kursteile und Termine auf dieser Seite. Prüfe zuerst, welche Teile du für deine Ausbildung benötigst. Die Kursteile müssen in der richtigen Reihenfolge absolviert werden. Plane deine Termine deshalb zusammen und achte darauf, dass du an allen ausgewählten Tagen teilnehmen kannst.</p>
-          <p>Für die Anmeldung hältst du deine persönlichen Angaben bereit und kontrollierst vor dem Abschluss die ausgewählten Kursteile und Kursdaten. Lies auch die Buchungs- und Absagebedingungen. Wenn du bereits einen Führerausweis besitzt oder dir bei der Auswahl unsicher bist, kläre die passenden Kursteile vorab mit der Fahrschule. Der gesonderte Buchungsweg für A1-Inhaber ist auf dieser Seite gekennzeichnet.</p>
+          <p>Den Motorrad-Grundkurs in Wettingen buchst du über die Auswahl der Kursteile und Termine auf dieser Seite. Prüfe zuerst, welche Teile du für deine Ausbildung benötigst.</p>
+          <p>Die Kursteile müssen in der richtigen Reihenfolge absolviert werden. Plane deine Termine deshalb zusammen und achte darauf, dass du an allen ausgewählten Tagen teilnehmen kannst.</p>
+          <p>Für die Anmeldung hältst du deine persönlichen Angaben bereit und kontrollierst vor dem Abschluss die ausgewählten Kursteile und Kursdaten. Lies auch die Buchungs- und Absagebedingungen.</p>
+          <p>Wenn du bereits einen Führerausweis besitzt oder dir bei der Auswahl unsicher bist, kläre die passenden Kursteile vorab mit der Fahrschule. Der gesonderte Buchungsweg für A1-Inhaber ist auf dieser Seite gekennzeichnet.</p>
+        </section>
+
+        <section className="font-body text-muted-foreground space-y-3 my-8">
+          <h2 className="text-xl font-heading font-bold text-foreground">Welche Kursteile sind aufgeführt?</h2>
+          <p>Die reguläre Kursübersicht gliedert den Motorrad-Grundkurs in Teil 1, Teil 2 und Teil 3. Die auf der Website aufgeführten Teile umfassen jeweils vier Stunden. Die Anmeldung zeigt die dazugehörigen Termine und Preise. Prüfe deine Auswahl vor dem Abschluss und nutze bei Fragen zu bereits absolvierten Kursteilen den Kontakt zur Fahrschule.</p>
         </section>
 
         {isPromotionActive(promotion) && (

@@ -23,7 +23,7 @@ const VerkehrskundeWettingen = () => (
     longText={[
       {
         heading: "Was ist der Verkehrskundeunterricht?",
-        body: "Der VKU vermittelt dir das nötige Wissen, um sicher und vorausschauend am Strassenverkehr teilzunehmen. Er ist in der Schweiz obligatorisch und muss vor der praktischen Führerprüfung absolviert sein – egal ob für Auto (B), Motorrad (A1/A2/A) oder andere Kategorien.",
+        body: "Der VKU vermittelt dir das nötige Wissen, um sicher und vorausschauend am Strassenverkehr teilzunehmen. Der Verkehrskundeunterricht ist ein Pflichtkurs vor der praktischen Führerprüfung. Er ist in der Schweiz obligatorisch und muss vor der praktischen Führerprüfung absolviert sein – egal ob für Auto (B), Motorrad (A1/A2/A) oder andere Kategorien.",
       },
       {
         heading: "Inhalte des Kurses",

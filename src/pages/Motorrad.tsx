@@ -32,8 +32,10 @@ const Motorrad = () => (
       <section className="bg-card py-10">
         <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
           <h2 className="text-2xl font-heading font-bold text-foreground">Dein Weg zum Motorradführerschein</h2>
-          <p>Der Motorradführerschein umfasst mehr als das sichere Bedienen der Maschine. Zum Lernen gehören auch Blickführung, Bremsen, Kurvenfahren und das Einschätzen von Verkehrssituationen. Auf dieser Seite findest du einen Einstieg in die Motorrad-Ausbildung in Wettingen und die dazugehörigen Grundkurse. Welche Ausbildung zu dir passt, hängt unter anderem von deinem bisherigen Führerausweis und der gewünschten Kategorie ab.</p>
-          <p>Informiere dich vor der Buchung über die Voraussetzungen deiner Kategorie. Wenn du bereits Erfahrung mitbringst oder unsicher bist, welche Kursteile du benötigst, kläre dies zuerst mit der Fahrschule. Für zusätzliche Übung kannst du dich über individuelle Motorrad-Fahrstunden informieren. Aktuelle Kursangebote und die Buchungsmöglichkeiten erreichst du über die verlinkten Grundkursseiten.</p>
+          <p>Der Motorradführerschein umfasst mehr als das sichere Bedienen der Maschine. Zum Lernen gehören auch Blickführung, Bremsen, Kurvenfahren und das Einschätzen von Verkehrssituationen.</p>
+          <p>Auf dieser Seite findest du einen Einstieg in die Motorrad-Ausbildung in Wettingen und die dazugehörigen Grundkurse. Welche Ausbildung zu dir passt, hängt unter anderem von deinem bisherigen Führerausweis und der gewünschten Kategorie ab.</p>
+          <p>Informiere dich vor der Buchung über die Voraussetzungen deiner Kategorie. Wenn du bereits Erfahrung mitbringst oder unsicher bist, welche Kursteile du benötigst, kläre dies zuerst mit der Fahrschule.</p>
+          <p>Für zusätzliche Übung kannst du dich über individuelle Motorrad-Fahrstunden informieren. Aktuelle Kursangebote und die Buchungsmöglichkeiten erreichst du über die verlinkten Grundkursseiten.</p>
         </div>
       </section>
 
@@ -75,6 +77,13 @@ const Motorrad = () => (
         { to: "/motorrad-fuehrerschein-baden/", title: "Motorradführerschein für Baden", desc: "Ausbildung, Grundkurs und Fahrstunden für Motorradfahrer aus Baden." },
       ]} />
     </div>
+
+    <section className="bg-card py-10">
+      <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-3">
+        <h2 className="text-2xl font-heading font-bold text-foreground">Grundkurs und zusätzliche Fahrstunden</h2>
+        <p>Die Grundkursübersicht zeigt drei Teile mit jeweils vier Stunden Praxis. Daneben bietet die Fahrschule individuelle Motorrad-Fahrstunden, Vorschulung und Vor-Prüfungsfahrten an. Diese Angebote erfüllen unterschiedliche Aufgaben: Der Grundkurs ist als Kurs gegliedert, während du dich für zusätzliche Fahrpraxis über Fahrstunden informieren kannst.</p>
+      </div>
+    </section>
 
     <SiteFooter />
     <ChatBot />

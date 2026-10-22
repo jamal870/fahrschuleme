@@ -38,19 +38,19 @@ export const SEO_ROUTES = [
     path: "/impressum",
     sitemap: { changefreq: "yearly", priority: 0.3 },
     title: "Impressum – Fahrschule me",
-    description: "Impressum und rechtliche Angaben der Fahrschule me.",
+    description: "Impressum der Fahrschule me in Wettingen: Angaben zum Unternehmen, Kontaktmöglichkeiten und rechtliche Informationen zur Website.",
   },
   {
     path: "/datenschutz",
     sitemap: { changefreq: "yearly", priority: 0.3 },
     title: "Datenschutzerklärung – Fahrschule me",
-    description: "Datenschutzerklärung der Fahrschule me gemäss Schweizer Datenschutzgesetz (DSG).",
+    description: "Datenschutz bei Fahrschule me in Wettingen: Informationen zur Bearbeitung persönlicher Daten, zu Kontaktmöglichkeiten und deinen Rechten.",
   },
   {
     path: "/agb",
     sitemap: { changefreq: "yearly", priority: 0.3 },
     title: "AGB – Allgemeine Geschäftsbedingungen | Fahrschule me",
-    description: "Allgemeine Geschäftsbedingungen der Fahrschule me.",
+    description: "AGB der Fahrschule me in Wettingen: Bedingungen für Fahrstunden und Kurse sowie Informationen zu Buchung, Zahlung und Absagen.",
   },
   {
     path: "/team",

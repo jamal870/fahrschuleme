@@ -219,6 +219,13 @@ const Fahrstunden = () => (
       ]} />
     </div>
 
+    <section className="bg-card py-10">
+      <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-3">
+        <h2 className="text-2xl font-heading font-bold text-foreground">Einzellektion oder Abo?</h2>
+        <p>Die Preisübersicht unterscheidet zwischen einzelnen Auto-Fahrstunden, Doppellektionen sowie 10er- und 20er-Abos. Für Motorrad-Fahrstunden sind eigene Angebote aufgeführt. Vergleiche jeweils die Beschreibung der gewünschten Leistung; Auto- und Motorrad-Angebote haben unterschiedliche Umfänge. Die aktuellen Beträge findest du auf der Preisseite, ohne zwischen verschiedenen Angebotsseiten rechnen zu müssen.</p>
+      </div>
+    </section>
+
     <SiteFooter />
     <ChatBot />
   </div>
