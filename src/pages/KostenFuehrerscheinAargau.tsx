@@ -150,7 +150,7 @@ const KostenFuehrerscheinAargau = () => (
     <Seo
       title="Kosten Führerschein Aargau 2026 – alle Preise im Überblick"
       description="Was kostet der Führerschein im Kanton Aargau? Alle Gebühren 2026: Lernfahrausweis, Theorie- und Führerprüfung Schafisheim, VKU, Fahrstunden und Motorrad-Grundkurs."
-      path="/kosten-fuehrerschein-aargau"
+      path="/kosten-fuehrerschein-aargau/"
       jsonLd={jsonLd}
     />
     <SiteHeader />
@@ -260,8 +260,8 @@ const KostenFuehrerscheinAargau = () => (
           Termine nach Vereinbarung, auch abends – im Raum Wettingen, Baden, Neuenhof und Spreitenbach.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
-          <Link to="/fahrstunden" className="px-6 py-3 bg-background text-primary font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Autofahrstunden</Link>
-          <Link to="/preise" className="px-6 py-3 border-2 border-primary-foreground font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Preisübersicht</Link>
+          <Link to="/fahrstunden/" className="px-6 py-3 bg-background text-primary font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Autofahrstunden</Link>
+          <Link to="/preise/" className="px-6 py-3 border-2 border-primary-foreground font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Preisübersicht</Link>
         </div>
       </section>
 
@@ -274,9 +274,9 @@ const KostenFuehrerscheinAargau = () => (
 
     <RelatedLinks
       links={[
-        { to: "/wie-viele-fahrstunden", title: "Wie viele Fahrstunden brauche ich?", desc: "Orientierungswerte nach Vorerfahrung, Alter und Fahrpraxis – mit Lektionentabelle." },
-        { to: "/motorrad-kategorien-vergleich", title: "Motorrad-Kategorien AM, A1, A2, A", desc: "Alter, Leistung, Voraussetzungen und Kosten im direkten Vergleich." },
-        { to: "/strassenverkehrsamt-aargau", title: "Strassenverkehrsamt Aargau", desc: "Lernfahrausweis, Theorie- und praktische Prüfung in Schafisheim Schritt für Schritt." },
+        { to: "/wie-viele-fahrstunden/", title: "Wie viele Fahrstunden brauche ich?", desc: "Orientierungswerte nach Vorerfahrung, Alter und Fahrpraxis – mit Lektionentabelle." },
+        { to: "/motorrad-kategorien-vergleich/", title: "Motorrad-Kategorien AM, A1, A2, A", desc: "Alter, Leistung, Voraussetzungen und Kosten im direkten Vergleich." },
+        { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Lernfahrausweis, Theorie- und praktische Prüfung in Schafisheim Schritt für Schritt." },
       ]}
     />
 

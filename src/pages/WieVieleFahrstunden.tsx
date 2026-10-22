@@ -128,7 +128,7 @@ const WieVieleFahrstunden = () => (
     <Seo
       title="Wie viele Fahrstunden brauche ich? Richtwerte Schweiz 2026"
       description="Realistische Anzahl Fahrstunden bis zur Führerprüfung: Richtwerte nach Vorerfahrung, Dauer und Kosten für Auto und Motorrad – aus der Praxis in Wettingen/Baden."
-      path="/wie-viele-fahrstunden"
+      path="/wie-viele-fahrstunden/"
       jsonLd={jsonLd}
     />
     <SiteHeader />
@@ -238,8 +238,8 @@ const WieVieleFahrstunden = () => (
         <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">Erste Fahrstunde vereinbaren</h2>
         <p className="opacity-95 mb-6 max-w-2xl mx-auto">Wir schätzen nach der ersten Lektion ehrlich ein, wie viele Stunden du realistisch brauchst.</p>
         <div className="flex flex-wrap gap-3 justify-center">
-          <Link to="/fahrstunden" className="px-6 py-3 bg-background text-primary font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Fahrstunden</Link>
-          <Link to="/kontakt" className="px-6 py-3 border-2 border-primary-foreground font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Kontakt</Link>
+          <Link to="/fahrstunden/" className="px-6 py-3 bg-background text-primary font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Fahrstunden</Link>
+          <Link to="/kontakt/" className="px-6 py-3 border-2 border-primary-foreground font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>Kontakt</Link>
         </div>
       </section>
 
@@ -252,9 +252,9 @@ const WieVieleFahrstunden = () => (
 
     <RelatedLinks
       links={[
-        { to: "/kosten-fuehrerschein-aargau", title: "Kosten Führerschein Aargau 2026", desc: "Alle Gebühren und Preise vom Sehtest bis zum Führerausweis auf Probe." },
-        { to: "/motorrad-kategorien-vergleich", title: "Motorrad-Kategorien im Vergleich", desc: "AM, A1, A2 und A: Alter, Leistung und Voraussetzungen in einer Tabelle." },
-        { to: "/strassenverkehrsamt-aargau", title: "Strassenverkehrsamt Aargau", desc: "Der Weg zum Lernfahrausweis und zur Prüfung in Schafisheim." },
+        { to: "/kosten-fuehrerschein-aargau/", title: "Kosten Führerschein Aargau 2026", desc: "Alle Gebühren und Preise vom Sehtest bis zum Führerausweis auf Probe." },
+        { to: "/motorrad-kategorien-vergleich/", title: "Motorrad-Kategorien im Vergleich", desc: "AM, A1, A2 und A: Alter, Leistung und Voraussetzungen in einer Tabelle." },
+        { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Der Weg zum Lernfahrausweis und zur Prüfung in Schafisheim." },
       ]}
     />
 

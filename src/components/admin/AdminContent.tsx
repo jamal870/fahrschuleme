@@ -14,14 +14,14 @@ type Rows = Record<string, unknown>;
 
 const PREVIEW_LINKS: Record<string, string> = {
   brand: "/",
-  contact: "/kontakt",
-  legal: "/impressum",
+  contact: "/kontakt/",
+  legal: "/impressum/",
   bank: "/buchung-erfolgreich",
-  pricing_auto: "/preise",
-  pricing_auto_abos: "/preise",
-  pricing_motorrad: "/preise",
-  pricing_motorrad_grundkurs: "/preise",
-  pricing_extras: "/preise",
+  pricing_auto: "/preise/",
+  pricing_auto_abos: "/preise/",
+  pricing_motorrad: "/preise/",
+  pricing_motorrad_grundkurs: "/preise/",
+  pricing_extras: "/preise/",
   chatbot: "/",
   footer: "/",
 };

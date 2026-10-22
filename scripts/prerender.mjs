@@ -162,7 +162,7 @@ function applyLiveReviewDataToTextFile(path, live) {
 function buildMetaOnlyHtml(template, route) {
   const title = escapeHtml(route.title);
   const description = escapeHtml(route.description);
-  const url = `${SITE_URL}${route.path}`;
+  const url = `${SITE_URL}${route.path === "/" ? "/" : route.path.replace(/\/+$/, "") + "/"}`;
 
   let html = template;
   html = replaceOrThrow(html, /<title>[^<]*<\/title>/, `<title>${title}</title>`, "<title>");

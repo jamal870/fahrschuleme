@@ -2,7 +2,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const NothelferkursWettingen = () => (
   <LocalLandingPage
-    path="/nothelferkurs-wettingen"
+    path="/nothelferkurs-wettingen/"
     seoTitle="Nothelferkurs Wettingen – obligatorisch für Lernfahrausweis | Fahrschule me"
     seoDescription="Nothelferkurs in Wettingen für den Lernfahrausweis (Auto/Motorrad). 10 Stunden, anerkannt vom Strassenverkehrsamt Aargau. Online buchen bei Fahrschule me."
     badge="Nothelferkurs Wettingen"
@@ -40,13 +40,13 @@ const NothelferkursWettingen = () => (
       { q: "Wie lange ist der Ausweis gültig?", a: "6 Jahre. Danach ist eine Auffrischung empfohlen, aber für den Lernfahrausweis nur bei Neuerwerb nötig." },
       { q: "Ist der Kurs auch für Motorradfahrer Pflicht?", a: "Ja – für alle Lernfahrausweise (Auto und Motorrad) gleichermassen." },
     ]}
-    primaryCta={{ label: "Jetzt anmelden", to: "/kontakt" }}
-    secondaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine" }}
+    primaryCta={{ label: "Jetzt anmelden", to: "/kontakt/" }}
+    secondaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine/" }}
     breadcrumbs={[{ label: "Nothelferkurs Wettingen" }]}
     relatedLinks={[
       
-      { to: "/strassenverkehrsamt-aargau", title: "Strassenverkehrsamt Aargau", desc: "Lernfahrausweis beantragen – so geht's." },
-      { to: "/fahrschule-wettingen", title: "Fahrschule Wettingen", desc: "Auto- und Motorrad-Fahrstunden direkt bei uns." },
+      { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Lernfahrausweis beantragen – so geht's." },
+      { to: "/fahrschule-wettingen/", title: "Fahrschule Wettingen", desc: "Auto- und Motorrad-Fahrstunden direkt bei uns." },
     ]}
   />
 );

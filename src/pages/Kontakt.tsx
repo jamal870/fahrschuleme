@@ -13,7 +13,7 @@ const Kontakt = () => {
       <Seo
         title="Kontakt – Fahrschule me Wettingen | Telefon, WhatsApp, E-Mail"
         description="So erreichst du Fahrschule me: Telefon, WhatsApp und E-Mail. Bahnhofstrasse 56, 5430 Wettingen. Termine nach Vereinbarung."
-        path="/kontakt"
+        path="/kontakt/"
       />
       <SiteHeader />
       <header className="bg-card border-b border-border">

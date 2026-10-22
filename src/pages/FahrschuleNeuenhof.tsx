@@ -2,7 +2,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const FahrschuleNeuenhof = () => (
   <LocalLandingPage
-    path="/fahrschule-neuenhof"
+    path="/fahrschule-neuenhof/"
     seoTitle="Fahrschule Neuenhof – Auto & Motorrad | Fahrschule me"
     seoDescription="Fahrschule für Neuenhof: Auto- und Motorrad-Fahrstunden mit Treffpunkt Wettingen. Termine nach Vereinbarung, faire Preise. Online buchen bei Fahrschule me."
     badge="Fahrschule Neuenhof"
@@ -40,13 +40,13 @@ const FahrschuleNeuenhof = () => (
       { q: "Was kostet eine Autofahrstunde?", a: "95 CHF pro Einzellektion (45 Min). Mit dem 10er-Abo sparst du 50 CHF, mit dem 20er-Abo 150 CHF." },
       { q: "Wie melde ich mich an?", a: "Online über die Kontaktseite, per WhatsApp oder telefonisch unter 076 779 03 83." },
     ]}
-    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs" }}
-    secondaryCta={{ label: "Preise ansehen", to: "/preise" }}
+    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs/" }}
+    secondaryCta={{ label: "Preise ansehen", to: "/preise/" }}
     breadcrumbs={[{ label: "Fahrschule Neuenhof" }]}
     relatedLinks={[
-      { to: "/fahrschule-wettingen", title: "Fahrschule Wettingen", desc: "Unser Hauptstandort – Auto und Motorrad direkt vor der Tür." },
-      { to: "/motorrad-grundkurs-wettingen", title: "MGK Wettingen", desc: "Der obligatorische 12h-Motorrad-Grundkurs für A1/A2/A." },
-      { to: "/preise", title: "Alle Preise", desc: "Transparente Übersicht aller Lektionen und Pakete." },
+      { to: "/fahrschule-wettingen/", title: "Fahrschule Wettingen", desc: "Unser Hauptstandort – Auto und Motorrad direkt vor der Tür." },
+      { to: "/motorrad-grundkurs-wettingen/", title: "MGK Wettingen", desc: "Der obligatorische 12h-Motorrad-Grundkurs für A1/A2/A." },
+      { to: "/preise/", title: "Alle Preise", desc: "Transparente Übersicht aller Lektionen und Pakete." },
     ]}
   />
 );

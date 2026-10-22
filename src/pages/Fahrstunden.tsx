@@ -77,7 +77,7 @@ const FahrstundenPromotions = () => {
             <p className="text-primary-foreground/80 font-body mt-1">Limitierte Angebote für Auto- und Motorrad-Fahrstunden.</p>
           </div>
           <Link
-            to="/angebote"
+            to="/angebote/"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-foreground text-primary font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90 shrink-0"
             style={{ borderRadius: "3px" }}
           >
@@ -138,7 +138,7 @@ const Fahrstunden = () => (
     <Seo
       title="Fahrstunden Auto & Motorrad in Wettingen | Fahrschule me"
       description="Individuelle Auto- und Motorrad-Fahrstunden in Wettingen. Einzel- und Doppellektionen, 10er- und 20er-Abos. Jetzt Termin buchen bei Fahrschule me."
-      path="/fahrstunden"
+      path="/fahrstunden/"
     />
     <SiteHeader />
     <header className="bg-card border-b border-border">
@@ -196,7 +196,7 @@ const Fahrstunden = () => (
           <a href={`tel:${tenantConfig.contact.phone}`} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground" style={{ borderRadius: "3px" }}>
             {tenantConfig.contact.phone}
           </a>
-          <Link to="/kontakt" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-border text-foreground font-heading font-bold text-sm uppercase tracking-wide hover:bg-section-alt" style={{ borderRadius: "3px" }}>
+          <Link to="/kontakt/" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-border text-foreground font-heading font-bold text-sm uppercase tracking-wide hover:bg-section-alt" style={{ borderRadius: "3px" }}>
             Kontakt
           </Link>
         </div>

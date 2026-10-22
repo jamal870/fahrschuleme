@@ -2,7 +2,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const VerkehrskundeWettingen = () => (
   <LocalLandingPage
-    path="/verkehrskunde-wettingen"
+    path="/verkehrskunde-wettingen/"
     seoTitle="Verkehrskunde Wettingen (VKU) – obligatorischer Kurs | Fahrschule me"
     seoDescription="Verkehrskundeunterricht (VKU) in Wettingen – 8 Lektionen, Pflicht vor der praktischen Führerprüfung. Anerkannt vom StVA Aargau. Online buchen bei Fahrschule me."
     badge="VKU Wettingen"
@@ -40,13 +40,13 @@ const VerkehrskundeWettingen = () => (
       { q: "Wann muss ich den VKU absolvieren?", a: "Spätestens vor der praktischen Führerprüfung. Wir empfehlen aber, ihn zu Beginn der Ausbildung zu machen." },
       { q: "Ist der VKU für Motorradfahrer Pflicht?", a: "Ja – der VKU ist für alle Kategorien (B, A1, A2, A) Voraussetzung für die praktische Prüfung." },
     ]}
-    primaryCta={{ label: "Jetzt anmelden", to: "/kontakt" }}
-    secondaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine" }}
+    primaryCta={{ label: "Jetzt anmelden", to: "/kontakt/" }}
+    secondaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine/" }}
     breadcrumbs={[{ label: "Verkehrskunde Wettingen" }]}
     relatedLinks={[
       
-      { to: "/fahrschule-wettingen", title: "Fahrschule Wettingen", desc: "Auto- und Motorrad-Fahrstunden direkt bei uns." },
-      { to: "/strassenverkehrsamt-aargau", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung zur praktischen Prüfung beim StVA." },
+      { to: "/fahrschule-wettingen/", title: "Fahrschule Wettingen", desc: "Auto- und Motorrad-Fahrstunden direkt bei uns." },
+      { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung zur praktischen Prüfung beim StVA." },
     ]}
   />
 );

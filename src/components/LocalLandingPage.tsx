@@ -8,9 +8,10 @@ import Breadcrumbs, { type BreadcrumbItem } from "@/components/Breadcrumbs";
 import RelatedLinks, { type RelatedLink } from "@/components/RelatedLinks";
 import TrackedCta from "@/components/TrackedCta";
 import { tenantConfig } from "@/config/tenant";
+import { canonicalUrl } from "@/lib/seo-url";
 
 export interface LocalLandingProps {
-  path: string;                 // z.B. "/fahrschule-wettingen"
+  path: string;                 // z.B. "/fahrschule-wettingen/"
   seoTitle: string;
   seoDescription: string;
   badge: string;                // kleines Label oben
@@ -29,7 +30,6 @@ export interface LocalLandingProps {
   relatedLinks?: RelatedLink[];
 }
 
-const SITE_URL = "https://www.fahrschule-me.ch";
 
 const LocalLandingPage = (p: LocalLandingProps) => {
   const jsonLd: Record<string, unknown>[] = [
@@ -37,7 +37,7 @@ const LocalLandingPage = (p: LocalLandingProps) => {
       "@context": "https://schema.org",
       "@type": p.serviceType,
       name: `${tenantConfig.brand.name} – ${p.serviceName}`,
-      url: `${SITE_URL}${p.path}`,
+      url: canonicalUrl(p.path),
       telephone: tenantConfig.contact.phone,
       email: tenantConfig.contact.email,
       address: {

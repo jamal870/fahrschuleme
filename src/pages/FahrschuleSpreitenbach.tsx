@@ -2,7 +2,7 @@ import LocalLandingPage from "@/components/LocalLandingPage";
 
 const FahrschuleSpreitenbach = () => (
   <LocalLandingPage
-    path="/fahrschule-spreitenbach"
+    path="/fahrschule-spreitenbach/"
     seoTitle="Fahrschule Spreitenbach – Auto & Motorrad | Fahrschule me"
     seoDescription="Fahrschule für Spreitenbach mit Treffpunkt Wettingen. Auto- & Motorrad-Fahrstunden, MGK, faire Preise. Termine nach Vereinbarung. Online buchen bei Fahrschule me."
     badge="Fahrschule Spreitenbach"
@@ -40,13 +40,13 @@ const FahrschuleSpreitenbach = () => (
       { q: "Wo findet der MGK statt?", a: "In Wettingen, an der Bahnhofstrasse 56. Nur wenige Minuten von Spreitenbach entfernt." },
       { q: "Welche Kategorien werden ausgebildet?", a: "Auto (B) sowie Motorrad AM, A1, A2 und A." },
     ]}
-    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs" }}
-    secondaryCta={{ label: "Preise ansehen", to: "/preise" }}
+    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs/" }}
+    secondaryCta={{ label: "Preise ansehen", to: "/preise/" }}
     breadcrumbs={[{ label: "Fahrschule Spreitenbach" }]}
     relatedLinks={[
-      { to: "/fahrschule-wettingen", title: "Fahrschule Wettingen", desc: "Unser Hauptstandort – das vollständige Angebot." },
-      { to: "/motorrad-grundkurs-wettingen", title: "MGK Wettingen", desc: "Der 12h-Motorrad-Grundkurs für A1/A2/A." },
-      { to: "/strassenverkehrsamt-aargau", title: "Strassenverkehrsamt Aargau", desc: "Alles zur Anmeldung und Prüfung beim StVA." },
+      { to: "/fahrschule-wettingen/", title: "Fahrschule Wettingen", desc: "Unser Hauptstandort – das vollständige Angebot." },
+      { to: "/motorrad-grundkurs-wettingen/", title: "MGK Wettingen", desc: "Der 12h-Motorrad-Grundkurs für A1/A2/A." },
+      { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Alles zur Anmeldung und Prüfung beim StVA." },
     ]}
   />
 );
