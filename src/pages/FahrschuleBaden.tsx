@@ -4,7 +4,7 @@ const FahrschuleBaden = () => (
   <LocalLandingPage
     path="/fahrschule-baden/"
     seoTitle="Fahrschule Baden – Treffpunkt Bahnhof | Fahrschule me"
-    seoDescription="Fahrschule für Baden mit Treffpunkt Bahnhof Baden. Auto- und Motorrad-Fahrstunden, MGK, Termine nach Vereinbarung. Direkt online buchen bei Fahrschule me."
+    seoDescription="Fahrschule für Baden mit Treffpunkt Bahnhof Baden: Auto- und Motorrad-Fahrstunden, MGK und Termine nach Vereinbarung. Online buchen."
     badge="Fahrschule Baden"
     h1="Fahrschule für"
     h1Accent="Baden – Treffpunkt Bahnhof"
