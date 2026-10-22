@@ -251,7 +251,7 @@ const MotorradKategorienVergleich = () => (
         </a>{" "}
         (Vereinigung der Strassenverkehrsämter); massgebend ist das{" "}
         <a
-          href="https://www.ag.ch/de/verwaltung/dvi/strassenverkehrsamt"
+          href="https://www.ag.ch/de/themen/mobilitaet-verkehr/strassenverkehr"
           target="_blank"
           rel="noopener noreferrer"
           className="text-primary underline hover:no-underline"
