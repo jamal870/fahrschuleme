@@ -37,7 +37,7 @@ const Team = () => {
       <Seo
         title="Unser Team – Fahrlehrer Fahrschule me Wettingen"
         description="Lerne unser Team kennen: erfahrene Auto- und Motorrad-Fahrlehrer der Fahrschule me in Wettingen mit Qualifikationen und Erfahrung im Raum Baden."
-        path="/team"
+        path="/team/"
       />
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -121,13 +121,13 @@ const Team = () => {
       <footer className="border-t-2 border-primary bg-card py-6">
         <div className="max-w-5xl mx-auto px-6 text-center text-xs text-muted-foreground font-body space-y-2">
           <div className="space-x-3">
-            <Link to="/impressum" className="hover:text-primary">Impressum</Link>
+            <Link to="/impressum/" className="hover:text-primary">Impressum</Link>
             <span>·</span>
-            <Link to="/datenschutz" className="hover:text-primary">Datenschutz</Link>
+            <Link to="/datenschutz/" className="hover:text-primary">Datenschutz</Link>
             <span>·</span>
-            <Link to="/agb" className="hover:text-primary">AGB</Link>
+            <Link to="/agb/" className="hover:text-primary">AGB</Link>
             <span>·</span>
-            <Link to="/team" className="hover:text-primary">Team</Link>
+            <Link to="/team/" className="hover:text-primary">Team</Link>
           </div>
           <div>{tenantConfig.footer.copyright}</div>
         </div>

@@ -178,7 +178,7 @@ const PromotionsSection = () => {
 
         <div className="mt-10 text-center">
           <Link
-            to="/angebote"
+            to="/angebote/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
             style={{ borderRadius: "3px" }}
           >

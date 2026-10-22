@@ -11,7 +11,7 @@ const Impressum = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Seo title={`Impressum – ${b.name}`} description={`Impressum und rechtliche Angaben der ${b.name}.`} path="/impressum" />
+      <Seo title={`Impressum – ${b.name}`} description={`Impressum und rechtliche Angaben der ${b.name}.`} path="/impressum/" />
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-sm font-heading font-bold text-foreground hover:text-primary transition-colors">
@@ -53,11 +53,11 @@ const Impressum = () => {
         </section>
 
         <footer className="mt-12 pt-6 border-t border-border text-sm text-muted-foreground space-x-2">
-          <Link to="/impressum" className="hover:text-primary">Impressum</Link>
+          <Link to="/impressum/" className="hover:text-primary">Impressum</Link>
           <span>·</span>
-          <Link to="/datenschutz" className="hover:text-primary">Datenschutz</Link>
+          <Link to="/datenschutz/" className="hover:text-primary">Datenschutz</Link>
           <span>·</span>
-          <Link to="/agb" className="hover:text-primary">AGB</Link>
+          <Link to="/agb/" className="hover:text-primary">AGB</Link>
         </footer>
       </main>
     </div>

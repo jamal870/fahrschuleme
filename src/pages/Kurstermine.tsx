@@ -135,7 +135,7 @@ const Kurstermine = () => {
                   </div>
                 </div>
                 <Link
-                  to="/grundkurs"
+                  to="/grundkurs/"
                   className="inline-flex items-center px-3 py-2 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90"
                   style={{ borderRadius: "3px" }}
                 >
@@ -154,7 +154,7 @@ const Kurstermine = () => {
       <Seo
         title="Motorrad-Grundkurs Termine 2026 Wettingen | Fahrschule me"
         description="Alle aktuellen MGK-Termine in Wettingen. Teil 1, 2 und 3 – freie Plätze, Preise und direkte Buchung bei Fahrschule me."
-        path="/kurstermine"
+        path="/kurstermine/"
         jsonLd={rows.length ? buildEventJsonLd(rows) : undefined}
       />
       <SiteHeader />

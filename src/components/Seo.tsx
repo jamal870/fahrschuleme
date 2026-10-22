@@ -1,15 +1,15 @@
 import { Helmet } from "react-helmet-async";
+import { canonicalUrl, SITE_URL } from "@/lib/seo-url";
 
 interface SeoProps {
   title: string;
   description: string;
-  path: string; // e.g. "/kurstermine" — appended to https://www.fahrschule-me.ch
+  path: string; // e.g. "/kurstermine/" — appended to https://www.fahrschule-me.ch
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   image?: string;
   noindex?: boolean;
 }
 
-const SITE_URL = "https://www.fahrschule-me.ch";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 /**
@@ -18,7 +18,7 @@ const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`;
  * sehen die Fallback-Tags aus index.html, da sie kein JavaScript ausführen.
  */
 const Seo = ({ title, description, path, jsonLd, image = DEFAULT_IMAGE, noindex }: SeoProps) => {
-  const url = `${SITE_URL}${path}`;
+  const url = canonicalUrl(path);
   return (
     <Helmet>
       <title>{title}</title>

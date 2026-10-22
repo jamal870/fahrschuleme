@@ -3,7 +3,7 @@ import { trackBookingClick } from "@/lib/analytics";
 import { ArrowRight, ExternalLink } from "lucide-react";
 
 export interface TrackedCtaProps {
-  /** Destination: internal path (e.g. "/grundkurs") or absolute URL. */
+  /** Destination: internal path (e.g. "/grundkurs/") or absolute URL. */
   to: string;
   /** Visible label, also used as event label. */
   label: string;

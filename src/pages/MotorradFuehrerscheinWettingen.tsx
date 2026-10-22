@@ -51,7 +51,7 @@ const MotorradFuehrerscheinWettingen = () => {
       <Seo
         title="Motorrad Führerschein Wettingen – MGK & Kategorien A/A1/A2 | Fahrschule me"
         description="Motorradführerschein in Wettingen (Bezirk Baden): Grundkurs MGK, Kategorien AM, A1, A2 und A. Kleine Gruppen, Termine nach Vereinbarung."
-        path="/motorrad-fuehrerschein-wettingen"
+        path="/motorrad-fuehrerschein-wettingen/"
         jsonLd={faqJsonLd}
       />
       <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
@@ -60,7 +60,7 @@ const MotorradFuehrerscheinWettingen = () => {
             <ArrowLeft className="w-4 h-4" /> Startseite
           </Link>
           <TrackedCta
-            to="/grundkurs"
+            to="/grundkurs/"
             label="Kurs buchen"
             className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
             icon="none"
@@ -84,7 +84,7 @@ const MotorradFuehrerscheinWettingen = () => {
           </p>
           <div className="flex flex-wrap gap-3">
             <TrackedCta
-              to="/grundkurs"
+              to="/grundkurs/"
               label="Kurs buchen"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
               icon="none"
@@ -155,7 +155,7 @@ const MotorradFuehrerscheinWettingen = () => {
 
           <div className="text-center mt-10">
             <TrackedCta
-              to="/grundkurs"
+              to="/grundkurs/"
               label="Kurs buchen"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
               icon="none"
@@ -214,7 +214,7 @@ const MotorradFuehrerscheinWettingen = () => {
           </div>
           <div className="text-center mt-8">
             <Link
-              to="/grundkurs"
+              to="/grundkurs/"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
               style={{ borderRadius: "3px" }}
             >
@@ -228,13 +228,13 @@ const MotorradFuehrerscheinWettingen = () => {
       <footer className="border-t-2 border-primary bg-card py-6">
         <div className="max-w-6xl mx-auto px-6 text-center text-xs text-muted-foreground font-body space-y-2">
           <div className="space-x-3">
-            <Link to="/impressum" className="hover:text-primary">Impressum</Link>
+            <Link to="/impressum/" className="hover:text-primary">Impressum</Link>
             <span>·</span>
-            <Link to="/datenschutz" className="hover:text-primary">Datenschutz</Link>
+            <Link to="/datenschutz/" className="hover:text-primary">Datenschutz</Link>
             <span>·</span>
-            <Link to="/agb" className="hover:text-primary">AGB</Link>
+            <Link to="/agb/" className="hover:text-primary">AGB</Link>
             <span>·</span>
-            <Link to="/team" className="hover:text-primary">Team</Link>
+            <Link to="/team/" className="hover:text-primary">Team</Link>
           </div>
           <div>{tenantConfig.footer.copyright}</div>
         </div>

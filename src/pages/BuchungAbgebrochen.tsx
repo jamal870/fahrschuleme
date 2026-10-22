@@ -55,7 +55,7 @@ export default function BuchungAbgebrochen() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button asChild className="font-heading uppercase" style={{ borderRadius: "3px" }}>
-                <Link to="/grundkurs">Erneut buchen</Link>
+                <Link to="/grundkurs/">Erneut buchen</Link>
               </Button>
               <Button asChild variant="outline" className="font-heading uppercase" style={{ borderRadius: "3px" }}>
                 <Link to="/">Zur Startseite</Link>

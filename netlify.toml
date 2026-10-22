@@ -27,84 +27,84 @@
 # Motorrad
 [[redirects]]
   from = "https://drive-me.ch/redesign/motorrad-2/*"
-  to = "https://www.fahrschule-me.ch/motorrad"
+  to = "https://www.fahrschule-me.ch/motorrad/"
   status = 301
   force = true
 [[redirects]]
   from = "https://drive-me.ch/redesign/motorrad-2"
-  to = "https://www.fahrschule-me.ch/motorrad"
+  to = "https://www.fahrschule-me.ch/motorrad/"
   status = 301
   force = true
 
 # Motorradführerschein Wettingen (SEO-Seite)
 [[redirects]]
   from = "https://drive-me.ch/redesign/motorrad-fuhrerschein-wettingen/*"
-  to = "https://www.fahrschule-me.ch/motorrad-fuehrerschein-wettingen"
+  to = "https://www.fahrschule-me.ch/motorrad-fuehrerschein-wettingen/"
   status = 301
   force = true
 [[redirects]]
   from = "https://drive-me.ch/redesign/motorrad-fuhrerschein-wettingen"
-  to = "https://www.fahrschule-me.ch/motorrad-fuehrerschein-wettingen"
+  to = "https://www.fahrschule-me.ch/motorrad-fuehrerschein-wettingen/"
   status = 301
   force = true
 
 # Fahrstunden
 [[redirects]]
   from = "https://drive-me.ch/redesign/fahrstunden-2/*"
-  to = "https://www.fahrschule-me.ch/fahrstunden"
+  to = "https://www.fahrschule-me.ch/fahrstunden/"
   status = 301
   force = true
 [[redirects]]
   from = "https://drive-me.ch/redesign/fahrstunden-2"
-  to = "https://www.fahrschule-me.ch/fahrstunden"
+  to = "https://www.fahrschule-me.ch/fahrstunden/"
   status = 301
   force = true
 
 # Preise
 [[redirects]]
   from = "https://drive-me.ch/redesign/preise/*"
-  to = "https://www.fahrschule-me.ch/preise"
+  to = "https://www.fahrschule-me.ch/preise/"
   status = 301
   force = true
 [[redirects]]
   from = "https://drive-me.ch/redesign/preise"
-  to = "https://www.fahrschule-me.ch/preise"
+  to = "https://www.fahrschule-me.ch/preise/"
   status = 301
   force = true
 
 # Team
 [[redirects]]
   from = "https://drive-me.ch/redesign/team/*"
-  to = "https://www.fahrschule-me.ch/team"
+  to = "https://www.fahrschule-me.ch/team/"
   status = 301
   force = true
 [[redirects]]
   from = "https://drive-me.ch/redesign/team"
-  to = "https://www.fahrschule-me.ch/team"
+  to = "https://www.fahrschule-me.ch/team/"
   status = 301
   force = true
 
 # Kontakt
 [[redirects]]
   from = "https://drive-me.ch/redesign/kontakt-3/*"
-  to = "https://www.fahrschule-me.ch/kontakt"
+  to = "https://www.fahrschule-me.ch/kontakt/"
   status = 301
   force = true
 [[redirects]]
   from = "https://drive-me.ch/redesign/kontakt-3"
-  to = "https://www.fahrschule-me.ch/kontakt"
+  to = "https://www.fahrschule-me.ch/kontakt/"
   status = 301
   force = true
 
 # Nothelfer (keine eigene Seite → Kontakt)
 [[redirects]]
   from = "https://drive-me.ch/redesign/nothelfer-3/*"
-  to = "https://www.fahrschule-me.ch/kontakt"
+  to = "https://www.fahrschule-me.ch/kontakt/"
   status = 301
   force = true
 [[redirects]]
   from = "https://drive-me.ch/redesign/nothelfer-3"
-  to = "https://www.fahrschule-me.ch/kontakt"
+  to = "https://www.fahrschule-me.ch/kontakt/"
   status = 301
   force = true
 
