@@ -14,7 +14,7 @@ const SiteHeader = () => {
   const close = () => setOpen(false);
 
   return (
-    <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary">
+    <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary shadow-soft">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-1" onClick={close}>
           <BrandLogo imgClassName="h-12 w-auto" />

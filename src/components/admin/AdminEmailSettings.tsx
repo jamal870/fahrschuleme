@@ -75,7 +75,7 @@ const AdminEmailSettings = () => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <CardTitle className="text-xl font-[Outfit]">E-Mail-Einstellungen</CardTitle>
+          <CardTitle className="text-xl font-heading">E-Mail-Einstellungen</CardTitle>
           <p className="text-sm text-muted-foreground mt-1">
             Diese Texte werden in den E-Mails an Kunden verwendet. Änderungen wirken sofort bei neuen Mails.
           </p>
