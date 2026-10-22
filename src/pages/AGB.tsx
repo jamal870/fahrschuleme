@@ -9,7 +9,7 @@ const AGB = () => {
   const b = content.brand;
 
   const sections = [
-    { title: "1. Geltungsbereich", body: `Diese AGB gelten für alle Dienstleistungen der ${b.name}: Fahrstunden (Auto & Motorrad), VKU (Verkehrskundeunterricht), NHK (Nothilfekurs) sowie alle weiteren Ausbildungsangebote.` },
+    { title: "1. Geltungsbereich", body: `Diese AGB gelten für alle Dienstleistungen der ${b.name}: Fahrstunden (Auto & Motorrad), Motorrad-Grundkurse sowie alle weiteren Ausbildungsangebote.` },
     { title: "2. Anmeldung & Verbindlichkeit", body: "Buchungen über unsere Website oder telefonisch sind verbindlich. Mit der Buchung akzeptierst du diese AGB vollumfänglich." },
     { title: "3. Preise & Zahlung", body: `Alle Preise in Schweizer Franken (CHF) inkl. MwSt. Zahlung per Bar, Banküberweisung oder online. Bei Zahlungsverzug wird eine Bearbeitungsgebühr von CHF ${l.processingFeeChf} sowie ein Verzugszins von ${l.latePaymentInterestPct}% verrechnet.` },
     { title: "4. Absagen & Stornierungen", body: `Absagen müssen mindestens ${l.cancellationNoticeHours} Stunden vor dem Termin mitgeteilt werden (telefonisch oder per E-Mail). Bei kurzfristiger Absage oder Nichterscheinen wird die Lektion vollständig in Rechnung gestellt. Ausnahme: Arztzeugnis, innerhalb von ${l.medicalCertificateDays} Tagen einzureichen.` },
