@@ -1,2 +1,10 @@
+# Nothelferkurs und VKU werden nicht mehr angeboten -> Auto-Seite.
+# Muss VOR dem SPA-Fallback stehen: _redirects hat Vorrang vor netlify.toml,
+# und "/* /index.html 200" würde sonst jede nicht vorhandene URL abfangen.
+/nothelferkurs-wettingen   /autofuehrerschein-wettingen/  301!
+/nothelferkurs-wettingen/  /autofuehrerschein-wettingen/  301!
+/verkehrskunde-wettingen   /autofuehrerschein-wettingen/  301!
+/verkehrskunde-wettingen/  /autofuehrerschein-wettingen/  301!
+
 # Netlify SPA-Fallback für React Router (direkte Aufrufe wie /admin/login)
 /*  /index.html  200
