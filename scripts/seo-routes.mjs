@@ -86,7 +86,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.9 },
     title: "Fahrschule Baden – Treffpunkt Bahnhof | Fahrschule me",
     description:
-      "Fahrschule für Baden mit Treffpunkt Bahnhof Baden. Auto- und Motorrad-Fahrstunden, MGK, Termine nach Vereinbarung. Direkt online buchen bei Fahrschule me.",
+      "Fahrschule für Baden mit Treffpunkt Bahnhof Baden: Auto- und Motorrad-Fahrstunden, MGK und Termine nach Vereinbarung. Online buchen.",
   },
   {
     path: "/fahrschule-neuenhof",
@@ -172,7 +172,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "monthly", priority: 0.7 },
     title: "Strassenverkehrsamt Aargau – Lernfahrausweis & Prüfung",
     description:
-      "Kompletter Ratgeber zum Strassenverkehrsamt Aargau (Schafisheim): Lernfahrausweis beantragen, Theorie- und praktische Prüfung, Dokumente, Kosten und Tipps.",
+      "Ratgeber zum Strassenverkehrsamt Aargau (Schafisheim): Lernfahrausweis beantragen, Prüfungen, Dokumente, Kosten und Tipps im Überblick.",
   },
   {
     path: "/kosten-fuehrerschein-aargau",
