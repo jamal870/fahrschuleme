@@ -120,7 +120,7 @@ const jsonLd = [
 
 const Table = ({ title, rows }: { title: string; rows: Row[] }) => (
   <div className="mb-10">
-    <h3 className="font-heading font-bold text-lg text-foreground mb-3">{title}</h3>
+    <h2 className="font-heading font-bold text-lg text-foreground mb-3">{title}</h2>
     <div className="overflow-x-auto border border-border" style={{ borderRadius: "3px" }}>
       <table className="w-full text-sm font-body min-w-[640px]">
         <thead className="bg-muted">
