@@ -132,7 +132,7 @@ const FuerFahrlehrer = () => {
           {[
             { num: "iOS & Android", lbl: "Native App – Tablet & Smartphone" },
             { num: "30 Tage", lbl: "Gratis testen" },
-            { num: "CHF 449", lbl: "Solo · Pro Monat (jährlich)" },
+            { num: `CHF ${soloPrice}`, lbl: "Solo · pro Monat (jährlich)" },
             { num: "100% CH", lbl: "Daten in der Schweiz" },
           ].map((s, i) => (
             <div key={i} className="py-2">
