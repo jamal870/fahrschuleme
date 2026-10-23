@@ -1,3 +1,6 @@
+> **Veraltet:** Die Links in dieser Datei (`/#/...`) und einzelne Angaben (Preise, Zeiten, Treffpunkte) stimmen nicht mehr.
+> Aktuelle Angaben und Ziel-URLs stehen in `docs/BACKLINKS.md`. Vor Gebrauch prüfen.
+
 # Google Unternehmensprofil (GBP) – Post-Vorlagen
 
 So nutzt du sie: Google → Mein Unternehmensprofil → **Updates** bzw. **Angebote** → Text + Bild + Button + Link einfügen.  
