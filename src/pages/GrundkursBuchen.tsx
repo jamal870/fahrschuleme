@@ -89,6 +89,10 @@ export default function GrundkursBuchen() {
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "barzahlung" | "ueberweisung">("barzahlung");
   const [a1Confirmed, setA1Confirmed] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
+  // Im statischen HTML (Prerender, Suchmaschinen ohne JS) sind die Termine noch nicht geladen:
+  // dort "werden geladen" zeigen statt fälschlich "Keine verfügbaren Termine".
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -429,7 +433,7 @@ export default function GrundkursBuchen() {
               courses={getFilteredCourses(1)}
               selected={selections[1]}
               onSelect={(course) => selectCourse(1, course)}
-              loading={loadingPart === 1}
+              loading={loadingPart === 1 || !mounted}
               promotion={promotion}
             />
 
@@ -440,7 +444,7 @@ export default function GrundkursBuchen() {
                 courses={getFilteredCourses(2)}
                 selected={selections[2]}
                 onSelect={(course) => selectCourse(2, course)}
-                loading={loadingPart === 2}
+                loading={loadingPart === 2 || !mounted}
                 requiresPrev={!selections[1]}
                 promotion={promotion}
               />
@@ -455,7 +459,7 @@ export default function GrundkursBuchen() {
             courses={getFilteredCourses(3)}
             selected={selections[3]}
             onSelect={(course) => selectCourse(3, course)}
-            loading={loadingPart === 3}
+            loading={loadingPart === 3 || !mounted}
             requiresPrev={!a1Only && !selections[2]}
             priceOverride={a1Only ? A1_TEIL3_PRICE : undefined}
             promotion={promotion}

@@ -68,7 +68,7 @@ const Index = () => {
               <span className="text-primary">Auto &amp; Motorrad im Raum Wettingen und Baden</span>
             </h1>
             <p className="text-lg font-body text-muted-foreground leading-relaxed mb-8 max-w-lg">
-              {tenantConfig.brand.name} – {tenantConfig.brand.tagline} · {tenantConfig.contact.openingHours}
+              Fahrstunden und Kurse für Auto und Motorrad im Raum Wettingen und Baden. {tenantConfig.brand.tagline} · {tenantConfig.contact.openingHours}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
