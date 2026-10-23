@@ -14,6 +14,7 @@ import grundkurs2 from "@/assets/grundkurs-2.png";
 import grundkurs3 from "@/assets/grundkurs-3.png";
 import heroFoto from "@/assets/hero-motorrad.webp";
 import karteMotorradFoto from "@/assets/karte-motorrad.webp";
+import karteAutoFoto from "@/assets/karte-auto.webp";
 
 const grundkursImages = [grundkurs1, grundkurs2, grundkurs3];
 
@@ -114,9 +115,14 @@ const Index = () => {
           </div>
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             <Link to="/autofuehrerschein-wettingen/" className="group bg-card border border-border overflow-hidden hover:border-primary/60 transition-colors" style={{ borderRadius: "3px" }}>
-              <div className="h-48 bg-primary/10 flex items-center justify-center">
-                <Car className="w-20 h-20 text-primary" aria-hidden="true" />
-              </div>
+              <img
+                src={karteAutoFoto}
+                alt="Fahrschülerin freut sich über den bestandenen Führerausweis vor dem Schulungsauto"
+                width={1000}
+                height={860}
+                loading="lazy"
+                className="h-48 w-full object-cover object-[center_30%]"
+              />
               <div className="p-6">
                 <h3 className="text-2xl font-heading font-bold text-foreground mb-3">Auto (Kategorie B)</h3>
                 <ul className="space-y-2 text-sm font-body text-muted-foreground mb-5">
