@@ -8,6 +8,7 @@ import SiteFooter from "@/components/SiteFooter";
 import Seo, { BUSINESS_ID } from "@/components/Seo";
 import TrackedCta from "@/components/TrackedCta";
 import { trackBookingClick } from "@/lib/analytics";
+import { whatsappLink } from "@/lib/whatsapp";
 import { tenantConfig } from "@/config/tenant";
 import grundkurs1 from "@/assets/grundkurs-1.png";
 import grundkurs2 from "@/assets/grundkurs-2.png";
@@ -91,7 +92,7 @@ const Index = () => {
               <a href={`tel:${tenantConfig.contact.phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-primary">
                 <Phone className="w-4 h-4 text-primary" /> {tenantConfig.contact.phone}
               </a>
-              <a href={tenantConfig.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-primary">
+              <a href={whatsappLink(tenantConfig.contact.whatsappUrl)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-primary">
                 <MessageCircle className="w-4 h-4 text-primary" /> WhatsApp
               </a>
             </div>
