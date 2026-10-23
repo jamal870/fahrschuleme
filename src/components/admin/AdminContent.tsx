@@ -151,7 +151,7 @@ const AdminContent = () => {
           <div className="grid md:grid-cols-2 gap-4">
             <div><Label>Telefon</Label><Input value={contact.phone} onChange={(e) => set("contact", (v) => ({ ...(v as typeof contact), phone: e.target.value }))} /></div>
             <div><Label>E-Mail</Label><Input value={contact.email} onChange={(e) => set("contact", (v) => ({ ...(v as typeof contact), email: e.target.value }))} /></div>
-            <div className="md:col-span-2"><Label>WhatsApp-URL (z.B. https://wa.me/41XXXXXXXXX)</Label><Input value={contact.whatsappUrl} onChange={(e) => set("contact", (v) => ({ ...(v as typeof contact), whatsappUrl: e.target.value }))} /></div>
+            <div className="md:col-span-2"><Label>WhatsApp-URL (z.B. https://api.whatsapp.com/send?phone=41XXXXXXXXX)</Label><Input value={contact.whatsappUrl} onChange={(e) => set("contact", (v) => ({ ...(v as typeof contact), whatsappUrl: e.target.value }))} /></div>
             <div><Label>Adresse – Name/Bezeichnung</Label><Input value={contact.address.street} onChange={(e) => set("contact", (v) => ({ ...(v as typeof contact), address: { ...(v as typeof contact).address, street: e.target.value } }))} /></div>
             <div><Label>Strasse & Nr.</Label><Input value={contact.address.detail} onChange={(e) => set("contact", (v) => ({ ...(v as typeof contact), address: { ...(v as typeof contact).address, detail: e.target.value } }))} /></div>
             <div><Label>PLZ & Ort</Label><Input value={contact.address.city} onChange={(e) => set("contact", (v) => ({ ...(v as typeof contact), address: { ...(v as typeof contact).address, city: e.target.value } }))} /></div>
