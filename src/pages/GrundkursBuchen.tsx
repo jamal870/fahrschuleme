@@ -500,7 +500,7 @@ export default function GrundkursBuchen() {
               transition={{ duration: 0.4 }}
             >
               <div className="mt-10">
-                <h2 className="text-2xl font-bold font-[Outfit] text-primary mb-6 flex items-center gap-2">
+                <h2 className="text-2xl font-bold font-heading text-primary mb-6 flex items-center gap-2">
                   ✅ Buchung bestätigen
                 </h2>
 
@@ -756,7 +756,7 @@ function CourseSection({
 }) {
   return (
     <div>
-      <h2 className="text-2xl font-bold font-[Outfit] text-primary mb-1 flex items-center gap-2">
+      <h2 className="text-2xl font-bold font-heading text-primary mb-1 flex items-center gap-2">
         🏍️ MGK Teil {partNum} – {requiresPrev ? "Übersicht" : "Datum wählen"}
         {selected && <Check className="w-5 h-5 text-accent" />}
       </h2>
@@ -791,7 +791,7 @@ function CourseSection({
                 >
                   <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{weekdayFromDate(course.date)}</p>
 
-                  <p className="font-bold text-muted-foreground text-lg font-[Outfit] line-through">{course.date}</p>
+                  <p className="font-bold text-muted-foreground text-lg font-heading line-through">{course.date}</p>
                   <div className="mt-2 space-y-1">
                     <p className="text-xs text-muted-foreground flex items-center gap-1.5">
                       <Clock className="w-3 h-3" /> {course.time}
@@ -825,7 +825,7 @@ function CourseSection({
                 }`}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{weekdayFromDate(course.date)}</p>
-                <p className="font-bold text-foreground text-lg font-[Outfit]">{course.date}</p>
+                <p className="font-bold text-foreground text-lg font-heading">{course.date}</p>
                 <div className="mt-2 space-y-1">
                   <p className="text-xs text-muted-foreground flex items-center gap-1.5">
                     <Clock className="w-3 h-3" /> {course.time}
