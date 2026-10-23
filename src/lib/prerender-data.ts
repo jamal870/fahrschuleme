@@ -6,6 +6,8 @@ import { createContext, useContext } from "react";
 // provider, so pages keep fetching live as before.
 export interface PrerenderData {
   team?: unknown[];
+  courseDates?: unknown[];
+  promotions?: unknown[];
 }
 
 export const PrerenderDataContext = createContext<PrerenderData | null>(null);

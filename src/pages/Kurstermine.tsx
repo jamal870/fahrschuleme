@@ -6,6 +6,7 @@ import SiteFooter from "@/components/SiteFooter";
 import Seo, { BUSINESS_ID } from "@/components/Seo";
 import { tenantConfig } from "@/config/tenant";
 import { dedupeCourses } from "@/lib/course-dedupe";
+import { usePrerenderData } from "@/lib/prerender-data";
 
 interface CourseRow {
   id: string;
@@ -71,8 +72,13 @@ const buildEventJsonLd = (rows: CourseRow[]) =>
   });
 
 const Kurstermine = () => {
-  const [rows, setRows] = useState<CourseRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Beim Build vorgeladene Termine (nur zukünftige), damit das statische HTML Inhalt hat;
+  // im Browser werden sie sofort neu geladen.
+  const prerendered = usePrerenderData()?.courseDates as CourseRow[] | undefined;
+  const [rows, setRows] = useState<CourseRow[]>(() =>
+    prerendered ? dedupeCourses(prerendered.filter((r) => new Date(toIsoDate(r.date)) >= new Date(new Date().setHours(0, 0, 0, 0)))) : [],
+  );
+  const [loading, setLoading] = useState(!prerendered);
 
   useEffect(() => {
     (async () => {

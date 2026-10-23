@@ -273,42 +273,68 @@ async function loadRenderRoute() {
   }
 }
 
-// Team members for /team: the page loads them from Supabase in the browser,
-// so without this the static HTML only has the intro text. Public read via
-// the same anon REST call the page makes. Best-effort: on any failure the
-// page falls back to its client-side loading state.
-async function fetchTeamMembers() {
+// Live-Daten aus Supabase für Seiten, die sie sonst erst im Browser laden (Team,
+// Kurstermine, Aktionen). Ohne das sehen Bots ohne JavaScript nur "wird geladen".
+// Öffentlicher Lesezugriff mit dem Anon-Key wie im Browser. Best-effort: bei Fehlern
+// oder fehlenden Env-Variablen bleibt das bisherige Verhalten (Laden im Browser).
+async function fetchPublicRows(label, build) {
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
   const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
   if (!supabaseUrl || !supabaseKey) return null;
   try {
-    // Same client the browser uses, so key/header handling is identical.
     const { createClient } = await import("@supabase/supabase-js");
     const client = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false, autoRefreshToken: false } });
-    const { data, error } = await client
-      .from("team_members")
-      .select("id, name, role, qualification, hobbies, character, motto, phone")
-      .eq("is_visible", true)
-      .order("sort_order", { ascending: true })
-      .abortSignal(AbortSignal.timeout(8000));
+    const { data, error } = await build(client).abortSignal(AbortSignal.timeout(8000));
     if (error) {
-      console.warn(`prerender: team_members failed (${error.code ?? "?"}: ${error.message}) — /team keeps its client-side loading state.`);
+      console.warn(`prerender: ${label} failed (${error.code ?? "?"}: ${error.message}) — Seite lädt im Browser.`);
       return null;
     }
     return Array.isArray(data) && data.length > 0 ? data : null;
   } catch (err) {
-    console.warn(`prerender: could not fetch team members (${err.message}) — /team keeps its client-side loading state.`);
+    console.warn(`prerender: could not fetch ${label} (${err.message}) — Seite lädt im Browser.`);
     return null;
   }
 }
+
+const fetchTeamMembers = () =>
+  fetchPublicRows("team_members", (c) =>
+    c
+      .from("team_members")
+      .select("id, name, role, qualification, hobbies, character, motto, phone")
+      .eq("is_visible", true)
+      .order("sort_order", { ascending: true }),
+  );
+
+const fetchCourseDates = () =>
+  fetchPublicRows("course_dates", (c) =>
+    c
+      .from("course_dates")
+      .select("id, part, day, date, time, location, instructor, spots_available, price")
+      .order("date"),
+  );
+
+const fetchPromotions = () =>
+  fetchPublicRows("promotions", (c) =>
+    c
+      .from("promotions")
+      .select("id,title,description,price,badge,starts_at,ends_at,sort_order,original_price,discount_price,category")
+      .eq("active", true)
+      .order("sort_order", { ascending: true }),
+  );
 
 async function main() {
   if (!existsSync(TEMPLATE_PATH)) {
     throw new Error(`prerender: ${TEMPLATE_PATH} not found — run "vite build" first.`);
   }
   const rawTemplate = readFileSync(TEMPLATE_PATH, "utf-8");
-  const [renderRoute, liveReviewData, team] = await Promise.all([loadRenderRoute(), fetchLiveReviewData(), fetchTeamMembers()]);
-  const prerenderData = team ? { team } : null;
+  const [renderRoute, liveReviewData, team, courseDates, promotions] = await Promise.all([
+    loadRenderRoute(),
+    fetchLiveReviewData(),
+    fetchTeamMembers(),
+    fetchCourseDates(),
+    fetchPromotions(),
+  ]);
+  const prerenderData = team || courseDates || promotions ? { team, courseDates, promotions } : null;
   const template = applyLiveReviewDataToTemplate(rawTemplate, liveReviewData);
   applyLiveReviewDataToTextFile(join(DIST_DIR, "llms.txt"), liveReviewData);
   applyLiveReviewDataToTextFile(join(DIST_DIR, "llms-full.txt"), liveReviewData);

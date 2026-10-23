@@ -11,6 +11,7 @@ import { tenantConfig } from "@/config/tenant";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { dedupeCourses } from "@/lib/course-dedupe";
+import { whatsappLink } from "@/lib/whatsapp";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -83,7 +84,7 @@ function buildAiContext(): string {
   return [
     `Fahrschule: ${t.brand.name} – ${t.brand.tagline}`,
     `Standort: ${t.contact.address.detail}, ${t.contact.address.city}`,
-    `Telefon: ${t.contact.phone} | E-Mail: ${t.contact.email} | WhatsApp: ${t.contact.whatsappUrl}`,
+    `Telefon: ${t.contact.phone} | E-Mail: ${t.contact.email} | WhatsApp: ${whatsappLink(t.contact.whatsappUrl)}`,
     `Öffnungszeiten: ${t.contact.openingHours}`,
     "",
     "Kategorien:",
@@ -753,7 +754,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "WhatsApp" });
       addMsg({
         role: "bot",
-        content: `📱 Schreib uns direkt auf WhatsApp:\n\n👉 [WhatsApp öffnen](${tenantConfig.contact.whatsappUrl})`,
+        content: `📱 Schreib uns direkt auf WhatsApp:\n\n👉 [WhatsApp öffnen](${whatsappLink(tenantConfig.contact.whatsappUrl)})`,
         buttons: [{ label: "Zurück zum Menü", action: "main_menu" }],
       });
     }
@@ -883,7 +884,7 @@ export default function ChatBot() {
       if (aiQuestionCount >= AI_QUESTION_LIMIT) {
         addMsg({
           role: "bot",
-          content: `Du hast das kostenlose KI-Fragenlimit von **${AI_QUESTION_LIMIT} Fragen** erreicht.\n\nFür weitere Fragen erreichst du uns direkt:\n\n📞 **${tenantConfig.contact.phone}**\n📧 **${tenantConfig.contact.email}**\n💬 [WhatsApp](${tenantConfig.contact.whatsappUrl})`,
+          content: `Du hast das kostenlose KI-Fragenlimit von **${AI_QUESTION_LIMIT} Fragen** erreicht.\n\nFür weitere Fragen erreichst du uns direkt:\n\n📞 **${tenantConfig.contact.phone}**\n📧 **${tenantConfig.contact.email}**\n💬 [WhatsApp](${whatsappLink(tenantConfig.contact.whatsappUrl)})`,
           buttons: [
             { label: "📞 Anrufen", action: "call_direct" },
             { label: "Zurück zum Menü", action: "main_menu" },

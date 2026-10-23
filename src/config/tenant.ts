@@ -117,7 +117,7 @@ export const tenantConfig: TenantConfig = {
   contact: {
     phone: "076 779 03 83",
     email: "info@l-me.ch",
-    whatsappUrl: "https://wa.me/41767790383",
+    whatsappUrl: "https://api.whatsapp.com/send?phone=41767790383",
     address: {
       street: "Fahrschule me",
       detail: "Bahnhofstrasse 56",

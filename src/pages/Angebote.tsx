@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { usePrerenderData } from "@/lib/prerender-data";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo, { BUSINESS_ID } from "@/components/Seo";
@@ -24,8 +25,9 @@ interface Promotion {
 const SITE_URL = "https://www.fahrschule-me.ch";
 
 const Angebote = () => {
-  const [items, setItems] = useState<Promotion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const prerendered = usePrerenderData()?.promotions as Promotion[] | undefined;
+  const [items, setItems] = useState<Promotion[]>(prerendered ?? []);
+  const [loading, setLoading] = useState(!prerendered);
 
   useEffect(() => {
     (async () => {
