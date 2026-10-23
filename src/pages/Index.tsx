@@ -15,6 +15,8 @@ import grundkurs3 from "@/assets/grundkurs-3.png";
 import heroFoto from "@/assets/hero-motorrad.webp";
 import karteMotorradFoto from "@/assets/karte-motorrad.webp";
 import karteAutoFoto from "@/assets/karte-auto.webp";
+import schueler1 from "@/assets/schueler-1.webp";
+import schueler2 from "@/assets/schueler-2.webp";
 
 const grundkursImages = [grundkurs1, grundkurs2, grundkurs3];
 
@@ -422,6 +424,48 @@ const Index = () => {
           <p className="text-xs text-muted-foreground text-center mt-3">
             Du bist bereits im Besitz der Kategorie A1? Buche direkt nur den Kursteil 3 zum Pauschalpreis.
           </p>
+        </div>
+      </section>
+
+      {/* Echte Fahrschüler */}
+      <section className="bg-card py-14">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-8">
+            <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Unsere Fahrschüler</p>
+            <h2 className="text-3xl font-heading font-bold text-foreground mb-3">Schritt für Schritt zum Ausweis</h2>
+            <p className="text-sm text-muted-foreground font-body max-w-xl mx-auto">
+              Echte Fahrschüler der {tenantConfig.brand.name} in Wettingen, veröffentlicht mit ihrer Einwilligung.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+            <img
+              src={schueler1}
+              alt="Fahrschülerin freut sich mit ihrem Ausweis neben dem Schulungsauto"
+              width={700}
+              height={1058}
+              loading="lazy"
+              className="w-full aspect-[3/4] object-cover object-top shadow-md"
+              style={{ borderRadius: "3px" }}
+            />
+            <img
+              src={schueler2}
+              alt="Fahrschüler zeigt seinen Ausweis vor dem Schulungsauto am Bahnhof"
+              width={700}
+              height={1206}
+              loading="lazy"
+              className="w-full aspect-[3/4] object-cover object-top shadow-md"
+              style={{ borderRadius: "3px" }}
+            />
+          </div>
+          <div className="text-center mt-8">
+            <Link
+              to="/kontakt/"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide"
+              style={{ borderRadius: "3px" }}
+            >
+              Fahrstunde anfragen
+            </Link>
+          </div>
         </div>
       </section>
 
