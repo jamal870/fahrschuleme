@@ -102,7 +102,8 @@ const Index = () => {
             alt="Fahrschüler mit Motorrad vor einer Fahrstunde der Fahrschule me in Wettingen"
             width={900}
             height={1200}
-            fetchPriority="high"
+            // React 18 kennt fetchPriority noch nicht (Warnung im Build); als Attribut in Kleinschreibung weitergeben
+            {...({ fetchpriority: "high" } as Record<string, string>)}
             className="hidden md:block w-full max-h-[520px] object-cover object-top shadow-xl"
             style={{ borderRadius: "3px" }}
           />
