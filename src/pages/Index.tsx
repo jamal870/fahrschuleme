@@ -117,11 +117,11 @@ const Index = () => {
             <Link to="/autofuehrerschein-wettingen/" className="group bg-card border border-border overflow-hidden hover:border-primary/60 transition-colors" style={{ borderRadius: "3px" }}>
               <img
                 src={karteAutoFoto}
-                alt="Fahrschülerin freut sich über den bestandenen Führerausweis vor dem Schulungsauto"
-                width={1000}
-                height={860}
+                alt="Weisses Schulungsauto der Fahrschule me für die Autofahrstunden in Wettingen"
+                width={870}
+                height={540}
                 loading="lazy"
-                className="h-48 w-full object-cover object-[center_30%]"
+                className="h-60 w-full object-cover object-[center_60%]"
               />
               <div className="p-6">
                 <h3 className="text-2xl font-heading font-bold text-foreground mb-3">Auto (Kategorie B)</h3>
@@ -140,7 +140,7 @@ const Index = () => {
                 width={900}
                 height={676}
                 loading="lazy"
-                className="h-48 w-full object-cover object-[center_15%]"
+                className="h-60 w-full object-cover object-[center_15%]"
               />
               <div className="p-6">
                 <h3 className="text-2xl font-heading font-bold text-foreground mb-3">Motorrad (A1, A2, A)</h3>
