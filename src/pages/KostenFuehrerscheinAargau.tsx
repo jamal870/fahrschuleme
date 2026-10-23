@@ -176,7 +176,7 @@ const KostenFuehrerscheinAargau = () => (
     <main className="max-w-4xl mx-auto px-6 py-10">
       <section className="mb-10 p-5 bg-card border-l-4 border-primary" style={{ borderRadius: "3px" }}>
         <p className="text-sm text-foreground leading-relaxed">
-          <strong className="font-heading">Kurzantwort:</strong> Der Autoführerschein (Kategorie B) kostet im Kanton Aargau
+          <strong className="font-heading">Kurzantwort:</strong> Hier der Überblick: Der Autoführerschein (Kategorie B) kostet im Kanton Aargau
           insgesamt rund <strong>CHF 3'600–4'100</strong> bei 30 Fahrstunden. Davon entfallen ca. <strong>CHF 550</strong> auf
           amtliche Gebühren, ca. <strong>CHF 180</strong> auf den VKU bei einem externen Anbieter und der Rest auf Fahrstunden
           (CHF 95 pro 45 Minuten, günstiger im Abo). Der Motorrad-Grundkurs kostet CHF 480 für alle drei Teile.
