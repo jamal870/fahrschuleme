@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bike, Check, MapPin, Clock, User, AlertCircle, CreditCard, Loader2, Sparkles, Tag } from "lucide-react";
+import { Bike, Check, MapPin, Clock, User, AlertCircle, CreditCard, Loader2, Sparkles, Tag, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -88,6 +88,7 @@ export default function GrundkursBuchen() {
   const [category, setCategory] = useState("A1 bis 125ccm");
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "barzahlung" | "ueberweisung">("barzahlung");
   const [a1Confirmed, setA1Confirmed] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -706,6 +707,11 @@ export default function GrundkursBuchen() {
         </AnimatePresence>
 
         <div className="mt-12 pt-8 border-t border-border">
+          {/* Der Text bleibt im HTML (Suchmaschinen), ist nur optisch eingeklappt */}
+          <div
+            id="grundkurs-infos"
+            className={`relative overflow-hidden transition-[max-height] duration-500 ${infoOpen ? "max-h-[2000px]" : "max-h-48"}`}
+          >
           <section className="font-body text-muted-foreground space-y-4 my-8">
             <h2 className="text-xl font-heading font-bold text-foreground">Motorrad-Grundkurs: vor der Anmeldung</h2>
             <p>Den Motorrad-Grundkurs in Wettingen buchst du über die Auswahl der Kursteile und Termine auf dieser Seite. Prüfe zuerst, welche Teile du für deine Ausbildung benötigst.</p>
@@ -731,7 +737,23 @@ export default function GrundkursBuchen() {
             <p>Welche Kursvariante für dich gilt, hängt von deiner Kategorie und deinem Lernfahrausweis ab. Einen Überblick über die Kategorien findest du auf der Seite <Link to="/motorrad/" className="text-primary underline">Motorradführerschein</Link>. Bist du bereits im Besitz der Kategorie A1, nutze den gesonderten Buchungsweg für Teil 3 weiter oben.</p>
 
           </section>
-
+            {!infoOpen && (
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent" aria-hidden="true" />
+            )}
+          </div>
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => setInfoOpen((v) => !v)}
+              aria-expanded={infoOpen}
+              aria-controls="grundkurs-infos"
+              className="inline-flex items-center gap-2 px-5 py-2 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors"
+              style={{ borderRadius: "3px" }}
+            >
+              {infoOpen ? "Weniger anzeigen" : "Mehr lesen"}
+              <ChevronDown className={`w-4 h-4 transition-transform ${infoOpen ? "rotate-180" : ""}`} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
