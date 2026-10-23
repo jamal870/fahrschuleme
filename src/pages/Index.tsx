@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, Clock, Users, Bike, CreditCard } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Users, Bike, Car, CreditCard, MessageCircle, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
 import PromotionsSection from "@/components/PromotionsSection";
@@ -12,6 +12,8 @@ import { tenantConfig } from "@/config/tenant";
 import grundkurs1 from "@/assets/grundkurs-1.png";
 import grundkurs2 from "@/assets/grundkurs-2.png";
 import grundkurs3 from "@/assets/grundkurs-3.png";
+import heroFoto from "@/assets/hero-motorrad.webp";
+import karteMotorradFoto from "@/assets/karte-motorrad.webp";
 
 const grundkursImages = [grundkurs1, grundkurs2, grundkurs3];
 
@@ -56,8 +58,8 @@ const Index = () => {
 
       {/* Hero */}
       <header className="bg-card">
-        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
-          <div className="max-w-2xl">
+        <div className="max-w-6xl mx-auto px-6 py-14 md:py-20 grid md:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+          <div>
             <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground leading-tight mb-4">
               {tenantConfig.brand.name} –<br />
               <span className="text-primary">Auto &amp; Motorrad im Raum Wettingen und Baden</span>
@@ -66,32 +68,94 @@ const Index = () => {
               {tenantConfig.brand.name} – {tenantConfig.brand.tagline} · {tenantConfig.contact.openingHours}
             </p>
             <div className="flex flex-wrap gap-3">
+              <Link
+                to="/kontakt/"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
+                style={{ borderRadius: "3px" }}
+              >
+                Fahrstunde anfragen
+              </Link>
               <a
                 href="#grundkurs"
                 onClick={() => trackBookingClick("Grundkurs buchen (Hero)")}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors"
                 style={{ borderRadius: "3px" }}
               >
                 Grundkurs buchen
               </a>
-              <a
-                href="#kategorien"
-                className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors bg-transparent"
-                style={{ borderRadius: "3px" }}
-              >
-                Alle Kategorien
+            </div>
+            <div className="mt-5 flex flex-wrap gap-4 text-sm font-body text-muted-foreground">
+              <a href={`tel:${tenantConfig.contact.phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-primary">
+                <Phone className="w-4 h-4 text-primary" /> {tenantConfig.contact.phone}
+              </a>
+              <a href={tenantConfig.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-primary">
+                <MessageCircle className="w-4 h-4 text-primary" /> WhatsApp
               </a>
             </div>
           </div>
+          <img
+            src={heroFoto}
+            alt="Fahrschüler mit Motorrad vor einer Fahrstunde der Fahrschule me in Wettingen"
+            width={900}
+            height={1200}
+            fetchPriority="high"
+            className="hidden md:block w-full max-h-[520px] object-cover object-top shadow-xl"
+            style={{ borderRadius: "3px" }}
+          />
         </div>
       </header>
+
+      {/* Zwei Wege: Auto und Motorrad */}
+      <section className="bg-section-alt py-14">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-8">
+            <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">Dein Weg zum Führerschein</p>
+            <h2 className="text-3xl font-heading font-bold text-foreground">Auto oder Motorrad?</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <Link to="/autofuehrerschein-wettingen/" className="group bg-card border border-border overflow-hidden hover:border-primary/60 transition-colors" style={{ borderRadius: "3px" }}>
+              <div className="h-48 bg-primary/10 flex items-center justify-center">
+                <Car className="w-20 h-20 text-primary" aria-hidden="true" />
+              </div>
+              <div className="p-6">
+                <h3 className="text-2xl font-heading font-bold text-foreground mb-3">Auto (Kategorie B)</h3>
+                <ul className="space-y-2 text-sm font-body text-muted-foreground mb-5">
+                  <li className="flex gap-2"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Einzellektion 45 Min. CHF 95</li>
+                  <li className="flex gap-2"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> 10er- und 20er-Abo, Vollkasko inklusive</li>
+                  <li className="flex gap-2"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Treffpunkt Bahnhof Wettingen, Termine nach Vereinbarung</li>
+                </ul>
+                <span className="inline-flex items-center gap-2 text-primary font-heading font-bold text-sm uppercase tracking-wide group-hover:underline">Zum Autoführerschein →</span>
+              </div>
+            </Link>
+            <Link to="/motorrad/" className="group bg-card border border-border overflow-hidden hover:border-primary/60 transition-colors" style={{ borderRadius: "3px" }}>
+              <img
+                src={karteMotorradFoto}
+                alt="Fahrschülerin neben ihrem Motorrad nach der Fahrstunde"
+                width={900}
+                height={676}
+                loading="lazy"
+                className="h-48 w-full object-cover object-[center_15%]"
+              />
+              <div className="p-6">
+                <h3 className="text-2xl font-heading font-bold text-foreground mb-3">Motorrad (A1, A2, A)</h3>
+                <ul className="space-y-2 text-sm font-body text-muted-foreground mb-5">
+                  <li className="flex gap-2"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Grundkurs in 3 Teilen, je 4 Stunden</li>
+                  <li className="flex gap-2"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Kleine Gruppen in Wettingen</li>
+                  <li className="flex gap-2"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Fahrstunden und Vor-Prüfungsfahrt</li>
+                </ul>
+                <span className="inline-flex items-center gap-2 text-primary font-heading font-bold text-sm uppercase tracking-wide group-hover:underline">Zum Motorradführerschein →</span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Stats Bar */}
       <section className="bg-primary text-primary-foreground">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {[
-              { icon: <Bike className="w-5 h-5 mx-auto mb-1" />, label: "AM / A1 / A2 / A" },
+              { icon: <Car className="w-5 h-5 mx-auto mb-1" />, label: "Auto & Motorrad" },
               { icon: <Clock className="w-5 h-5 mx-auto mb-1" />, label: tenantConfig.contact.openingHours },
               { icon: <Users className="w-5 h-5 mx-auto mb-1" />, label: "Kleine Gruppen" },
               { icon: <MapPin className="w-5 h-5 mx-auto mb-1" />, label: tenantConfig.location.region },

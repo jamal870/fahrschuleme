@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { ChevronDown, Menu, X, UserCircle2 } from "lucide-react";
+import { ChevronDown, Menu, X, UserCircle2, Phone } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import { tenantConfig } from "@/config/tenant";
 import { trackBookingClick } from "@/lib/analytics";
@@ -16,12 +16,12 @@ const SiteHeader = () => {
   return (
     <nav className="sticky top-0 z-40 bg-card border-b-2 border-primary shadow-soft">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-1" onClick={close}>
+        <Link to="/" className="flex items-center gap-1 shrink-0" onClick={close}>
           <BrandLogo imgClassName="h-12 w-auto" />
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-7 text-[15px] font-semibold font-body text-foreground/80 tracking-[0.005em]">
+        <div className="hidden xl:flex items-center gap-6 text-[15px] font-semibold font-body text-foreground/80 tracking-[0.005em] whitespace-nowrap">
           <NavLink to="/fuer-fahrlehrer/" className={({ isActive }) => `${navItem} ${isActive ? activeItem : ""}`}>
             Für Fahrlehrer
           </NavLink>
@@ -68,6 +68,15 @@ const SiteHeader = () => {
             Kontakt
           </NavLink>
           <a
+            href={`tel:${tenantConfig.contact.phone.replace(/\s/g, "")}`}
+            aria-label="Anrufen"
+            title="Anrufen"
+            className="inline-flex items-center justify-center w-9 h-9 border border-border text-foreground hover:border-primary hover:text-primary transition-colors"
+            style={{ borderRadius: "3px" }}
+          >
+            <Phone className="w-4 h-4" />
+          </a>
+          <a
             href={tenantConfig.booking.externalBookingUrl || "/grundkurs/"}
             target={tenantConfig.booking.externalBookingUrl ? "_blank" : undefined}
             rel="noopener noreferrer"
@@ -81,7 +90,7 @@ const SiteHeader = () => {
         {/* Mobile toggle */}
         <button
           type="button"
-          className="md:hidden p-2 text-foreground hover:text-primary"
+          className="xl:hidden p-2 text-foreground hover:text-primary"
           aria-label={open ? "Menü schliessen" : "Menü öffnen"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
@@ -92,7 +101,7 @@ const SiteHeader = () => {
 
       {/* Mobile nav */}
       {open && (
-        <div className="md:hidden border-t border-border bg-card">
+        <div className="xl:hidden border-t border-border bg-card">
           <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1 text-[15px] font-semibold font-body text-foreground/80">
             <NavLink to="/fuer-fahrlehrer/" onClick={close} className={({ isActive }) => `py-2 ${isActive ? "text-primary" : ""}`}>
               Für Fahrlehrer
