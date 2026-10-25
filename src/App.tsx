@@ -18,6 +18,7 @@ import MotorradFuehrerscheinWettingen from "./pages/MotorradFuehrerscheinWetting
 import MotorradGrundkursWettingen from "./pages/MotorradGrundkursWettingen.tsx";
 import FahrschuleWettingen from "./pages/FahrschuleWettingen.tsx";
 import AutofuehrerscheinWettingen from "./pages/AutofuehrerscheinWettingen.tsx";
+import A1FuehrerscheinWettingen from "./pages/A1FuehrerscheinWettingen.tsx";
 import FahrschuleBaden from "./pages/FahrschuleBaden.tsx";
 import FahrschuleNeuenhof from "./pages/FahrschuleNeuenhof.tsx";
 import FahrschuleSpreitenbach from "./pages/FahrschuleSpreitenbach.tsx";
@@ -65,6 +66,7 @@ const App = () => (
           <Route path="/motorrad-grundkurs-wettingen" element={<MotorradGrundkursWettingen />} />
           <Route path="/fahrschule-wettingen" element={<FahrschuleWettingen />} />
           <Route path="/autofuehrerschein-wettingen" element={<AutofuehrerscheinWettingen />} />
+          <Route path="/a1-fuehrerschein-wettingen" element={<A1FuehrerscheinWettingen />} />
           <Route path="/fahrschule-baden" element={<FahrschuleBaden />} />
           <Route path="/fahrschule-neuenhof" element={<FahrschuleNeuenhof />} />
           <Route path="/fahrschule-spreitenbach" element={<FahrschuleSpreitenbach />} />
