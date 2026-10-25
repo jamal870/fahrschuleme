@@ -4,7 +4,7 @@ const FahrschuleWettingen = () => (
   <LocalLandingPage
     path="/fahrschule-wettingen/"
     seoTitle="Fahrschule Wettingen – Auto & Motorrad | Fahrschule me"
-    seoDescription="Fahrschule in Wettingen für Auto- und Motorrad-Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung. Online buchen bei Fahrschule me."
+    seoDescription="Fahrschule in Wettingen: Autofahrstunden ab CHF 95, Motorrad-Grundkurs und Fahrstunden. Treffpunkt Bahnhof Wettingen, Termine nach Vereinbarung."
     badge="Fahrschule Wettingen"
     h1="Deine Fahrschule in"
     h1Accent="Wettingen"

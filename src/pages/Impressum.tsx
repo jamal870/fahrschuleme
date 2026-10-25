@@ -31,7 +31,7 @@ const Impressum = () => {
           <p>Inhaber & Geschäftsführer: {l.ownerName}</p>
           <p>Unternehmensform: Einzelunternehmen</p>
           <p>UID: CHE-322.008.477</p>
-          <p>{b.name} ist eine Marke der {l.entityName || "Ettanaghmalti Finza Solutions"}.</p>
+          <p>{b.name} (früher Drive me) ist eine Marke der {l.entityName || "Ettanaghmalti Finza Solutions"}.</p>
 
         </section>
 

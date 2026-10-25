@@ -22,9 +22,9 @@ export const SEO_ROUTES = [
   {
     path: "/",
     sitemap: { changefreq: "weekly", priority: 1.0 },
-    title: "Fahrschule me Wettingen – Auto, Motorrad & Grundkurs Baden",
+    title: "Fahrschule me Wettingen – Auto, Motorrad & Fahrstunden",
     description:
-      "Fahrschule in Wettingen & Baden: Autoprüfung, Motorrad-Grundkurs (MGK) und Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung.",
+      "Fahrschule me in Wettingen und Baden: Autofahrstunden ab CHF 95, Motorrad-Grundkurs in kleinen Gruppen, Termine nach Vereinbarung. Jetzt anfragen.",
   },
   {
     path: "/grundkurs",
@@ -79,7 +79,14 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.9 },
     title: "Fahrschule Wettingen – Auto & Motorrad | Fahrschule me",
     description:
-      "Fahrschule in Wettingen für Auto- und Motorrad-Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung. Online buchen bei Fahrschule me.",
+      "Fahrschule in Wettingen: Autofahrstunden ab CHF 95, Motorrad-Grundkurs und Fahrstunden. Treffpunkt Bahnhof Wettingen, Termine nach Vereinbarung.",
+  },
+  {
+    path: "/a1-fuehrerschein-wettingen",
+    sitemap: { changefreq: "weekly", priority: 0.8 },
+    title: "A1 Führerschein Wettingen – 125 ccm | Fahrschule me",
+    description:
+      "A1 Führerschein (125 ccm) in Wettingen: ab 16 Jahren, Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfungsvorbereitung. Ablauf und Kosten im Überblick.",
   },
   {
     path: "/autofuehrerschein-wettingen",

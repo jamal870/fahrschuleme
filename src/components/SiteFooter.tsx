@@ -27,6 +27,7 @@ const SiteFooter = () => {
           </Link>
         </div>
         <div>{content.footer.copyright}</div>
+        <div>Fahrschule me – früher Drive me</div>
       </div>
     </footer>
   );

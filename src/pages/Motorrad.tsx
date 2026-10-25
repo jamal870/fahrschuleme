@@ -83,8 +83,58 @@ const Motorrad = () => (
       </div>
     </section>
 
+    <section className="bg-card py-12">
+      <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
+        <h2 className="text-2xl font-heading font-bold text-foreground">Motorradfahrschule in Wettingen: So läuft die Ausbildung ab</h2>
+        <ol className="list-decimal pl-5 space-y-2">
+          <li>Sehtest machen, Nothelferkurs bei einem anerkannten Anbieter absolvieren und das Gesuch bei der Wohngemeinde einreichen.</li>
+          <li>Theorieprüfung beim Strassenverkehrsamt Aargau bestehen und den Lernfahrausweis deiner Kategorie erhalten.</li>
+          <li>Den obligatorischen Motorrad-Grundkurs bei uns in Wettingen besuchen: drei Teile mit je vier Stunden, in der richtigen Reihenfolge.</li>
+          <li>In Fahrstunden das Fahren im Verkehr üben, auf Wunsch mit Vorschulung.</li>
+          <li>Vor-Prüfungsfahrt buchen und die praktische Prüfung beim Strassenverkehrsamt ablegen.</li>
+        </ol>
+        <p>
+          Für den Einstieg mit 16 Jahren findest du alle Angaben auf der Seite{" "}
+          <Link to="/a1-fuehrerschein-wettingen/" className="text-primary underline">A1 Führerschein in Wettingen</Link>. Die Unterschiede zwischen den Kategorien zeigt der{" "}
+          <Link to="/motorrad-kategorien-vergleich/" className="text-primary underline">Kategorien-Vergleich</Link>.
+        </p>
+      </div>
+    </section>
+
+    <section className="bg-section-alt py-12">
+      <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
+        <h2 className="text-2xl font-heading font-bold text-foreground">Kosten für die Motorrad-Ausbildung</h2>
+        <ul className="space-y-1">
+          {[...tenantConfig.pricing.motorradGrundkurs, ...tenantConfig.pricing.motorrad].map((item) => (
+            <li key={item.name} className="flex justify-between gap-4 border-b border-border py-1">
+              <span>{item.name}</span>
+              <span className="font-heading font-bold text-foreground">CHF {item.price.replace(".-", "")}</span>
+            </li>
+          ))}
+        </ul>
+        <p>Dazu kommen die amtlichen Gebühren. Eine Übersicht findest du im{" "}
+          <Link to="/kosten-fuehrerschein-aargau/" className="text-primary underline">Kostenratgeber für den Kanton Aargau</Link>.
+        </p>
+      </div>
+    </section>
+
+    <section className="bg-card py-12">
+      <div className="max-w-5xl mx-auto px-6 font-body text-muted-foreground space-y-4">
+        <h2 className="text-2xl font-heading font-bold text-foreground">Häufige Fragen zum Motorradführerschein</h2>
+        <h3 className="font-heading font-bold text-foreground">Ist der Grundkurs obligatorisch?</h3>
+        <p>Ja. Für A1, A2 und A ist der Motorrad-Grundkurs mit 12 Stunden in drei Teilen vorgeschrieben.</p>
+        <h3 className="font-heading font-bold text-foreground">Wo findet der Grundkurs statt?</h3>
+        <p>Bei uns in Wettingen. Die aktuellen Termine siehst du bei den <Link to="/kurstermine/" className="text-primary underline">Kursterminen</Link>.</p>
+        <h3 className="font-heading font-bold text-foreground">Treffpunkt für Motorrad-Fahrstunden</h3>
+        <p>Motorrad-Fahrstunden und Kurse starten an der Bahnhofstrasse 56 in Wettingen.</p>
+        <h3 className="font-heading font-bold text-foreground">Ich habe schon A1. Was brauche ich für die Kategorie A?</h3>
+        <p>Dafür buchst du nur Kursteil 3 zum Pauschalpreis von CHF 250 auf der <Link to="/grundkurs/?a1=1" className="text-primary underline">Grundkurs-Seite</Link>.</p>
+      </div>
+    </section>
+
     <div className="max-w-6xl mx-auto px-6 py-10">
       <RelatedLinks links={[
+        { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein in Wettingen", desc: "Ab 16 Jahren: Grundkurs, Fahrstunden und Kosten für 125 ccm." },
         { to: "/motorrad-fuehrerschein-baden/", title: "Motorradführerschein für Baden", desc: "Ausbildung, Grundkurs und Fahrstunden für Motorradfahrer aus Baden." },
       ]} />
     </div>

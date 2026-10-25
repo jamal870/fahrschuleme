@@ -53,8 +53,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Seo
-        title="Fahrschule me Wettingen – Auto, Motorrad & Grundkurs Baden"
-        description="Fahrschule in Wettingen & Baden: Autoprüfung, Motorrad-Grundkurs (MGK) und Fahrstunden. Erfahrene Instruktoren, faire Preise, Termine nach Vereinbarung."
+        title="Fahrschule me Wettingen – Auto, Motorrad & Fahrstunden"
+        description="Fahrschule me in Wettingen und Baden: Autofahrstunden ab CHF 95, Motorrad-Grundkurs in kleinen Gruppen, Termine nach Vereinbarung. Jetzt anfragen."
         path="/"
         jsonLd={homeFaqJsonLd}
       />

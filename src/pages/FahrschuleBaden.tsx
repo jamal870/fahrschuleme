@@ -30,6 +30,10 @@ const FahrschuleBaden = () => (
         body: "• Auto-Fahrstunden (Kategorie B) – Einzel- und Doppellektionen, Abos\n• Motorrad-Fahrstunden für A1, A2 und A\n• Motorrad-Grundkurs (MGK) – Durchführung in Wettingen, nur wenige Minuten entfernt\n• Vor-Prüfungsfahrt inklusive Prüfungsanmeldung beim Strassenverkehrsamt Aargau\n• Beratung zum Lernfahrausweis",
       },
       {
+        heading: "Preise und Ablauf für Fahrschüler aus Baden",
+        body: "Autofahrstunden starten am Bahnhof Baden (Treffpunkt nach Absprache) und kosten CHF 95 pro Lektion von 45 Minuten, die Doppellektion CHF 190. Motorradlektionen kosten CHF 130 für 60 Minuten. Den Motorrad-Grundkurs besuchst du an der Bahnhofstrasse 56 in Wettingen, drei Teile à CHF 160. Für einen ersten Überblick lohnt sich ein Blick auf unseren Autoführerschein und unseren A1 Führerschein.",
+      },
+      {
         heading: "Warum Fahrschule me in Baden?",
         body: "Wir kennen die Strassen von Baden, den Verkehr rund um Schulhausplatz, Bäderquartier und Kantonsspital genau – das macht den Unterricht effizient und prüfungsnah. Unsere Fahrlehrer sind eidgenössisch geprüft, geduldig und auf moderne Lehrmethoden spezialisiert.\n\nEinzugsgebiet: Baden, Ennetbaden, Obersiggenthal, Wettingen, Neuenhof, Würenlos, Untersiggenthal, Nussbaumen und der gesamte Bezirk Baden im Kanton Aargau.",
       },
@@ -46,6 +50,8 @@ const FahrschuleBaden = () => (
     relatedLinks={[
       { to: "/fahrschule-wettingen/", title: "Fahrschule Wettingen", desc: "Unser Hauptstandort in Wettingen – Auto und Motorrad aus einer Hand." },
       { to: "/motorrad-grundkurs-wettingen/", title: "Motorrad-Grundkurs", desc: "MGK A1/A2/A in Wettingen – nur wenige Minuten von Baden." },
+      { to: "/autofuehrerschein-wettingen/", title: "Autoführerschein", desc: "Ablauf, Fahrstunden, Abos und Kosten für die Kategorie B." },
+      { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein", desc: "Motorrad ab 16 Jahren: Grundkurs, Fahrstunden und Kosten." },
       { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung, Prüfung, Lernfahrausweis – alles Wichtige zum StVA." },
     ]}
   />

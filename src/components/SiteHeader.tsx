@@ -43,6 +43,7 @@ const SiteHeader = () => {
             <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               <div className="bg-card border border-border shadow-md min-w-[220px] py-2" style={{ borderRadius: "3px" }}>
                 <Link to="/motorrad/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Übersicht</Link>
+                <Link to="/a1-fuehrerschein-wettingen/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">A1 Führerschein</Link>
                 <Link to="/motorrad-grundkurs-wettingen/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Motorrad Grundkurs Wettingen</Link>
                 <Link to="/grundkurs/" onClick={() => trackBookingClick("Grundkurs buchen (Menü)")} className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Grundkurs buchen</Link>
                 <Link to="/preise/" className="block px-4 py-2 text-sm hover:bg-section-alt hover:text-primary">Preise Motorrad</Link>
