@@ -97,16 +97,19 @@ const Index = () => {
               </a>
             </div>
           </div>
+          <picture className="hidden md:block">
+          <source media="(min-width: 768px)" srcSet={heroFoto} />
           <img
-            src={heroFoto}
+            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
             alt="Fahrschüler mit Motorrad vor einer Fahrstunde der Fahrschule me in Wettingen"
             width={900}
             height={1200}
             // React 18 kennt fetchPriority noch nicht (Warnung im Build); als Attribut in Kleinschreibung weitergeben
             {...({ fetchpriority: "high" } as Record<string, string>)}
-            className="hidden md:block w-full max-h-[520px] object-cover object-top shadow-xl"
+            className="w-full max-h-[520px] object-cover object-top shadow-xl"
             style={{ borderRadius: "3px" }}
           />
+          </picture>
         </div>
       </header>
 
@@ -195,7 +198,7 @@ const Index = () => {
               src="/erklarvideo.mp4"
               controls
               playsInline
-              preload="metadata"
+              preload="none"
               poster="/og-image.jpg"
               className="w-full h-auto block bg-black"
             />

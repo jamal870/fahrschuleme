@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -5,11 +6,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import GrundkursBuchen from "./pages/GrundkursBuchen.tsx";
-import Admin from "./pages/Admin.tsx";
-import AdminLogin from "./pages/AdminLogin.tsx";
-import BuchungErfolgreich from "./pages/BuchungErfolgreich.tsx";
-import BuchungAbgebrochen from "./pages/BuchungAbgebrochen.tsx";
-import Unsubscribe from "./pages/Unsubscribe.tsx";
+const Admin = lazy(() => import("./pages/Admin.tsx"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin.tsx"));
+const BuchungErfolgreich = lazy(() => import("./pages/BuchungErfolgreich.tsx"));
+const BuchungAbgebrochen = lazy(() => import("./pages/BuchungAbgebrochen.tsx"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe.tsx"));
 import Impressum from "./pages/Impressum.tsx";
 import Datenschutz from "./pages/Datenschutz.tsx";
 import AGB from "./pages/AGB.tsx";
@@ -34,7 +35,7 @@ import KostenFuehrerscheinAargau from "./pages/KostenFuehrerscheinAargau.tsx";
 import MotorradKategorienVergleich from "./pages/MotorradKategorienVergleich.tsx";
 import WieVieleFahrstunden from "./pages/WieVieleFahrstunden.tsx";
 import FuerFahrlehrer from "./pages/FuerFahrlehrer.tsx";
-import NotFound from "./pages/NotFound.tsx";
+const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 import WhatsAppFloat from "./components/WhatsAppFloat.tsx";
 import { SiteContentProvider } from "@/hooks/useSiteContent";
 
@@ -48,6 +49,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <main>
+        <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/grundkurs" element={<GrundkursBuchen />} />
@@ -88,6 +90,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
         </main>
         <WhatsAppFloat />
       </BrowserRouter>

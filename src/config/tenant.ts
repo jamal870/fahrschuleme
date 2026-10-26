@@ -111,7 +111,7 @@ export const tenantConfig: TenantConfig = {
     name: "Fahrschule me",
     tagline: "Erfahrene Instruktoren · Kleine Gruppen",
     logoText: { main: "Fahrschule", accent: "me", sub: "" },
-    logoUrl: "/logo-lme.png?v=2",
+    logoUrl: "/logo-lme-header.webp?v=1",
   },
 
   contact: {
