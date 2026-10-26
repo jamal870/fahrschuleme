@@ -18,7 +18,7 @@ const BrandLogo = ({ className = "", imgClassName = "h-10 w-auto", src, alt }: B
   const { logoText } = tenantConfig.brand;
 
   if (url) {
-    return <img src={url} alt={name} className={`${imgClassName} ${className}`.trim()} />;
+    return <img src={url} alt={name} width={320} height={144} decoding="async" className={`${imgClassName} ${className}`.trim()} />;
   }
 
   return (
