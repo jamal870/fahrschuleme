@@ -1,4 +1,5 @@
 import LocalLandingPage from "@/components/LocalLandingPage";
+import { FAHRSTUNDEN_APP_URL } from "@/lib/booking-links";
 
 const AutofuehrerscheinWettingen = () => (
   <LocalLandingPage
@@ -46,9 +47,9 @@ const AutofuehrerscheinWettingen = () => (
       { q: "Was kostet eine Autofahrstunde?", a: "Eine Einzellektion (45 Minuten) kostet 95 CHF, eine Doppellektion (2 × 45 Minuten) 190 CHF. Mit dem 10er-Abo für 900 CHF sparst du 50 CHF, mit dem 20er-Abo für 1'760 CHF sparst du 150 CHF." },
       { q: "Brauche ich Fahrstunden, um die Prüfung zu bestehen?", a: "Fahrstunden sind in der Schweiz nicht vorgeschrieben. Die praktische Prüfung stellt aber hohe Anforderungen, deshalb ist Unterricht bei einem Fahrlehrer für die meisten sinnvoll." },
       { q: "Wo ist der Treffpunkt?", a: "Der Treffpunkt ist der Bahnhof Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
-      { q: "Wie melde ich mich an?", a: "Am einfachsten über die Kontaktseite. Du kannst uns auch anrufen oder per WhatsApp schreiben. Die Termine vereinbaren wir mit dir." },
+      { q: "Wie melde ich mich an?", a: "Am einfachsten über die Fahrschul-App: Dort meldest du dich an und buchst deine Fahrstunde. Du kannst uns auch anrufen oder per WhatsApp schreiben." },
     ]}
-    primaryCta={{ label: "Fahrstunde anfragen", to: "/kontakt/" }}
+    primaryCta={{ label: "Fahrstunde buchen", to: FAHRSTUNDEN_APP_URL }}
     secondaryCta={{ label: "Preise ansehen", to: "/preise/" }}
     breadcrumbs={[{ label: "Autoführerschein Wettingen" }]}
     relatedLinks={[
