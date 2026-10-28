@@ -1,4 +1,5 @@
 import LocalLandingPage from "@/components/LocalLandingPage";
+import { FAHRSTUNDEN_APP_URL } from "@/lib/booking-links";
 
 const FahrschuleSpreitenbach = () => (
   <LocalLandingPage
@@ -40,7 +41,7 @@ const FahrschuleSpreitenbach = () => (
       { q: "Wo findet der MGK statt?", a: "In Wettingen, an der Bahnhofstrasse 56. Nur wenige Minuten von Spreitenbach entfernt." },
       { q: "Welche Kategorien werden ausgebildet?", a: "Auto (B) sowie Motorrad AM, A1, A2 und A." },
     ]}
-    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs/" }}
+    primaryCta={{ label: "Fahrstunde buchen", to: FAHRSTUNDEN_APP_URL }}
     secondaryCta={{ label: "Preise ansehen", to: "/preise/" }}
     breadcrumbs={[{ label: "Fahrschule Spreitenbach" }]}
     relatedLinks={[

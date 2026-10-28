@@ -1,4 +1,5 @@
 import LocalLandingPage from "@/components/LocalLandingPage";
+import { FAHRSTUNDEN_APP_URL } from "@/lib/booking-links";
 
 const FahrschuleWettingen = () => (
   <LocalLandingPage
@@ -40,7 +41,7 @@ const FahrschuleWettingen = () => (
       { q: "Bietet ihr auch Motorrad-Fahrstunden an?", a: "Ja. Motorrad-Einzellektion (60 Min) kostet 130 CHF. Wir bieten Vorschulung, Grundschulung und Vor-Prüfungsfahrt an." },
       { q: "Wie melde ich mich an?", a: "Am einfachsten online über die Kontakt- oder Kurstermin-Seite. Du kannst uns auch direkt anrufen oder per WhatsApp schreiben." },
     ]}
-    primaryCta={{ label: "Jetzt buchen", to: "/grundkurs/" }}
+    primaryCta={{ label: "Fahrstunde buchen", to: FAHRSTUNDEN_APP_URL }}
     secondaryCta={{ label: "Preise ansehen", to: "/preise/" }}
     breadcrumbs={[{ label: "Fahrschule Wettingen" }]}
     relatedLinks={[
