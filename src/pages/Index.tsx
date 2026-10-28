@@ -7,6 +7,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo, { BUSINESS_ID } from "@/components/Seo";
 import TrackedCta from "@/components/TrackedCta";
+import { FAHRSTUNDEN_APP_URL } from "@/lib/booking-links";
 import { trackBookingClick } from "@/lib/analytics";
 import { whatsappLink } from "@/lib/whatsapp";
 import { tenantConfig } from "@/config/tenant";
@@ -72,13 +73,13 @@ const Index = () => {
               Fahrstunden und Kurse für Auto und Motorrad im Raum Wettingen und Baden. {tenantConfig.brand.tagline} · {tenantConfig.contact.openingHours}
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link
-                to="/kontakt/"
+              <TrackedCta
+                to={FAHRSTUNDEN_APP_URL}
+                label="Fahrstunde buchen"
+                external
+                icon="external"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
-                style={{ borderRadius: "3px" }}
-              >
-                Fahrstunde anfragen
-              </Link>
+              />
               <a
                 href="#grundkurs"
                 onClick={() => trackBookingClick("Grundkurs buchen (Hero)")}
@@ -463,13 +464,13 @@ const Index = () => {
             />
           </div>
           <div className="text-center mt-8">
-            <Link
-              to="/kontakt/"
+            <TrackedCta
+              to={FAHRSTUNDEN_APP_URL}
+              label="Fahrstunde buchen"
+              external
+              icon="external"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide"
-              style={{ borderRadius: "3px" }}
-            >
-              Fahrstunde anfragen
-            </Link>
+            />
           </div>
         </div>
       </section>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MapPin, Clock, Phone, ArrowRight, CheckCircle2 } from "lucide-react";
+import { MapPin, Clock, Phone, CheckCircle2 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Seo, { canonicalUrl, BUSINESS_ID } from "@/components/Seo";
@@ -83,7 +83,7 @@ const LocalLandingPage = (p: LocalLandingProps) => {
               to={p.primaryCta.to}
               label={p.primaryCta.label}
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
-              icon="arrow"
+              icon={/^https?:\/\//.test(p.primaryCta.to) ? "external" : "arrow"}
             />
             {p.secondaryCta && (
               <Link to={p.secondaryCta.to} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors" style={{ borderRadius: "3px" }}>
@@ -161,9 +161,12 @@ const LocalLandingPage = (p: LocalLandingProps) => {
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">Bereit für den nächsten Schritt?</h2>
           <p className="font-body text-background/70 mb-6">Buche direkt online oder ruf uns an – wir helfen dir persönlich weiter.</p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link to={p.primaryCta.to} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>
-              {p.primaryCta.label} <ArrowRight className="w-4 h-4" />
-            </Link>
+            <TrackedCta
+              to={p.primaryCta.to}
+              label={p.primaryCta.label}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide"
+              icon={/^https?:\/\//.test(p.primaryCta.to) ? "external" : "arrow"}
+            />
             <a href={`tel:${tenantConfig.contact.phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 px-6 py-3 border-2 border-background text-background font-heading font-bold text-sm uppercase tracking-wide hover:bg-background hover:text-foreground transition-colors" style={{ borderRadius: "3px" }}>
               <Phone className="w-4 h-4" /> {tenantConfig.contact.phone}
             </a>
