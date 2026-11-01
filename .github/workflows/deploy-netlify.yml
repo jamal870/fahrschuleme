@@ -5,6 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write      # commit comment from nwtgck/actions-netlify
+  deployments: write   # GitHub deployment status
+
 concurrency:
   group: netlify-prod
   cancel-in-progress: true
