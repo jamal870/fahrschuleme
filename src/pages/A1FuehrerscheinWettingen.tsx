@@ -4,7 +4,7 @@ const A1FuehrerscheinWettingen = () => (
   <LocalLandingPage
     path="/a1-fuehrerschein-wettingen/"
     seoTitle="A1 Führerschein Wettingen – 125 ccm | Fahrschule me"
-    seoDescription="A1 Führerschein (125 ccm) in Wettingen: ab 16 Jahren, Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfungsvorbereitung. Ablauf und Kosten im Überblick."
+    seoDescription="A1 Führerschein (125 ccm) in Wettingen: ab 16 Jahren, Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfung. Ablauf und Kosten im Überblick."
     badge="Motorrad A1"
     h1="A1 Führerschein in"
     h1Accent="Wettingen"

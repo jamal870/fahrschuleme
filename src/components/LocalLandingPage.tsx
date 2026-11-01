@@ -45,6 +45,7 @@ const LocalLandingPage = (p: LocalLandingProps) => {
       inLanguage: "de-CH",
       about: { "@id": BUSINESS_ID },
       isPartOf: { "@id": BUSINESS_ID },
+      primaryImageOfPage: { "@type": "ImageObject", url: "https://www.fahrschule-me.ch/og-image.jpg" },
     },
   ];
 

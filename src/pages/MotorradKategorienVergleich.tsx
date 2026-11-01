@@ -110,6 +110,7 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
+    image: "https://www.fahrschule-me.ch/og-image.jpg",
     headline: "Motorrad-Kategorien AM, A1, A2 und A im Vergleich (Schweiz)",
     inLanguage: "de-CH",
     datePublished: "2026-08-18",
