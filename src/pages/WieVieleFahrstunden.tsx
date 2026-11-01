@@ -114,6 +114,7 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
+    image: "https://www.fahrschule-me.ch/og-image.jpg",
     headline: "Wie viele Fahrstunden brauche ich? Richtwerte für die Schweiz",
     inLanguage: "de-CH",
     datePublished: "2026-08-18",

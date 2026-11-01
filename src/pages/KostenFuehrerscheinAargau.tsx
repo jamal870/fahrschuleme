@@ -108,6 +108,7 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
+    image: "https://www.fahrschule-me.ch/og-image.jpg",
     headline: "Kosten Führerschein Aargau 2026 – komplette Kostenübersicht",
     inLanguage: "de-CH",
     datePublished: "2026-08-18",

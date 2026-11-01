@@ -72,7 +72,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.9 },
     title: "Motorrad Grundkurs Wettingen – MGK A1/A2/A | Fahrschule me",
     description:
-      "Motorrad-Grundkurs (MGK) in Wettingen für A1, A2 und A. 12 Stunden in 3 Teilen, kleine Gruppen, Termine nach Vereinbarung. Online buchen bei Fahrschule me.",
+      "Motorrad-Grundkurs (MGK) in Wettingen für A1, A2 und A. 12 Stunden in 3 Teilen, kleine Gruppen, Termine nach Vereinbarung. Online buchen.",
   },
   {
     path: "/fahrschule-wettingen",
@@ -86,7 +86,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.8 },
     title: "A1 Führerschein Wettingen – 125 ccm | Fahrschule me",
     description:
-      "A1 Führerschein (125 ccm) in Wettingen: ab 16 Jahren, Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfungsvorbereitung. Ablauf und Kosten im Überblick.",
+      "A1 Führerschein (125 ccm) in Wettingen: ab 16 Jahren, Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfung. Ablauf und Kosten im Überblick.",
   },
   {
     path: "/autofuehrerschein-wettingen",
