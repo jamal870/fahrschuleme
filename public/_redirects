@@ -10,5 +10,10 @@
 /nothelferkurs   /autofuehrerschein-wettingen/  301!
 /nothelferkurs/  /autofuehrerschein-wettingen/  301!
 
+# Alte Adressen der früheren Website
+/datenschutz.html  /datenschutz/  301!
+/formulare   /kontakt/  301!
+/formulare/  /kontakt/  301!
+
 # Netlify SPA-Fallback für React Router (direkte Aufrufe wie /admin/login)
 /*  /index.html  200

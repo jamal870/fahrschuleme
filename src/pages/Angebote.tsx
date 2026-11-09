@@ -104,6 +104,9 @@ const Angebote = () => {
               <Link to="/kurstermine/" className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-heading font-bold text-sm uppercase tracking-wide" style={{ borderRadius: "3px" }}>
                 Kurstermine ansehen <ArrowRight className="w-4 h-4" />
               </Link>
+              <p className="text-sm text-muted-foreground font-body mt-6">
+                Die regulären Preise findest du unter <Link to="/preise/" className="text-primary underline">Preise</Link>, die Angebote für Auto und Motorrad unter <Link to="/fahrstunden/" className="text-primary underline">Fahrstunden</Link>. Bei Fragen helfen wir dir über die <Link to="/kontakt/" className="text-primary underline">Kontaktseite</Link> gern weiter.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
