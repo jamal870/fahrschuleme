@@ -176,6 +176,43 @@ const Kurstermine = () => {
 
         {loading ? (
           <p className="font-body">Termine werden geladen…</p>
+        ) : rows.length === 0 ? (
+          <section
+            className="border border-border bg-card p-6 font-body space-y-4"
+            style={{ borderRadius: "3px" }}
+          >
+            <h2 className="font-heading text-2xl font-bold text-foreground">
+              Aktuell sind keine Kurstage ausgeschrieben
+            </h2>
+            <p className="text-muted-foreground">
+              Neue Termine für Teil 1, 2 und 3 des Motorrad-Grundkurses geben wir hier bekannt,
+              sobald sie feststehen. Wenn du schon jetzt einen Platz möchtest, melde dich bei uns:
+              Wir informieren dich, sobald ein passender Kurs geplant ist.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/kontakt/"
+                className="inline-flex items-center px-4 py-3 bg-primary text-primary-foreground font-heading font-bold text-xs uppercase tracking-wide hover:opacity-90"
+                style={{ borderRadius: "3px" }}
+              >
+                Termin anfragen
+              </Link>
+              <Link
+                to="/motorrad-grundkurs-wettingen/"
+                className="inline-flex items-center px-4 py-3 border border-border font-heading font-bold text-xs uppercase tracking-wide hover:bg-muted"
+                style={{ borderRadius: "3px" }}
+              >
+                Infos zum Motorrad-Grundkurs
+              </Link>
+              <Link
+                to="/grundkurs/"
+                className="inline-flex items-center px-4 py-3 border border-border font-heading font-bold text-xs uppercase tracking-wide hover:bg-muted"
+                style={{ borderRadius: "3px" }}
+              >
+                Grundkurs buchen
+              </Link>
+            </div>
+          </section>
         ) : (
           <>
             {renderPart(1)}
