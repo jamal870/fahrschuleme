@@ -35,7 +35,7 @@ const faqs = [
   },
   {
     q: "Was ist die praktische Grundschulung (PGS)?",
-    a: "Bei der Kategorie B (Auto) ist die PGS die praktische Ausbildung bei der Fahrschule. Beim Motorrad ist die PGS der Grundkurs. Welche Inhalte und Umfänge die Vorgaben im Detail verlangen, geben wir hier bekannt, sobald sie feststehen.",
+    a: "PGS steht für praktische Grundschulung. Sie findet bei der Fahrschule statt: beim Auto als praktische Ausbildung, beim Motorrad als Grundkurs.",
   },
   {
     q: "Wie lange dauert die Probezeit?",
