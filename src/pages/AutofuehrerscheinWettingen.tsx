@@ -56,6 +56,7 @@ const AutofuehrerscheinWettingen = () => (
       { to: "/kosten-fuehrerschein-aargau/", title: "Kosten Führerschein Aargau", desc: "Alle Gebühren und Preise vom Sehtest bis zum Führerausweis auf Probe." },
       { to: "/wie-viele-fahrstunden/", title: "Wie viele Fahrstunden brauche ich?", desc: "Orientierungswerte nach Vorerfahrung, Alter und Fahrpraxis." },
       { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Lernfahrausweis, Theorie und praktische Prüfung in Schafisheim." },
+      { to: "/fuehrerausweis-ab-2027/", title: "Weg zum Führerausweis ab 2027", desc: "Der neue Ablauf von Antrag bis Führerausweis im Überblick." },
     ]}
   />
 );

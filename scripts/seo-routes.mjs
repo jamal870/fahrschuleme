@@ -175,6 +175,13 @@ export const SEO_ROUTES = [
       "Ratgeber zum Strassenverkehrsamt Aargau (Schafisheim): Lernfahrausweis beantragen, Prüfungen, Dokumente, Kosten und Tipps im Überblick.",
   },
   {
+    path: "/fuehrerausweis-ab-2027",
+    sitemap: { changefreq: "monthly", priority: 0.7 },
+    title: "Weg zum Führerausweis ab 2027 – Ablauf im Überblick",
+    description:
+      "So läuft der Weg zum Führerausweis ab 2027: Antrag, Theorie, Lernfahrausweis, Grundschulung, Prüfung und Probezeit. Das heisst es für dich.",
+  },
+  {
     path: "/kosten-fuehrerschein-aargau",
     sitemap: { changefreq: "monthly", priority: 0.8 },
     title: "Kosten Führerschein Aargau 2026 – alle Preise im Überblick",

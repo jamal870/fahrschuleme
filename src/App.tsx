@@ -31,6 +31,7 @@ import Kontakt from "./pages/Kontakt.tsx";
 import Kurstermine from "./pages/Kurstermine.tsx";
 import Angebote from "./pages/Angebote.tsx";
 import StrassenverkehrsamtAargau from "./pages/StrassenverkehrsamtAargau.tsx";
+import FuehrerausweisAb2027 from "./pages/FuehrerausweisAb2027.tsx";
 import KostenFuehrerscheinAargau from "./pages/KostenFuehrerscheinAargau.tsx";
 import MotorradKategorienVergleich from "./pages/MotorradKategorienVergleich.tsx";
 import WieVieleFahrstunden from "./pages/WieVieleFahrstunden.tsx";
@@ -82,6 +83,7 @@ const App = () => (
           <Route path="/angebote" element={<Angebote />} />
           <Route path="/aktionen" element={<Angebote />} />
           <Route path="/strassenverkehrsamt-aargau" element={<StrassenverkehrsamtAargau />} />
+          <Route path="/fuehrerausweis-ab-2027" element={<FuehrerausweisAb2027 />} />
           <Route path="/kosten-fuehrerschein-aargau" element={<KostenFuehrerscheinAargau />} />
           <Route path="/motorrad-kategorien-vergleich" element={<MotorradKategorienVergleich />} />
           <Route path="/wie-viele-fahrstunden" element={<WieVieleFahrstunden />} />
