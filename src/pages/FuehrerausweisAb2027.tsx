@@ -23,7 +23,7 @@ import { FAHRSTUNDEN_APP_URL } from "@/lib/booking-links";
 const faqs = [
   {
     q: "Ab wann gilt der neue Ablauf?",
-    a: "Die Präsentation der asa vom Oktober 2026 nennt „ab 2027“. Das genaue Datum und die Übergangsregeln für Personen, die schon vorher begonnen haben, stehen dort nicht. Diese Auskunft gibt das Strassenverkehrsamt. Wenn du bald startest, frag uns, wir sagen dir, was wir wissen.",
+    a: "Der neue Ablauf gilt ab dem 1. Januar 2027. Welche Übergangsregeln für Personen gelten, die vorher begonnen haben, gibt das Strassenverkehrsamt bekannt. Wenn du bald startest, frag uns, wir sagen dir, was wir wissen.",
   },
   {
     q: "Was ist neu am Ablauf?",
@@ -35,7 +35,7 @@ const faqs = [
   },
   {
     q: "Was ist die praktische Grundschulung (PGS)?",
-    a: "So heisst in der Übersicht der asa der Teil bei der Fahrschule, der auf die praktische Prüfung vorbereitet. Welche Inhalte und Umfänge die Vorgaben im Detail verlangen, geben wir hier bekannt, sobald sie feststehen.",
+    a: "Bei der Kategorie B (Auto) ist die PGS die praktische Ausbildung bei der Fahrschule. Beim Motorrad ist die PGS der Grundkurs. Welche Inhalte und Umfänge die Vorgaben im Detail verlangen, geben wir hier bekannt, sobald sie feststehen.",
   },
   {
     q: "Wie lange dauert die Probezeit?",
@@ -83,7 +83,7 @@ const steps = [
   {
     icon: Car,
     title: "Praktische Grundschulung (PGS) bei der Fahrschule",
-    body: "Bei uns lernst du das Fahren. Wir bereiten dich Schritt für Schritt auf die praktische Prüfung vor, mit Auto oder Motorrad.",
+    body: "Beim Auto ist das die praktische Ausbildung mit Fahrstunden bei uns. Beim Motorrad ist die PGS der Grundkurs. In beiden Fällen bereiten wir dich Schritt für Schritt auf die praktische Prüfung vor.",
   },
   {
     icon: Award,
@@ -132,7 +132,7 @@ const FuehrerausweisAb2027 = () => {
             Der Weg zum Führerausweis <span className="text-primary">ab 2027</span>
           </h1>
           <p className="text-lg font-body text-muted-foreground leading-relaxed max-w-2xl">
-            Der Ablauf von Antrag bis Führerausweis wird ab 2027 neu organisiert. Hier siehst du die
+            Der Ablauf von Antrag bis Führerausweis wird ab dem 1. Januar 2027 neu organisiert. Hier siehst du die
             Stationen im Überblick und was das für deine Ausbildung bei {tenantConfig.brand.name} bedeutet.
           </p>
         </div>
@@ -147,12 +147,28 @@ const FuehrerausweisAb2027 = () => {
           <div className="text-sm text-muted-foreground leading-relaxed">
             <p className="font-heading font-bold text-foreground mb-1">Stand der Informationen</p>
             <p>
-              Diese Seite beruht auf der Übersicht «Weg zum Führerausweis – ab 2027» der asa (Stand 8. Oktober 2026).
-              Das genaue Einführungsdatum, die Übergangsregeln und die Einzelheiten zu den einzelnen Schritten gibt das
-              Strassenverkehrsamt bekannt. Wir ergänzen die Seite, sobald wir mehr wissen.
+              Diese Seite zeigt den Ablauf, der ab dem 1. Januar 2027 gilt (Stand Oktober 2026). Die Übergangsregeln und
+              die Einzelheiten zu den einzelnen Schritten gibt das Strassenverkehrsamt bekannt. Wir ergänzen die Seite,
+              sobald wir mehr wissen.
             </p>
           </div>
         </section>
+
+        <figure className="mb-12">
+          <img
+            src="/images/weg-zum-fuehrerausweis-2027.webp"
+            alt="Übersicht der Stationen auf dem Weg zum Führerausweis ab 2027: Antrag, Erfassung mit FABER-PIN, Vorbereitung, Theorieprüfung, Lernfahrausweis, praktische Grundschulung, Prüfung, Weiterausbildungskurs und Probezeit"
+            width={1600}
+            height={1003}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto border border-border"
+            style={{ borderRadius: "3px" }}
+          />
+          <figcaption className="text-xs text-muted-foreground mt-2">
+            Der Weg zum Führerausweis ab 1. Januar 2027 im Überblick.
+          </figcaption>
+        </figure>
 
         <section className="mb-12">
           <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2">

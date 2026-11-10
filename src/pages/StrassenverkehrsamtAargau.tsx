@@ -136,7 +136,7 @@ const StrassenverkehrsamtAargau = () => {
         {/* Hinweis neuer Ablauf */}
         <section className="bg-card border border-border p-5 mb-12 flex flex-wrap items-center justify-between gap-4" style={{ borderRadius: "3px" }}>
           <p className="text-sm text-muted-foreground max-w-xl">
-            <strong className="text-foreground">Neu ab 2027:</strong> Der Ablauf vom Antrag bis zum Führerausweis wird neu organisiert. Die Schritte unten beschreiben den heutigen Ablauf.
+            <strong className="text-foreground">Neu ab 1. Januar 2027:</strong> Der Ablauf vom Antrag bis zum Führerausweis wird neu organisiert. Die Schritte unten beschreiben den heutigen Ablauf.
           </p>
           <Link to="/fuehrerausweis-ab-2027/" className="inline-flex items-center gap-2 text-sm font-heading font-bold text-primary hover:underline">
             Zum neuen Ablauf <ChevronRight className="w-4 h-4" />
