@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Star, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { selectReviews } from "@/lib/review-filter";
 
 interface Review {
   rating: number;
@@ -18,7 +19,7 @@ interface ReviewsPayload {
   reviews: Review[];
 }
 
-const REVIEWS_CACHE_KEY = "google-reviews-cache-v1";
+const REVIEWS_CACHE_KEY = "google-reviews-cache-v2";
 const REVIEWS_CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
 
 const readCachedReviews = (): ReviewsPayload | null => {
@@ -78,14 +79,15 @@ const GoogleReviews = ({ heading = "Google Bewertungen" }: { heading?: string })
     };
   }, []);
 
-  if (error || !data || !data.reviews?.length) return null;
+  const shown = data ? selectReviews(data.reviews ?? []) : [];
+  if (error || !data || shown.length === 0) return null;
 
   return (
     <section className="bg-section-alt py-16">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-8">
           <p className="text-primary text-xs font-heading font-bold uppercase tracking-widest mb-2">
-            Echte Stimmen aus Wettingen &amp; Baden
+            Ausgewählte Stimmen aus Wettingen &amp; Baden
           </p>
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-3">{heading}</h2>
           {data.rating != null && (
@@ -98,7 +100,7 @@ const GoogleReviews = ({ heading = "Google Bewertungen" }: { heading?: string })
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {data.reviews.map((r, i) => (
+          {shown.map((r, i) => (
             <article key={i} className="bg-card border border-border p-5 flex flex-col" style={{ borderRadius: "3px" }}>
               <div className="flex items-center gap-3 mb-3">
                 {r.photo ? (
@@ -130,7 +132,7 @@ const GoogleReviews = ({ heading = "Google Bewertungen" }: { heading?: string })
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-heading font-bold text-sm uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors"
               style={{ borderRadius: "3px" }}
             >
-              Auf Google bewerten <ExternalLink className="w-4 h-4" />
+              Alle Bewertungen auf Google <ExternalLink className="w-4 h-4" />
             </a>
           </div>
         )}
