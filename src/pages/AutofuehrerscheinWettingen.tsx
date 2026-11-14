@@ -1,5 +1,5 @@
 import LocalLandingPage from "@/components/LocalLandingPage";
-import { FAHRSTUNDEN_APP_URL, PARTNER_NOTHILFE_URL, PARTNER_VKU_URL } from "@/lib/booking-links";
+import { FAHRSTUNDEN_APP_URL } from "@/lib/booking-links";
 
 const AutofuehrerscheinWettingen = () => (
   <LocalLandingPage
@@ -57,8 +57,8 @@ const AutofuehrerscheinWettingen = () => (
       { to: "/wie-viele-fahrstunden/", title: "Wie viele Fahrstunden brauche ich?", desc: "Orientierungswerte nach Vorerfahrung, Alter und Fahrpraxis." },
       { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Lernfahrausweis, Theorie und praktische Prüfung in Schafisheim." },
       { to: "/fuehrerausweis-ab-2027/", title: "Weg zum Führerausweis ab 2027", desc: "Der neue Ablauf von Antrag bis Führerausweis im Überblick." },
-      { to: PARTNER_NOTHILFE_URL, title: "Nothilfekurs buchen", desc: "Termine und Anmeldung bei unserer Partner-Fahrschule Star." },
-      { to: PARTNER_VKU_URL, title: "Verkehrskundeunterricht (VKU) buchen", desc: "Termine und Anmeldung bei unserer Partner-Fahrschule Star." },
+      { to: "/nothelferkurs-wettingen/", title: "Nothelferkurs", desc: "Dauer, Kosten und Anmeldung bei unserer Partner-Fahrschule Star." },
+      { to: "/verkehrskunde-wettingen/", title: "Verkehrskundeunterricht (VKU)", desc: "Inhalt, Dauer und Anmeldung bei unserer Partner-Fahrschule Star." },
     ]}
   />
 );

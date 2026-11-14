@@ -1,14 +1,12 @@
-# Nothelferkurs und VKU werden nicht mehr angeboten -> Auto-Seite.
+# Kürzere Adressen für Nothelferkurs und VKU leiten auf die Infoseiten weiter.
 # Muss VOR dem SPA-Fallback stehen: _redirects hat Vorrang vor netlify.toml,
 # und "/* /index.html 200" würde sonst jede nicht vorhandene URL abfangen.
-/nothelferkurs-wettingen   /autofuehrerschein-wettingen/  301!
-/nothelferkurs-wettingen/  /autofuehrerschein-wettingen/  301!
-/verkehrskunde-wettingen   /autofuehrerschein-wettingen/  301!
-/verkehrskunde-wettingen/  /autofuehrerschein-wettingen/  301!
-/verkehrskunde   /autofuehrerschein-wettingen/  301!
-/verkehrskunde/  /autofuehrerschein-wettingen/  301!
-/nothelferkurs   /autofuehrerschein-wettingen/  301!
-/nothelferkurs/  /autofuehrerschein-wettingen/  301!
+/verkehrskunde   /verkehrskunde-wettingen/  301!
+/verkehrskunde/  /verkehrskunde-wettingen/  301!
+/nothelferkurs   /nothelferkurs-wettingen/  301!
+/nothelferkurs/  /nothelferkurs-wettingen/  301!
+/nothelfer   /nothelferkurs-wettingen/  301!
+/nothelfer/  /nothelferkurs-wettingen/  301!
 
 # Alte Adressen der früheren Website
 /datenschutz.html  /datenschutz/  301!

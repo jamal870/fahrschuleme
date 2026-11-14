@@ -214,6 +214,10 @@ const FuehrerausweisAb2027 = () => {
               Partner-Fahrschule Star. Plane sie früh ein, weil sie im neuen Ablauf zur Vorbereitung gehören und in
               beliebiger Reihenfolge möglich sind.
             </p>
+            <p>
+              Mehr dazu auf den Seiten <Link to="/nothelferkurs-wettingen/" className="text-primary underline">Nothelferkurs</Link>{" "}
+              und <Link to="/verkehrskunde-wettingen/" className="text-primary underline">Verkehrskundeunterricht (VKU)</Link>.
+            </p>
             <div className="flex flex-wrap gap-3">
               <TrackedCta
                 to={PARTNER_NOTHILFE_URL}
