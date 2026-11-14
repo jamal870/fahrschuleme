@@ -44,6 +44,8 @@ import Kurstermine from "@/pages/Kurstermine";
 import Angebote from "@/pages/Angebote";
 import StrassenverkehrsamtAargau from "@/pages/StrassenverkehrsamtAargau";
 import FuehrerausweisAb2027 from "@/pages/FuehrerausweisAb2027";
+import Nothelferkurs from "@/pages/Nothelferkurs";
+import Verkehrskunde from "@/pages/Verkehrskunde";
 import KostenFuehrerscheinAargau from "@/pages/KostenFuehrerscheinAargau";
 import MotorradKategorienVergleich from "@/pages/MotorradKategorienVergleich";
 import WieVieleFahrstunden from "@/pages/WieVieleFahrstunden";
@@ -90,6 +92,8 @@ const SsrRoutes = () => (
     <Route path="/aktionen" element={<Angebote />} />
     <Route path="/strassenverkehrsamt-aargau" element={<StrassenverkehrsamtAargau />} />
     <Route path="/fuehrerausweis-ab-2027" element={<FuehrerausweisAb2027 />} />
+    <Route path="/nothelferkurs-wettingen" element={<Nothelferkurs />} />
+    <Route path="/verkehrskunde-wettingen" element={<Verkehrskunde />} />
     <Route path="/kosten-fuehrerschein-aargau" element={<KostenFuehrerscheinAargau />} />
     <Route path="/motorrad-kategorien-vergleich" element={<MotorradKategorienVergleich />} />
     <Route path="/wie-viele-fahrstunden" element={<WieVieleFahrstunden />} />

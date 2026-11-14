@@ -1,5 +1,5 @@
 import LocalLandingPage from "@/components/LocalLandingPage";
-import { FAHRSTUNDEN_APP_URL, PARTNER_NOTHILFE_URL, PARTNER_VKU_URL } from "@/lib/booking-links";
+import { FAHRSTUNDEN_APP_URL } from "@/lib/booking-links";
 
 const AutofuehrerscheinWettingen = () => (
   <LocalLandingPage
@@ -43,7 +43,7 @@ const AutofuehrerscheinWettingen = () => (
       },
     ]}
     faqs={[
-      { q: "Was kostet der Autoführerschein im Kanton Aargau?", a: "Das hängt von der Anzahl Fahrstunden ab. Bei etwa 30 Fahrstunden rechnen wir mit rund CHF 3'600 bis 4'100 inklusive amtlicher Gebühren sowie VKU und Nothelferkurs bei externen Anbietern (Preise je nach Anbieter). Die Aufstellung findest du auf der Seite Kosten Führerschein Aargau." },
+      { q: "Was kostet der Autoführerschein im Kanton Aargau?", a: "Das hängt von der Anzahl Fahrstunden ab. Bei etwa 30 Fahrstunden rechnen wir mit rund CHF 3'500 bis 4'000 inklusive amtlicher Gebühren sowie VKU (CHF 140) und Nothelferkurs (CHF 69) bei unserer Partner-Fahrschule Star (Stand November 2026). Die Aufstellung findest du auf der Seite Kosten Führerschein Aargau." },
       { q: "Was kostet eine Autofahrstunde?", a: "Eine Einzellektion (45 Minuten) kostet 95 CHF, eine Doppellektion (2 × 45 Minuten) 190 CHF. Mit dem 10er-Abo für 900 CHF sparst du 50 CHF, mit dem 20er-Abo für 1'760 CHF sparst du 150 CHF." },
       { q: "Brauche ich Fahrstunden, um die Prüfung zu bestehen?", a: "Fahrstunden sind in der Schweiz nicht vorgeschrieben. Die praktische Prüfung stellt aber hohe Anforderungen, deshalb ist Unterricht bei einem Fahrlehrer für die meisten sinnvoll." },
       { q: "Wo ist der Treffpunkt?", a: "Der Treffpunkt ist der Bahnhof Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
@@ -57,8 +57,8 @@ const AutofuehrerscheinWettingen = () => (
       { to: "/wie-viele-fahrstunden/", title: "Wie viele Fahrstunden brauche ich?", desc: "Orientierungswerte nach Vorerfahrung, Alter und Fahrpraxis." },
       { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Lernfahrausweis, Theorie und praktische Prüfung in Schafisheim." },
       { to: "/fuehrerausweis-ab-2027/", title: "Weg zum Führerausweis ab 2027", desc: "Der neue Ablauf von Antrag bis Führerausweis im Überblick." },
-      { to: PARTNER_NOTHILFE_URL, title: "Nothilfekurs buchen", desc: "Termine und Anmeldung bei unserer Partner-Fahrschule Star." },
-      { to: PARTNER_VKU_URL, title: "Verkehrskundeunterricht (VKU) buchen", desc: "Termine und Anmeldung bei unserer Partner-Fahrschule Star." },
+      { to: "/nothelferkurs-wettingen/", title: "Nothelferkurs", desc: "Dauer, Kosten und Anmeldung bei unserer Partner-Fahrschule Star." },
+      { to: "/verkehrskunde-wettingen/", title: "Verkehrskundeunterricht (VKU)", desc: "Inhalt, Dauer und Anmeldung bei unserer Partner-Fahrschule Star." },
     ]}
   />
 );

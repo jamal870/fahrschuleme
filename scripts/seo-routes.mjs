@@ -182,6 +182,20 @@ export const SEO_ROUTES = [
       "So läuft der Weg zum Führerausweis ab 2027: Antrag, Theorie, Lernfahrausweis, Grundschulung, Prüfung und Probezeit. Das heisst es für dich.",
   },
   {
+    path: "/nothelferkurs-wettingen",
+    sitemap: { changefreq: "monthly", priority: 0.7 },
+    title: "Nothelferkurs Wettingen & Baden | Fahrschule me",
+    description:
+      "Nothelferkurs für den Führerschein: 10 Stunden, Kosten, Gültigkeit und Anmeldung. Wir vermitteln dich an unsere Partner-Fahrschule Star.",
+  },
+  {
+    path: "/verkehrskunde-wettingen",
+    sitemap: { changefreq: "monthly", priority: 0.7 },
+    title: "VKU Wettingen & Baden | Fahrschule me",
+    description:
+      "Verkehrskundeunterricht (VKU) für den Autoführerschein: 8 Stunden, Inhalte, Kosten und Anmeldung bei unserer Partner-Fahrschule Star.",
+  },
+  {
     path: "/kosten-fuehrerschein-aargau",
     sitemap: { changefreq: "monthly", priority: 0.8 },
     title: "Kosten Führerschein Aargau 2026 – alle Preise im Überblick",
