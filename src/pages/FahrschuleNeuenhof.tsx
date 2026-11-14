@@ -10,7 +10,7 @@ const FahrschuleNeuenhof = () => (
     h1="Deine Fahrschule für"
     h1Accent="Neuenhof"
     intro="Du wohnst in Neuenhof? Unsere Fahrschule liegt nur wenige Minuten entfernt in Wettingen – schnell erreichbar mit Bus, Velo oder Auto. Auto- und Motorrad-Ausbildung aus einer Hand, Termine nach Vereinbarung."
-    meetingPoint={{ label: "Wettingen (für Neuenhof)", address: "Auto: Bahnhof Wettingen · Motorrad: Bahnhofstrasse 56, 5430 Wettingen" }}
+    meetingPoint={{ label: "Wettingen (für Neuenhof)", address: "Auto: Bahnhof Wettingen · Motorrad: Bahnhofstrasse 56 · Grundkurs: Güterstrasse 12, 5430 Wettingen" }}
     serviceName="Fahrschule Neuenhof"
     serviceType="DrivingSchool"
     benefits={[
@@ -32,7 +32,7 @@ const FahrschuleNeuenhof = () => (
       },
       {
         heading: "Treffpunkt und Anfahrt",
-        body: "Autofahrstunden starten am Bahnhof Wettingen, Motorrad-Fahrstunden und Kurse an der Bahnhofstrasse 56 in 5430 Wettingen – von Neuenhof aus per Bus (Linie 1) oder mit dem Velo in wenigen Minuten erreichbar. Auf Wunsch holen wir dich direkt in Neuenhof ab.",
+        body: "Autofahrstunden starten am Bahnhof Wettingen, Motorrad-Fahrstunden an der Bahnhofstrasse 56, der Motorrad-Grundkurs an der Güterstrasse 12 in 5430 Wettingen – von Neuenhof aus per Bus (Linie 1) oder mit dem Velo in wenigen Minuten erreichbar. Auf Wunsch holen wir dich direkt in Neuenhof ab.",
       },
     ]}
     faqs={[

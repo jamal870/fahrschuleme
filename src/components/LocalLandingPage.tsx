@@ -17,7 +17,7 @@ export interface LocalLandingProps {
   h1: string;
   h1Accent?: string;            // farbiger Teil im H1
   intro: string;                // Lead-Paragraph
-  meetingPoint: { label: string; address: string };
+  meetingPoint: { label: string; address: string; href?: string };
   serviceName: string;          // für JSON-LD Service
   /** @deprecated nur noch kompatibel gehalten; das Schema nutzt die sitewide Firma (@id #business). */
   serviceType?: "MotorcycleSchool" | "DrivingSchool";
@@ -98,7 +98,7 @@ const LocalLandingPage = (p: LocalLandingProps) => {
       {/* Treffpunkt + Öffnungszeiten */}
       <section className="bg-primary text-primary-foreground">
         <div className="max-w-6xl mx-auto px-6 py-5 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm font-body">
-          <div className="flex items-center gap-2"><MapPin className="w-4 h-4" /><strong className="font-heading">Treffpunkt:</strong> {p.meetingPoint.label} – {p.meetingPoint.address}</div>
+          <div className="flex items-center gap-2"><MapPin className="w-4 h-4" /><strong className="font-heading">Treffpunkt:</strong> {p.meetingPoint.label} – {p.meetingPoint.href ? <a href={p.meetingPoint.href} target="_blank" rel="noopener noreferrer" className="underline">{p.meetingPoint.address}</a> : p.meetingPoint.address}</div>
           <div className="flex items-center gap-2"><Clock className="w-4 h-4" /><strong className="font-heading">Zeiten:</strong> {tenantConfig.contact.openingHours}</div>
           <div className="flex items-center gap-2"><Phone className="w-4 h-4" /><strong className="font-heading">Telefon:</strong> <a href={`tel:${tenantConfig.contact.phone.replace(/\s/g, "")}`} className="underline">{tenantConfig.contact.phone}</a></div>
         </div>

@@ -32,7 +32,7 @@ const FahrschuleBaden = () => (
       },
       {
         heading: "Preise und Ablauf für Fahrschüler aus Baden",
-        body: "Autofahrstunden starten am Bahnhof Baden (Treffpunkt nach Absprache) und kosten CHF 95 pro Lektion von 45 Minuten, die Doppellektion CHF 190. Motorradlektionen kosten CHF 130 für 60 Minuten. Den Motorrad-Grundkurs besuchst du an der Bahnhofstrasse 56 in Wettingen, drei Teile à CHF 160. Für einen ersten Überblick lohnt sich ein Blick auf unseren Autoführerschein und unseren A1 Führerschein.",
+        body: "Autofahrstunden starten am Bahnhof Baden (Treffpunkt nach Absprache) und kosten CHF 95 pro Lektion von 45 Minuten, die Doppellektion CHF 190. Motorradlektionen kosten CHF 130 für 60 Minuten. Den Motorrad-Grundkurs besuchst du an der Güterstrasse 12 in Wettingen, drei Teile à CHF 160. Für einen ersten Überblick lohnt sich ein Blick auf unseren Autoführerschein und unseren A1 Führerschein.",
       },
       {
         heading: "Warum Fahrschule me in Baden?",

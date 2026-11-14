@@ -9,7 +9,7 @@ const MotorradFuehrerscheinBaden = () => (
     h1="Motorrad-Führerschein in"
     h1Accent="Baden"
     intro="Den Motorrad-Führerschein für Baden machst du bei Fahrschule me – mit Treffpunkt Bahnhof Baden für Fahrstunden und dem MGK direkt in Wettingen, nur wenige Minuten entfernt. Wir begleiten dich von der Anmeldung bis zur bestandenen Prüfung."
-    meetingPoint={{ label: "Baden Bahnhof / MGK in Wettingen", address: "Bahnhof Baden / Bahnhofstrasse 56, 5430 Wettingen" }}
+    meetingPoint={{ label: "Baden Bahnhof / MGK in Wettingen", address: "Bahnhof Baden / Grundkurs: Güterstrasse 12, 5430 Wettingen" }}
     serviceName="Motorrad-Führerschein Baden"
     serviceType="MotorcycleSchool"
     benefits={[
@@ -37,7 +37,7 @@ const MotorradFuehrerscheinBaden = () => (
     faqs={[
       { q: "Wie viele Fahrstunden brauche ich für die Motorradprüfung?", a: "Das ist individuell. Wir empfehlen 8–15 Lektionen vor der Prüfung – je nach Vorerfahrung und Kategorie." },
       { q: "Brauche ich ein eigenes Motorrad?", a: "Du wirst auf deinem eigenen Motorrad geprüft. Wir helfen dir gerne, ein geeignetes Motorrad zu mieten." },
-      { q: "Wo findet der MGK statt?", a: "In Wettingen, an der Bahnhofstrasse 56 – wenige Minuten von Baden entfernt." },
+      { q: "Wo findet der MGK statt?", a: "In Wettingen, an der Güterstrasse 12 – wenige Minuten von Baden entfernt." },
       { q: "Was kostet das Gesamtpaket?", a: "MGK: 3× 160 CHF, Motorrad-Lektion: 130 CHF (60 Min). Genaue Pakete besprechen wir individuell." },
     ]}
     primaryCta={{ label: "Kurstermine ansehen", to: "/kurstermine/" }}

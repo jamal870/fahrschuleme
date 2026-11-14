@@ -124,9 +124,9 @@ const Motorrad = () => (
         <h3 className="font-heading font-bold text-foreground">Ist der Grundkurs obligatorisch?</h3>
         <p>Ja. Für A1, A2 und A ist der Motorrad-Grundkurs mit 12 Stunden in drei Teilen vorgeschrieben.</p>
         <h3 className="font-heading font-bold text-foreground">Wo findet der Grundkurs statt?</h3>
-        <p>Bei uns in Wettingen. Die aktuellen Termine siehst du bei den <Link to="/kurstermine/" className="text-primary underline">Kursterminen</Link>.</p>
-        <h3 className="font-heading font-bold text-foreground">Treffpunkt für Motorrad-Fahrstunden</h3>
-        <p>Motorrad-Fahrstunden und Kurse starten an der Bahnhofstrasse 56 in Wettingen.</p>
+        <p>Bei uns in Wettingen, an der Güterstrasse 12. Die aktuellen Termine siehst du bei den <Link to="/kurstermine/" className="text-primary underline">Kursterminen</Link>.</p>
+        <h3 className="font-heading font-bold text-foreground">Treffpunkt für Motorrad-Fahrstunden und Grundkurs</h3>
+        <p>Motorrad-Fahrstunden starten an der Bahnhofstrasse 56 in Wettingen. Der Treffpunkt für den Motorrad-Grundkurs ist die Güterstrasse 12 in Wettingen.</p>
         <h3 className="font-heading font-bold text-foreground">Ich habe schon A1. Was brauche ich für die Kategorie A?</h3>
         <p>Dafür buchst du nur Kursteil 3 zum Pauschalpreis von CHF 250 auf der <Link to="/grundkurs/?a1=1" className="text-primary underline">Grundkurs-Seite</Link>.</p>
       </div>

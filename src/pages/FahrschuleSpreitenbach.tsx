@@ -10,7 +10,7 @@ const FahrschuleSpreitenbach = () => (
     h1="Fahrschule für"
     h1Accent="Spreitenbach"
     intro="Aus Spreitenbach erreichst du unsere Fahrschule in Wettingen in wenigen Minuten. Wir bilden dich für Auto (Kategorie B) und Motorrad (A1/A2/A) aus – flexibel, persönlich und zu fairen Preisen."
-    meetingPoint={{ label: "Wettingen (für Spreitenbach)", address: "Auto: Bahnhof Wettingen · Motorrad: Bahnhofstrasse 56, 5430 Wettingen" }}
+    meetingPoint={{ label: "Wettingen (für Spreitenbach)", address: "Auto: Bahnhof Wettingen · Motorrad: Bahnhofstrasse 56 · Grundkurs: Güterstrasse 12, 5430 Wettingen" }}
     serviceName="Fahrschule Spreitenbach"
     serviceType="DrivingSchool"
     benefits={[
@@ -32,13 +32,13 @@ const FahrschuleSpreitenbach = () => (
       },
       {
         heading: "Treffpunkt und Anfahrt",
-        body: "Autofahrstunden starten am Bahnhof Wettingen, Motorrad-Fahrstunden und Kurse an der Bahnhofstrasse 56, 5430 Wettingen. Mit der Limmattalbahn (Haltestelle Wettingen) oder dem Auto über die A1/Tivoli-Ausfahrt schnell erreichbar. Auf Wunsch holen wir dich auch in Spreitenbach ab.",
+        body: "Autofahrstunden starten am Bahnhof Wettingen, Motorrad-Fahrstunden an der Bahnhofstrasse 56, der Motorrad-Grundkurs an der Güterstrasse 12, 5430 Wettingen. Mit der Limmattalbahn (Haltestelle Wettingen) oder dem Auto über die A1/Tivoli-Ausfahrt schnell erreichbar. Auf Wunsch holen wir dich auch in Spreitenbach ab.",
       },
     ]}
     faqs={[
       { q: "Wie lange dauert die Anfahrt aus Spreitenbach?", a: "Mit dem Auto ca. 8 Minuten, mit der Limmattalbahn ca. 12 Minuten bis zum Treffpunkt Wettingen." },
       { q: "Holt ihr mich in Spreitenbach ab?", a: "Ja, gegen Absprache. Erwähne den Wunsch einfach bei der Buchung." },
-      { q: "Wo findet der MGK statt?", a: "In Wettingen, an der Bahnhofstrasse 56. Nur wenige Minuten von Spreitenbach entfernt." },
+      { q: "Wo findet der MGK statt?", a: "In Wettingen, an der Güterstrasse 12. Nur wenige Minuten von Spreitenbach entfernt." },
       { q: "Welche Kategorien werden ausgebildet?", a: "Auto (B) sowie Motorrad AM, A1, A2 und A." },
     ]}
     primaryCta={{ label: "Fahrstunde buchen", to: FAHRSTUNDEN_APP_URL }}

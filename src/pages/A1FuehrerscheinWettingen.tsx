@@ -9,7 +9,7 @@ const A1FuehrerscheinWettingen = () => (
     h1="A1 Führerschein in"
     h1Accent="Wettingen"
     intro="Mit der Kategorie A1 fährst du ab 16 Jahren Motorräder bis 125 cm³ und 11 kW. Bei Fahrschule me besuchst du den obligatorischen Grundkurs in Wettingen, übst in Fahrstunden und bereitest dich gezielt auf die praktische Prüfung vor."
-    meetingPoint={{ label: "Wettingen", address: "Bahnhofstrasse 56, 5430 Wettingen" }}
+    meetingPoint={{ label: "Wettingen", address: "Grundkurs: Güterstrasse 12 · Fahrstunden: Bahnhofstrasse 56, 5430 Wettingen" }}
     serviceName="A1 Führerschein Wettingen"
     benefits={[
       { title: "Ab 16 Jahren", desc: "Kategorie A1 für Motorräder bis 125 cm³ und maximal 11 kW." },
