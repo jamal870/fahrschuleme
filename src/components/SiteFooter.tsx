@@ -16,6 +16,8 @@ const SiteFooter = () => {
           <span>·</span>
           <Link to="/kontakt/" className="hover:text-primary">Kontakt</Link>
           <span>·</span>
+          <Link to="/fuer-fahrlehrer/" className="hover:text-primary">Für Fahrlehrer</Link>
+          <span>·</span>
           <Link to="/impressum/" className="hover:text-primary">Impressum</Link>
           <span>·</span>
           <Link to="/datenschutz/" className="hover:text-primary">Datenschutz</Link>
