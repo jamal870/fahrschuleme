@@ -12,7 +12,7 @@ const Verkehrskunde = () => (
     intro="Der Verkehrskundeunterricht bereitet dich auf das Verhalten im Strassenverkehr vor, bevor du hinter das Steuer steigst. Hier siehst du Inhalt, Dauer und Kosten. Den Kurs führt unsere Partner-Fahrschule Star durch, die Fahrstunden machst du bei uns."
     facts={[
       { label: "Dauer", value: "8 Stunden" },
-      { label: "Kosten", value: "ca. CHF 180" },
+      { label: "Kosten", value: "CHF 140" },
       { label: "Kurs", value: "Bei Partner Star" },
     ]}
     sections={[
@@ -46,7 +46,7 @@ const Verkehrskunde = () => (
     ]}
     faqs={[
       { q: "Wie lange dauert der VKU?", a: "Der Verkehrskundeunterricht umfasst acht Stunden. Je nach Anbieter verteilt er sich auf mehrere Termine." },
-      { q: "Was kostet der VKU?", a: "Rechne mit rund CHF 180. Der genaue Preis hängt vom Anbieter ab. Bei unserer Partner-Fahrschule Star siehst du ihn direkt bei der Anmeldung." },
+      { q: "Was kostet der VKU?", a: "Bei unserer Partner-Fahrschule Star kostet der VKU CHF 140 (Stand November 2026). Allfällige weitere Gebühren und den aktuellen Preis siehst du direkt bei der Anmeldung." },
       { q: "Ist der VKU Pflicht?", a: "Für den Autoführerschein (Kategorie B) ist der VKU obligatorisch. Für andere Kategorien klärt das Strassenverkehrsamt, ob du ihn brauchst." },
       { q: "Bietet Fahrschule me den VKU selbst an?", a: "Nein. Wir vermitteln dich an unsere Partner-Fahrschule Star. Die Fahrstunden und die praktische Ausbildung machst du bei uns." },
       { q: "Wann sollte ich den VKU machen?", a: "Plane ihn früh ein, damit die Bestätigung rechtzeitig für die praktische Prüfung vorliegt. Im neuen Ablauf ab 2027 gehört er zur Vorbereitung und kann in beliebiger Reihenfolge mit Foto, Sehtest und Nothelferkurs erledigt werden." },

@@ -12,7 +12,7 @@ const Nothelferkurs = () => (
     intro="Ohne Nothelferkurs gibt es keinen Lernfahrausweis. Hier erfährst du, was dich erwartet, wie lange der Kurs gilt und wie du dich anmeldest. Den Kurs führt unsere Partner-Fahrschule Star durch, die Fahrstunden machst du bei uns."
     facts={[
       { label: "Dauer", value: "10 Stunden" },
-      { label: "Kosten", value: "ca. CHF 120" },
+      { label: "Kosten", value: "CHF 69" },
       { label: "Gültigkeit", value: "6 Jahre" },
     ]}
     sections={[
@@ -46,7 +46,7 @@ const Nothelferkurs = () => (
     ]}
     faqs={[
       { q: "Wie lange dauert der Nothelferkurs?", a: "Der Kurs dauert 10 Stunden. Je nach Anbieter ist er auf mehrere Abende oder auf einen oder zwei Tage verteilt." },
-      { q: "Was kostet der Nothelferkurs?", a: "Rechne mit rund CHF 120. Der genaue Preis hängt vom Anbieter ab. Bei unserer Partner-Fahrschule Star siehst du ihn direkt bei der Anmeldung." },
+      { q: "Was kostet der Nothelferkurs?", a: "Bei unserer Partner-Fahrschule Star kostet der Nothelferkurs CHF 69 (Stand November 2026). Allfällige weitere Gebühren und den aktuellen Preis siehst du direkt bei der Anmeldung." },
       { q: "Wie lange ist die Bestätigung gültig?", a: "Die Teilnahmebestätigung ist sechs Jahre gültig." },
       { q: "Bietet Fahrschule me den Nothelferkurs selbst an?", a: "Nein. Wir vermitteln dich an unsere Partner-Fahrschule Star. Die Fahrstunden und die praktische Ausbildung machst du bei uns." },
       { q: "Muss ich den Kurs vor der Theorieprüfung machen?", a: "Der Nothelferkurs ist eine Voraussetzung für den Lernfahrausweis. Im neuen Ablauf ab 2027 erledigst du ihn zusammen mit Foto, Sehtest und Verkehrskundeunterricht in beliebiger Reihenfolge." },

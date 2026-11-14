@@ -15,11 +15,11 @@ interface Row {
 
 const amtlich: Row[] = [
   { pos: "Sehtest (Optiker/Augenarzt)", betrag: "CHF 15–25", quelle: "Optiker", hinweis: "Gültig 2 Jahre" },
-  { pos: "Nothelferkurs (10 Std.)", betrag: "ca. CHF 120", quelle: "Externer Anbieter", hinweis: "Gültig 6 Jahre – Preis je nach Anbieter, nicht bei Fahrschule me" },
+  { pos: "Nothelferkurs (10 Std.)", betrag: "CHF 69", quelle: "Partner-Fahrschule Star", hinweis: "Gültig 6 Jahre – Preis Stand November 2026, nicht bei Fahrschule me" },
   { pos: "Gesuch Lernfahrausweis (Gemeinde)", betrag: "ca. CHF 30", quelle: "Wohngemeinde", hinweis: "Einreichung Einwohnerkontrolle" },
   { pos: "Theorieprüfung", betrag: "CHF 30", quelle: "StVA Aargau, Schafisheim", hinweis: "50 Fragen, max. 5 Fehler" },
   { pos: "Ausstellung Lernfahrausweis", betrag: "ca. CHF 50", quelle: "StVA Aargau", hinweis: "Gültig 24 Monate (Kat. B)" },
-  { pos: "Verkehrskundeunterricht (VKU, 8 Std.)", betrag: "ca. CHF 180", quelle: "Externer Anbieter", hinweis: "Preis je nach Anbieter, nicht bei Fahrschule me" },
+  { pos: "Verkehrskundeunterricht (VKU, 8 Std.)", betrag: "CHF 140", quelle: "Partner-Fahrschule Star", hinweis: "Preis Stand November 2026, nicht bei Fahrschule me" },
   { pos: "Praktische Führerprüfung", betrag: "CHF 120", quelle: "StVA Aargau", hinweis: "Dauer ca. 60 Minuten" },
   { pos: "Ausstellung Führerausweis auf Probe", betrag: "ca. CHF 65", quelle: "StVA Aargau", hinweis: "Probezeit 3 Jahre" },
 ];
@@ -38,13 +38,13 @@ const szenarien = [
   {
     titel: "Auto Kategorie B – sparsam",
     lektionen: "20 Lektionen",
-    total: "ca. CHF 2'550",
-    detail: "Amtliche Kosten (ca. CHF 550) + Administrationsbeitrag CHF 130 + 20 Lektionen im Abo (CHF 1'760) + VKU bei einem externen Anbieter (ca. CHF 180, je nach Anbieter).",
+    total: "ca. CHF 2'450",
+    detail: "Amtliche Kosten und Nothelferkurs (ca. CHF 400) + Administrationsbeitrag CHF 130 + 20 Lektionen im Abo (CHF 1'760) + VKU bei der Partner-Fahrschule Star (CHF 140).",
   },
   {
     titel: "Auto Kategorie B – realistisch",
     lektionen: "30–35 Lektionen",
-    total: "ca. CHF 3'600–4'100",
+    total: "ca. CHF 3'500–4'000",
     detail: "Schweizer Durchschnitt liegt bei rund 30 Lektionen bis zur Prüfungsreife. Basis: 20er-Abo plus Einzellektionen.",
   },
   {
@@ -61,7 +61,7 @@ const faq = [
     name: "Was kostet der Autoführerschein im Kanton Aargau insgesamt?",
     acceptedAnswer: {
       "@type": "Answer",
-      text: "Mit 30 Fahrstunden liegen die Gesamtkosten im Kanton Aargau bei rund CHF 3'600–4'100. Darin enthalten sind amtliche Gebühren von ca. CHF 550 (Sehtest, Nothelferkurs, Lernfahrausweis, Theorie- und praktische Prüfung), der VKU bei einem externen Anbieter (ca. CHF 180, Preis je nach Anbieter) sowie die Fahrstunden zu CHF 95 pro 45 Minuten bei der Fahrschule me in Wettingen.",
+      text: "Mit 30 Fahrstunden liegen die Gesamtkosten im Kanton Aargau bei rund CHF 3'500–4'000. Darin enthalten sind amtliche Gebühren und Nothelferkurs von ca. CHF 400 (Sehtest, Nothelferkurs, Lernfahrausweis, Theorie- und praktische Prüfung, Führerausweis auf Probe), der VKU bei der Partner-Fahrschule Star (CHF 140, Stand November 2026) sowie die Fahrstunden zu CHF 95 pro 45 Minuten bei der Fahrschule me in Wettingen.",
     },
   },
   {
@@ -178,8 +178,8 @@ const KostenFuehrerscheinAargau = () => (
       <section className="mb-10 p-5 bg-card border-l-4 border-primary" style={{ borderRadius: "3px" }}>
         <p className="text-sm text-foreground leading-relaxed">
           <strong className="font-heading">Kurzantwort:</strong> Hier der Überblick: Der Autoführerschein (Kategorie B) kostet im Kanton Aargau
-          insgesamt rund <strong>CHF 3'600–4'100</strong> bei 30 Fahrstunden. Davon entfallen ca. <strong>CHF 550</strong> auf
-          amtliche Gebühren, ca. <strong>CHF 180</strong> auf den VKU bei einem externen Anbieter und der Rest auf Fahrstunden
+          insgesamt rund <strong>CHF 3'500–4'000</strong> bei 30 Fahrstunden. Davon entfallen ca. <strong>CHF 400</strong> auf
+          amtliche Gebühren inklusive Nothelferkurs (CHF 69), ca. <strong>CHF 140</strong> auf den VKU bei der Partner-Fahrschule Star und der Rest auf Fahrstunden
           (CHF 95 pro 45 Minuten, günstiger im Abo). Der Motorrad-Grundkurs kostet CHF 480 für alle drei Teile.
         </p>
       </section>

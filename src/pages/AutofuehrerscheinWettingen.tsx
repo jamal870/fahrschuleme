@@ -43,7 +43,7 @@ const AutofuehrerscheinWettingen = () => (
       },
     ]}
     faqs={[
-      { q: "Was kostet der Autoführerschein im Kanton Aargau?", a: "Das hängt von der Anzahl Fahrstunden ab. Bei etwa 30 Fahrstunden rechnen wir mit rund CHF 3'600 bis 4'100 inklusive amtlicher Gebühren sowie VKU und Nothelferkurs bei externen Anbietern (Preise je nach Anbieter). Die Aufstellung findest du auf der Seite Kosten Führerschein Aargau." },
+      { q: "Was kostet der Autoführerschein im Kanton Aargau?", a: "Das hängt von der Anzahl Fahrstunden ab. Bei etwa 30 Fahrstunden rechnen wir mit rund CHF 3'500 bis 4'000 inklusive amtlicher Gebühren sowie VKU (CHF 140) und Nothelferkurs (CHF 69) bei unserer Partner-Fahrschule Star (Stand November 2026). Die Aufstellung findest du auf der Seite Kosten Führerschein Aargau." },
       { q: "Was kostet eine Autofahrstunde?", a: "Eine Einzellektion (45 Minuten) kostet 95 CHF, eine Doppellektion (2 × 45 Minuten) 190 CHF. Mit dem 10er-Abo für 900 CHF sparst du 50 CHF, mit dem 20er-Abo für 1'760 CHF sparst du 150 CHF." },
       { q: "Brauche ich Fahrstunden, um die Prüfung zu bestehen?", a: "Fahrstunden sind in der Schweiz nicht vorgeschrieben. Die praktische Prüfung stellt aber hohe Anforderungen, deshalb ist Unterricht bei einem Fahrlehrer für die meisten sinnvoll." },
       { q: "Wo ist der Treffpunkt?", a: "Der Treffpunkt ist der Bahnhof Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
