@@ -1,5 +1,5 @@
 import LocalLandingPage from "@/components/LocalLandingPage";
-import { FAHRSTUNDEN_APP_URL } from "@/lib/booking-links";
+import { FAHRSTUNDEN_APP_URL, PARTNER_NOTHILFE_URL, PARTNER_VKU_URL } from "@/lib/booking-links";
 
 const AutofuehrerscheinWettingen = () => (
   <LocalLandingPage
@@ -23,7 +23,7 @@ const AutofuehrerscheinWettingen = () => (
     longText={[
       {
         heading: "Der Weg zum Autoführerschein (Kategorie B)",
-        body: "1. Sehtest beim Optiker machen und den Nothelferkurs bei einem anerkannten Anbieter absolvieren.\n2. Lernfahrausweis beantragen und die Theorieprüfung beim Strassenverkehrsamt Aargau in Schafisheim bestehen.\n3. Fahrstunden bei Fahrschule me besuchen.\n4. Den Verkehrskundeunterricht (VKU) bei einem anerkannten Anbieter abschliessen.\n5. Praktische Führerprüfung beim Strassenverkehrsamt ablegen.\n6. Den Führerausweis auf Probe erhalten, die Probezeit dauert drei Jahre.",
+        body: "1. Sehtest beim Optiker machen und den Nothelferkurs bei unserer Partner-Fahrschule Star buchen.\n2. Lernfahrausweis beantragen und die Theorieprüfung beim Strassenverkehrsamt Aargau in Schafisheim bestehen.\n3. Fahrstunden bei Fahrschule me besuchen.\n4. Den Verkehrskundeunterricht (VKU) bei unserer Partner-Fahrschule Star abschliessen.\n5. Praktische Führerprüfung beim Strassenverkehrsamt ablegen.\n6. Den Führerausweis auf Probe erhalten, die Probezeit dauert drei Jahre.",
       },
       {
         heading: "Fahrstunden bei Fahrschule me",
@@ -31,7 +31,7 @@ const AutofuehrerscheinWettingen = () => (
       },
       {
         heading: "Preise im Überblick",
-        body: "• Einzellektion (45 Min.): 95 CHF, auch auf Rechnung möglich\n• Doppellektion (2 × 45 Min.): 190 CHF\n• 10er-Abo: 900 CHF\n• 20er-Abo: 1'760 CHF\n• Administrationsbeitrag einmalig: 130 CHF, inklusive Vollkaskoversicherung\n\nNothelferkurs und Verkehrskundeunterricht bieten wir nicht an, beide absolvierst du bei einem anerkannten Anbieter. Alle weiteren Kosten wie amtliche Gebühren findest du in der Übersicht der Kosten im Kanton Aargau.",
+        body: "• Einzellektion (45 Min.): 95 CHF, auch auf Rechnung möglich\n• Doppellektion (2 × 45 Min.): 190 CHF\n• 10er-Abo: 900 CHF\n• 20er-Abo: 1'760 CHF\n• Administrationsbeitrag einmalig: 130 CHF, inklusive Vollkaskoversicherung\n\nNothelferkurs und Verkehrskundeunterricht führen wir nicht selbst durch. Beide buchst du bei unserer Partner-Fahrschule Star, die Links findest du weiter unten auf dieser Seite. Alle weiteren Kosten wie amtliche Gebühren findest du in der Übersicht der Kosten im Kanton Aargau.",
       },
       {
         heading: "Wie viele Fahrstunden brauchst du?",
@@ -57,6 +57,8 @@ const AutofuehrerscheinWettingen = () => (
       { to: "/wie-viele-fahrstunden/", title: "Wie viele Fahrstunden brauche ich?", desc: "Orientierungswerte nach Vorerfahrung, Alter und Fahrpraxis." },
       { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Lernfahrausweis, Theorie und praktische Prüfung in Schafisheim." },
       { to: "/fuehrerausweis-ab-2027/", title: "Weg zum Führerausweis ab 2027", desc: "Der neue Ablauf von Antrag bis Führerausweis im Überblick." },
+      { to: PARTNER_NOTHILFE_URL, title: "Nothilfekurs buchen", desc: "Termine und Anmeldung bei unserer Partner-Fahrschule Star." },
+      { to: PARTNER_VKU_URL, title: "Verkehrskundeunterricht (VKU) buchen", desc: "Termine und Anmeldung bei unserer Partner-Fahrschule Star." },
     ]}
   />
 );

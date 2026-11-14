@@ -18,7 +18,8 @@ import Seo, { BUSINESS_ID } from "@/components/Seo";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { tenantConfig } from "@/config/tenant";
-import { FAHRSTUNDEN_APP_URL } from "@/lib/booking-links";
+import TrackedCta from "@/components/TrackedCta";
+import { FAHRSTUNDEN_APP_URL, PARTNER_LINK_REL, PARTNER_NOTHILFE_URL, PARTNER_VKU_URL } from "@/lib/booking-links";
 
 const faqs = [
   {
@@ -31,7 +32,7 @@ const faqs = [
   },
   {
     q: "Bietet Fahrschule me den Nothilfekurs und den VKU an?",
-    a: "Nein. Beide absolvierst du bei einem anerkannten Anbieter. Wir begleiten dich bei der praktischen Ausbildung mit Fahrstunden.",
+    a: "Wir führen die beiden Kurse nicht selbst durch. Du buchst sie bei unserer Partner-Fahrschule Star (fahrschule-star.ch). Die praktische Ausbildung mit Fahrstunden machst du bei uns.",
   },
   {
     q: "Was ist die praktische Grundschulung (PGS)?",
@@ -68,7 +69,7 @@ const steps = [
   {
     icon: ListChecks,
     title: "Vorbereitung in beliebiger Reihenfolge",
-    body: "Foto, Sehtest, Nothilfekurs und Verkehrskundeunterricht (VKU) erledigst du in der Reihenfolge, die für dich passt. Nothilfekurs und VKU absolvierst du bei einem anerkannten Anbieter.",
+    body: "Foto, Sehtest, Nothilfekurs und Verkehrskundeunterricht (VKU) erledigst du in der Reihenfolge, die für dich passt. Nothilfekurs und VKU buchst du bei unserer Partner-Fahrschule Star.",
   },
   {
     icon: BookOpen,
@@ -209,9 +210,30 @@ const FuehrerausweisAb2027 = () => {
               einem Fahrlehrer, der deinen Lernstand kennt, und Terminen nach Vereinbarung.
             </p>
             <p>
-              Nothilfekurs und Verkehrskundeunterricht bieten wir nicht an. Beide absolvierst du bei einem anerkannten Anbieter.
-              Plane sie früh ein, weil sie im neuen Ablauf zur Vorbereitung gehören und in beliebiger Reihenfolge möglich sind.
+              Nothilfekurs und Verkehrskundeunterricht führen wir nicht selbst durch. Beide buchst du bei unserer
+              Partner-Fahrschule Star. Plane sie früh ein, weil sie im neuen Ablauf zur Vorbereitung gehören und in
+              beliebiger Reihenfolge möglich sind.
             </p>
+            <div className="flex flex-wrap gap-3">
+              <TrackedCta
+                to={PARTNER_NOTHILFE_URL}
+                label="Nothilfekurs buchen (Partner)"
+                external
+                icon="external"
+                rel={PARTNER_LINK_REL}
+              >
+                Nothilfekurs buchen
+              </TrackedCta>
+              <TrackedCta
+                to={PARTNER_VKU_URL}
+                label="VKU buchen (Partner)"
+                external
+                icon="external"
+                rel={PARTNER_LINK_REL}
+              >
+                VKU buchen
+              </TrackedCta>
+            </div>
             <p>
               Wenn du bald mit dem Führerausweis startest und unsicher bist, welcher Ablauf für dich gilt, melde dich bei uns.
               Wir sagen dir ehrlich, was wir wissen, und verweisen dich für Verbindliches ans Strassenverkehrsamt.
