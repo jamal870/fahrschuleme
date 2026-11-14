@@ -9,7 +9,7 @@ const MotorradGrundkursWettingen = () => (
     h1="Motorrad Grundkurs (MGK) in"
     h1Accent="Wettingen"
     intro="Der obligatorische 12-Stunden-Motorrad-Grundkurs für A1, A2 und A – direkt in Wettingen. Wir bilden dich in kleinen Gruppen sicher und praxisnah auf alles vor, was du auf der Strasse brauchst."
-    meetingPoint={{ label: "Wettingen", address: "Bahnhofstrasse 56, 5430 Wettingen" }}
+    meetingPoint={{ label: "Grundkurs Wettingen", address: "Güterstrasse 12, 5430 Wettingen", href: "https://www.google.com/maps/search/?api=1&query=G%C3%BCterstrasse+12%2C+5430+Wettingen" }}
     serviceName="Motorrad Grundkurs"
     serviceType="MotorcycleSchool"
     benefits={[
@@ -27,7 +27,7 @@ const MotorradGrundkursWettingen = () => (
       },
       {
         heading: "MGK in Wettingen – Ablauf bei Fahrschule me",
-        body: "Wir starten am Treffpunkt Bahnhofstrasse 56 in 5430 Wettingen. Du brauchst deinen Lernfahrausweis, ein verkehrstüchtiges Motorrad und die komplette Schutzausrüstung (Helm, Handschuhe, Jacke, Hose, Stiefel). Auf Wunsch helfen wir dir, ein passendes Motorrad zu mieten.\n\nNach dem erfolgreichen Abschluss aller drei Kursteile erhältst du den Kursausweis und darfst zur praktischen Führerprüfung antreten.",
+        body: "Wir starten am Treffpunkt Güterstrasse 12 in 5430 Wettingen. Du brauchst deinen Lernfahrausweis, ein verkehrstüchtiges Motorrad und die komplette Schutzausrüstung (Helm, Handschuhe, Jacke, Hose, Stiefel). Auf Wunsch helfen wir dir, ein passendes Motorrad zu mieten.\n\nNach dem erfolgreichen Abschluss aller drei Kursteile erhältst du den Kursausweis und darfst zur praktischen Führerprüfung antreten.",
       },
       {
         heading: "Einzugsgebiet",

@@ -10,7 +10,7 @@ const FahrschuleWettingen = () => (
     h1="Deine Fahrschule in"
     h1Accent="Wettingen"
     intro="Auto- und Motorrad-Fahrstunden direkt in Wettingen – mit erfahrenen, eidgenössisch geprüften Fahrlehrern. Flexible Termine nach Vereinbarung, transparente Preise und persönliche Betreuung bis zur Prüfung."
-    meetingPoint={{ label: "Wettingen", address: "Auto: Bahnhof Wettingen · Motorrad: Bahnhofstrasse 56, 5430 Wettingen" }}
+    meetingPoint={{ label: "Wettingen", address: "Auto: Bahnhof Wettingen · Motorrad: Bahnhofstrasse 56 · Grundkurs: Güterstrasse 12, 5430 Wettingen" }}
     serviceName="Fahrschule Wettingen"
     serviceType="DrivingSchool"
     benefits={[
@@ -36,7 +36,7 @@ const FahrschuleWettingen = () => (
       },
     ]}
     faqs={[
-      { q: "Wo finden die Fahrstunden statt?", a: "Auto-Fahrstunden starten am Bahnhof Wettingen, Motorrad-Fahrstunden an der Bahnhofstrasse 56 in 5430 Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
+      { q: "Wo finden die Fahrstunden statt?", a: "Auto-Fahrstunden starten am Bahnhof Wettingen, Motorrad-Fahrstunden an der Bahnhofstrasse 56, der Motorrad-Grundkurs an der Güterstrasse 12 in 5430 Wettingen. Auf Anfrage holen wir dich auch an anderen Orten in der Region ab." },
       { q: "Was kostet eine Autofahrstunde?", a: "Eine Einzellektion (45 Min) kostet 95 CHF. Mit dem 10er-Abo sparst du 50 CHF, mit dem 20er-Abo 150 CHF." },
       { q: "Bietet ihr auch Motorrad-Fahrstunden an?", a: "Ja. Motorrad-Einzellektion (60 Min) kostet 130 CHF. Wir bieten Vorschulung, Grundschulung und Vor-Prüfungsfahrt an." },
       { q: "Wie melde ich mich an?", a: "Am einfachsten online über die Kontakt- oder Kurstermin-Seite. Du kannst uns auch direkt anrufen oder per WhatsApp schreiben." },

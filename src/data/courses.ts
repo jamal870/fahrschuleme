@@ -143,7 +143,7 @@ export const faqData = [
   },
   {
     question: "Wo finden die Kurse statt? (Treffpunkt)",
-    answer: "Unsere Motorrad Grundkurse finden in **Wettingen** statt.\n\n📍 **Treffpunkt:**\nLandstrasse 99\nCenterpassage – Ottos Rampe\n5430 Wettingen",
+    answer: "Unsere Motorrad Grundkurse finden in **Wettingen** statt.\n\n📍 **Treffpunkt:**\nGüterstrasse 12\n5430 Wettingen",
   },
   {
     question: "Was muss ich zum Kurs mitbringen?",
