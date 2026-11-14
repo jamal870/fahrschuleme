@@ -17,6 +17,8 @@ export interface TrackedCtaProps {
   value?: number;
   /** Show an arrow or external-link icon. */
   icon?: "arrow" | "external" | "none";
+  /** Link-Beziehung für externe Ziele (Standard: noopener noreferrer). */
+  rel?: string;
   /** Optional click handler that runs after tracking. */
   onClick?: (e: React.MouseEvent) => void;
   children?: React.ReactNode;
@@ -33,6 +35,7 @@ const TrackedCta = ({
   style = { borderRadius: "3px" },
   value,
   icon = "arrow",
+  rel = "noopener noreferrer",
   onClick,
   children,
 }: TrackedCtaProps) => {
@@ -65,7 +68,7 @@ const TrackedCta = ({
       <a
         href={to}
         target="_blank"
-        rel="noopener noreferrer"
+        rel={rel}
         className={className}
         style={style}
         onClick={handleClick}
