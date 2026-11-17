@@ -130,7 +130,7 @@ const motorradFaq = [
   ),
   qa(
     "Ab wann kann man Motorrad-Fahrstunden nehmen?",
-    "Du brauchst einen gültigen Lernfahrausweis für deine Kategorie. Meist kommt der Grundkurs zuerst, danach folgen die Fahrstunden im Verkehr. Mindestalter sind 16 Jahre für A1 und 18 Jahre für A2. Eine Übersicht aller Kategorien findest du in unserem Vergleich."
+    "Du brauchst einen gültigen Lernfahrausweis für deine Kategorie. Meist kommt der Grundkurs zuerst, danach folgen die Fahrstunden im Verkehr. Mindestalter: 15 Jahre für Roller und Motorräder bis 50 cm³ (AM), 16 Jahre für 125 cm³ (A1) und 18 Jahre für A2. Eine Übersicht aller Kategorien findest du in unserem Vergleich."
   ),
   qa(
     "Kann man im Winter Motorrad-Fahrstunden nehmen?",
