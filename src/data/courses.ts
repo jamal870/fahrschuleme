@@ -146,6 +146,10 @@ export const faqData = [
     answer: "Unsere Motorrad Grundkurse finden in **Wettingen** statt.\n\n📍 **Treffpunkt:**\nGüterstrasse 12\n5430 Wettingen",
   },
   {
+    question: "In welcher Jahreszeit finden Motorrad-Kurse statt? Auch bei Regen?",
+    answer: "Die Motorradausbildung richtet sich nach dem Strassenverkehrsamt und läuft in der Regel von **März bis etwa 20. November**. Fahrstunden, Grundkurse und Prüfungen finden **auch bei Regen** statt.",
+  },
+  {
     question: "Was muss ich zum Kurs mitbringen?",
     answer: "Du brauchst:\n- **Eigenes Motorrad** in technisch einwandfreiem Zustand (aufgetankt, Profiltiefe > 1.6 mm)\n- **L-Schild** am Motorrad angebracht\n- **Motorradbekleidung** mit Protektoren (Knie, Ellenbogen, Schulter)\n- **Helm, Handschuhe und geeignete Schuhe/Stiefel**\n- **Regenschutzbekleidung** (z.B. Overall) für schlechtes Wetter\n- **Personalausweis** (ID oder Pass) und **Lernfahrausweis** am ersten Kurstag!\n\n⚠️ Du musst dich sicher im Verkehr bewegen können.",
   },
