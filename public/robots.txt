@@ -30,6 +30,11 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/
 
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
 User-agent: PerplexityBot
 Allow: /
 Disallow: /admin

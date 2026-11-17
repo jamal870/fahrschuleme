@@ -94,6 +94,9 @@ const Motorrad = () => (
           <li>Vor-Prüfungsfahrt buchen und die praktische Prüfung beim Strassenverkehrsamt ablegen.</li>
         </ol>
         <p>
+          <strong className="text-foreground">Saison:</strong> Die Motorradausbildung richtet sich nach dem Strassenverkehrsamt und läuft in der Regel von März bis etwa 20. November. Fahrstunden, Grundkurse und Prüfungen finden auch bei Regen statt.
+        </p>
+        <p>
           Für den Einstieg mit 16 Jahren findest du alle Angaben auf der Seite{" "}
           <Link to="/a1-fuehrerschein-wettingen/" className="text-primary underline">A1 Führerschein in Wettingen</Link>. Die Unterschiede zwischen den Kategorien zeigt der{" "}
           <Link to="/motorrad-kategorien-vergleich/" className="text-primary underline">Kategorien-Vergleich</Link>.

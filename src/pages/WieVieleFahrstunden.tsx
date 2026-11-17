@@ -109,8 +109,45 @@ const faq = [
   },
 ];
 
+const qa = (name: string, text: string) => ({
+  "@type": "Question",
+  name,
+  acceptedAnswer: { "@type": "Answer", text },
+});
+
+const motorradFaq = [
+  qa(
+    "Wie viele Motorrad-Fahrstunden braucht man für A2?",
+    "Für die Kategorie A2 sind nach dem 12-stündigen Grundkurs meist 4 bis 8 Lektionen à 60 Minuten realistisch. Wer schon Roller oder Mofa gefahren ist, braucht eher weniger, Neueinsteiger eher mehr. Nach der ersten Lektion schätzen wir ehrlich ein, wo du stehst."
+  ),
+  qa(
+    "Wie viele Fahrstunden braucht man für Motorrad Klasse A?",
+    "Auch bei der unbeschränkten Kategorie A gibt es keine feste Zahl. Wegen Leistung und Gewicht liegen die meisten Fahrschüler eher am oberen Ende der 4 bis 8 Lektionen nach dem Grundkurs. Entscheidend sind Fahrpraxis, Sicherheit bei Bremsen und Ausweichen sowie dein Gefühl für die Maschine."
+  ),
+  qa(
+    "Sind Motorrad-Fahrstunden Pflicht?",
+    "Eine gesetzliche Mindestzahl an Motorrad-Fahrstunden gibt es nicht. Obligatorisch sind der Nothelferkurs, der Verkehrskundeunterricht und der Motorrad-Grundkurs mit 12 Stunden. Zusätzliche Fahrstunden sind freiwillig, erhöhen aber die Chance, die praktische Prüfung beim ersten Versuch zu bestehen."
+  ),
+  qa(
+    "Ab wann kann man Motorrad-Fahrstunden nehmen?",
+    "Du brauchst einen gültigen Lernfahrausweis für deine Kategorie. Meist kommt der Grundkurs zuerst, danach folgen die Fahrstunden im Verkehr. Mindestalter: 15 Jahre für Roller und Motorräder bis 50 cm³ (AM), 16 Jahre für 125 cm³ (A1) und 18 Jahre für A2. Eine Übersicht aller Kategorien findest du in unserem Vergleich."
+  ),
+  qa(
+    "Kann man im Winter Motorrad-Fahrstunden nehmen?",
+    "Die Motorradausbildung richtet sich nach den Vorgaben des Strassenverkehrsamts und läuft in der Regel von März bis etwa 20. November. In dieser Zeit finden Fahrstunden, Grundkurse und Prüfungen statt. Im Winter ruht die Ausbildung. Starte rechtzeitig im Frühling, damit du die Prüfung vor Saisonende ablegen kannst."
+  ),
+  qa(
+    "Finden Motorrad-Fahrstunden auch bei Regen statt?",
+    "Ja. Fahrstunden, Grundkurse und Prüfungen finden auch bei Regen statt, denn Regen gehört zum Alltag auf dem Motorrad. Du lernst, früher zu bremsen, sanfter zu lenken und mehr Abstand zu halten. Wichtig sind eine gute Regenkombi, wasserdichte Handschuhe und Schuhe, die nicht durchnässen."
+  ),
+  qa(
+    "Lohnen sich Auffrischungs-Fahrstunden nach langer Motorrad-Pause?",
+    "Ja. Wer lange nicht gefahren ist, verliert oft Routine bei Bremsen, Kurven und Schulterblick. Zwei bis vier Lektionen reichen häufig, um wieder sicher zu werden. Auch nach einem Kauf eines kräftigeren Motorrads oder vor der ersten Saisonfahrt ist eine Auffrischung sinnvoll."
+  ),
+];
+
 const jsonLd = [
-  { "@context": "https://schema.org", "@type": "FAQPage", about: { "@id": BUSINESS_ID }, mainEntity: faq },
+  { "@context": "https://schema.org", "@type": "FAQPage", about: { "@id": BUSINESS_ID }, mainEntity: [...faq, ...motorradFaq] },
   {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -202,6 +239,23 @@ const WieVieleFahrstunden = () => (
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="mb-12">
+        <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2">Motorrad-Fahrstunden: Fragen und Antworten</h2>
+        <p className="text-sm text-muted-foreground mb-6">Pflicht, Anzahl, Winter, Regen und Auffrischung – kurz beantwortet.</p>
+        <div className="space-y-6">
+          {motorradFaq.map((q) => (
+            <article key={q.name}>
+              <h3 className="font-heading font-bold text-foreground mb-2">{q.name}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{q.acceptedAnswer.text}</p>
+            </article>
+          ))}
+        </div>
+        <p className="text-sm text-muted-foreground mt-6">
+          Mehr dazu: <Link to="/motorrad-kategorien-vergleich/" className="text-primary underline">Motorrad-Kategorien im Vergleich</Link> und{" "}
+          <Link to="/motorrad-grundkurs-wettingen/" className="text-primary underline">Motorrad-Grundkurs in Wettingen</Link>.
+        </p>
       </section>
 
       <section className="mb-12">
