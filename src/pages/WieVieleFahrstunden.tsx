@@ -134,11 +134,11 @@ const motorradFaq = [
   ),
   qa(
     "Kann man im Winter Motorrad-Fahrstunden nehmen?",
-    "Ja, solange die Strasse trocken und eisfrei ist. Bei Schnee, Glatteis oder Salz auf der Fahrbahn verschieben wir die Lektion aus Sicherheitsgründen. Plane im Winter etwas Flexibilität ein und trag warme, winddichte Motorradkleidung mit Protektoren, damit du dich auf das Fahren konzentrieren kannst."
+    "Die Motorradausbildung richtet sich nach den Vorgaben des Strassenverkehrsamts und läuft in der Regel von März bis etwa 20. November. In dieser Zeit finden Fahrstunden, Grundkurse und Prüfungen statt. Im Winter ruht die Ausbildung. Starte rechtzeitig im Frühling, damit du die Prüfung vor Saisonende ablegen kannst."
   ),
   qa(
-    "Fahren wir bei Regen Motorrad-Fahrstunden?",
-    "In der Regel ja, denn Regen gehört zum Alltag und die Prüfung findet nicht nur bei Sonnenschein statt. Du lernst, früher zu bremsen, sanfter zu lenken und mehr Abstand zu halten. Wichtig sind eine gute Regenkombi und trockene Handschuhe. Bei Starkregen oder Gewitter sprechen wir den Termin kurzfristig ab."
+    "Finden Motorrad-Fahrstunden auch bei Regen statt?",
+    "Ja. Fahrstunden, Grundkurse und Prüfungen finden auch bei Regen statt, denn Regen gehört zum Alltag auf dem Motorrad. Du lernst, früher zu bremsen, sanfter zu lenken und mehr Abstand zu halten. Wichtig sind eine gute Regenkombi, wasserdichte Handschuhe und Schuhe, die nicht durchnässen."
   ),
   qa(
     "Lohnen sich Auffrischungs-Fahrstunden nach langer Motorrad-Pause?",
