@@ -18,7 +18,7 @@ interface Kat {
 
 const kategorien: Kat[] = [
   {
-    kat: "AM",
+    kat: "A1 bis 50 cm³ (AM)",
     label: "Kleinmotorrad / Motorfahrrad",
     alter: "ab 15 Jahren",
     fahrzeug: "Motorfahrräder und Kleinmotorräder bis 50 cm³",
@@ -76,7 +76,7 @@ const faq = [
     name: "Ab welchem Alter darf ich in der Schweiz Motorrad fahren?",
     acceptedAnswer: {
       "@type": "Answer",
-      text: "Kategorie AM (bis 45 km/h) ist ab 15 Jahren möglich, die Kategorie A1 ab 15 Jahren (bis 50 cm³, ab 16 Jahren bis 125 cm³), A2 ab 18 Jahren und die unbegrenzte Kategorie A ab 18 Jahren mit zwei Jahren A2-Erfahrung oder direkt ab 25 Jahren.",
+      text: "Die Kategorie A1 bis 50 cm³ (auch AM genannt, bis 45 km/h) ist ab 15 Jahren möglich, ab 16 Jahren folgt A1 bis 125 cm³, A2 ab 18 Jahren und die unbegrenzte Kategorie A ab 18 Jahren mit zwei Jahren A2-Erfahrung oder direkt ab 25 Jahren.",
     },
   },
   {
@@ -150,8 +150,8 @@ const MotorradKategorienVergleich = () => (
     <main className="max-w-5xl mx-auto px-6 py-10">
       <section className="mb-10 p-5 bg-card border-l-4 border-primary" style={{ borderRadius: "3px" }}>
         <p className="text-sm text-foreground leading-relaxed">
-          <strong className="font-heading">Kurzantwort:</strong> <strong>AM</strong> ab 15 Jahren (max. 45 km/h),
-          <strong> A1</strong> ab 15 Jahren (bis 50 cm³), ab 16 Jahren 125 cm³ (max. 11 kW), <strong>A2</strong> ab 18 Jahren (max. 35 kW) und
+          <strong className="font-heading">Kurzantwort:</strong> <strong>A1 bis 50 cm³ (AM)</strong> ab 15 Jahren (max. 45 km/h),
+          <strong> A1</strong> ab 16 Jahren bis 125 cm³ (max. 11 kW), <strong>A2</strong> ab 18 Jahren (max. 35 kW) und
           <strong> A</strong> unbegrenzt ab 18 Jahren mit zwei Jahren A2 oder direkt ab 25 Jahren. Für A1, A2 und A ist
           der Motorrad-Grundkurs mit 12 Stunden obligatorisch.
         </p>
