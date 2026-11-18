@@ -653,7 +653,7 @@ export default function ChatBot() {
       const infos: Record<string, string> = {
         info_a1125cc: "**A1 – 125cc**\n\nAb 15 Jahren (zunächst bis 50cm³), ab 16 Jahren 125cm³ · max. 11 kW · Perfekter Einstieg in die Motorradwelt.\n\nGrundkurs (12h) + Praktische Prüfung erforderlich.",
         info_a235kw: "**A2 – 35kW**\n\nAb 18 Jahren · bis 35 kW · Nächste Stufe nach A1.\n\nGrundkurs (12h) + Praktische Prüfung erforderlich.",
-        info_aunbegrenzt: "**A – Unbegrenzt**\n\nAb 20 Jahren (Direktzugang) oder 24 (Stufenzugang) · Unbegrenzte Leistung.\n\nGrundkurs (12h) + Praktische Prüfung erforderlich.",
+        info_aunbegrenzt: "**A – Unbegrenzt**\n\nEs gibt keinen Direktzugang: Zuerst Kategorie A2 (bis 35 kW), nach 2 Jahren Fahrpraxis mit Prüfung zur offenen Kategorie A · Unbegrenzte Leistung.",
       };
       addMsg({ role: "user", content: "Mehr Infos" });
       const key = Object.keys(infos).find(k => action.includes(k.replace("info_", "")));
@@ -685,7 +685,7 @@ export default function ChatBot() {
         cat_info_am: { label: "A1 bis 50ccm (AM)", text: "Ab 15 Jahren · Mofa & Roller bis 50cm³ · max. 45 km/h · bei uns auch «A1 bis 50ccm» genannt" },
         cat_info_a1: { label: "A1 – 125cc", text: "Ab 15 Jahren (bis 50cm³), ab 16 Jahren 125cm³ · max. 11 kW" },
         cat_info_a2: { label: "A2 – 35kW", text: "Ab 18 Jahren · bis 35 kW · Nächste Stufe nach A1" },
-        cat_info_a: { label: "A – Unbegrenzt", text: "Ab 20 Jahren (Direktzugang) oder 24 (Stufenzugang) · Unbegrenzte Leistung" },
+        cat_info_a: { label: "A – Unbegrenzt", text: "Kein Direktzugang: erst A2 (bis 35 kW), nach 2 Jahren mit Prüfung zur offenen Kategorie A" },
       };
       const info = catInfos[action];
       if (info) {
@@ -785,7 +785,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "Mindestalter" });
       addMsg({
         role: "bot",
-        content: "**Mindestalter:**\n\nA1 bis 50ccm (AM) ab 15 · A1 bis 125cm³ ab 16 · A2 ab 18 · A ab 20 Jahren (Direktzugang)",
+        content: "**Mindestalter:**\n\nA1 bis 50ccm (AM) ab 15 · A1 bis 125cm³ ab 16 · A2 ab 18 · A erst nach 2 Jahren A2 und mit Prüfung (kein Direktzugang)",
         buttons: faqFollowUp,
       });
     }

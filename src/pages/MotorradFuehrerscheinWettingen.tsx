@@ -36,7 +36,7 @@ const categories = [
   { code: "AM", title: "A1 bis 50 cm³ (Mofa / Roller)", desc: "Einstieg in die motorisierte Zweiradwelt – Mofa und leichte Roller bis 50 cm³.", spec1: { label: "Alter", value: "ab 15 Jahren" }, spec2: { label: "Max", value: "45 km/h" } },
   { code: "A1", title: "Leichtmotorrad", desc: "Der erste richtige Motorradführerschein – 125 cm³ und 11 kW.", spec1: { label: "Alter", value: "ab 15 Jahren (125 cm³ ab 16)" }, spec2: { label: "Max", value: "125 cm³ / 11 kW" } },
   { code: "A2", title: "Mittlere Klasse", desc: "Mehr Power für erfahrene Einsteiger – bis 35 kW Motorradleistung.", spec1: { label: "Alter", value: "ab 18 Jahren" }, spec2: { label: "Max", value: "35 kW" } },
-  { code: "A", title: "Unbegrenzt", desc: "Volle Freiheit – Kategorie A ohne Leistungsbeschränkung.", spec1: { label: "Direkt", value: "ab 20 Jahren" }, spec2: { label: "Stufe", value: "ab 24 Jahren" } },
+  { code: "A", title: "Unbegrenzt", desc: "Volle Freiheit – Kategorie A ohne Leistungsbeschränkung.", spec1: { label: "Zugang", value: "nur über A2" }, spec2: { label: "Voraussetzung", value: "2 Jahre A2 + Prüfung" } },
 ];
 
 const advantages = [

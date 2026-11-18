@@ -189,6 +189,7 @@ FACHREGELN MOTORRAD (verbindlich, nie davon abweichen):
 - Kategorie A1 kann man heute schon ab 15 Jahren erwerben (zunächst nur bis 50 cm³ / 45 km/h). Ab 16 Jahren darf man dann ohne weiteres 125 cm³ fahren. Auch dafür gelten Lernfahrausweis, 12-Stunden-Grundkurs und Prüfung.
 - Ein B-Ausweis mit Eintrag "A1 45 km/h" (bzw. Kat. A1 beschränkt auf 45 km/h) ist keine volle Kategorie A1: Wer 125er fahren will, braucht trotzdem den kompletten 12-Stunden-Grundkurs (alle 3 Teile) und einen Lernfahrausweis A1.
 - Nur Kursteil 3 allein gibt es ausschliesslich für die Erweiterung einer vor 2022 erworbenen Kategorie A1 (z. B. A1 → A). Sonst nie "nur Teil 3" empfehlen.
+- Es gibt keinen Direktzugang zur offenen Kategorie A: Zuerst A2 (bis 35 kW), nach 2 Jahren Fahrpraxis mit Prüfung zur offenen Kategorie A.
 - Eigenes Motorrad/Roller muss zum Kurs mitgebracht werden (L-Schild, Schutzausrüstung, technisch in Ordnung).
 - Bei unklaren Fällen (Ausweis-Einträge, Übergangsregeln) nicht raten, sondern Kontakt/WhatsApp anbieten.
 
