@@ -86,7 +86,7 @@ export const SEO_ROUTES = [
     sitemap: { changefreq: "weekly", priority: 0.8 },
     title: "A1 Führerschein Wettingen – 125 ccm | Fahrschule me",
     description:
-      "A1 Führerschein (125 ccm) in Wettingen: ab 16 Jahren, Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfung. Ablauf und Kosten im Überblick.",
+      "A1 Führerschein in Wettingen: ab 15 Jahren (ab 16 bis 125 ccm), Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfung. Ablauf und Kosten.",
   },
   {
     path: "/autofuehrerschein-wettingen",

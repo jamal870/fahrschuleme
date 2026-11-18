@@ -97,7 +97,7 @@ const Motorrad = () => (
           <strong className="text-foreground">Saison:</strong> Die Motorradausbildung richtet sich nach dem Strassenverkehrsamt und läuft in der Regel von März bis etwa 20. November. Fahrstunden, Grundkurse und Prüfungen finden auch bei Regen statt.
         </p>
         <p>
-          Für den Einstieg mit 16 Jahren findest du alle Angaben auf der Seite{" "}
+          Für den Einstieg mit 15 oder 16 Jahren findest du alle Angaben auf der Seite{" "}
           <Link to="/a1-fuehrerschein-wettingen/" className="text-primary underline">A1 Führerschein in Wettingen</Link>. Die Unterschiede zwischen den Kategorien zeigt der{" "}
           <Link to="/motorrad-kategorien-vergleich/" className="text-primary underline">Kategorien-Vergleich</Link>.
         </p>
@@ -137,7 +137,7 @@ const Motorrad = () => (
 
     <div className="max-w-6xl mx-auto px-6 py-10">
       <RelatedLinks links={[
-        { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein in Wettingen", desc: "Ab 16 Jahren: Grundkurs, Fahrstunden und Kosten für 125 ccm." },
+        { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein in Wettingen", desc: "Ab 15 Jahren: Grundkurs, Fahrstunden und Kosten für A1 (ab 16 bis 125 ccm)." },
         { to: "/motorrad-fuehrerschein-baden/", title: "Motorradführerschein für Baden", desc: "Ausbildung, Grundkurs und Fahrstunden für Motorradfahrer aus Baden." },
       ]} />
     </div>

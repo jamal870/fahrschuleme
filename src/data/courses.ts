@@ -135,7 +135,11 @@ export const instructors: Instructor[] = [
 export const faqData = [
   {
     question: "Was ist der Motorrad Grundkurs (MGK)?",
-    answer: "Der Motorrad Grundkurs ist ein obligatorischer Kurs in der Schweiz, bestehend aus **3 Teilen** (je 4 Stunden). Er ist Voraussetzung für den Lernfahrausweis der Kategorie A1 oder A. Die Kursteile müssen **in der richtigen Reihenfolge** absolviert werden.",
+    answer: "Der Motorrad Grundkurs ist ein obligatorischer Kurs in der Schweiz, bestehend aus **3 Teilen** (je 4 Stunden). Er umfasst **12 Stunden** und ist für jede Motorrad-Kategorie (A1, A2, A) Pflicht. Du brauchst dafür immer einen **gültigen Lernfahrausweis** deiner Kategorie. Nur Kursteil 3 allein gibt es für die Erweiterung einer vor 2022 erworbenen Kategorie A1. Die Kursteile müssen **in der richtigen Reihenfolge** absolviert werden.",
+  },
+  {
+    question: "Ich habe B und bei A1 steht 45 km/h. Brauche ich den ganzen Grundkurs für einen 125er?",
+    answer: "Ja. Der Eintrag \"A1 45 km/h\" ist keine volle Kategorie A1. Für einen 125er brauchst du einen **gültigen Lernfahrausweis A1** und den **kompletten Grundkurs (12 Stunden, alle 3 Teile)**. Das gilt für jede Motorrad-Kategorie. Deinen Roller oder dein Motorrad bringst du selbst mit.",
   },
   {
     question: "Wie viel kostet der Grundkurs?",

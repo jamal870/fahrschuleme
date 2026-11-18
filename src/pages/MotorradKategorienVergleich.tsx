@@ -18,7 +18,7 @@ interface Kat {
 
 const kategorien: Kat[] = [
   {
-    kat: "AM",
+    kat: "A1 bis 50 cm³ (AM)",
     label: "Kleinmotorrad / Motorfahrrad",
     alter: "ab 15 Jahren",
     fahrzeug: "Motorfahrräder und Kleinmotorräder bis 50 cm³",
@@ -29,7 +29,7 @@ const kategorien: Kat[] = [
   {
     kat: "A1",
     label: "125er",
-    alter: "ab 16 Jahren (125 cm³ ab 16)",
+    alter: "ab 15 Jahren (bis 50 cm³ / 45 km/h), ab 16 Jahren bis 125 cm³",
     fahrzeug: "Motorräder bis 125 cm³",
     leistung: "max. 11 kW, Verhältnis max. 0.1 kW/kg",
     voraussetzung: "Lernfahrausweis, Theorieprüfung, Motorrad-Grundkurs (12 Std.), praktische Prüfung",
@@ -42,15 +42,15 @@ const kategorien: Kat[] = [
     fahrzeug: "Motorräder aller Hubräume mit Leistungsbegrenzung",
     leistung: "max. 35 kW, max. 0.2 kW/kg",
     voraussetzung: "Lernfahrausweis, Theorieprüfung, Motorrad-Grundkurs, praktische Prüfung",
-    aufstieg: "Nach 2 Jahren A2 direkt weiter zur Kategorie A",
+    aufstieg: "Nach 2 Jahren A2 nur mit Prüfung (kein Kurs) weiter zur offenen Kategorie A",
   },
   {
     kat: "A",
     label: "Unbegrenzt",
-    alter: "ab 18 mit 2 Jahren A2, direkt ab 25 Jahren",
+    alter: "nach 2 Jahren A2 (kein Direktzugang)",
     fahrzeug: "Alle Motorräder ohne Leistungsbegrenzung",
     leistung: "unbegrenzt",
-    voraussetzung: "Praktische Prüfung Kategorie A; Grundkurs falls noch nicht absolviert",
+    voraussetzung: "2 Jahre Fahrpraxis mit A2, praktische Prüfung Kategorie A",
     aufstieg: "Endstufe – keine weitere Aufstufung nötig",
   },
 ];
@@ -68,7 +68,7 @@ const faq = [
     name: "Was ist der Unterschied zwischen A1, A2 und A?",
     acceptedAnswer: {
       "@type": "Answer",
-      text: "A1 gilt ab 16 Jahren für Motorräder bis 125 cm³ und maximal 11 kW. A2 gilt ab 18 Jahren für Motorräder bis 35 kW ohne Hubraumbegrenzung. Die Kategorie A ist unbegrenzt und ist ab 18 Jahren nach zwei Jahren Praxis mit A2 oder direkt ab 25 Jahren möglich.",
+      text: "A1 kann man ab 15 Jahren erwerben (zunächst bis 50 cm³ und 45 km/h); ab 16 Jahren darf man ohne weiteres Motorräder bis 125 cm³ und maximal 11 kW fahren. A2 gilt ab 18 Jahren für Motorräder bis 35 kW ohne Hubraumbegrenzung. Die Kategorie A ist unbegrenzt und ist nur über die Kategorie A2 erreichbar: nach zwei Jahren Fahrpraxis und mit Prüfung. Einen Direktzugang gibt es nicht.",
     },
   },
   {
@@ -76,7 +76,7 @@ const faq = [
     name: "Ab welchem Alter darf ich in der Schweiz Motorrad fahren?",
     acceptedAnswer: {
       "@type": "Answer",
-      text: "Kategorie AM (bis 45 km/h) ist ab 15 Jahren möglich, die Kategorie A1 mit 125 cm³ ab 16 Jahren, A2 ab 18 Jahren und die unbegrenzte Kategorie A ab 18 Jahren mit zwei Jahren A2-Erfahrung oder direkt ab 25 Jahren.",
+      text: "Die Kategorie A1 bis 50 cm³ (auch AM genannt, bis 45 km/h) ist ab 15 Jahren möglich, ab 16 Jahren folgt A1 bis 125 cm³, A2 ab 18 Jahren und die offene Kategorie A nach zwei Jahren A2 mit Prüfung. Einen Direktzugang gibt es nicht.",
     },
   },
   {
@@ -100,7 +100,7 @@ const faq = [
     name: "Kann ich mit A2 direkt auf A aufsteigen?",
     acceptedAnswer: {
       "@type": "Answer",
-      text: "Ja. Nach zwei Jahren unfallfreier Praxis mit der Kategorie A2 ist der Aufstieg auf die unbegrenzte Kategorie A möglich. Ohne A2-Vorerfahrung ist der Direkteinstieg in A ab 25 Jahren möglich.",
+      text: "Ja. Nach zwei Jahren Fahrpraxis mit der Kategorie A2 ist der Aufstieg auf die offene Kategorie A möglich, ohne Kurs, nur mit praktischer Prüfung. Einen Direktzugang ohne A2 gibt es nicht. Eine Ausnahme gilt für Lernende in der Motorradmechanik ab 18 Jahren.",
     },
   },
 ];
@@ -150,9 +150,9 @@ const MotorradKategorienVergleich = () => (
     <main className="max-w-5xl mx-auto px-6 py-10">
       <section className="mb-10 p-5 bg-card border-l-4 border-primary" style={{ borderRadius: "3px" }}>
         <p className="text-sm text-foreground leading-relaxed">
-          <strong className="font-heading">Kurzantwort:</strong> <strong>AM</strong> ab 15 Jahren (max. 45 km/h),
-          <strong> A1</strong> ab 16 Jahren (125 cm³, max. 11 kW), <strong>A2</strong> ab 18 Jahren (max. 35 kW) und
-          <strong> A</strong> unbegrenzt ab 18 Jahren mit zwei Jahren A2 oder direkt ab 25 Jahren. Für A1, A2 und A ist
+          <strong className="font-heading">Kurzantwort:</strong> <strong>A1 bis 50 cm³ (AM)</strong> ab 15 Jahren (max. 45 km/h),
+          <strong> A1</strong> ab 16 Jahren bis 125 cm³ (max. 11 kW), <strong>A2</strong> ab 18 Jahren (max. 35 kW) und
+          <strong> A</strong> offen nach zwei Jahren A2 mit Prüfung (kein Direktzugang). Für A1, A2 und A ist
           der Motorrad-Grundkurs mit 12 Stunden obligatorisch.
         </p>
       </section>
@@ -199,11 +199,11 @@ const MotorradKategorienVergleich = () => (
           </div>
           <div className="p-5 bg-card border border-border" style={{ borderRadius: "3px" }}>
             <h3 className="font-heading font-bold text-foreground mb-2">18–24 Jahre</h3>
-            <p className="text-sm text-muted-foreground">A2 mit 35 kW – nach zwei Jahren Praxis ohne erneute Grundausbildung Aufstieg auf A.</p>
+            <p className="text-sm text-muted-foreground">A2 mit 35 kW – nach zwei Jahren Fahrpraxis mit Prüfung Aufstieg auf die offene Kategorie A.</p>
           </div>
           <div className="p-5 bg-card border border-border" style={{ borderRadius: "3px" }}>
-            <h3 className="font-heading font-bold text-foreground mb-2">Ab 25 Jahren</h3>
-            <p className="text-sm text-muted-foreground">Direkteinstieg in die unbegrenzte Kategorie A möglich – ohne Umweg über A2.</p>
+            <h3 className="font-heading font-bold text-foreground mb-2">Ab 20 Jahren</h3>
+            <p className="text-sm text-muted-foreground">Frühestens nach zwei Jahren A2 und mit Prüfung zur offenen Kategorie A. Einen Direktzugang gibt es nicht.</p>
           </div>
         </div>
       </section>
@@ -281,7 +281,7 @@ const MotorradKategorienVergleich = () => (
     <RelatedLinks
       links={[
         { to: "/kosten-fuehrerschein-aargau/", title: "Kosten Führerschein Aargau 2026", desc: "Alle Gebühren, Kurskosten und Fahrstundenpreise in einer Übersicht." },
-        { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein in Wettingen", desc: "Ab 16 Jahren: Grundkurs, Fahrstunden und Kosten für 125 ccm." },
+        { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein in Wettingen", desc: "Ab 15 Jahren: Grundkurs, Fahrstunden und Kosten für A1 (ab 16 bis 125 ccm)." },
         { to: "/motorrad/", title: "Motorrad-Ausbildung", desc: "Ausbildung, Vorschulung und Prüfungsvorbereitung für alle Motorradkategorien." },
         { to: "/wie-viele-fahrstunden/", title: "Wie viele Fahrstunden brauche ich?", desc: "Realistische Lektionenzahl für Auto und Motorrad nach Vorerfahrung." },
       ]}

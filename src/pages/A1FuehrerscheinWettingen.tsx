@@ -4,11 +4,11 @@ const A1FuehrerscheinWettingen = () => (
   <LocalLandingPage
     path="/a1-fuehrerschein-wettingen/"
     seoTitle="A1 Führerschein Wettingen – 125 ccm | Fahrschule me"
-    seoDescription="A1 Führerschein (125 ccm) in Wettingen: ab 16 Jahren, Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfung. Ablauf und Kosten im Überblick."
+    seoDescription="A1 Führerschein in Wettingen: ab 15 Jahren (ab 16 bis 125 ccm), Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfung. Ablauf und Kosten."
     badge="Motorrad A1"
     h1="A1 Führerschein in"
     h1Accent="Wettingen"
-    intro="Mit der Kategorie A1 fährst du ab 16 Jahren Motorräder bis 125 cm³ und 11 kW. Bei Fahrschule me besuchst du den obligatorischen Grundkurs in Wettingen, übst in Fahrstunden und bereitest dich gezielt auf die praktische Prüfung vor."
+    intro="Die Kategorie A1 kannst du ab 15 Jahren erwerben (zunächst bis 50 cm³). Ab 16 Jahren fährst du Motorräder bis 125 cm³ und 11 kW. Bei Fahrschule me besuchst du den obligatorischen Grundkurs in Wettingen, übst in Fahrstunden und bereitest dich gezielt auf die praktische Prüfung vor."
     meetingPoint={{ label: "Wettingen", address: "Grundkurs: Güterstrasse 12 · Fahrstunden: Bahnhofstrasse 56, 5430 Wettingen" }}
     serviceName="A1 Führerschein Wettingen"
     benefits={[
@@ -22,7 +22,7 @@ const A1FuehrerscheinWettingen = () => (
     longText={[
       {
         heading: "Das darfst du mit der Kategorie A1 fahren",
-        body: "A1 gilt für Motorräder bis 125 cm³ mit höchstens 11 kW Leistung (Verhältnis höchstens 0.1 kW pro Kilogramm). Du kannst die Kategorie ab 16 Jahren erwerben. Sie ist ein guter Einstieg und die Basis für den späteren Wechsel auf A2. Mit der Praxis aus A2 steht dir nach zwei Jahren die unbegrenzte Kategorie A offen.",
+        body: "A1 gilt für Motorräder bis 125 cm³ mit höchstens 11 kW Leistung (Verhältnis höchstens 0.1 kW pro Kilogramm). Du kannst die Kategorie ab 15 Jahren (zunächst bis 50 cm³, ab 16 Jahren ohne weiteres 125 cm³) erwerben. Sie ist ein guter Einstieg und die Basis für den späteren Wechsel auf A2. Mit der Praxis aus A2 steht dir nach zwei Jahren die unbegrenzte Kategorie A offen.",
       },
       {
         heading: "So kommst du zum A1 Führerschein",
@@ -38,7 +38,7 @@ const A1FuehrerscheinWettingen = () => (
       },
     ]}
     faqs={[
-      { q: "Ab welchem Alter gibt es die Kategorie A1?", a: "Die Kategorie A1 für Motorräder bis 125 cm³ erwirbst du ab 16 Jahren." },
+      { q: "Ab welchem Alter gibt es die Kategorie A1?", a: "Die Kategorie A1 erwirbst du ab 15 Jahren, zunächst für Fahrzeuge bis 50 cm³ (45 km/h). Ab 16 Jahren fährst du ohne weiteres Motorräder bis 125 cm³." },
       { q: "Brauche ich für A1 einen Grundkurs?", a: "Ja. Der Motorrad-Grundkurs mit 12 Stunden in drei Teilen ist für A1, A2 und A obligatorisch. Die Kursteile müssen in der richtigen Reihenfolge besucht werden." },
       { q: "Was kostet der A1 Grundkurs?", a: "Jeder der drei Kursteile kostet CHF 160, zusammen CHF 480." },
       { q: "Ich habe schon A1. Was brauche ich für die Kategorie A?", a: "Für den Weg von A1 zur Kategorie A buchst du bei uns nur Kursteil 3 zum Pauschalpreis von CHF 250. Der Buchungsweg für A1-Inhaber ist auf der Grundkurs-Seite gekennzeichnet." },

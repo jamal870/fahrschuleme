@@ -151,10 +151,10 @@ export const tenantConfig: TenantConfig = {
   },
 
   categories: [
-    { id: "am", title: "AM – Mofa", age: "Ab 15 Jahren", desc: "Mofa & Roller bis 50cm³, max. 45 km/h" },
-    { id: "a1", title: "A1 – 125cc", age: "Ab 16 Jahren", desc: "125cm³, max. 11 kW – perfekter Einstieg" },
+    { id: "am", title: "A1 bis 50ccm (AM)", age: "Ab 15 Jahren", desc: "Mofa & Roller bis 50cm³, max. 45 km/h" },
+    { id: "a1", title: "A1 – 125cc", age: "Ab 15 Jahren", desc: "ab 16 bis 125cm³, max. 11 kW – perfekter Einstieg" },
     { id: "a2", title: "A2 – 35kW", age: "Ab 18 Jahren", desc: "Bis 35 kW – nächste Stufe nach A1" },
-    { id: "a", title: "A – Unbegrenzt", age: "Ab 20 Jahren", desc: "Unbegrenzte Leistung – Direktzugang" },
+    { id: "a", title: "A – Unbegrenzt", age: "Nach 2 Jahren A2", desc: "Unbegrenzte Leistung – mit Prüfung, kein Direktzugang" },
   ],
 
   pricing: {

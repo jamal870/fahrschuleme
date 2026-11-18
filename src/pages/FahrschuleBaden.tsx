@@ -52,7 +52,7 @@ const FahrschuleBaden = () => (
       { to: "/fahrschule-wettingen/", title: "Fahrschule Wettingen", desc: "Unser Hauptstandort in Wettingen – Auto und Motorrad aus einer Hand." },
       { to: "/motorrad-grundkurs-wettingen/", title: "Motorrad-Grundkurs", desc: "MGK A1/A2/A in Wettingen – nur wenige Minuten von Baden." },
       { to: "/autofuehrerschein-wettingen/", title: "Autoführerschein", desc: "Ablauf, Fahrstunden, Abos und Kosten für die Kategorie B." },
-      { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein", desc: "Motorrad ab 16 Jahren: Grundkurs, Fahrstunden und Kosten." },
+      { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein", desc: "Motorrad ab 15 Jahren: Grundkurs, Fahrstunden und Kosten." },
       { to: "/strassenverkehrsamt-aargau/", title: "Strassenverkehrsamt Aargau", desc: "Anmeldung, Prüfung, Lernfahrausweis – alles Wichtige zum StVA." },
     ]}
   />
