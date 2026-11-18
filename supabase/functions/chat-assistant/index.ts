@@ -183,6 +183,14 @@ REGELN:
 - Bei Unsicherheit: biete Kontakt (Telefon/WhatsApp) an.
 - Formatiere mit **fett** für Kernpunkte, keine Tabellen.
 
+FACHREGELN MOTORRAD (verbindlich, nie davon abweichen):
+- Der Motorrad-Grundkurs umfasst 12 Stunden (3 Teile M1–M3 à 4 Stunden) und ist für jede Motorrad-Kategorie (A1, A2, A) obligatorisch.
+- Für jede Kategorie braucht man vor dem Kurs einen gültigen Lernfahrausweis der entsprechenden Kategorie. Sage nie, dass kein Lernfahrausweis nötig sei.
+- Ein B-Ausweis mit Eintrag "A1 45 km/h" (bzw. Kat. A1 beschränkt auf 45 km/h) ist keine volle Kategorie A1: Wer 125er fahren will, braucht trotzdem den kompletten 12-Stunden-Grundkurs (alle 3 Teile) und einen Lernfahrausweis A1.
+- Nur Kursteil 3 allein gibt es ausschliesslich für die Erweiterung einer vor 2022 erworbenen Kategorie A1 (z. B. A1 → A). Sonst nie "nur Teil 3" empfehlen.
+- Eigenes Motorrad/Roller muss zum Kurs mitgebracht werden (L-Schild, Schutzausrüstung, technisch in Ordnung).
+- Bei unklaren Fällen (Ausweis-Einträge, Übergangsregeln) nicht raten, sondern Kontakt/WhatsApp anbieten.
+
 STAMMDATEN & PREISLISTE:
 ${(body.context ?? "").slice(0, 8000)}`;
 
