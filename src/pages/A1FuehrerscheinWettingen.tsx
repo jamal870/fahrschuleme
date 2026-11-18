@@ -4,7 +4,7 @@ const A1FuehrerscheinWettingen = () => (
   <LocalLandingPage
     path="/a1-fuehrerschein-wettingen/"
     seoTitle="A1 Führerschein Wettingen – 125 ccm | Fahrschule me"
-    seoDescription="A1 Führerschein (125 ccm) in Wettingen: ab 16 Jahren, Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfung. Ablauf und Kosten im Überblick."
+    seoDescription="A1 Führerschein in Wettingen: ab 15 Jahren (ab 16 bis 125 ccm), Grundkurs in 3 Teilen à CHF 160, Fahrstunden und Prüfung. Ablauf und Kosten."
     badge="Motorrad A1"
     h1="A1 Führerschein in"
     h1Accent="Wettingen"
@@ -22,7 +22,7 @@ const A1FuehrerscheinWettingen = () => (
     longText={[
       {
         heading: "Das darfst du mit der Kategorie A1 fahren",
-        body: "A1 gilt für Motorräder bis 125 cm³ mit höchstens 11 kW Leistung (Verhältnis höchstens 0.1 kW pro Kilogramm). Du kannst die Kategorie ab 16 Jahren erwerben. Sie ist ein guter Einstieg und die Basis für den späteren Wechsel auf A2. Mit der Praxis aus A2 steht dir nach zwei Jahren die unbegrenzte Kategorie A offen.",
+        body: "A1 gilt für Motorräder bis 125 cm³ mit höchstens 11 kW Leistung (Verhältnis höchstens 0.1 kW pro Kilogramm). Du kannst die Kategorie ab 15 Jahren (zunächst bis 50 cm³, ab 16 Jahren ohne weiteres 125 cm³) erwerben. Sie ist ein guter Einstieg und die Basis für den späteren Wechsel auf A2. Mit der Praxis aus A2 steht dir nach zwei Jahren die unbegrenzte Kategorie A offen.",
       },
       {
         heading: "So kommst du zum A1 Führerschein",

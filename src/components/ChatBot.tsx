@@ -651,7 +651,7 @@ export default function ChatBot() {
     }
     else if (action.startsWith("info_")) {
       const infos: Record<string, string> = {
-        info_a1125cc: "**A1 – 125cc**\n\nAb 16 Jahren · 125cm³ · max. 11 kW · Perfekter Einstieg in die Motorradwelt.\n\nGrundkurs (12h) + Praktische Prüfung erforderlich.",
+        info_a1125cc: "**A1 – 125cc**\n\nAb 15 Jahren (zunächst bis 50cm³), ab 16 Jahren 125cm³ · max. 11 kW · Perfekter Einstieg in die Motorradwelt.\n\nGrundkurs (12h) + Praktische Prüfung erforderlich.",
         info_a235kw: "**A2 – 35kW**\n\nAb 18 Jahren · bis 35 kW · Nächste Stufe nach A1.\n\nGrundkurs (12h) + Praktische Prüfung erforderlich.",
         info_aunbegrenzt: "**A – Unbegrenzt**\n\nAb 20 Jahren (Direktzugang) oder 24 (Stufenzugang) · Unbegrenzte Leistung.\n\nGrundkurs (12h) + Praktische Prüfung erforderlich.",
       };
@@ -785,7 +785,7 @@ export default function ChatBot() {
       addMsg({ role: "user", content: "Mindestalter" });
       addMsg({
         role: "bot",
-        content: "**Mindestalter:**\n\nAM ab 15 · A1 ab 16 · A2 ab 18 · A ab 20 Jahren (Direktzugang)",
+        content: "**Mindestalter:**\n\nAM ab 15 · A1 ab 15 (ab 16 bis 125cm³) · A2 ab 18 · A ab 20 Jahren (Direktzugang)",
         buttons: faqFollowUp,
       });
     }

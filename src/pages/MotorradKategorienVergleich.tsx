@@ -281,7 +281,7 @@ const MotorradKategorienVergleich = () => (
     <RelatedLinks
       links={[
         { to: "/kosten-fuehrerschein-aargau/", title: "Kosten Führerschein Aargau 2026", desc: "Alle Gebühren, Kurskosten und Fahrstundenpreise in einer Übersicht." },
-        { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein in Wettingen", desc: "Ab 16 Jahren: Grundkurs, Fahrstunden und Kosten für 125 ccm." },
+        { to: "/a1-fuehrerschein-wettingen/", title: "A1 Führerschein in Wettingen", desc: "Ab 15 Jahren: Grundkurs, Fahrstunden und Kosten für A1 (ab 16 bis 125 ccm)." },
         { to: "/motorrad/", title: "Motorrad-Ausbildung", desc: "Ausbildung, Vorschulung und Prüfungsvorbereitung für alle Motorradkategorien." },
         { to: "/wie-viele-fahrstunden/", title: "Wie viele Fahrstunden brauche ich?", desc: "Realistische Lektionenzahl für Auto und Motorrad nach Vorerfahrung." },
       ]}
