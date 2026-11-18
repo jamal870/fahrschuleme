@@ -683,7 +683,7 @@ export default function ChatBot() {
     else if (action.startsWith("cat_info_")) {
       const catInfos: Record<string, { label: string; text: string }> = {
         cat_info_am: { label: "AM – Mofa", text: "Ab 15 Jahren · Mofa & Roller bis 50cm³ · max. 45 km/h" },
-        cat_info_a1: { label: "A1 – 125cc", text: "Ab 16 Jahren · 125cm³ · max. 11 kW · Perfekter Einstieg" },
+        cat_info_a1: { label: "A1 – 125cc", text: "Ab 15 Jahren (bis 50cm³), ab 16 Jahren 125cm³ · max. 11 kW" },
         cat_info_a2: { label: "A2 – 35kW", text: "Ab 18 Jahren · bis 35 kW · Nächste Stufe nach A1" },
         cat_info_a: { label: "A – Unbegrenzt", text: "Ab 20 Jahren (Direktzugang) oder 24 (Stufenzugang) · Unbegrenzte Leistung" },
       };
