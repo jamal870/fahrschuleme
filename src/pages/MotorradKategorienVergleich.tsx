@@ -29,7 +29,7 @@ const kategorien: Kat[] = [
   {
     kat: "A1",
     label: "125er",
-    alter: "ab 16 Jahren (125 cm³ ab 16)",
+    alter: "ab 15 Jahren (bis 50 cm³ / 45 km/h), ab 16 Jahren bis 125 cm³",
     fahrzeug: "Motorräder bis 125 cm³",
     leistung: "max. 11 kW, Verhältnis max. 0.1 kW/kg",
     voraussetzung: "Lernfahrausweis, Theorieprüfung, Motorrad-Grundkurs (12 Std.), praktische Prüfung",
@@ -68,7 +68,7 @@ const faq = [
     name: "Was ist der Unterschied zwischen A1, A2 und A?",
     acceptedAnswer: {
       "@type": "Answer",
-      text: "A1 gilt ab 16 Jahren für Motorräder bis 125 cm³ und maximal 11 kW. A2 gilt ab 18 Jahren für Motorräder bis 35 kW ohne Hubraumbegrenzung. Die Kategorie A ist unbegrenzt und ist ab 18 Jahren nach zwei Jahren Praxis mit A2 oder direkt ab 25 Jahren möglich.",
+      text: "A1 kann man ab 15 Jahren erwerben (zunächst bis 50 cm³ und 45 km/h); ab 16 Jahren darf man ohne weiteres Motorräder bis 125 cm³ und maximal 11 kW fahren. A2 gilt ab 18 Jahren für Motorräder bis 35 kW ohne Hubraumbegrenzung. Die Kategorie A ist unbegrenzt und ist ab 18 Jahren nach zwei Jahren Praxis mit A2 oder direkt ab 25 Jahren möglich.",
     },
   },
   {
@@ -76,7 +76,7 @@ const faq = [
     name: "Ab welchem Alter darf ich in der Schweiz Motorrad fahren?",
     acceptedAnswer: {
       "@type": "Answer",
-      text: "Kategorie AM (bis 45 km/h) ist ab 15 Jahren möglich, die Kategorie A1 mit 125 cm³ ab 16 Jahren, A2 ab 18 Jahren und die unbegrenzte Kategorie A ab 18 Jahren mit zwei Jahren A2-Erfahrung oder direkt ab 25 Jahren.",
+      text: "Kategorie AM (bis 45 km/h) ist ab 15 Jahren möglich, die Kategorie A1 ab 15 Jahren (bis 50 cm³, ab 16 Jahren bis 125 cm³), A2 ab 18 Jahren und die unbegrenzte Kategorie A ab 18 Jahren mit zwei Jahren A2-Erfahrung oder direkt ab 25 Jahren.",
     },
   },
   {
@@ -151,7 +151,7 @@ const MotorradKategorienVergleich = () => (
       <section className="mb-10 p-5 bg-card border-l-4 border-primary" style={{ borderRadius: "3px" }}>
         <p className="text-sm text-foreground leading-relaxed">
           <strong className="font-heading">Kurzantwort:</strong> <strong>AM</strong> ab 15 Jahren (max. 45 km/h),
-          <strong> A1</strong> ab 16 Jahren (125 cm³, max. 11 kW), <strong>A2</strong> ab 18 Jahren (max. 35 kW) und
+          <strong> A1</strong> ab 15 Jahren (bis 50 cm³), ab 16 Jahren 125 cm³ (max. 11 kW), <strong>A2</strong> ab 18 Jahren (max. 35 kW) und
           <strong> A</strong> unbegrenzt ab 18 Jahren mit zwei Jahren A2 oder direkt ab 25 Jahren. Für A1, A2 und A ist
           der Motorrad-Grundkurs mit 12 Stunden obligatorisch.
         </p>
