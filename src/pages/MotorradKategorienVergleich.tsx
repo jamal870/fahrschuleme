@@ -42,7 +42,7 @@ const kategorien: Kat[] = [
     fahrzeug: "Motorräder aller Hubräume mit Leistungsbegrenzung",
     leistung: "max. 35 kW, max. 0.2 kW/kg",
     voraussetzung: "Lernfahrausweis, Theorieprüfung, Motorrad-Grundkurs, praktische Prüfung",
-    aufstieg: "Nach 2 Jahren A2 mit Prüfung weiter zur offenen Kategorie A",
+    aufstieg: "Nach 2 Jahren A2 nur mit Prüfung (kein Kurs) weiter zur offenen Kategorie A",
   },
   {
     kat: "A",
@@ -100,7 +100,7 @@ const faq = [
     name: "Kann ich mit A2 direkt auf A aufsteigen?",
     acceptedAnswer: {
       "@type": "Answer",
-      text: "Ja. Nach zwei Jahren Fahrpraxis mit der Kategorie A2 ist der Aufstieg auf die offene Kategorie A mit Prüfung möglich. Einen Direktzugang ohne A2 gibt es nicht.",
+      text: "Ja. Nach zwei Jahren Fahrpraxis mit der Kategorie A2 ist der Aufstieg auf die offene Kategorie A möglich, ohne Kurs, nur mit praktischer Prüfung. Einen Direktzugang ohne A2 gibt es nicht. Eine Ausnahme gilt für Lernende in der Motorradmechanik ab 18 Jahren.",
     },
   },
 ];
